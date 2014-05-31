@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/notification_parent"
+    android:layout_width="fill_parent"
+    android:layout_height="20dp" >
+
+    <View
+        android:id="@+id/notification_banner"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@color/orange" />
+
+    <TextView
+        android:id="@+id/notification_status_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Connecting..."
+        android:textColor="@android:color/white" />
+
+</FrameLayout>
