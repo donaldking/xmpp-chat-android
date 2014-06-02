@@ -1,4 +1,4 @@
-package co.uk.tusksolutions.tchat.android;
+package co.tusksolutions.tchat.android.activities;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,6 +10,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.fragments.FriendsFragment;
 import co.uk.tusksolutions.tchat.android.fragments.GroupsFragment;
 import co.uk.tusksolutions.tchat.android.fragments.RecentsFragment;
@@ -98,9 +99,10 @@ public class MainActivity extends ActionBarActivity implements
 
 		/*
 		 * Hide Actionbar but only display tabs
+		 * 
+		 * actionBar.setDisplayShowTitleEnabled(false);
+		 * actionBar.setDisplayShowHomeEnabled(false);
 		 */
-		actionBar.setDisplayShowTitleEnabled(false);
-		actionBar.setDisplayShowHomeEnabled(false);
 
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections of the activity.
