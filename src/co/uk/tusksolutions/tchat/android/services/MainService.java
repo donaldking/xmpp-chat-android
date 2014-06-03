@@ -15,15 +15,18 @@ public class MainService extends Service {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		
-		Intent i = new Intent(this,XMPPConnectionManager.class);
+		/**
+		 * Connects the user to XMPP server immediately after the service is
+		 * started.
+		 */
+		Intent i = new Intent(this, XMPPConnectionManager.class);
 		this.startService(i);
 	}
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		super.onStartCommand(intent, flags, startId);
-		
+
 		return START_STICKY;
 	}
 

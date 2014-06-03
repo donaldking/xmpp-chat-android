@@ -38,7 +38,7 @@ public class XMPPConnectionManager extends IntentService {
 			connection.login(
 					username,
 					password,
-					"TChat-Messenger-"
+					"TChat-Android-"
 							+ Secure.getString(TChatApplication.getContext()
 									.getContentResolver(), Secure.ANDROID_ID));
 			Log.i(TAG, "Logged in as " + connection.getUser());

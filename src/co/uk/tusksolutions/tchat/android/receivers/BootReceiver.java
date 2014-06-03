@@ -14,12 +14,14 @@ public class BootReceiver extends BroadcastReceiver {
 	public void onReceive(Context context, Intent intent) {
 
 		if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED")) {
-
+			/**
+			 * Fires the main service service when boot completed intent is
+			 * received.
+			 */
 			Intent serviceLauncher = new Intent(context, MainService.class);
 			context.startService(serviceLauncher);
 			Toast.makeText(context, (String) TAG + " onReceive",
 					Toast.LENGTH_LONG).show();
-
 		}
 
 	}

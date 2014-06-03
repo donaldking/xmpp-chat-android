@@ -47,7 +47,6 @@
         </receiver>
         <receiver
             android:name="co.uk.tusksolutions.tchat.android.receivers.ScheduleXMPPService"
-            android:enabled="true"
             android:permission="co.uk.tusksolutions.permission.TCHAT_PACKET" >
             <intent-filter>
                 <action android:name="co.uk.tusksolutions.tchat.android.action.START_LISTENING_FOR_PACKETS" />
