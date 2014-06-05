@@ -8,6 +8,7 @@ import org.jivesoftware.smack.Connection;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.os.PowerManager;
 import android.widget.Toast;
 import co.uk.tusksolutions.tchat.android.services.MainService;
 
@@ -21,22 +22,34 @@ public class TChatApplication extends Application {
 	private static Context mContext;
 	public static Connection connection;
 	public static boolean isMainServiceRunning;
+	private static PowerManager.WakeLock wakeLock;
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		TChatApplication.mContext = this;
+		TChatApplication.mContext = getBaseContext();
 
 		if (isMainServiceRunning == false) {
-			Toast.makeText(getApplicationContext(),
-					(String) TAG + " onCreate - Trigger connection...",
-					Toast.LENGTH_LONG).show();
 			startService(new Intent(this, MainService.class));
-		} else if (isMainServiceRunning == true) {
-			Toast.makeText(getApplicationContext(),
-					(String) TAG + " onCreate - Main Service Running...",
-					Toast.LENGTH_LONG).show();
 		}
+	}
+
+	public static void acquireWakeLock() {
+		PowerManager pm = (PowerManager) getContext().getSystemService(
+				Context.POWER_SERVICE);
+		wakeLock = pm
+				.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "My wakelook");
+		wakeLock.acquire();
+		Toast acquire = Toast.makeText(getContext(), "Wake Lock ON",
+				Toast.LENGTH_SHORT);
+		acquire.show();
+	}
+
+	public static void releaseWakeLock() {
+		wakeLock.release();
+		Toast release = Toast.makeText(getContext(), "Wake Lock OFF",
+				Toast.LENGTH_SHORT);
+		release.show();
 	}
 
 	public static Context getContext() {

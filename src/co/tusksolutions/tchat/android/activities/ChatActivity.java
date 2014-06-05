@@ -85,6 +85,24 @@ public class ChatActivity extends ActionBarActivity {
 		return true;
 	}
 
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+
+		if (this.isTaskRoot()) {
+			/*
+			 * Start MainActivity as ChatActiviy is the last in the stack.
+			 * Otherwise, simply finish ChatActivity
+			 */
+			Intent i = new Intent(this, MainActivity.class);
+			i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(i);
+			finish();
+		} else {
+			finish();
+		}
+	}
+
 	/**
 	 * Programatically register for broadcast to be notified when chat message
 	 * has been received, processed and inserted to the db so we can reload this

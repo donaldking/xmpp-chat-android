@@ -1,6 +1,5 @@
 package co.tusksolutions.tchat.android.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -139,23 +138,6 @@ public class MainActivity extends ActionBarActivity implements
 					 * .getInt("icon"))
 					 */
 					.setTabListener(this));
-
-		}
-
-		/*
-		 * Check if we were started from notification window and get bundle from
-		 * the intent and pass to the next activity: ChatActivity.
-		 */
-		if (getIntent().getExtras() != null) {
-			if (getIntent().getExtras().containsKey("chatMessageBundle")) {
-
-				Intent i = new Intent(this, ChatActivity.class);
-				i.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-				i.putExtra("chatMessageBundle", getIntent().getExtras()
-						.getBundle("chatMessageBundle"));
-				startActivity(i);
-
-			}
 		}
 	}
 

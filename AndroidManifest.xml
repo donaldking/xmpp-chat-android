@@ -37,6 +37,10 @@
             android:name="co.uk.tusksolutions.tchat.android.fragments.GroupsFragment"
             android:label="@string/title_activity_groups_fragment" >
         </activity>
+        <activity
+            android:name="co.uk.tusksolutions.tchat.android.activities.ChatActivity"
+            android:noHistory="true" >
+        </activity>
 
         <!-- Receivers -->
         <receiver
@@ -47,11 +51,23 @@
             </intent-filter>
         </receiver>
         <receiver
-            android:name="co.uk.tusksolutions.tchat.android.receivers.TChatWakeLockReceiver"
+            android:name="co.uk.tusksolutions.tchat.android.receivers.GenericBroadcastReceiver"
             android:enabled="true"
-            android:permission="co.uk.tusksolutions.tchat.android.receivers.TCHAT_WAKELOCK" >
+            android:exported="false" >
             <intent-filter>
-                <action android:name="co.uk.tusksolutions.tchat.android.action.CHAT_MESSAGE_RECEIVED" />
+                <action android:name="co.uk.tusksolutions.tchat.android.action.CONNECTION_LOST_IN_ERROR" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="co.uk.tusksolutions.tchat.android.action.CONNECTION_LOST_BY_USER_ACTION" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="co.uk.tusksolutions.tchat.android.action.RECONNECTING" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="co.uk.tusksolutions.tchat.android.action.RECONNECTING_FAILED" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="co.uk.tusksolutions.tchat.android.action.RECONNECTION_SUCCESSFULL" />
             </intent-filter>
         </receiver>
 
@@ -61,9 +77,6 @@
             android:enabled="true" />
         <service
             android:name="co.uk.tusksolutions.tchat.android.xmpp.XMPPConnectionManager"
-            android:enabled="true" />
-        <service
-            android:name="co.uk.tusksolutions.tchat.android.xmpp.notifications.XMPPNotificationManager"
             android:enabled="true" />
 
         <activity

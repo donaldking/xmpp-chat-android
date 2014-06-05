@@ -11,7 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.TChatApplication.CHAT_STATUS_ENUM;
-import co.uk.tusksolutions.tchat.android.constants.Constants;
+import co.uk.tusksolutions.tchat.android.xmpp.notifications.XMPPNotificationManager;
 
 public class XMPPChatMessageListener implements PacketListener {
 
@@ -29,33 +29,45 @@ public class XMPPChatMessageListener implements PacketListener {
 				Log.i(TAG, "Stopped composing...: ");
 			} else if (message.getBody().length() > 0) {
 				if (TChatApplication.getChatActivityStatus() == CHAT_STATUS_ENUM.VISIBLE) {
-					sendBundleToWakeLock(message);
+					/*
+					 * Ideally, do nothing!
+					 */
+
+					Bundle b = new Bundle();
+					b.putString("fromName", StringUtils.parseName(StringUtils
+							.parseBareAddress(message.getFrom())));
+					b.putString("message", message.getBody());
+
+					Intent intent = new Intent();
+					intent.putExtra("chatMessageBundle", b);
+
+					// Send to notification manager
+					new XMPPNotificationManager()
+							.sendNormalChatNotification(intent);
 
 				} else if (TChatApplication.getChatActivityStatus() == CHAT_STATUS_ENUM.NOT_VISIBLE) {
-					sendBundleToWakeLock(message);
+
+					/*
+					 * Prepare message bundle.
+					 */
+
+					Bundle b = new Bundle();
+					b.putString("fromName", StringUtils.parseName(StringUtils
+							.parseBareAddress(message.getFrom())));
+					b.putString("message", message.getBody());
+
+					Intent intent = new Intent();
+					intent.putExtra("chatMessageBundle", b);
+
+					// Send to notification manager
+					new XMPPNotificationManager()
+							.sendNormalChatNotification(intent);
 
 				} else {
 					Log.i(TAG, "Unknown state to display message received!");
 				}
 			}
 		}
-	}
-
-	private void sendBundleToWakeLock(Message message) {
-
-		// Prepare message bundle.
-
-		Bundle b = new Bundle();
-		b.putString("fromName", StringUtils.parseName(StringUtils
-				.parseBareAddress(message.getFrom())));
-		b.putString("message", message.getBody());
-
-		Intent intent = new Intent();
-		intent.putExtra("chatMessageBundle", b);
-		intent.setAction(Constants.CHAT_MESSAGE_RECEIVED);
-
-		// Send a WakeLock Broadcast to XMPPNotificationManager
-		mContext.sendBroadcast(intent);
 	}
 
 }

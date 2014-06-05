@@ -19,13 +19,17 @@ public class XMPPPacketManager {
 	}
 
 	private void setUpPacketListeners() {
-		PacketFilter chatFilter = new MessageTypeFilter(Message.Type.chat);
-		PacketFilter groupChatFilter = new MessageTypeFilter(
-				Message.Type.groupchat);
+		try {
+			PacketFilter chatFilter = new MessageTypeFilter(Message.Type.chat);
+			PacketFilter groupChatFilter = new MessageTypeFilter(
+					Message.Type.groupchat);
 
-		TChatApplication.connection.addPacketListener(new XMPPChatMessageListener(), chatFilter);
-		TChatApplication.connection.addPacketListener(new XMPPGroupChatMessageListener(),
-				groupChatFilter);
-		TChatApplication.connection.addConnectionListener(new XMPPConnectionListener());
+			TChatApplication.connection.addPacketListener(new XMPPChatMessageListener(), chatFilter);
+			TChatApplication.connection.addPacketListener(new XMPPGroupChatMessageListener(),
+					groupChatFilter);
+			TChatApplication.connection.addConnectionListener(new XMPPConnectionListener());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

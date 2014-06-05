@@ -38,11 +38,8 @@ public class MainService extends Service {
 		alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,
 				System.currentTimeMillis(), 30 * 1000, operation);
 
-		Toast.makeText(getApplicationContext(),
-				(String) TAG + " onCreate - Alarm! connection...",
-				Toast.LENGTH_LONG).show();
-		
 		TChatApplication.isMainServiceRunning = true;
+		TChatApplication.acquireWakeLock();
 	}
 
 	@Override
@@ -56,11 +53,11 @@ public class MainService extends Service {
 	public void onDestroy() {
 		super.onDestroy();
 		Toast.makeText(getApplicationContext(),
-				(String) TAG + " Release connection",
-				Toast.LENGTH_LONG).show();
+				(String) TAG + " Release connection", Toast.LENGTH_LONG).show();
 
 		TChatApplication.connection = null;
 		TChatApplication.isMainServiceRunning = false;
+		TChatApplication.releaseWakeLock();
 	}
 
 }
