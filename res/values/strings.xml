@@ -15,5 +15,6 @@
     <string name="fragment_groups">Groups Fragment</string>
     <string name="fragment_friends">Friends Fragment</string>
     <string name="fragment_settings">Settings Fragment</string>
+    <string name="title_activity_chat">ChatActivity</string>
 
 </resources>

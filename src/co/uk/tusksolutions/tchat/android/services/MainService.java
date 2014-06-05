@@ -3,24 +3,46 @@
  */
 package co.uk.tusksolutions.tchat.android.services;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
-import android.util.Log;
+import android.widget.Toast;
+import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.xmpp.XMPPConnectionManager;
 
 public class MainService extends Service {
 	static final String TAG = "TChatMainService";
+	Context context = TChatApplication.getContext();
+
+	@Override
+	public IBinder onBind(Intent intent) {
+		return null;
+	}
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
 		/**
-		 * Connects the user to XMPP server immediately after the service is
-		 * started.
+		 * Sets up Alarm Manager to run every 30 seconds to monitor our
+		 * connection to the XMPP server. If it gets disconnected, it will be
+		 * restarted automatically.
 		 */
-		Intent i = new Intent(this, XMPPConnectionManager.class);
-		this.startService(i);
+		Intent i = new Intent(context, XMPPConnectionManager.class);
+		PendingIntent operation = PendingIntent.getService(context, -1, i,
+				PendingIntent.FLAG_UPDATE_CURRENT);
+		AlarmManager alarmManager = (AlarmManager) context
+				.getSystemService(Context.ALARM_SERVICE);
+		alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,
+				System.currentTimeMillis(), 30 * 1000, operation);
+
+		Toast.makeText(getApplicationContext(),
+				(String) TAG + " onCreate - Alarm! connection...",
+				Toast.LENGTH_LONG).show();
+		
+		TChatApplication.isMainServiceRunning = true;
 	}
 
 	@Override
@@ -33,11 +55,12 @@ public class MainService extends Service {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		Log.i(TAG, "onDestroy");
+		Toast.makeText(getApplicationContext(),
+				(String) TAG + " Release connection",
+				Toast.LENGTH_LONG).show();
+
+		TChatApplication.connection = null;
+		TChatApplication.isMainServiceRunning = false;
 	}
 
-	@Override
-	public IBinder onBind(Intent intent) {
-		return null;
-	}
 }

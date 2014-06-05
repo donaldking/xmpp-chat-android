@@ -2,12 +2,12 @@ package co.uk.tusksolutions.tchat.android.xmpp;
 
 import java.util.Collection;
 
-import org.jivesoftware.smack.Connection;
 import org.jivesoftware.smack.Roster;
 import org.jivesoftware.smack.RosterEntry;
 import org.jivesoftware.smack.packet.Presence;
 
 import android.util.Log;
+import co.uk.tusksolutions.tchat.android.TChatApplication;
 
 public class XMPPPresenceManager {
 
@@ -16,27 +16,23 @@ public class XMPPPresenceManager {
 	Presence presence;
 	Roster roster;
 
-	public XMPPPresenceManager(Connection connection) {
+	public XMPPPresenceManager() {
 		try {
 			/**
 			 * Tell the server we are online
 			 */
 			presence = new Presence(Presence.Type.available);
-			connection.sendPacket(presence);
+			TChatApplication.connection.sendPacket(presence);
 
 			/**
 			 * Request and process our roster
 			 */
-			roster = connection.getRoster();
+			roster = TChatApplication.connection.getRoster();
 			processRosterEntries(roster.getEntries());
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-
-	/** Empty signature **/
-	public XMPPPresenceManager() {
 	}
 
 	private void processRosterEntries(Collection<RosterEntry> entries) {

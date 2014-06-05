@@ -10,6 +10,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:name="co.uk.tusksolutions.tchat.android.TChatApplication"
@@ -46,10 +47,11 @@
             </intent-filter>
         </receiver>
         <receiver
-            android:name="co.uk.tusksolutions.tchat.android.receivers.ScheduleXMPPService"
-            android:permission="co.uk.tusksolutions.permission.TCHAT_PACKET" >
+            android:name="co.uk.tusksolutions.tchat.android.receivers.TChatWakeLockReceiver"
+            android:enabled="true"
+            android:permission="co.uk.tusksolutions.tchat.android.receivers.TCHAT_WAKELOCK" >
             <intent-filter>
-                <action android:name="co.uk.tusksolutions.tchat.android.action.START_LISTENING_FOR_PACKETS" />
+                <action android:name="co.uk.tusksolutions.tchat.android.action.CHAT_MESSAGE_RECEIVED" />
             </intent-filter>
         </receiver>
 
@@ -60,6 +62,14 @@
         <service
             android:name="co.uk.tusksolutions.tchat.android.xmpp.XMPPConnectionManager"
             android:enabled="true" />
+        <service
+            android:name="co.uk.tusksolutions.tchat.android.xmpp.notifications.XMPPNotificationManager"
+            android:enabled="true" />
+
+        <activity
+            android:name="co.tusksolutions.tchat.android.activities.ChatActivity"
+            android:label="@string/title_activity_chat" >
+        </activity>
     </application>
 
 </manifest>
