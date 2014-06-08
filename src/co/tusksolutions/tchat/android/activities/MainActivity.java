@@ -1,5 +1,6 @@
 package co.tusksolutions.tchat.android.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -156,6 +157,10 @@ public class MainActivity extends ActionBarActivity implements
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 		if (id == R.id.action_chat) {
+			startActivity(new Intent(this,ChatActivity.class));
+			return true;
+		}
+		if(id==R.id.action_search){
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
