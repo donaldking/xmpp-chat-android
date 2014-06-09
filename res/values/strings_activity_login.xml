@@ -1,0 +1,17 @@
+<resources>
+
+    <string name="title_activity_login">Login</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_username">Username</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_login_register"><b>Login</b> or register</string>
+    <string name="action_login_short">Login</string>
+    <string name="action_forgot_password">Recover lost password</string>
+    <string name="login_progress_please_wait">Please wait&#8230;</string>
+    <string name="error_invalid_username_or_password">Invalid username or password</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+
+</resources>

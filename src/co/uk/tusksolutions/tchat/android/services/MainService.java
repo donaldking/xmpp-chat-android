@@ -31,12 +31,17 @@ public class MainService extends Service {
 		 * restarted automatically.
 		 */
 		Intent i = new Intent(context, XMPPConnectionManager.class);
-		PendingIntent operation = PendingIntent.getService(context, -1, i,
-				PendingIntent.FLAG_UPDATE_CURRENT);
+
+		i.putExtra("username", TChatApplication.getUserModel().getUsername());
+		i.putExtra("password", TChatApplication.getUserModel().getPassword());
+
+		TChatApplication.connectionMonitoringOperation = PendingIntent
+				.getService(context, -1, i, PendingIntent.FLAG_UPDATE_CURRENT);
 		AlarmManager alarmManager = (AlarmManager) context
 				.getSystemService(Context.ALARM_SERVICE);
 		alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,
-				System.currentTimeMillis(), 30 * 1000, operation);
+				System.currentTimeMillis(), 30 * 1000,
+				TChatApplication.connectionMonitoringOperation);
 
 		TChatApplication.isMainServiceRunning = true;
 		TChatApplication.acquireWakeLock();
@@ -55,6 +60,7 @@ public class MainService extends Service {
 		Toast.makeText(getApplicationContext(),
 				(String) TAG + " Release connection", Toast.LENGTH_LONG).show();
 
+		TChatApplication.connection.disconnect();
 		TChatApplication.connection = null;
 		TChatApplication.isMainServiceRunning = false;
 		TChatApplication.releaseWakeLock();

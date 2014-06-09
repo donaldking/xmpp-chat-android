@@ -5,8 +5,15 @@ public class Constants {
 	/**
 	 * Server End Points
 	 */
+	public static String CURRENT_SERVER = null;
 	public static final String STAGING_SERVER = "uat.yookoschat.com";
 	public static final String PRODUCTION_SERVER = "yookoschat.com";
+
+	/**
+	 * Login Actions
+	 */
+	public static String LOGIN_SUCCESSFUL = "co.uk.tusksolutions.tchat.android.action.LOGIN_SUCCESSFUL";
+	public static String LOGIN_UNSUCCESSFUL = "co.uk.tusksolutions.tchat.android.action.LOGIN_UNSUCCESSFUL";
 
 	/**
 	 * Chat / Packet Actions
@@ -23,4 +30,5 @@ public class Constants {
 	public static String RECONNECTING = "co.uk.tusksolutions.tchat.android.action.RECONNECTING";
 	public static String RECONNECTING_FAILED = "co.uk.tusksolutions.tchat.android.action.RECONNECTING_FAILED";
 	public static String RECONNECTION_SUCCESSFULL = "co.uk.tusksolutions.tchat.android.action.RECONNECTION_SUCCESSFULL";
+
 }

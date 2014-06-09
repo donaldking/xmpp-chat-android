@@ -83,6 +83,11 @@
             android:name="co.tusksolutions.tchat.android.activities.ChatActivity"
             android:label="@string/title_activity_chat" >
         </activity>
+        <activity
+            android:name="co.uk.tusksolutions.tchat.android.LoginActivity"
+            android:label="@string/title_activity_login"
+            android:windowSoftInputMode="adjustResize|stateVisible" >
+        </activity>
     </application>
 
 </manifest>

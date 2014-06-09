@@ -3,7 +3,9 @@ package co.uk.tusksolutions.tchat.android.xmpp;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 
+import android.app.AlarmManager;
 import android.app.IntentService;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
@@ -17,6 +19,7 @@ import co.uk.tusksolutions.tchat.android.services.MainService;
 public class XMPPConnectionManager extends IntentService {
 
 	static final String TAG = "XMPPConnectionManager";
+	String username, password;
 
 	public XMPPConnectionManager() {
 		super(TAG);
@@ -27,6 +30,11 @@ public class XMPPConnectionManager extends IntentService {
 
 		Log.i(TAG, "onHandleIntent");
 
+		if (intent.getExtras() != null) {
+			this.username = intent.getStringExtra("username");
+			this.password = intent.getStringExtra("password");
+		}
+
 		/**
 		 * if Main Service was stopped.
 		 */
@@ -35,13 +43,14 @@ public class XMPPConnectionManager extends IntentService {
 			startService(new Intent(TChatApplication.getContext(),
 					MainService.class));
 		}
+
 		/**
 		 * if no connection object
 		 */
 		if (TChatApplication.connection == null) {
 
 			Log.i(TAG, "Make new connection..");
-			connectAndLogin("donaldking", "default", Constants.STAGING_SERVER);
+			connectAndLogin();
 			return;
 		}
 		/**
@@ -52,23 +61,24 @@ public class XMPPConnectionManager extends IntentService {
 				&& TChatApplication.connection == null) {
 
 			Log.i(TAG, "Make new connection..");
-			connectAndLogin("donaldking", "default", Constants.STAGING_SERVER);
+			connectAndLogin();
 			return;
 		}
 		Log.i(TAG, "Connection valid... Do nothing.");
 	}
 
-	private void connectAndLogin(String username, String password, String server) {
+	private void connectAndLogin() {
 		try {
-			TChatApplication.connection = new XMPPConnection(server);
+			TChatApplication.connection = new XMPPConnection(
+					Constants.CURRENT_SERVER);
 			TChatApplication.connection.connect();
 		} catch (XMPPException e) {
 			e.printStackTrace();
 		}
 		try {
 			TChatApplication.connection.login(
-					username,
-					password,
+					this.username,
+					this.password,
 					"TChat-Android-"
 							+ Secure.getString(TChatApplication.getContext()
 									.getContentResolver(), Secure.ANDROID_ID));
@@ -96,6 +106,10 @@ public class XMPPConnectionManager extends IntentService {
 							(String) TAG + " Logged in as: "
 									+ TChatApplication.connection.getUser(),
 							Toast.LENGTH_LONG).show();
+					/*
+					 * Send login successful broadcast
+					 */
+					sendBroadcast(new Intent(Constants.LOGIN_SUCCESSFUL));
 				}
 			});
 
@@ -105,7 +119,32 @@ public class XMPPConnectionManager extends IntentService {
 			 * need to remove connection object.
 			 */
 			TChatApplication.connection = null;
+			/*
+			 * Show Toast who is logged in
+			 */
+			new Handler(Looper.getMainLooper()).post(new Runnable() {
+				@Override
+				public void run() { // Show who we are logged in as
+					Toast.makeText(TChatApplication.getContext(),
+							(String) TAG + " Unable to login",
+							Toast.LENGTH_SHORT).show();
+					resetConnectionOperation();
+				}
+			});
+
 			e.printStackTrace();
 		}
+	}
+
+	private void resetConnectionOperation() {
+		/*
+		 * Send login unsuccessful broadcast
+		 */
+		sendBroadcast(new Intent(Constants.LOGIN_UNSUCCESSFUL));
+		stopService(new Intent(TChatApplication.getContext(), MainService.class));
+		TChatApplication.getUserModel().deleteProfile();
+		AlarmManager alarmManager = (AlarmManager) TChatApplication
+				.getContext().getSystemService(Context.ALARM_SERVICE);
+		alarmManager.cancel(TChatApplication.connectionMonitoringOperation);
 	}
 }

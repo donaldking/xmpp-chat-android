@@ -9,7 +9,6 @@
     <string name="action_search">Search</string>
     <string name="title_section4">Settings</string>
     <string name="title_activity_recents_fragment">RecentsFragment</string>
-    <string name="hello_world">Hello world!</string>
     <string name="fragment_recents">Recents Fragment</string>
     <string name="title_activity_groups_fragment">GroupsFragment</string>
     <string name="fragment_groups">Groups Fragment</string>
