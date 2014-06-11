@@ -1,6 +1,6 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="co.uk.tusksolutions.tchat.android.LoginActivity" >
+    tools:context="co.tusksolutions.tchat.android.activities.LoginActivity" >
 
     <!-- Login progress -->
 

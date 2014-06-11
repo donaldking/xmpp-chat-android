@@ -60,7 +60,9 @@ public class MainService extends Service {
 		Toast.makeText(getApplicationContext(),
 				(String) TAG + " Release connection", Toast.LENGTH_LONG).show();
 
-		TChatApplication.connection.disconnect();
+		if (TChatApplication.connection !=null) {
+			TChatApplication.connection.disconnect();
+		}
 		TChatApplication.connection = null;
 		TChatApplication.isMainServiceRunning = false;
 		TChatApplication.releaseWakeLock();

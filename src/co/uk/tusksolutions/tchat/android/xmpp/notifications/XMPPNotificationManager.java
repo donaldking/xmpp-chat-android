@@ -26,9 +26,9 @@ public class XMPPNotificationManager {
 		 * normal ticker notification
 		 */
 
-		String fromName = intent.getBundleExtra("chatMessageBundle").getString(
+		String fromName = intent.getBundleExtra("chatFromFriendBundle").getString(
 				"fromName");
-		String message = intent.getBundleExtra("chatMessageBundle").getString(
+		String message = intent.getBundleExtra("chatFromFriendBundle").getString(
 				"message");
 		mBuilder = new NotificationCompat.Builder(mContext)
 				.setSmallIcon(R.drawable.ic_action_chat)
@@ -45,8 +45,8 @@ public class XMPPNotificationManager {
 		 * click on the notification.
 		 */
 		Intent chatActivityIntent = new Intent(mContext, ChatActivity.class);
-		chatActivityIntent.putExtra("chatMessageBundle",
-				intent.getBundleExtra("chatMessageBundle"));
+		chatActivityIntent.putExtra("chatFromFriendBundle",
+				intent.getBundleExtra("chatFromFriendBundle"));
 		chatActivityIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
 		PendingIntent pi = PendingIntent.getActivity(mContext, 0,

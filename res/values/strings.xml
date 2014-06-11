@@ -16,5 +16,7 @@
     <string name="fragment_settings">Settings Fragment</string>
     <string name="title_activity_chat">ChatActivity</string>
     <string name="chat_message_hint">Write a message</string>
+    <string name="title_activity_boot_strap">BootStrapActivity</string>
+    <string name="hello_world">Hello world!</string>
 
 </resources>

@@ -28,14 +28,15 @@ public class XMPPPresenceManager {
 			 * Request and process our roster
 			 */
 			roster = TChatApplication.connection.getRoster();
-			processRosterEntries(roster.getEntries());
+			//processRosterEntries(roster.getEntries());
+			TChatApplication.getRosterModel().saveRosterToDB(roster);
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	private void processRosterEntries(Collection<RosterEntry> entries) {
+	/*private void processRosterEntries(Collection<RosterEntry> entries) {
 		for (RosterEntry entry : entries) {
 			Log.i(TAG, "--------------------------------------");
 			Log.i(TAG, "RosterEntry " + entry);
@@ -53,6 +54,6 @@ public class XMPPPresenceManager {
 				Log.i(TAG, "Presence AVIALABLE");
 			Log.i(TAG, "Presence : " + entryPresence);
 		}
-	}
+	}*/
 
 }

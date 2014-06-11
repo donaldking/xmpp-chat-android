@@ -6,9 +6,12 @@ public class Constants {
 	 * Server End Points
 	 */
 	public static String CURRENT_SERVER = null;
+	public static String PROXY_SERVER = null;
 	public static final String STAGING_SERVER = "uat.yookoschat.com";
 	public static final String PRODUCTION_SERVER = "yookoschat.com";
-
+	public static String HTTP_SCHEME = "https://";
+	public static String PROXY_PATH = "/service/proxy/proxy.yookos.php?path=/people/";
+	
 	/**
 	 * Login Actions
 	 */

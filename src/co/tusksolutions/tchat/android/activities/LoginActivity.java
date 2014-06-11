@@ -1,4 +1,4 @@
-package co.uk.tusksolutions.tchat.android;
+package co.tusksolutions.tchat.android.activities;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -18,7 +18,8 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
-import co.tusksolutions.tchat.android.activities.MainActivity;
+import co.uk.tusksolutions.tchat.android.R;
+import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
 
 /**
@@ -58,8 +59,11 @@ public class LoginActivity extends Activity {
 		// Set up the login form.
 		mUsernameView = (EditText) findViewById(R.id.username);
 		mUsernameView.setText(mUsername);
+		mUsernameView.setText("donaldking");
 
 		mPasswordView = (EditText) findViewById(R.id.password);
+		mPasswordView.setText("default");
+		
 		mPasswordView
 				.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 					@Override

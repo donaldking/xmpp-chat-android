@@ -8,10 +8,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class TChatDBHelper extends SQLiteOpenHelper {
 
 	/*
-	 * 
-	 */
-	private static final String TAG = "TChatDBHelper";
-	/*
 	 * DB Definition
 	 */
 	private static final String DATABASE_NAME = "tchat.db";
@@ -42,9 +38,9 @@ public class TChatDBHelper extends SQLiteOpenHelper {
 	public static final String USER = "user";
 	public static final String NAME = "name";
 	public static final String STATUS = "status";
+	public static final String TYPE = "type";
 	public static final String PRESENCE_STATUS = "presenceStatus";
 	public static final String PRESENCE_TYPE = "presenceType";
-	public static final String PRESENCE = "presence";
 
 	/*
 	 * Chat messages table definition
@@ -54,7 +50,7 @@ public class TChatDBHelper extends SQLiteOpenHelper {
 	public static final String MESSAGE_DATE = "messageDate";
 	public static final String RECEIVER = "receiver";
 	public static final String SENDER = "sender";
-	public static final String DELIVERY_STATUS = "deliveryStatus";
+	public static final String MESSAGE_STATUS = "messageStatus";
 
 	public TChatDBHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -78,11 +74,11 @@ public class TChatDBHelper extends SQLiteOpenHelper {
 	private static final String CREATE_ROSTER_TABLE = "CREATE TABLE "
 			+ ROSTER_TABLE + " ( " + R_UID
 			+ " INTEGER PRIMARY KEY AUTOINCREMENT," + "  " + USER
-			+ " varchar(255) DEFAULT NULL," + "  " + NAME
+			+ " varchar(255) UNIQUE," + "  " + NAME
 			+ " varchar(255) DEFAULT NULL," + "  " + STATUS
+			+ " varchar(255) DEFAULT NULL," + "  " + TYPE
 			+ " varchar(255) DEFAULT NULL," + "  " + PRESENCE_STATUS
 			+ " varchar(255) DEFAULT NULL," + PRESENCE_TYPE
-			+ " varchar(255) DEFAULT NULL," + PRESENCE
 			+ " varchar(255) DEFAULT NULL);";
 
 	/*
@@ -93,7 +89,7 @@ public class TChatDBHelper extends SQLiteOpenHelper {
 			+ " INTEGER PRIMARY KEY AUTOINCREMENT," + "  " + MESSAGE + " blob,"
 			+ "  " + MESSAGE_DATE + " varchar(255) DEFAULT NULL," + "  "
 			+ RECEIVER + " varchar(255) DEFAULT NULL," + "  " + SENDER
-			+ " varchar(255) DEFAULT NULL," + DELIVERY_STATUS
+			+ " varchar(255) DEFAULT NULL," + MESSAGE_STATUS
 			+ " varchar(255) DEFAULT NULL);";
 
 	@Override

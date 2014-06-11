@@ -40,7 +40,7 @@ public class ChatActivity extends ActionBarActivity {
 
 		if (getIntent().getExtras() != null) {
 			String fromName = getIntent().getExtras()
-					.getBundle("chatMessageBundle").getString("fromName");
+					.getBundle("chatFromFriendBundle").getString("fromName");
 			// String message = getIntent().getExtras()
 			// .getBundle("chatMessageBundle").getString("message");
 

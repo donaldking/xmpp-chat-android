@@ -22,7 +22,7 @@
         android:id="@+id/chat_message_entry_view"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@color/light_grey"
+        android:background="@color/white"
         android:baselineAligned="true"
         android:orientation="horizontal"
         android:padding="10dp" >

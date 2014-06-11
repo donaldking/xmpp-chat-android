@@ -12,10 +12,12 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import co.uk.tusksolutions.tchat.android.R;
-import co.uk.tusksolutions.tchat.android.fragments.FriendsFragment;
+import co.uk.tusksolutions.tchat.android.TChatApplication;
+import co.uk.tusksolutions.tchat.android.fragments.RosterFragment;
 import co.uk.tusksolutions.tchat.android.fragments.GroupsFragment;
 import co.uk.tusksolutions.tchat.android.fragments.RecentsFragment;
 import co.uk.tusksolutions.tchat.android.fragments.SettingsFragment;
+import co.uk.tusksolutions.tchat.android.services.MainService;
 
 public class MainActivity extends ActionBarActivity implements
 		ActionBar.TabListener {
@@ -38,7 +40,7 @@ public class MainActivity extends ActionBarActivity implements
 	 */
 	RecentsFragment mRecentsFragment;
 	GroupsFragment mGroupsFragment;
-	FriendsFragment mFriendsFragment;
+	RosterFragment mRosterFragment;
 	SettingsFragment mSettingsFragment;
 	boolean mHomeForeGround = false;
 
@@ -66,16 +68,16 @@ public class MainActivity extends ActionBarActivity implements
 		return mGroupsFragment;
 	}
 
-	public FriendsFragment getFriendsFragment() {
+	public RosterFragment getRosterFragment() {
 
-		if (mFriendsFragment == null) {
-			mFriendsFragment = new FriendsFragment();
+		if (mRosterFragment == null) {
+			mRosterFragment = new RosterFragment();
 			Bundle bundle = new Bundle();
 			bundle.putString("title", "Friends");
 			bundle.putInt("icon", R.drawable.ic_action_person);
-			mFriendsFragment.setArguments(bundle);
+			mRosterFragment.setArguments(bundle);
 		}
-		return mFriendsFragment;
+		return mRosterFragment;
 	}
 
 	public SettingsFragment getSettingsFragment() {
@@ -95,6 +97,14 @@ public class MainActivity extends ActionBarActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+		/*
+		 * Check if service is running... otherwise, start service
+		 * and continue.
+		 */
+		if (TChatApplication.isMainServiceRunning == false) {
+			startService(new Intent(this, MainService.class));
+		}
+		
 		// Set up the action bar.
 		final ActionBar actionBar = getSupportActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -203,7 +213,7 @@ public class MainActivity extends ActionBarActivity implements
 			case 1:
 				return getGroupsFragment();
 			case 2:
-				return getFriendsFragment();
+				return getRosterFragment();
 			case 3:
 				return getSettingsFragment();
 			}

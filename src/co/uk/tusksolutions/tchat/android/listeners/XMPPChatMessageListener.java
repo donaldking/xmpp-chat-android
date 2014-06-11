@@ -39,7 +39,7 @@ public class XMPPChatMessageListener implements PacketListener {
 					b.putString("message", message.getBody());
 
 					Intent intent = new Intent();
-					intent.putExtra("chatMessageBundle", b);
+					intent.putExtra("chatFromFriendBundle", b);
 
 					// Send to notification manager
 					new XMPPNotificationManager()
@@ -57,7 +57,7 @@ public class XMPPChatMessageListener implements PacketListener {
 					b.putString("message", message.getBody());
 
 					Intent intent = new Intent();
-					intent.putExtra("chatMessageBundle", b);
+					intent.putExtra("chatFromFriendBundle", b);
 
 					// Send to notification manager
 					new XMPPNotificationManager()

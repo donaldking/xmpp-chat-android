@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
     <color name="light_grey">#fafafa</color>
@@ -12,4 +13,7 @@
     <color name="blue">#0000FF</color>
     <color name="pink">#ff69b4</color>
     <color name="red">#f01e14</color>
+    <color name="radio_button_selected_color">#ff33b5e5</color>
+    <color name="radio_button_unselected_color">@android:color/transparent</color>
+
 </resources>
