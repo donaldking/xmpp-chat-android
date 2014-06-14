@@ -19,6 +19,7 @@ public class XMPPPacketManager {
 	}
 
 	private void setUpPacketListeners() {
+		
 		try {
 			PacketFilter chatFilter = new MessageTypeFilter(Message.Type.chat);
 			PacketFilter groupChatFilter = new MessageTypeFilter(

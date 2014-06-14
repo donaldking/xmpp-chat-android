@@ -11,7 +11,7 @@ public class Constants {
 	public static final String PRODUCTION_SERVER = "yookoschat.com";
 	public static String HTTP_SCHEME = "https://";
 	public static String PROXY_PATH = "/service/proxy/proxy.yookos.php?path=/people/";
-	
+
 	/**
 	 * Login Actions
 	 */
@@ -33,5 +33,7 @@ public class Constants {
 	public static String RECONNECTING = "co.uk.tusksolutions.tchat.android.action.RECONNECTING";
 	public static String RECONNECTING_FAILED = "co.uk.tusksolutions.tchat.android.action.RECONNECTING_FAILED";
 	public static String RECONNECTION_SUCCESSFULL = "co.uk.tusksolutions.tchat.android.action.RECONNECTION_SUCCESSFULL";
+	public static String ROSTER_UPDATED = "co.uk.tusksolutions.tchat.android.action.ROSTER_UPDATED";
+	public static String ROSTER_EMPTY = "co.uk.tusksolutions.tchat.android.action.ROSTER_EMPTY";
 
 }

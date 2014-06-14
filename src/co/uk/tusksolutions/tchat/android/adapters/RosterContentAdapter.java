@@ -12,8 +12,10 @@ import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.BaseAdapter;
-import co.tusksolutions.tchat.android.activities.ChatActivity;
+import android.widget.Toast;
 import co.uk.tusksolutions.tchat.android.R;
+import co.uk.tusksolutions.tchat.android.TChatApplication;
+import co.uk.tusksolutions.tchat.android.activities.ChatActivity;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
 import co.uk.tusksolutions.tchat.android.models.RosterModel;
 import co.uk.tusksolutions.tchat.android.viewHolders.RosterViewHolder;
@@ -25,20 +27,42 @@ public class RosterContentAdapter extends BaseAdapter {
 	static String TAG = "RosterContentAdapter";
 	static float DEFAULT_ALPHA = 1.0f;
 	static float SELECTED_ALPHA = 0.5f;
-	Context context;
+	private Context context;
+	private RosterModel mModel;
+	private int action;
 
-	ArrayList<RosterModel> rosterModelCollection;
+	private ArrayList<RosterModel> rosterModelCollection;
 
-	public RosterContentAdapter(Context context, String params) {
-		this.context = context;
-		RosterModel mModel = new RosterModel();
-
-		/*
-		 * Pull all media from model (DB)
+	public RosterContentAdapter(Context context, int action) {
+		this.context = TChatApplication.getContext();
+		mModel = new RosterModel();
+		/**
+		 * action is an integer of what data to query. 1 = All Friends
+		 * (queryAll()) 2 = Online Friends (queryOnline())
 		 */
-		rosterModelCollection = mModel.query();
+		this.action = action;
+
+		switch (action) {
+		case 1:
+			rosterModelCollection = mModel.queryAll();
+			notifyDataSetChanged();
+			break;
+		case 2:
+			rosterModelCollection = mModel.queryOnline();
+			notifyDataSetChanged();
+			break;
+		default:
+			rosterModelCollection = mModel.queryAll();
+			notifyDataSetChanged();
+			break;
+		}
 	}
 
+	@Override
+	public void notifyDataSetChanged() {
+		super.notifyDataSetChanged();
+	}
+	
 	@Override
 	public int getCount() {
 		return rosterModelCollection.size();
@@ -59,6 +83,7 @@ public class RosterContentAdapter extends BaseAdapter {
 
 		View row = convertView;
 		RosterViewHolder holder = null;
+
 		if (row == null) {
 			LayoutInflater inflater = (LayoutInflater) context
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -71,13 +96,37 @@ public class RosterContentAdapter extends BaseAdapter {
 			holder = (RosterViewHolder) row.getTag();
 		}
 
+		/**
+		 * Put values received from model collection to view holder.
+		 * 
+		 */
 		final RosterModel rosterModel = rosterModelCollection.get(position);
 
 		String[] username = rosterModel.user.split("@");
-		UrlImageViewHelper.setUrlDrawable(holder.rosterAvatar,
-				Constants.PROXY_SERVER + username[0] + "/avatar/48&return=png",R.drawable.mondobar_jewel_friends_on);
+		try {
+			UrlImageViewHelper.setUrlDrawable(holder.rosterAvatar,
+					Constants.PROXY_SERVER + username[0]
+							+ "/avatar/1288&return=png",
+					R.drawable.mondobar_jewel_friends_on);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 		holder.rosterName.setText(rosterModel.name);
 		holder.rosterPresenceType.setText(rosterModel.presenceType);
+		/*
+		 * Show presenceType if we are loading action 2 (Online)
+		 */
+		switch (action) {
+		case 1:
+			holder.rosterPresenceFrame.setVisibility(View.GONE);
+			break;
+		case 2:
+			holder.rosterPresenceFrame.setVisibility(View.VISIBLE);
+			break;
+		default:
+			break;
+		}
 
 		row.setOnClickListener(new OnClickListener() {
 
@@ -85,14 +134,14 @@ public class RosterContentAdapter extends BaseAdapter {
 			public void onClick(View v) {
 
 				doSelectionAnimationForView(v);
-
 				Bundle b = new Bundle();
 				b.putString("fromName", rosterModel.name);
 
+				Toast.makeText(context, "chat with: " + rosterModel.name,
+						Toast.LENGTH_SHORT).show();
 				Intent intent = new Intent(context, ChatActivity.class);
 				intent.putExtra("chatFromFriendBundle", b);
 				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
 				context.startActivity(intent);
 			}
 		});

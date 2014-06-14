@@ -1,4 +1,4 @@
-package co.tusksolutions.tchat.android.activities;
+package co.uk.tusksolutions.tchat.android.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,9 +13,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
-import co.uk.tusksolutions.tchat.android.fragments.RosterFragment;
 import co.uk.tusksolutions.tchat.android.fragments.GroupsFragment;
 import co.uk.tusksolutions.tchat.android.fragments.RecentsFragment;
+import co.uk.tusksolutions.tchat.android.fragments.RosterFragment;
 import co.uk.tusksolutions.tchat.android.fragments.SettingsFragment;
 import co.uk.tusksolutions.tchat.android.services.MainService;
 
@@ -38,10 +38,11 @@ public class MainActivity extends ActionBarActivity implements
 	/**
 	 * Declare all our fragments
 	 */
-	RecentsFragment mRecentsFragment;
-	GroupsFragment mGroupsFragment;
-	RosterFragment mRosterFragment;
-	SettingsFragment mSettingsFragment;
+	private RecentsFragment mRecentsFragment;
+	private GroupsFragment mGroupsFragment;
+	private RosterFragment mRosterFragment;
+	private SettingsFragment mSettingsFragment;
+	ActionBar actionBar;
 	boolean mHomeForeGround = false;
 
 	public RecentsFragment getRecentsFragment() {
@@ -98,15 +99,14 @@ public class MainActivity extends ActionBarActivity implements
 		setContentView(R.layout.activity_main);
 
 		/*
-		 * Check if service is running... otherwise, start service
-		 * and continue.
+		 * Check if service is running... otherwise, start service and continue.
 		 */
 		if (TChatApplication.isMainServiceRunning == false) {
 			startService(new Intent(this, MainService.class));
 		}
-		
+
 		// Set up the action bar.
-		final ActionBar actionBar = getSupportActionBar();
+		actionBar = getSupportActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
 		/*
@@ -118,6 +118,7 @@ public class MainActivity extends ActionBarActivity implements
 
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections of the activity.
+
 		mSectionsPagerAdapter = new SectionsPagerAdapter(
 				getSupportFragmentManager());
 
@@ -144,10 +145,10 @@ public class MainActivity extends ActionBarActivity implements
 					.setText(
 							mSectionsPagerAdapter.getItem(i).getArguments()
 									.getString("title"))
-					/*
-					 * .setIcon( mSectionsPagerAdapter.getItem(i).getArguments()
-					 * .getInt("icon"))
-					 */
+					.setIcon(
+							mSectionsPagerAdapter.getItem(i).getArguments()
+									.getInt("icon"))
+
 					.setTabListener(this));
 		}
 	}
@@ -167,10 +168,10 @@ public class MainActivity extends ActionBarActivity implements
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 		if (id == R.id.action_chat) {
-			startActivity(new Intent(this,ChatActivity.class));
+			startActivity(new Intent(this, ChatActivity.class));
 			return true;
 		}
-		if(id==R.id.action_search){
+		if (id == R.id.action_search) {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

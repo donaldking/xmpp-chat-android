@@ -5,15 +5,18 @@
     <color name="black">#000000</color>
     <color name="light_grey">#fafafa</color>
     <color name="dark_grey">#E3E3E3</color>
+    <color name="very_light_grey">#fafafa</color>
     <color name="light_black">#191919</color>
     <color name="transparent">#00000000</color>
     <color name="orange">#FF6600</color>
     <color name="silver">#d3d3d3</color>
     <color name="pale_brown">#EFECE5</color>
     <color name="blue">#0000FF</color>
+    <color name="yookos_blue">#009dd7</color>
     <color name="pink">#ff69b4</color>
     <color name="red">#f01e14</color>
     <color name="radio_button_selected_color">#ff33b5e5</color>
     <color name="radio_button_unselected_color">@android:color/transparent</color>
+    <color name="light_green">#00EE00</color>
 
 </resources>

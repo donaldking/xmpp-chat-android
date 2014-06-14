@@ -2,13 +2,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="${packageName}.${activityClass}" >
+    android:background="@color/white">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <Button
+        android:id="@+id/logout_button"
+        android:layout_width="120dp"
+        android:layout_height="35dp"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:text="@string/fragment_settings" />
+        android:text="Logout"
+        android:textColor="@color/white"
+        android:background="@drawable/blue_button" />
 
 </RelativeLayout>

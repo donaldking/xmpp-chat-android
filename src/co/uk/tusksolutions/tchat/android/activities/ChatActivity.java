@@ -1,4 +1,4 @@
-package co.tusksolutions.tchat.android.activities;
+package co.uk.tusksolutions.tchat.android.activities;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

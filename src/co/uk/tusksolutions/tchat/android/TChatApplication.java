@@ -5,6 +5,7 @@ package co.uk.tusksolutions.tchat.android;
 
 import org.jivesoftware.smack.Connection;
 
+import android.app.AlarmManager;
 import android.app.Application;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -43,7 +44,8 @@ public class TChatApplication extends Application {
 	public void onCreate() {
 		super.onCreate();
 		Constants.CURRENT_SERVER = Constants.STAGING_SERVER;
-		Constants.PROXY_SERVER = Constants.HTTP_SCHEME + Constants.CURRENT_SERVER + Constants.PROXY_PATH;
+		Constants.PROXY_SERVER = Constants.HTTP_SCHEME
+				+ Constants.CURRENT_SERVER + Constants.PROXY_PATH;
 
 		TChatApplication.mContext = getBaseContext();
 		tChatDBHelper = new TChatDBHelper(TChatApplication.getContext());
@@ -128,7 +130,7 @@ public class TChatApplication extends Application {
 	public static UserModel getUserModel() {
 		return mUserModel;
 	}
-	
+
 	public static RosterModel getRosterModel() {
 		return mRosterModel;
 	}
@@ -145,4 +147,20 @@ public class TChatApplication extends Application {
 	public void onTerminate() {
 	}
 
+	public static void tearDownAndLogout() {
+		try {
+			TChatApplication.getRosterModel().deleteRosterRecords();
+			TChatApplication.getContext().sendBroadcast(
+					new Intent(Constants.LOGIN_UNSUCCESSFUL));
+			TChatApplication.getContext().stopService(
+					new Intent(TChatApplication.getContext(), MainService.class));
+			TChatApplication.getUserModel().deleteProfile();
+			AlarmManager alarmManager = (AlarmManager) TChatApplication
+					.getContext().getSystemService(Context.ALARM_SERVICE);
+			alarmManager.cancel(TChatApplication.connectionMonitoringOperation);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }

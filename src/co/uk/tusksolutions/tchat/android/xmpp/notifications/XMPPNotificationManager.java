@@ -8,9 +8,9 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-import co.tusksolutions.tchat.android.activities.ChatActivity;
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
+import co.uk.tusksolutions.tchat.android.activities.ChatActivity;
 
 public class XMPPNotificationManager {
 

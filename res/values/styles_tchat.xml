@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-     File created by the Android Action Bar Style Generator
+<!-- File created by the Android Action Bar Style Generator
 
      Copyright (C) 2011 The Android Open Source Project
      Copyright (C) 2012 readyState Software Ltd
@@ -31,8 +30,9 @@
         <item name="actionModeSplitBackground">@drawable/cab_background_bottom_tchat</item>
         <item name="actionModeCloseButtonStyle">@style/ActionButton.CloseMode.Tchat</item>
 
-        <!-- Light.DarkActionBar specific -->
+                <!-- Light.DarkActionBar specific -->
         <item name="actionBarWidgetTheme">@style/Theme.Tchat.Widget</item>
+
     </style>
 
     <style name="ActionBar.Solid.Tchat" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
@@ -46,11 +46,11 @@
         <item name="background">@drawable/ab_transparent_tchat</item>
         <item name="progressBarStyle">@style/ProgressBar.Tchat</item>
     </style>
-
-    <style name="PopupMenu.Tchat" parent="@style/Widget.AppCompat.PopupMenu">
-        <item name="android:popupBackground">@drawable/menu_dropdown_panel_tchat</item>
+	
+    <style name="PopupMenu.Tchat" parent="@style/Widget.AppCompat.PopupMenu">	
+        <item name="android:popupBackground">@drawable/menu_dropdown_panel_tchat</item>	
     </style>
-
+	
     <style name="DropDownListView.Tchat" parent="@style/Widget.AppCompat.ListView.DropDown">
         <item name="android:listSelector">@drawable/selectable_background_tchat</item>
     </style>
@@ -58,21 +58,21 @@
     <style name="ActionBarTabStyle.Tchat" parent="@style/Widget.AppCompat.ActionBar.TabView">
         <item name="android:background">@drawable/tab_indicator_ab_tchat</item>
     </style>
-
+	
     <style name="DropDownNav.Tchat" parent="@style/Widget.AppCompat.Spinner.DropDown.ActionBar">
         <item name="android:background">@drawable/spinner_background_ab_tchat</item>
         <item name="android:popupBackground">@drawable/menu_dropdown_panel_tchat</item>
         <item name="android:dropDownSelector">@drawable/selectable_background_tchat</item>
     </style>
-
+    
     <style name="ProgressBar.Tchat" parent="@style/Widget.AppCompat.ProgressBar.Horizontal">
         <item name="android:progressDrawable">@drawable/progress_horizontal_tchat</item>
     </style>
-
+    
     <style name="ActionButton.CloseMode.Tchat" parent="@style/Widget.AppCompat.ActionButton.CloseMode">
         <item name="android:background">@drawable/btn_cab_done_tchat</item>
     </style>
-
+    
     <!-- this style is only referenced in a Light.DarkActionBar based theme -->
     <style name="Theme.Tchat.Widget" parent="@style/Theme.AppCompat">
         <item name="popupMenuStyle">@style/PopupMenu.Tchat</item>

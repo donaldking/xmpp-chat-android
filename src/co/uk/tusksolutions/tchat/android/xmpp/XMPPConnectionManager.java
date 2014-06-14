@@ -3,9 +3,7 @@ package co.uk.tusksolutions.tchat.android.xmpp;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 
-import android.app.AlarmManager;
 import android.app.IntentService;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
@@ -82,6 +80,11 @@ public class XMPPConnectionManager extends IntentService {
 					"TChat-Android-"
 							+ Secure.getString(TChatApplication.getContext()
 									.getContentResolver(), Secure.ANDROID_ID));
+			/**
+			 * We initialise packet manager class with this connection object
+			 * which sets up our listeners.
+			 */
+			new XMPPPacketManager();
 
 			/**
 			 * We initialise the presence manager class which takes care of our
@@ -89,11 +92,7 @@ public class XMPPConnectionManager extends IntentService {
 			 */
 			new XMPPPresenceManager();
 
-			/**
-			 * We initialise packet manager class with this connection object
-			 * which sets up our listeners.
-			 */
-			new XMPPPacketManager();
+			
 
 			/*
 			 * Show Toast who is logged in
@@ -128,7 +127,7 @@ public class XMPPConnectionManager extends IntentService {
 					Toast.makeText(TChatApplication.getContext(),
 							(String) TAG + " Unable to login",
 							Toast.LENGTH_SHORT).show();
-					resetConnectionOperation();
+					TChatApplication.tearDownAndLogout();
 				}
 			});
 
@@ -136,15 +135,4 @@ public class XMPPConnectionManager extends IntentService {
 		}
 	}
 
-	private void resetConnectionOperation() {
-		/*
-		 * Send login unsuccessful broadcast
-		 */
-		sendBroadcast(new Intent(Constants.LOGIN_UNSUCCESSFUL));
-		stopService(new Intent(TChatApplication.getContext(), MainService.class));
-		TChatApplication.getUserModel().deleteProfile();
-		AlarmManager alarmManager = (AlarmManager) TChatApplication
-				.getContext().getSystemService(Context.ALARM_SERVICE);
-		alarmManager.cancel(TChatApplication.connectionMonitoringOperation);
-	}
 }

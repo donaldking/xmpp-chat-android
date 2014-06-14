@@ -19,13 +19,13 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/Theme.Tchat"
-        android:uiOptions="splitActionBarWhenNarrow" >
+        android:theme="@style/Theme.Tchat" >
         <activity
-            android:name="co.tusksolutions.tchat.android.activities.MainActivity"
-            android:label="@string/app_name" />
+            android:name="co.uk.tusksolutions.tchat.android.activities.MainActivity"
+            android:label="@string/app_name"
+            android:uiOptions="splitActionBarWhenNarrow" />
         <activity
-            android:name="co.tusksolutions.tchat.android.activities.BootStrapActivity"
+            android:name="co.uk.tusksolutions.tchat.android.activities.BootStrapActivity"
             android:label="@string/app_name"
             android:launchMode="singleTask" >
             <intent-filter>
@@ -85,11 +85,11 @@
             android:enabled="true" />
 
         <activity
-            android:name="co.tusksolutions.tchat.android.activities.ChatActivity"
+            android:name="co.uk.tusksolutions.tchat.android.activities.ChatActivity"
             android:label="@string/title_activity_chat" >
         </activity>
         <activity
-            android:name="co.tusksolutions.tchat.android.activities.LoginActivity"
+            android:name="co.uk.tusksolutions.tchat.android.activities.LoginActivity"
             android:label="@string/title_activity_login"
             android:windowSoftInputMode="adjustResize|stateVisible" >
         </activity>

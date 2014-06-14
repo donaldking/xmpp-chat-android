@@ -10,47 +10,52 @@
         android:layout_height="fill_parent"
         android:orientation="vertical" >
 
+        <!-- Segment Buttons Layout start -->
+
         <LinearLayout
             android:id="@+id/roster_segment_view_frame"
             android:layout_width="fill_parent"
-            android:layout_height="130dp"
-            android:layout_weight="1"
-            android:orientation="horizontal" 
+            android:layout_height="wrap_content"
+            android:background="@color/very_light_grey"
             android:gravity="center"
+            android:orientation="vertical"
             android:paddingLeft="20dp"
-            android:paddingRight="20dp">
+            android:paddingRight="20dp"
+            android:padding="15dp">
 
             <info.hoang8f.android.segmented.SegmentedGroup
                 android:id="@+id/firends_segment_button_frame"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:orientation="horizontal" >
+                android:orientation="horizontal"
+                android:padding="10dp" >
 
                 <RadioButton
-                    android:id="@+id/friends_button"
+                    android:id="@+id/all_button"
                     style="@style/RadioButton"
                     android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="33dp"
                     android:layout_weight="1"
-                    android:text="Friends"
-                    android:checked="true" />
+                    android:checked="true"
+                    android:text="All" />
 
                 <RadioButton
-                    android:id="@+id/friends_online_button"
+                    android:id="@+id/online_button"
                     style="@style/RadioButton"
                     android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="33dp"
                     android:layout_weight="1"
-                    android:text="Online Friends" />
+                    android:text="Online" />
             </info.hoang8f.android.segmented.SegmentedGroup>
         </LinearLayout>
+        
+        <!-- Segment Buttons Layout start -->
 
         <LinearLayout
             android:id="@+id/roster_list_view_frame"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:background="@color/white"
             android:orientation="horizontal" >
 
@@ -58,7 +63,10 @@
                 android:id="@+id/list_view"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:cacheColorHint="@color/white" />
+                android:cacheColorHint="@color/white"
+                android:fastScrollEnabled="true"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp" />
         </LinearLayout>
 
         <!-- Loading progress -->

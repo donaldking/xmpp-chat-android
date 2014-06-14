@@ -8,12 +8,13 @@ import org.jivesoftware.smack.RosterEntry;
 import org.jivesoftware.smack.packet.Presence;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
+import co.uk.tusksolutions.tchat.android.constants.Constants;
 import co.uk.tusksolutions.tchat.android.dbHelper.TChatDBHelper;
 
 public class RosterModel implements Parcelable {
@@ -32,13 +33,14 @@ public class RosterModel implements Parcelable {
 	}
 
 	public boolean saveRosterToDB(Roster roster) {
+		int counter = 0;
 		db = TChatApplication.getTChatDBWritable();
 		Collection<RosterEntry> entries = roster.getEntries();
 		/*
 		 * This method inserts the roster received from the server to the local
 		 * db.
 		 */
-		
+
 		for (RosterEntry entry : entries) {
 			try {
 				ContentValues contentValues = new ContentValues();
@@ -47,36 +49,71 @@ public class RosterModel implements Parcelable {
 
 				contentValues.put(TChatDBHelper.USER, entry.getUser());
 				contentValues.put(TChatDBHelper.NAME, entry.getName());
-				contentValues.put(TChatDBHelper.STATUS, entry.getStatus() != null ? entry.getStatus()
-								.toString():"");
-				contentValues.put(TChatDBHelper.TYPE, entry.getType().toString());
+				contentValues.put(TChatDBHelper.STATUS,
+						entry.getStatus() != null ? entry.getStatus()
+								.toString() : "");
+				contentValues.put(TChatDBHelper.TYPE, entry.getType()
+						.toString());
 
 				// Get presence object
 				Presence entryPresence = roster.getPresence(entry.getUser());
-				
-				contentValues.put(TChatDBHelper.PRESENCE_STATUS,
-						entryPresence.getStatus() != null ? entryPresence.getStatus():"");
+
+				contentValues.put(TChatDBHelper.PRESENCE_STATUS, entryPresence
+						.getStatus() != null ? entryPresence.getStatus() : "");
 				contentValues.put(TChatDBHelper.PRESENCE_TYPE, entryPresence
 						.getType().toString());
 
 				// Insert
-				db.insertWithOnConflict(TABLE, null, contentValues, SQLiteDatabase.CONFLICT_IGNORE);
+				db.insertWithOnConflict(TABLE, null, contentValues,
+						SQLiteDatabase.CONFLICT_IGNORE);
+
+				counter++;
 
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
-		
-		Log.i(TAG, "Roster insert complete! send BroadCast!");
+
+		/**
+		 * Broadcast that we have data in now.
+		 */
+		Intent i = new Intent();
+		i.putExtra("inserts", counter);
+		i.setAction(Constants.ROSTER_UPDATED);
+		TChatApplication.getContext().sendBroadcast(i);
+
 		return true;
 	}
 
-	public ArrayList<RosterModel> query() {
+	public boolean deleteRosterRecords() {
+		db = TChatApplication.getTChatDBWritable();
+		/*
+		 * Delete all roster records
+		 */
+
+		db.delete(TChatDBHelper.ROSTER_TABLE, null, null);
+
+		// Clears any token in memory
+		TChatApplication.getUserModel().setUsername(null);
+		TChatApplication.getUserModel().setPassword(null);
+		db.close();
+
+		return true;
+	}
+
+	public ArrayList<RosterModel> queryOnline() {
 
 		ArrayList<RosterModel> rosterModelCollection = new ArrayList<RosterModel>();
 
+		String whereClause = TChatDBHelper.PRESENCE_TYPE + " = ? OR "
+				+ TChatDBHelper.PRESENCE_TYPE + " = ? OR "
+				+ TChatDBHelper.PRESENCE_TYPE + " = ? ";
+
+		String[] whereArgs = new String[] { "available", "busy", "away" };
+		String orderBy = TChatDBHelper.NAME + " ASC";
+
 		Cursor cursor = TChatApplication.getTChatDBReadable().query(TABLE,
-				null, null, null, null, null, null);
+				null, whereClause, whereArgs, null, null, orderBy);
 
 		while (cursor.moveToNext()) {
 			/*
@@ -86,6 +123,27 @@ public class RosterModel implements Parcelable {
 			rosterModelCollection.add(fromCursor(cursor));
 		}
 
+		return rosterModelCollection;
+	}
+
+	public ArrayList<RosterModel> queryAll() {
+
+		ArrayList<RosterModel> rosterModelCollection = new ArrayList<RosterModel>();
+
+		String whereClause = TChatDBHelper.PRESENCE_TYPE + " = ?";
+		String[] whereArgs = new String[] { "unavailable" };
+		String orderBy = TChatDBHelper.NAME + " ASC";
+
+		Cursor cursor = TChatApplication.getTChatDBReadable().query(TABLE,
+				null, whereClause, whereArgs, null, null, orderBy);
+
+		while (cursor.moveToNext()) {
+			/*
+			 * Request for the values to be pulled from this cursor and returned
+			 * back to us.
+			 */
+			rosterModelCollection.add(fromCursor(cursor));
+		}
 		return rosterModelCollection;
 	}
 

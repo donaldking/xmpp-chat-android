@@ -1,7 +1,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/silver"
+    android:background="@color/white"
     android:orientation="vertical" >
 
     <LinearLayout
@@ -22,10 +22,10 @@
         android:id="@+id/chat_message_entry_view"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
         android:baselineAligned="true"
         android:orientation="horizontal"
-        android:padding="10dp" >
+        android:padding="10dp"
+        android:background="@drawable/textlines" >
 
         <FrameLayout
             android:id="@+id/emoji_frame_view"
@@ -61,6 +61,7 @@
                 android:minLines="1"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
+                android:fontFamily="co.uk.tusksolutions.extensions.RobotoRegularTextView"
                 android:scrollbars="vertical" />
         </FrameLayout>
 
