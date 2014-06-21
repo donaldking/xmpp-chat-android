@@ -2,137 +2,152 @@ package co.uk.tusksolutions.tchat.android.xmpp;
 
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smack.filter.MessageTypeFilter;
+import org.jivesoftware.smack.filter.PacketFilter;
+import org.jivesoftware.smack.filter.PacketTypeFilter;
+import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smack.packet.Presence;
 
-import android.app.IntentService;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings.Secure;
-import android.util.Log;
 import android.widget.Toast;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
-import co.uk.tusksolutions.tchat.android.services.MainService;
+import co.uk.tusksolutions.tchat.android.listeners.XMPPChatMessageListener;
+import co.uk.tusksolutions.tchat.android.listeners.XMPPConnectionListener;
+import co.uk.tusksolutions.tchat.android.listeners.XMPPGroupChatMessageListener;
+import co.uk.tusksolutions.tchat.android.listeners.XMPPPresenceListener;
 
-public class XMPPConnectionManager extends IntentService {
+public class XMPPConnectionManager {
 
 	static final String TAG = "XMPPConnectionManager";
-	String username, password;
 
-	public XMPPConnectionManager() {
-		super(TAG);
-	}
+	public static void connect(final String username, final String password) {
 
-	@Override
-	protected void onHandleIntent(Intent intent) {
+		new Thread() {
+			public void run() {
+				TChatApplication.connection = new XMPPConnection(
+						Constants.CURRENT_SERVER);
+				try {
+					TChatApplication.connection.connect();
 
-		Log.i(TAG, "onHandleIntent");
+					try {
+						TChatApplication.connection.login(
+								username,
+								password,
+								"TChat-Android-"
+										+ Secure.getString(TChatApplication
+												.getContext()
+												.getContentResolver(),
+												Secure.ANDROID_ID));
 
-		if (intent.getExtras() != null) {
-			this.username = intent.getStringExtra("username");
-			this.password = intent.getStringExtra("password");
-		}
+						/**
+						 * 1) Add Connection Listener
+						 */
+						try {
+							TChatApplication.connection
+									.addConnectionListener(new XMPPConnectionListener());
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+						/**
+						 * 2) Set up chat messages packet listener
+						 */
+						try {
+							PacketFilter chatFilter = new MessageTypeFilter(
+									Message.Type.chat);
+							TChatApplication.connection.addPacketListener(
+									new XMPPChatMessageListener(), chatFilter);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
 
-		/**
-		 * if Main Service was stopped.
-		 */
-		if (TChatApplication.isMainServiceRunning == false) {
-			Log.i(TAG, "Main Service not running...");
-			startService(new Intent(TChatApplication.getContext(),
-					MainService.class));
-		}
+						/**
+						 * 3) Set up group chat messages packet listener
+						 */
+						try {
+							PacketFilter groupChatFilter = new MessageTypeFilter(
+									Message.Type.groupchat);
+							TChatApplication.connection.addPacketListener(
+									new XMPPGroupChatMessageListener(),
+									groupChatFilter);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
 
-		/**
-		 * if no connection object
-		 */
-		if (TChatApplication.connection == null) {
+						/**
+						 * 4) Add Presence packet listener
+						 */
+						try {
+							PacketFilter presenceFilter = new PacketTypeFilter(
+									Presence.class);
+							TChatApplication.connection.addPacketListener(
+									new XMPPPresenceListener(), presenceFilter);
 
-			Log.i(TAG, "Make new connection..");
-			connectAndLogin();
-			return;
-		}
-		/**
-		 * if Main Service is running but connection object is null. This could
-		 * be may be network connection was lost.
-		 */
-		if (TChatApplication.isMainServiceRunning == true
-				&& TChatApplication.connection == null) {
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
 
-			Log.i(TAG, "Make new connection..");
-			connectAndLogin();
-			return;
-		}
-		Log.i(TAG, "Connection valid... Do nothing.");
-	}
+						/*
+						 * Show Toast who is logged in
+						 */
+						new Handler(Looper.getMainLooper())
+								.post(new Runnable() {
+									@Override
+									public void run() { // Show who we are
+														// logged in as
+										Toast.makeText(
+												TChatApplication.getContext(),
+												(String) TAG
+														+ " Logged in as: "
+														+ TChatApplication.connection
+																.getUser(),
+												Toast.LENGTH_LONG).show();
+										/*
+										 * Send login successful broadcast
+										 */
+										TChatApplication
+												.getContext()
+												.sendBroadcast(
+														new Intent(
+																Constants.LOGIN_SUCCESSFUL));
+									}
+								});
 
-	private void connectAndLogin() {
-		try {
-			TChatApplication.connection = new XMPPConnection(
-					Constants.CURRENT_SERVER);
-			TChatApplication.connection.connect();
-		} catch (XMPPException e) {
-			e.printStackTrace();
-		}
-		try {
-			TChatApplication.connection.login(
-					this.username,
-					this.password,
-					"TChat-Android-"
-							+ Secure.getString(TChatApplication.getContext()
-									.getContentResolver(), Secure.ANDROID_ID));
-			/**
-			 * We initialise packet manager class with this connection object
-			 * which sets up our listeners.
-			 */
-			new XMPPPacketManager();
+					} catch (Exception e) {
+						/**
+						 * Error connecting. This could be Internet off or some
+						 * issue. We need to remove connection object.
+						 */
+						TChatApplication.connection = null;
+						/*
+						 * Show Toast who is logged in
+						 */
+						new Handler(Looper.getMainLooper())
+								.post(new Runnable() {
+									@Override
+									public void run() { // Show who we are
+														// logged in as
+										Toast.makeText(
+												TChatApplication.getContext(),
+												(String) TAG
+														+ " Unable to login",
+												Toast.LENGTH_SHORT).show();
+										TChatApplication.tearDownAndLogout();
+									}
+								});
 
-			/**
-			 * We initialise the presence manager class which takes care of our
-			 * presence, roster and roster entries.
-			 */
-			new XMPPPresenceManager();
+						e.printStackTrace();
+					}
 
-			
-
-			/*
-			 * Show Toast who is logged in
-			 */
-			new Handler(Looper.getMainLooper()).post(new Runnable() {
-				@Override
-				public void run() { // Show who we are logged in as
-					Toast.makeText(
-							TChatApplication.getContext(),
-							(String) TAG + " Logged in as: "
-									+ TChatApplication.connection.getUser(),
-							Toast.LENGTH_LONG).show();
-					/*
-					 * Send login successful broadcast
-					 */
-					sendBroadcast(new Intent(Constants.LOGIN_SUCCESSFUL));
+				} catch (XMPPException e) {
+					e.printStackTrace();
 				}
-			});
+			}
+		}.start();
 
-		} catch (Exception e) {
-			/**
-			 * Error connecting. This could be Internet off or some issue. We
-			 * need to remove connection object.
-			 */
-			TChatApplication.connection = null;
-			/*
-			 * Show Toast who is logged in
-			 */
-			new Handler(Looper.getMainLooper()).post(new Runnable() {
-				@Override
-				public void run() { // Show who we are logged in as
-					Toast.makeText(TChatApplication.getContext(),
-							(String) TAG + " Unable to login",
-							Toast.LENGTH_SHORT).show();
-					TChatApplication.tearDownAndLogout();
-				}
-			});
-
-			e.printStackTrace();
-		}
 	}
 
 }

@@ -1,12 +1,11 @@
 package co.uk.tusksolutions.tchat.android.models;
 
 import android.content.ContentValues;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.dbHelper.TChatDBHelper;
-import co.uk.tusksolutions.tchat.android.services.MainService;
+import co.uk.tusksolutions.tchat.android.xmpp.XMPPConnectionManager;
 
 public class UserModel {
 
@@ -76,18 +75,18 @@ public class UserModel {
 		return saveResult;
 	}
 
-	public void doLogin(String u, String p) {
+	public void doFirstTimeLogin(String u, String p) {
 
 		if (TChatApplication.getUserModel().deleteProfile()) {
 
 			if (TChatApplication.getUserModel().saveUserProfile(u, p)) {
 
-				/*
-				 * Start Main Service which takes care of login process
+				/**
+				 * Do Login
 				 */
-				TChatApplication.getContext().startService(
-						new Intent(TChatApplication.getContext(),
-								MainService.class));
+				XMPPConnectionManager.connect(TChatApplication.getUserModel()
+						.getUsername(), TChatApplication.getUserModel()
+						.getPassword());
 			}
 		}
 	}

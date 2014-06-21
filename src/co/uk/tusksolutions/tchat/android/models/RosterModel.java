@@ -2,6 +2,7 @@ package co.uk.tusksolutions.tchat.android.models;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Locale;
 
 import org.jivesoftware.smack.Roster;
 import org.jivesoftware.smack.RosterEntry;
@@ -13,6 +14,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
 import co.uk.tusksolutions.tchat.android.dbHelper.TChatDBHelper;
@@ -24,6 +26,7 @@ public class RosterModel implements Parcelable {
 	public String status;
 	public String presenceStatus;
 	public String presenceType;
+	public String resourceName;
 	private String TABLE = TChatDBHelper.ROSTER_TABLE;
 	private SQLiteDatabase db;
 
@@ -56,12 +59,21 @@ public class RosterModel implements Parcelable {
 						.toString());
 
 				// Get presence object
-				Presence entryPresence = roster.getPresence(entry.getUser());
+				Presence presence = roster.getPresence(entry.getUser());
 
-				contentValues.put(TChatDBHelper.PRESENCE_STATUS, entryPresence
-						.getStatus() != null ? entryPresence.getStatus() : "");
-				contentValues.put(TChatDBHelper.PRESENCE_TYPE, entryPresence
+				contentValues.put(TChatDBHelper.PRESENCE_STATUS, presence
+						.getStatus() != null ? presence.getStatus() : "");
+				contentValues.put(TChatDBHelper.PRESENCE_TYPE, presence
 						.getType().toString());
+
+				// Get Resource Name
+				if (presence.getType() != null
+						&& presence.getType() == Presence.Type.available) {
+					String[] strTemp = presence.getFrom().split("/");
+					contentValues.put(TChatDBHelper.RESOURCE,
+							getResourceType(strTemp[1].toLowerCase(Locale
+									.getDefault())));
+				}
 
 				// Insert
 				db.insertWithOnConflict(TABLE, null, contentValues,
@@ -74,6 +86,8 @@ public class RosterModel implements Parcelable {
 			}
 		}
 
+		Log.d(TAG, "Total Roster contacts " + counter);
+
 		/**
 		 * Broadcast that we have data in now.
 		 */
@@ -83,6 +97,18 @@ public class RosterModel implements Parcelable {
 		TChatApplication.getContext().sendBroadcast(i);
 
 		return true;
+	}
+
+	private String getResourceType(String string) {
+		String resource = null;
+		if (string.contains("android") || string.contains("ios")
+				|| string.contains("iphone") || string.contains("ipad")) {
+			resource = "Mobile";
+		} else {
+			resource = "Web";
+		}
+
+		return resource;
 	}
 
 	public boolean deleteRosterRecords() {
@@ -99,6 +125,43 @@ public class RosterModel implements Parcelable {
 		db.close();
 
 		return true;
+	}
+
+	public void updatePresenceForFriend(String friendJid, Presence presence,
+			String resource) {
+
+		String whereClause = TChatDBHelper.USER + " = ? ";
+		String[] whereArgs = { friendJid };
+
+		ContentValues contentValues = new ContentValues();
+		contentValues.put(TChatDBHelper.PRESENCE_TYPE, presence.getType()
+				.name());
+		contentValues.put(TChatDBHelper.RESOURCE,
+				getResourceType(resource.toLowerCase(Locale.getDefault())));
+
+		int id = TChatApplication.getTChatDBWritable().updateWithOnConflict(
+				TABLE, contentValues, whereClause, whereArgs,
+				SQLiteDatabase.CONFLICT_IGNORE);
+
+		Log.i(TAG, "Insert id: " + id);
+
+	}
+
+	public void setAllOffline() {
+
+		String whereClause = TChatDBHelper.PRESENCE_TYPE + " = ? ";
+		String[] whereArgs = { "available" };
+
+		ContentValues contentValues = new ContentValues();
+		contentValues.put(TChatDBHelper.PRESENCE_TYPE, "unavailable");
+		contentValues.put(TChatDBHelper.RESOURCE, "null");
+
+		int id = TChatApplication.getTChatDBWritable().updateWithOnConflict(
+				TABLE, contentValues, whereClause, whereArgs,
+				SQLiteDatabase.CONFLICT_IGNORE);
+
+		Log.i(TAG, "Set offline for id: " + id);
+
 	}
 
 	public ArrayList<RosterModel> queryOnline() {
@@ -163,6 +226,8 @@ public class RosterModel implements Parcelable {
 				.getColumnIndex(TChatDBHelper.PRESENCE_STATUS));
 		rosterModel.presenceType = cursor.getString(cursor
 				.getColumnIndex(TChatDBHelper.PRESENCE_TYPE));
+		rosterModel.resourceName = cursor.getString(cursor
+				.getColumnIndex(TChatDBHelper.RESOURCE));
 
 		return rosterModel;
 
@@ -185,6 +250,7 @@ public class RosterModel implements Parcelable {
 		dest.writeString(status);
 		dest.writeString(presenceStatus);
 		dest.writeString(presenceType);
+		dest.writeString(resourceName);
 	}
 
 	public static final Parcelable.Creator<RosterModel> CREATOR = new Parcelable.Creator<RosterModel>() {
@@ -204,5 +270,7 @@ public class RosterModel implements Parcelable {
 		this.status = in.readString();
 		this.presenceStatus = in.readString();
 		this.presenceType = in.readString();
+		this.resourceName = in.readString();
 	}
+
 }

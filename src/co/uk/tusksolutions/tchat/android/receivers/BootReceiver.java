@@ -4,7 +4,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
-import co.uk.tusksolutions.tchat.android.services.MainService;
+import co.uk.tusksolutions.tchat.android.TChatApplication;
+import co.uk.tusksolutions.tchat.android.xmpp.XMPPConnectionManager;
 
 public class BootReceiver extends BroadcastReceiver {
 
@@ -18,8 +19,14 @@ public class BootReceiver extends BroadcastReceiver {
 			 * Fires the main service service when boot completed intent is
 			 * received.
 			 */
-			Intent serviceLauncher = new Intent(context, MainService.class);
-			context.startService(serviceLauncher);
+			if (TChatApplication.getUserModel().getUsername() != null
+					&& TChatApplication.getUserModel().getPassword() != null) {
+
+				XMPPConnectionManager.connect(TChatApplication.getUserModel()
+						.getUsername(), TChatApplication.getUserModel()
+						.getPassword());
+
+			}
 			Toast.makeText(context, (String) TAG + " onReceive",
 					Toast.LENGTH_LONG).show();
 		}

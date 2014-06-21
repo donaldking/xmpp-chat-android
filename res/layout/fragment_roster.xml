@@ -5,6 +5,25 @@
     android:background="@color/white"
     tools:context="${packageName}.${activityClass}" >
 
+    <!-- Loading progress start -->
+
+    <LinearLayout
+        android:id="@+id/loading_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp" />
+    </LinearLayout>
+
+    <!-- Loading progress end -->
+
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
@@ -19,12 +38,12 @@
             android:background="@color/very_light_grey"
             android:gravity="center"
             android:orientation="vertical"
+            android:padding="15dp"
             android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:padding="15dp">
+            android:paddingRight="20dp" >
 
             <info.hoang8f.android.segmented.SegmentedGroup
-                android:id="@+id/firends_segment_button_frame"
+                android:id="@+id/firends_segment_button_group"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -48,13 +67,13 @@
                     android:text="Online" />
             </info.hoang8f.android.segmented.SegmentedGroup>
         </LinearLayout>
-        
-        <!-- Segment Buttons Layout start -->
+
+        <!-- Segment Buttons Layout end -->
 
         <LinearLayout
             android:id="@+id/roster_list_view_frame"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="0dp"
             android:layout_weight="2"
             android:background="@color/white"
             android:orientation="horizontal" >
@@ -64,26 +83,11 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:cacheColorHint="@color/white"
+                android:divider="@null"
+                android:dividerHeight="0dp"
+                android:fastScrollAlwaysVisible="true"
                 android:fastScrollEnabled="true"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp" />
-        </LinearLayout>
-
-        <!-- Loading progress -->
-
-        <LinearLayout
-            android:id="@+id/loading_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center_horizontal"
-            android:orientation="vertical"
-            android:visibility="gone" >
-
-            <ProgressBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp" />
+                android:scrollingCache="true" />
         </LinearLayout>
     </LinearLayout>
 

@@ -15,13 +15,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ListView;
+import android.widget.RadioButton;
 import android.widget.Toast;
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.adapters.RosterContentAdapter;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
+import co.uk.tusksolutions.tchat.android.listeners.XMPPPresenceListener;
 
 public class RosterFragment extends Fragment {
 
@@ -36,11 +37,12 @@ public class RosterFragment extends Fragment {
 	private int ALL_QUERY_ACTION = 1; // See adapter for notes
 	private int ONLINE_QUERY_ACTION = 2; // See adapter for notes
 	private static int CURRENT_QUERY_ACTION;
-	private Button allButton, onlineButton;
+	private RadioButton allButton, onlineButton;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
 	}
 
 	@Override
@@ -65,17 +67,18 @@ public class RosterFragment extends Fragment {
 		listView.setVerticalScrollBarEnabled(false);
 		listView.setHorizontalScrollBarEnabled(false);
 
-		allButton = (Button) rootView.findViewById(R.id.all_button);
+		allButton = (RadioButton) rootView.findViewById(R.id.all_button);
 		allButton.setOnClickListener(new SegmentButtonOnClickListener());
-		onlineButton = (Button) rootView.findViewById(R.id.online_button);
+		onlineButton = (RadioButton) rootView.findViewById(R.id.online_button);
 		onlineButton.setOnClickListener(new SegmentButtonOnClickListener());
 
-		if (savedInstanceState != null) {
+		if (savedInstanceState != null && mAdapter != null) {
 			CURRENT_QUERY_ACTION = savedInstanceState
 					.getInt("currentQueryAction");
 			prepareListView(CURRENT_QUERY_ACTION);
 		} else {
-			prepareListView(ALL_QUERY_ACTION);
+			CURRENT_QUERY_ACTION = 1;
+			prepareListView(CURRENT_QUERY_ACTION);
 		}
 
 	}
@@ -87,8 +90,14 @@ public class RosterFragment extends Fragment {
 		filter.addAction(Constants.ROSTER_EMPTY);
 		filter.addAction(Constants.ROSTER_UPDATED);
 		getActivity().registerReceiver(mRosterReceiver, filter);
+		
+		if (TChatApplication.getRosterModel().queryAll().size() == 0) {
+			XMPPPresenceListener.loadRoster();
+		} else {
+			prepareListView(CURRENT_QUERY_ACTION);
+		}
 	}
-
+	
 	@Override
 	public void onStop() {
 		super.onStop();

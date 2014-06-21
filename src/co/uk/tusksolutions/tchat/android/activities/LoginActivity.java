@@ -63,7 +63,7 @@ public class LoginActivity extends Activity {
 
 		mPasswordView = (EditText) findViewById(R.id.password);
 		mPasswordView.setText("default");
-		
+
 		mPasswordView
 				.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 					@Override
@@ -94,13 +94,12 @@ public class LoginActivity extends Activity {
 	public void onResume() {
 		super.onResume();
 		
-		IntentFilter loginSuccessfulFilter = new IntentFilter(Constants.LOGIN_SUCCESSFUL);
-		IntentFilter loginUnSuccessfulFilter = new IntentFilter(Constants.LOGIN_UNSUCCESSFUL);
-		
-		TChatApplication.getContext().registerReceiver(mLoginReceiver, loginSuccessfulFilter);
-		TChatApplication.getContext().registerReceiver(mLoginReceiver, loginUnSuccessfulFilter);
+		IntentFilter filter = new IntentFilter();
+		filter.addAction(Constants.LOGIN_SUCCESSFUL);
+		filter.addAction(Constants.LOGIN_UNSUCCESSFUL);
+		TChatApplication.getContext().registerReceiver(mLoginReceiver, filter);
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
@@ -157,16 +156,17 @@ public class LoginActivity extends Activity {
 						.setText(R.string.login_progress_please_wait);
 
 				showProgress(true);
-				
+
 				/*
 				 * Start Login process
 				 */
-				TChatApplication.getUserModel().doLogin(mUsername, mPassword);
+				TChatApplication.getUserModel().doFirstTimeLogin(mUsername,
+						mPassword);
 
 			}
 		}
 	}
-
+	
 	/*
 	 * Login receiver
 	 */
@@ -199,12 +199,12 @@ public class LoginActivity extends Activity {
 	private void loginUnSuccessful() {
 		TChatApplication.getUserModel().setUsername(null);
 		TChatApplication.getUserModel().setPassword(null);
-		
+
 		mPasswordView.requestFocus();
 		mPasswordView
 				.setError(getString(R.string.error_invalid_username_or_password));
 	}
-	
+
 	/**
 	 * Shows the progress UI and hides the login form.
 	 */

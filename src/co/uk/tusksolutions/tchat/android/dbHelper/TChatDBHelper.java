@@ -41,6 +41,7 @@ public class TChatDBHelper extends SQLiteOpenHelper {
 	public static final String TYPE = "type";
 	public static final String PRESENCE_STATUS = "presenceStatus";
 	public static final String PRESENCE_TYPE = "presenceType";
+	public static final String RESOURCE = "resource";
 
 	/*
 	 * Chat messages table definition
@@ -79,6 +80,7 @@ public class TChatDBHelper extends SQLiteOpenHelper {
 			+ " varchar(255) DEFAULT NULL," + "  " + TYPE
 			+ " varchar(255) DEFAULT NULL," + "  " + PRESENCE_STATUS
 			+ " varchar(255) DEFAULT NULL," + PRESENCE_TYPE
+			+ " varchar(255) DEFAULT NULL," + RESOURCE
 			+ " varchar(255) DEFAULT NULL);";
 
 	/*

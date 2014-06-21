@@ -62,7 +62,7 @@ public class RosterContentAdapter extends BaseAdapter {
 	public void notifyDataSetChanged() {
 		super.notifyDataSetChanged();
 	}
-	
+
 	@Override
 	public int getCount() {
 		return rosterModelCollection.size();
@@ -113,7 +113,7 @@ public class RosterContentAdapter extends BaseAdapter {
 		}
 
 		holder.rosterName.setText(rosterModel.name);
-		holder.rosterPresenceType.setText(rosterModel.presenceType);
+		holder.resource.setText(rosterModel.resourceName);
 		/*
 		 * Show presenceType if we are loading action 2 (Online)
 		 */

@@ -17,7 +17,7 @@ import co.uk.tusksolutions.tchat.android.fragments.GroupsFragment;
 import co.uk.tusksolutions.tchat.android.fragments.RecentsFragment;
 import co.uk.tusksolutions.tchat.android.fragments.RosterFragment;
 import co.uk.tusksolutions.tchat.android.fragments.SettingsFragment;
-import co.uk.tusksolutions.tchat.android.services.MainService;
+import co.uk.tusksolutions.tchat.android.xmpp.XMPPConnectionManager;
 
 public class MainActivity extends ActionBarActivity implements
 		ActionBar.TabListener {
@@ -99,10 +99,12 @@ public class MainActivity extends ActionBarActivity implements
 		setContentView(R.layout.activity_main);
 
 		/*
-		 * Check if service is running... otherwise, start service and continue.
+		 * Check if we have network and we can login.
 		 */
-		if (TChatApplication.isMainServiceRunning == false) {
-			startService(new Intent(this, MainService.class));
+		if (TChatApplication.connection == null) {
+			XMPPConnectionManager.connect(TChatApplication.getUserModel()
+					.getUsername(), TChatApplication.getUserModel()
+					.getPassword());
 		}
 
 		// Set up the action bar.

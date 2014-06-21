@@ -8,65 +8,104 @@
         android:id="@+id/main_row_view"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:orientation="horizontal"
-        android:paddingRight="20dp" >
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginTop="5dp"
+        android:baselineAligned="true"
+        android:orientation="horizontal" >
 
-        <FrameLayout
-            android:id="@+id/avatar_frame"
-            android:layout_width="60dp"
-            android:layout_height="60dp" >
-
-            <com.mikhaellopez.circularimageview.CircularImageView
-                android:id="@+id/roster_avatar"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:adjustViewBounds="true"
-                android:scaleType="centerCrop" />
-        </FrameLayout>
-
-        <co.uk.tusksolutions.extensions.RobotoRegularTextView
-            android:id="@+id/roster_name"
+        <LinearLayout
+            android:id="@+id/roster_presence_default_frame"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
             android:layout_marginTop="15dp"
             android:layout_weight="2"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:text="Donald King"
-            android:textColor="@color/black"
-            android:textSize="15sp" />
+            android:baselineAligned="true"
+            android:gravity="left"
+            android:orientation="horizontal"
+            android:visibility="visible" >
+
+            <FrameLayout
+                android:id="@+id/avatar_frame"
+                android:layout_width="60dp"
+                android:layout_height="60dp" >
+
+                <ImageView
+                    android:id="@+id/roster_avatar"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/mondobar_jewel_friends_on" />
+            </FrameLayout>
+
+            <co.uk.tusksolutions.extensions.RobotoRegularTextView
+                android:id="@+id/roster_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="Donald King"
+                android:textColor="@color/black"
+                android:textSize="17sp" />
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/roster_presence_frame"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="30dp"
             android:layout_weight="1"
-            android:gravity="right"
+            android:baselineAligned="true"
             android:orientation="horizontal"
-            android:visibility="gone" 
-            android:baselineAligned="true">
+            android:visibility="gone"
+            android:gravity="center_vertical" >
 
-            <ImageView
-                android:id="@+id/online_caret_image"
+            <FrameLayout
+                android:id="@+id/online_caret_frame"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/orca_active_now"
-                android:baselineAlignBottom="true" />
+                android:layout_height="wrap_content" >
+
+                <ImageView
+                    android:id="@+id/online_caret_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:baselineAlignBottom="false"
+                    android:src="@drawable/orca_active_now" />
+            </FrameLayout>
 
             <co.uk.tusksolutions.extensions.RobotoBoldTextView
-                android:id="@+id/roster_presence_type"
+                android:id="@+id/resource_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="right"
-                android:text="some presence"
                 android:layout_marginLeft="2dp"
+                android:baselineAlignBottom="false"
+                android:gravity="left"
+                android:text="some resource name"
                 android:textAllCaps="true"
                 android:textColor="@color/light_green"
-                android:textSize="12sp"
-                android:baselineAlignBottom="true" />
+                android:textSize="12sp" />
         </LinearLayout>
+    </LinearLayout>
+
+    <!-- Divider line layout -->
+
+    <LinearLayout
+        android:id="@+id/divider_layout_frame"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:layout_marginLeft="75dp"
+        android:layout_marginRight="25dp"
+        android:baselineAligned="true" >
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="#EEE" />
     </LinearLayout>
 
 </LinearLayout>
