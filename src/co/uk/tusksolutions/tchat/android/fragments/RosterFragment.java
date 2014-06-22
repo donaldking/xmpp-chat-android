@@ -17,7 +17,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.RadioButton;
-import android.widget.Toast;
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.adapters.RosterContentAdapter;
@@ -34,7 +33,7 @@ public class RosterFragment extends Fragment {
 	private RosterReceiver mRosterReceiver;
 	private static View mLodingStatusView;
 	private static int shortAnimTime;
-	private int ALL_QUERY_ACTION = 1; // See adapter for notes
+	private static int ALL_QUERY_ACTION = 1; // See adapter for notes
 	private int ONLINE_QUERY_ACTION = 2; // See adapter for notes
 	private static int CURRENT_QUERY_ACTION;
 	private RadioButton allButton, onlineButton;
@@ -42,7 +41,7 @@ public class RosterFragment extends Fragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 	}
 
 	@Override
@@ -90,18 +89,17 @@ public class RosterFragment extends Fragment {
 		filter.addAction(Constants.ROSTER_EMPTY);
 		filter.addAction(Constants.ROSTER_UPDATED);
 		getActivity().registerReceiver(mRosterReceiver, filter);
-		
+
 		if (TChatApplication.getRosterModel().queryAll().size() == 0) {
-			XMPPPresenceListener.loadRoster();
+			showProgress(true);
+			new Thread() {
+				public void run() {
+					XMPPPresenceListener.loadRoster();
+				}
+			}.start();
 		} else {
 			prepareListView(CURRENT_QUERY_ACTION);
 		}
-	}
-	
-	@Override
-	public void onStop() {
-		super.onStop();
-		getActivity().unregisterReceiver(mRosterReceiver);
 	}
 
 	/**
@@ -191,25 +189,15 @@ public class RosterFragment extends Fragment {
 			 * Load friends from db and reload the list view
 			 */
 			if (intent.getAction().equalsIgnoreCase(Constants.ROSTER_UPDATED)) {
-				int inserts = intent.getExtras().getInt("inserts");
-				if (inserts > mAdapter.getCount() && CURRENT_QUERY_ACTION == 1) {
-					Toast.makeText(
-							context,
-							intent.getExtras().getInt("inserts")
-									+ " Inserted!: All", Toast.LENGTH_SHORT)
-							.show();
-					prepareListView(ALL_QUERY_ACTION);
-				} else if (inserts > mAdapter.getCount()
-						&& CURRENT_QUERY_ACTION == 2) {
-					Toast.makeText(
-							context,
-							intent.getExtras().getInt("inserts")
-									+ " Inserted!: Online ", Toast.LENGTH_SHORT)
-							.show();
+
+				if (intent.getExtras() != null) {
+					int inserts = intent.getExtras().getInt("inserts");
+					if (inserts > mAdapter.getCount()
+							&& CURRENT_QUERY_ACTION == 1) {
+						prepareListView(ALL_QUERY_ACTION);
+					}
+				} else if (CURRENT_QUERY_ACTION == ONLINE_QUERY_ACTION) {
 					prepareListView(ONLINE_QUERY_ACTION);
-				} else {
-					Toast.makeText(context, "Do Nothing!", Toast.LENGTH_SHORT)
-							.show();
 				}
 
 			} else if (intent.getAction().equalsIgnoreCase(
@@ -218,7 +206,6 @@ public class RosterFragment extends Fragment {
 				Log.i(TAG, "Online Roster Empty!");
 			}
 		}
-
 	}
 
 	@Override

@@ -1,6 +1,5 @@
 package co.uk.tusksolutions.tchat.android.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -10,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
-import co.uk.tusksolutions.tchat.android.activities.LoginActivity;
 
 public class SettingsFragment extends Fragment {
 
@@ -42,12 +40,6 @@ public class SettingsFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				TChatApplication.tearDownAndLogout();
-				
-				// Push to Login activity
-				Intent i = new Intent(TChatApplication.getContext(),
-						LoginActivity.class);
-				i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				startActivity(i);
 				getActivity().finish();
 			}
 		});

@@ -17,7 +17,6 @@ import co.uk.tusksolutions.tchat.android.fragments.GroupsFragment;
 import co.uk.tusksolutions.tchat.android.fragments.RecentsFragment;
 import co.uk.tusksolutions.tchat.android.fragments.RosterFragment;
 import co.uk.tusksolutions.tchat.android.fragments.SettingsFragment;
-import co.uk.tusksolutions.tchat.android.xmpp.XMPPConnectionManager;
 
 public class MainActivity extends ActionBarActivity implements
 		ActionBar.TabListener {
@@ -102,9 +101,7 @@ public class MainActivity extends ActionBarActivity implements
 		 * Check if we have network and we can login.
 		 */
 		if (TChatApplication.connection == null) {
-			XMPPConnectionManager.connect(TChatApplication.getUserModel()
-					.getUsername(), TChatApplication.getUserModel()
-					.getPassword());
+			TChatApplication.reconnect();
 		}
 
 		// Set up the action bar.

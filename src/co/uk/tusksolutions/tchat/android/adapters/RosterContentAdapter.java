@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.BaseAdapter;
-import android.widget.Toast;
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.activities.ChatActivity;
@@ -135,12 +134,11 @@ public class RosterContentAdapter extends BaseAdapter {
 
 				doSelectionAnimationForView(v);
 				Bundle b = new Bundle();
-				b.putString("fromName", rosterModel.name);
+				b.putString("buddyJid", rosterModel.user);
+				b.putString("friendName", rosterModel.name);
 
-				Toast.makeText(context, "chat with: " + rosterModel.name,
-						Toast.LENGTH_SHORT).show();
 				Intent intent = new Intent(context, ChatActivity.class);
-				intent.putExtra("chatFromFriendBundle", b);
+				intent.putExtra("chatWithFriendBundle", b);
 				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 				context.startActivity(intent);
 			}

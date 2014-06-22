@@ -16,27 +16,25 @@
 
         <LinearLayout
             android:id="@+id/roster_presence_default_frame"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="3"
             android:layout_marginLeft="5dp"
-            android:layout_marginTop="15dp"
-            android:layout_weight="2"
+            android:layout_marginTop="1dp"
             android:baselineAligned="true"
             android:gravity="left"
-            android:orientation="horizontal"
-            android:visibility="visible" >
+            android:orientation="horizontal">
 
             <FrameLayout
                 android:id="@+id/avatar_frame"
-                android:layout_width="60dp"
-                android:layout_height="60dp" >
+                android:layout_width="50dp"
+                android:layout_height="50dp" >
 
                 <ImageView
                     android:id="@+id/roster_avatar"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:adjustViewBounds="true"
-                    android:scaleType="fitXY"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:scaleType="fitCenter"
                     android:src="@drawable/mondobar_jewel_friends_on" />
             </FrameLayout>
 
@@ -45,6 +43,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:layout_marginLeft="5dp"
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:text="Donald King"
@@ -54,15 +53,15 @@
 
         <LinearLayout
             android:id="@+id/roster_presence_frame"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
-            android:layout_marginTop="30dp"
-            android:layout_weight="1"
+            android:layout_marginTop="15dp"
             android:baselineAligned="true"
             android:orientation="horizontal"
-            android:visibility="gone"
+            android:visibility="visible"
             android:gravity="center_vertical" >
 
             <FrameLayout

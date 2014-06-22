@@ -36,7 +36,6 @@ public class ChatMessagesModel implements Parcelable {
 			String ts = tsLong.toString();
 
 			ContentValues contentValues = new ContentValues();
-			
 			contentValues.put(TChatDBHelper.SENDER, sender);
 			contentValues.put(TChatDBHelper.RECEIVER, receiver);
 			contentValues.put(TChatDBHelper.MESSAGE, message);

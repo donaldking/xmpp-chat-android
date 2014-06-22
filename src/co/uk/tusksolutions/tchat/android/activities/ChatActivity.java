@@ -16,11 +16,13 @@ import android.widget.Toast;
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
+import co.uk.tusksolutions.tchat.android.xmpp.XMPPChatMessageManager;
 
 public class ChatActivity extends ActionBarActivity {
 
 	TextView chatMessageEditText;
 	Button chatSendButton, emojiButton;
+	String buddyName, buddyJid;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -39,12 +41,31 @@ public class ChatActivity extends ActionBarActivity {
 		chatMessageEditText.addTextChangedListener(new ChatTextListener());
 
 		if (getIntent().getExtras() != null) {
-			String fromName = getIntent().getExtras()
-					.getBundle("chatFromFriendBundle").getString("fromName");
-			// String message = getIntent().getExtras()
-			// .getBundle("chatMessageBundle").getString("message");
+			if (getIntent().getExtras().containsKey("chatFromFriendBundle")) {
+				/*
+				 * Launched from Notification...
+				 */
+				buddyName = getIntent().getExtras()
+						.getBundle("chatFromFriendBundle")
+						.getString("fromName");
+				buddyJid = getIntent().getExtras()
+						.getBundle("chatFromFriendBundle")
+						.getString("buddyJid");
 
-			getSupportActionBar().setTitle(fromName);
+			} else if (getIntent().getExtras().containsKey(
+					"chatWithFriendBundle")) {
+				/*
+				 * Launched from Roster...
+				 */
+				buddyName = getIntent().getExtras()
+						.getBundle("chatWithFriendBundle")
+						.getString("friendName");
+				buddyJid = getIntent().getExtras()
+						.getBundle("chatWithFriendBundle")
+						.getString("buddyJid");
+			}
+
+			getSupportActionBar().setTitle(buddyName);
 		}
 	}
 
@@ -55,6 +76,9 @@ public class ChatActivity extends ActionBarActivity {
 		 * Set chat visible enum to visible so when we get a chat packet, no
 		 * status bar notification will be posted.
 		 */
+		if (TChatApplication.connection == null) {
+			TChatApplication.reconnect();
+		}
 		TChatApplication
 				.setChatActivityStatus(TChatApplication.CHAT_STATUS_ENUM.VISIBLE);
 
@@ -162,13 +186,16 @@ public class ChatActivity extends ActionBarActivity {
 		@Override
 		public void onClick(View v) {
 			if (chatMessageEditText.getText().toString().length() >= 1) {
+				XMPPChatMessageManager.sendMessage(buddyJid,
+						chatMessageEditText.getText().toString());
 				chatMessageEditText.setText("");
 				chatSendButton.setEnabled(false);
 				// TODO Insert chat to db
 				// TODO Reload chat db.
 				// TODO Wait for packet call back to set it as delivered.
-				Toast.makeText(TChatApplication.getContext(), "Message sent!",
-						Toast.LENGTH_SHORT).show();
+				// Toast.makeText(TChatApplication.getContext(),
+				// "Message sent!",
+				// Toast.LENGTH_SHORT).show();
 			}
 		}
 

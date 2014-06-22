@@ -19,6 +19,7 @@ public class XMPPPresenceListener implements PacketListener {
 		 * Tell the server we are online
 		 */
 		presence = new Presence(Presence.Type.available);
+		presence.setPriority(1);
 		TChatApplication.connection.sendPacket(presence);
 	}
 

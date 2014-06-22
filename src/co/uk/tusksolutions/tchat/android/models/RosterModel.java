@@ -101,11 +101,10 @@ public class RosterModel implements Parcelable {
 
 	private String getResourceType(String string) {
 		String resource = null;
-		if (string.contains("android") || string.contains("ios")
-				|| string.contains("iphone") || string.contains("ipad")) {
-			resource = "Mobile";
-		} else {
+		if (string.matches("[0-9]+") && string.length() >= 1) {
 			resource = "Web";
+		} else {
+			resource = "Mobile";
 		}
 
 		return resource;
@@ -139,11 +138,15 @@ public class RosterModel implements Parcelable {
 		contentValues.put(TChatDBHelper.RESOURCE,
 				getResourceType(resource.toLowerCase(Locale.getDefault())));
 
-		int id = TChatApplication.getTChatDBWritable().updateWithOnConflict(
-				TABLE, contentValues, whereClause, whereArgs,
+		TChatApplication.getTChatDBWritable().updateWithOnConflict(TABLE,
+				contentValues, whereClause, whereArgs,
 				SQLiteDatabase.CONFLICT_IGNORE);
 
-		Log.i(TAG, "Insert id: " + id);
+		/**
+		 * Broadcast presence updated.
+		 */
+		TChatApplication.getContext().sendBroadcast(
+				new Intent(Constants.ROSTER_UPDATED));
 
 	}
 
@@ -156,11 +159,15 @@ public class RosterModel implements Parcelable {
 		contentValues.put(TChatDBHelper.PRESENCE_TYPE, "unavailable");
 		contentValues.put(TChatDBHelper.RESOURCE, "null");
 
-		int id = TChatApplication.getTChatDBWritable().updateWithOnConflict(
-				TABLE, contentValues, whereClause, whereArgs,
+		TChatApplication.getTChatDBWritable().updateWithOnConflict(TABLE,
+				contentValues, whereClause, whereArgs,
 				SQLiteDatabase.CONFLICT_IGNORE);
 
-		Log.i(TAG, "Set offline for id: " + id);
+		/**
+		 * Broadcast presence updated.
+		 */
+		TChatApplication.getContext().sendBroadcast(
+				new Intent(Constants.ROSTER_UPDATED));
 
 	}
 
@@ -186,6 +193,13 @@ public class RosterModel implements Parcelable {
 			rosterModelCollection.add(fromCursor(cursor));
 		}
 
+		if (rosterModelCollection.size() == 0) {
+			/*
+			 * No one online
+			 */
+			TChatApplication.getContext().sendBroadcast(
+					new Intent(Constants.ROSTER_EMPTY));
+		}
 		return rosterModelCollection;
 	}
 
@@ -193,8 +207,10 @@ public class RosterModel implements Parcelable {
 
 		ArrayList<RosterModel> rosterModelCollection = new ArrayList<RosterModel>();
 
-		String whereClause = TChatDBHelper.PRESENCE_TYPE + " = ?";
-		String[] whereArgs = new String[] { "unavailable" };
+		String whereClause = TChatDBHelper.PRESENCE_TYPE + " = ? OR "
+				+ TChatDBHelper.PRESENCE_TYPE + " = ? ";
+
+		String[] whereArgs = new String[] { "available", "unavailable"};
 		String orderBy = TChatDBHelper.NAME + " ASC";
 
 		Cursor cursor = TChatApplication.getTChatDBReadable().query(TABLE,

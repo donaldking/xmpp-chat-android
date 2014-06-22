@@ -11,6 +11,7 @@ import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
@@ -42,7 +43,6 @@ public class LoginActivity extends Activity {
 
 	// Input manager reference.
 	private InputMethodManager imm;
-
 	private LoginReceiver mLoginReceiver;
 
 	@Override
@@ -51,8 +51,6 @@ public class LoginActivity extends Activity {
 		context = TChatApplication.getContext();
 
 		setContentView(R.layout.activity_login);
-
-		mLoginReceiver = new LoginReceiver();
 
 		imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
@@ -93,11 +91,12 @@ public class LoginActivity extends Activity {
 	@Override
 	public void onResume() {
 		super.onResume();
-		
+
+		mLoginReceiver = new LoginReceiver();
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(Constants.LOGIN_SUCCESSFUL);
 		filter.addAction(Constants.LOGIN_UNSUCCESSFUL);
-		TChatApplication.getContext().registerReceiver(mLoginReceiver, filter);
+		registerReceiver(mLoginReceiver, filter);
 	}
 
 	@Override
@@ -166,7 +165,15 @@ public class LoginActivity extends Activity {
 			}
 		}
 	}
-	
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		if (mLoginReceiver != null) {
+			unregisterReceiver(mLoginReceiver);
+		}
+	}
+
 	/*
 	 * Login receiver
 	 */
@@ -190,10 +197,12 @@ public class LoginActivity extends Activity {
 	}
 
 	private void loginSuccessful() {
+		Log.d("LoginActivity", "Login successfull");
 		Intent intent = new Intent(context, MainActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
 				| Intent.FLAG_ACTIVITY_NEW_TASK);
 		startActivity(intent);
+		finish();
 	}
 
 	private void loginUnSuccessful() {

@@ -34,6 +34,7 @@ public class XMPPChatMessageListener implements PacketListener {
 					 */
 
 					Bundle b = new Bundle();
+					b.putString("buddyJid", packet.getFrom());
 					b.putString("fromName", StringUtils.parseName(StringUtils
 							.parseBareAddress(message.getFrom())));
 					b.putString("message", message.getBody());
@@ -52,6 +53,7 @@ public class XMPPChatMessageListener implements PacketListener {
 					 */
 
 					Bundle b = new Bundle();
+					b.putString("buddyJid", packet.getFrom());
 					b.putString("fromName", StringUtils.parseName(StringUtils
 							.parseBareAddress(message.getFrom())));
 					b.putString("message", message.getBody());

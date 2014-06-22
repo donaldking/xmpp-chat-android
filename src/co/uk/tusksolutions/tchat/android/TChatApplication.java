@@ -7,14 +7,17 @@ import org.jivesoftware.smack.Connection;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.widget.Toast;
+import co.uk.tusksolutions.tchat.android.activities.LoginActivity;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
 import co.uk.tusksolutions.tchat.android.dbHelper.TChatDBHelper;
 import co.uk.tusksolutions.tchat.android.models.RosterModel;
 import co.uk.tusksolutions.tchat.android.models.UserModel;
+import co.uk.tusksolutions.tchat.android.xmpp.XMPPConnectionManager;
 
 public class TChatApplication extends Application {
 
@@ -102,14 +105,24 @@ public class TChatApplication extends Application {
 		return getTChatDBHelper().getReadableDatabase();
 	}
 
+	public static void reconnect() {
+		XMPPConnectionManager.connect(TChatApplication.getUserModel()
+				.getUsername(), TChatApplication.getUserModel().getPassword());
+	}
+
 	public static void tearDownAndLogout() {
+		TChatApplication.getRosterModel().deleteRosterRecords();
+		TChatApplication.getUserModel().deleteProfile();
 		try {
 			TChatApplication.connection.disconnect();
 			TChatApplication.connection = null;
-			TChatApplication.getRosterModel().deleteRosterRecords();
-			TChatApplication.getUserModel().deleteProfile();
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			TChatApplication.getContext().startActivity(
+					new Intent(TChatApplication.getContext(),
+							LoginActivity.class)
+							.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
 		}
 	}
 }
