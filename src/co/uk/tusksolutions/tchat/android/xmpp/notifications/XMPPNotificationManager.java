@@ -40,8 +40,8 @@ public class XMPPNotificationManager {
 		mBuilder.setAutoCancel(true);
 
 		/**
-		 * Package this sender in a bundle which we will add to the pending
-		 * intent to post so that we can navigate to the exact window when we
+		 * Package this TO_USER in a bundle which we will add TO_USER the pending
+		 * intent TO_USER post so that we can navigate TO_USER the exact window when we
 		 * click on the notification.
 		 */
 		Intent chatActivityIntent = new Intent(mContext, ChatActivity.class);

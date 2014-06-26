@@ -13,8 +13,8 @@ import co.uk.tusksolutions.tchat.android.dbHelper.TChatDBHelper;
 
 public class ChatMessagesModel implements Parcelable {
 
-	public String sender;
-	public String receiver;
+	public String toUser;
+	public String fromUser;
 	public String message;
 	public String messageDate;
 	public String messageStatus;
@@ -27,24 +27,21 @@ public class ChatMessagesModel implements Parcelable {
 
 	}
 
-	public boolean saveMessageToDB(String sender, String receiver,
-			String message, String timeStamp, String messageStatus) {
+	public boolean saveMessageToDB(String to, String from,
+			String message, long timeStamp, int messageStatus) {
 		db = TChatApplication.getTChatDBWritable();
 
 		try {
-			Long tsLong = System.currentTimeMillis() / 1000;
-			String ts = tsLong.toString();
 
 			ContentValues contentValues = new ContentValues();
-			contentValues.put(TChatDBHelper.SENDER, sender);
-			contentValues.put(TChatDBHelper.RECEIVER, receiver);
+			contentValues.put(TChatDBHelper.TO_USER, to);
+			contentValues.put(TChatDBHelper.FROM_USER, from);
 			contentValues.put(TChatDBHelper.MESSAGE, message);
-			contentValues.put(TChatDBHelper.MESSAGE_DATE, ts);
+			contentValues.put(TChatDBHelper.MESSAGE_DATE, timeStamp);
 			contentValues.put(TChatDBHelper.MESSAGE_STATUS, messageStatus);
 
 			// Insert
-			db.insertWithOnConflict(TABLE, null, contentValues,
-					SQLiteDatabase.CONFLICT_IGNORE);
+			db.insert(TABLE, null, contentValues);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -62,8 +59,8 @@ public class ChatMessagesModel implements Parcelable {
 
 		while (cursor.moveToNext()) {
 			/*
-			 * Request for the values to be pulled from this cursor and returned
-			 * back to us.
+			 * Request for the values TO_USER be pulled fromUser this cursor and returned
+			 * back TO_USER us.
 			 */
 			chatMessageModelCollection.add(fromCursor(cursor));
 		}
@@ -72,14 +69,14 @@ public class ChatMessagesModel implements Parcelable {
 
 	private ChatMessagesModel fromCursor(Cursor cursor) {
 		/*
-		 * Pulls the values from the cursor object and returns it to the caller
+		 * Pulls the values fromUser the cursor object and returns it TO_USER the caller
 		 */
 		ChatMessagesModel chatMessageModel = new ChatMessagesModel();
 
-		chatMessageModel.sender = cursor.getString(cursor
-				.getColumnIndex(TChatDBHelper.SENDER));
-		chatMessageModel.receiver = cursor.getString(cursor
-				.getColumnIndex(TChatDBHelper.RECEIVER));
+		chatMessageModel.toUser = cursor.getString(cursor
+				.getColumnIndex(TChatDBHelper.TO_USER));
+		chatMessageModel.fromUser = cursor.getString(cursor
+				.getColumnIndex(TChatDBHelper.FROM_USER));
 		chatMessageModel.message = cursor.getString(cursor
 				.getColumnIndex(TChatDBHelper.MESSAGE));
 		chatMessageModel.messageDate = cursor.getString(cursor
@@ -103,8 +100,8 @@ public class ChatMessagesModel implements Parcelable {
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeString(sender);
-		dest.writeString(receiver);
+		dest.writeString(toUser);
+		dest.writeString(fromUser);
 		dest.writeString(message);
 		dest.writeString(messageDate);
 		dest.writeString(messageStatus);
@@ -120,10 +117,10 @@ public class ChatMessagesModel implements Parcelable {
 		}
 	};
 
-	/** recreate object from parcel */
+	/** recreate object fromUser parcel */
 	private ChatMessagesModel(Parcel in) {
-		this.sender = in.readString();
-		this.receiver = in.readString();
+		this.toUser = in.readString();
+		this.fromUser = in.readString();
 		this.message = in.readString();
 		this.messageDate = in.readString();
 		this.messageStatus = in.readString();

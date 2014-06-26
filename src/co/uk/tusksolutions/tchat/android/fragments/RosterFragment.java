@@ -109,7 +109,7 @@ public class RosterFragment extends Fragment {
 	private static void showProgress(final boolean show) {
 
 		// On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
-		// for very easy animations. If available, use these APIs to fade-in
+		// for very easy animations. If available, use these APIs TO_USER fade-in
 		// the progress spinner.
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
 
@@ -133,7 +133,7 @@ public class RosterFragment extends Fragment {
 	private static void prepareListView(final int queryInt) {
 
 		/**
-		 * Load Friends from DB
+		 * Load Friends fromUser DB
 		 */
 
 		CURRENT_QUERY_ACTION = queryInt;
@@ -162,12 +162,12 @@ public class RosterFragment extends Fragment {
 			int id = v.getId();
 			switch (id) {
 			case R.id.all_button:
-				Log.d(TAG, "Switching to tab: " + ALL_QUERY_ACTION);
+				Log.d(TAG, "Switching TO_USER tab: " + ALL_QUERY_ACTION);
 				RosterFragment.prepareListView(ALL_QUERY_ACTION);
 				break;
 
 			case R.id.online_button:
-				Log.d(TAG, "Switching to tab: " + ONLINE_QUERY_ACTION);
+				Log.d(TAG, "Switching TO_USER tab: " + ONLINE_QUERY_ACTION);
 				RosterFragment.prepareListView(ONLINE_QUERY_ACTION);
 				break;
 
@@ -178,15 +178,15 @@ public class RosterFragment extends Fragment {
 	}
 
 	/*
-	 * Broad cast receiver that gets called When we receive new data form cloud
-	 * to db
+	 * Broad cast fromUser that gets called When we receive new data form cloud
+	 * TO_USER db
 	 */
 	private class RosterReceiver extends BroadcastReceiver {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			/*
-			 * Load friends from db and reload the list view
+			 * Load friends fromUser db and reload the list view
 			 */
 			if (intent.getAction().equalsIgnoreCase(Constants.ROSTER_UPDATED)) {
 

@@ -24,7 +24,7 @@ import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
 
 /**
- * Activity which displays a login screen to the user, offering registration as
+ * Activity which displays a login screen TO_USER the user, offering registration as
  * well.
  */
 public class LoginActivity extends Activity {
@@ -107,7 +107,7 @@ public class LoginActivity extends Activity {
 	}
 
 	/**
-	 * Attempt to login
+	 * Attempt TO_USER login
 	 */
 	public void attemptLogin() {
 
@@ -141,7 +141,7 @@ public class LoginActivity extends Activity {
 			// form field with an error.
 			focusView.requestFocus();
 		} else {
-			// Show a progress spinner, and kick off a background task to
+			// Show a progress spinner, and kick off a background task TO_USER
 			// perform the user login attempt.
 
 			// Get view with current focus
@@ -175,14 +175,14 @@ public class LoginActivity extends Activity {
 	}
 
 	/*
-	 * Login receiver
+	 * Login fromUser
 	 */
 	private class LoginReceiver extends BroadcastReceiver {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			/*
-			 * Login result receiver
+			 * Login result fromUser
 			 */
 			if (intent.getAction().equalsIgnoreCase(Constants.LOGIN_SUCCESSFUL)) {
 				showProgress(false);
@@ -220,7 +220,7 @@ public class LoginActivity extends Activity {
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
 	private void showProgress(final boolean show) {
 		// On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
-		// for very easy animations. If available, use these APIs to fade-in
+		// for very easy animations. If available, use these APIs TO_USER fade-in
 		// the progress spinner.
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
 			int shortAnimTime = getResources().getInteger(

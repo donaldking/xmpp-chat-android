@@ -18,7 +18,7 @@ public class XMPPGroupChatMessageListener implements PacketListener {
 		if (message.getBody() != null) {
 			String fromName = StringUtils.parseBareAddress(message.getFrom());
 			String toName = StringUtils.parseBareAddress(message.getTo());
-			Log.i(TAG, "New group message from " + fromName + ", To: " + toName
+			Log.i(TAG, "New group message fromUser " + fromName + ", To: " + toName
 					+ " : " + message.getBody());
 		}
 

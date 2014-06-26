@@ -119,7 +119,7 @@ public class XMPPConnectionManager {
 					} catch (Exception e) {
 						/**
 						 * Error connecting. This could be Internet off or some
-						 * issue. We need to remove connection object.
+						 * issue. We need TO_USER remove connection object.
 						 */
 						TChatApplication.connection = null;
 						/*
@@ -133,7 +133,7 @@ public class XMPPConnectionManager {
 										Toast.makeText(
 												TChatApplication.getContext(),
 												(String) TAG
-														+ " Unable to login",
+														+ " Unable TO_USER login",
 												Toast.LENGTH_SHORT).show();
 										TChatApplication.tearDownAndLogout();
 									}

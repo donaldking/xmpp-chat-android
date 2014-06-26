@@ -39,7 +39,7 @@ public class VerticalScrollView extends ScrollView {
 			break;
 
 		case MotionEvent.ACTION_MOVE:
-			return false; // redirect MotionEvents to ourself
+			return false; // redirect MotionEvents TO_USER ourself
 
 		case MotionEvent.ACTION_CANCEL:
 			Log.i("VerticalScrollview",

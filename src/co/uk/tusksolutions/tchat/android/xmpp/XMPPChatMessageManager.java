@@ -3,23 +3,33 @@ package co.uk.tusksolutions.tchat.android.xmpp;
 import org.jivesoftware.smack.packet.Message;
 
 import co.uk.tusksolutions.tchat.android.TChatApplication;
+import co.uk.tusksolutions.tchat.android.models.ChatMessagesModel;
 
 public class XMPPChatMessageManager {
 
-	public static void sendMessage(String to, String message) {
+	private static ChatMessagesModel mChatMessageModel;
+
+	public static void sendMessage(final String to, final String message) {
+		if (mChatMessageModel == null) {
+			mChatMessageModel = new ChatMessagesModel();
+		}
 		Message msg = new Message(to, Message.Type.chat);
 		msg.setBody(message);
 		if (TChatApplication.connection != null) {
 			try {
-				// TODO Save to db and send relay message to self
-				// then send packet!
+				
+				mChatMessageModel.saveMessageToDB(to,
+						TChatApplication.getCurrentJid(), message,
+						System.currentTimeMillis(), 1);
 				TChatApplication.connection.sendPacket(msg);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		} else {
-			// TODO Save message locally so it can be tried again when we caome
 			// online offline message
+			mChatMessageModel.saveMessageToDB(to,
+					TChatApplication.getCurrentJid(), message,
+					System.currentTimeMillis(), 2);
 		}
 	}
 

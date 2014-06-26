@@ -14,7 +14,7 @@ public class GroupsFragment extends Fragment {
 		super.onCreate(savedInstanceState);
 
 		/**
-		 * Load Groups from DB
+		 * Load Groups fromUser DB
 		 */
 	}
 

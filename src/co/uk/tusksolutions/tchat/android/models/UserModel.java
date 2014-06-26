@@ -55,7 +55,7 @@ public class UserModel {
 	private boolean saveUserProfile(String username, String password) {
 		db = TChatApplication.getTChatDBWritable();
 		/*
-		 * Save user profile to db
+		 * Save user profile TO_USER db
 		 */
 
 		boolean saveResult = false;
@@ -110,7 +110,7 @@ public class UserModel {
 	private void prepareProfile() {
 		db = TChatApplication.getTChatDBWritable();
 		/*
-		 * Pulls and sets the user's profile from db to user object
+		 * Pulls and sets the user's profile fromUser db TO_USER user object
 		 */
 		String[] columns = { TChatDBHelper.USERNAME, TChatDBHelper.PASSWORD,
 				TChatDBHelper.PROFILE_NAME, TChatDBHelper.LAST_LOGIN };

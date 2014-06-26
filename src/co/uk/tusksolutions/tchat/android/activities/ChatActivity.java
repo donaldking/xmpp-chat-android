@@ -43,7 +43,7 @@ public class ChatActivity extends ActionBarActivity {
 		if (getIntent().getExtras() != null) {
 			if (getIntent().getExtras().containsKey("chatFromFriendBundle")) {
 				/*
-				 * Launched from Notification...
+				 * Launched fromUser Notification...
 				 */
 				buddyName = getIntent().getExtras()
 						.getBundle("chatFromFriendBundle")
@@ -55,7 +55,7 @@ public class ChatActivity extends ActionBarActivity {
 			} else if (getIntent().getExtras().containsKey(
 					"chatWithFriendBundle")) {
 				/*
-				 * Launched from Roster...
+				 * Launched fromUser Roster...
 				 */
 				buddyName = getIntent().getExtras()
 						.getBundle("chatWithFriendBundle")
@@ -73,7 +73,7 @@ public class ChatActivity extends ActionBarActivity {
 	public void onResume() {
 		super.onResume();
 		/**
-		 * Set chat visible enum to visible so when we get a chat packet, no
+		 * Set chat visible enum TO_USER visible so when we get a chat packet, no
 		 * status bar notification will be posted.
 		 */
 		if (TChatApplication.connection == null) {
@@ -88,7 +88,7 @@ public class ChatActivity extends ActionBarActivity {
 	public void onDestroy() {
 		super.onDestroy();
 		/**
-		 * Set chat visible enum to not visible so when we get a chat packet,
+		 * Set chat visible enum TO_USER not visible so when we get a chat packet,
 		 * status bar notification will be posted.
 		 */
 		TChatApplication
@@ -99,7 +99,7 @@ public class ChatActivity extends ActionBarActivity {
 	protected void onStop() {
 		super.onStop();
 		/**
-		 * Set chat visible enum to not visible so when we get a chat packet,
+		 * Set chat visible enum TO_USER not visible so when we get a chat packet,
 		 * status bar notification will be posted.
 		 */
 		TChatApplication
@@ -165,12 +165,12 @@ public class ChatActivity extends ActionBarActivity {
 		public void afterTextChanged(Editable s) {
 			if (s.toString().length() >= 1) {
 				if (chatSendButton.isEnabled() == false) {
-					// TODO Send composing stanza to friend.
+					// TODO Send composing stanza TO_USER friend.
 					chatSendButton.setEnabled(true);
 				}
 			} else {
 				if (chatSendButton.isEnabled() == true) {
-					// TODO Send stopped composing stanza to friend.
+					// TODO Send stopped composing stanza TO_USER friend.
 					chatSendButton.setEnabled(false);
 				}
 			}
@@ -190,9 +190,9 @@ public class ChatActivity extends ActionBarActivity {
 						chatMessageEditText.getText().toString());
 				chatMessageEditText.setText("");
 				chatSendButton.setEnabled(false);
-				// TODO Insert chat to db
+				// TODO Insert chat TO_USER db
 				// TODO Reload chat db.
-				// TODO Wait for packet call back to set it as delivered.
+				// TODO Wait for packet call back TO_USER set it as delivered.
 				// Toast.makeText(TChatApplication.getContext(),
 				// "Message sent!",
 				// Toast.LENGTH_SHORT).show();
@@ -208,7 +208,7 @@ public class ChatActivity extends ActionBarActivity {
 
 		@Override
 		public void onClick(View v) {
-			// TODO change inputview for chatMessageEditText to emoji fragment
+			// TODO change inputview for chatMessageEditText TO_USER emoji fragment
 			Toast.makeText(TChatApplication.getContext(),
 					"Emoji coming soon...", Toast.LENGTH_SHORT).show();
 		}
@@ -216,8 +216,8 @@ public class ChatActivity extends ActionBarActivity {
 	}
 
 	/**
-	 * Programatically register for broadcast to be notified when chat message
-	 * has been received, processed and inserted to the db so we can reload this
+	 * Programatically register for broadcast TO_USER be notified when chat message
+	 * has been received, processed and inserted TO_USER the db so we can reload this
 	 * view with the new message.
 	 * 
 	 */

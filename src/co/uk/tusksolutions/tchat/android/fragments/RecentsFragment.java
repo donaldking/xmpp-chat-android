@@ -14,7 +14,7 @@ public class RecentsFragment extends Fragment {
 		super.onCreate(savedInstanceState);
 
 		/**
-		 * Load Recent chats from DB
+		 * Load Recent chats fromUser DB
 		 */
 	}
 

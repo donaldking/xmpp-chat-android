@@ -48,7 +48,7 @@ public class TChatApplication extends Application {
 
 		/**
 		 * This method makes sure we have network and can login. If so, send us
-		 * to MainActivity, otherwise, send us to LoginActivity
+		 * TO_USER MainActivity, otherwise, send us TO_USER LoginActivity
 		 */
 		if (!isNetworkAvailable()) {
 			Toast.makeText(TChatApplication.getContext(),
@@ -66,6 +66,10 @@ public class TChatApplication extends Application {
 				&& activeNetwork.isConnectedOrConnecting();
 
 		return isConnected;
+	}
+
+	public static String getCurrentJid() {
+		return getUserModel().getUsername()+"@"+ Constants.CURRENT_SERVER;
 	}
 
 	public static Context getContext() {

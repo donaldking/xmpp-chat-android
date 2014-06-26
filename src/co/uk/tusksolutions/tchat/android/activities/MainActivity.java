@@ -24,7 +24,7 @@ public class MainActivity extends ActionBarActivity implements
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
 	 * fragments for each of the sections. We use a {@link FragmentPagerAdapter}
 	 * derivative, which will keep every loaded fragment in memory. If this
-	 * becomes too memory intensive, it may be best to switch to a
+	 * becomes too memory intensive, it may be best TO_USER switch TO_USER a
 	 * {@link android.support.v4.app.FragmentStatePagerAdapter}.
 	 */
 	SectionsPagerAdapter mSectionsPagerAdapter;
@@ -127,8 +127,8 @@ public class MainActivity extends ActionBarActivity implements
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 
 		// When swiping between different sections, select the corresponding
-		// tab. We can also use ActionBar.Tab#select() to do this if we have
-		// a reference to the Tab.
+		// tab. We can also use ActionBar.Tab#select() TO_USER do this if we have
+		// a reference TO_USER the Tab.
 		mViewPager
 				.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
 					@Override
@@ -137,7 +137,7 @@ public class MainActivity extends ActionBarActivity implements
 					}
 				});
 
-		// For each of the sections in the app, add a tab to the action bar.
+		// For each of the sections in the app, add a tab TO_USER the action bar.
 		for (int i = 0; i < mSectionsPagerAdapter.getCount(); i++) {
 			actionBar.addTab(actionBar
 					.newTab()
@@ -155,7 +155,7 @@ public class MainActivity extends ActionBarActivity implements
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 
-		// Inflate the menu; this adds items to the action bar if it is present.
+		// Inflate the menu; this adds items TO_USER the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
@@ -179,7 +179,7 @@ public class MainActivity extends ActionBarActivity implements
 	@Override
 	public void onTabSelected(ActionBar.Tab tab,
 			FragmentTransaction fragmentTransaction) {
-		// When the given tab is selected, switch to the corresponding page in
+		// When the given tab is selected, switch TO_USER the corresponding page in
 		// the ViewPager.
 		mViewPager.setCurrentItem(tab.getPosition());
 	}
@@ -195,7 +195,7 @@ public class MainActivity extends ActionBarActivity implements
 	}
 
 	/**
-	 * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
+	 * A {@link FragmentPagerAdapter} that returns a fragment corresponding TO_USER
 	 * one of the sections/tabs/pages.
 	 */
 	public class SectionsPagerAdapter extends FragmentPagerAdapter {
@@ -206,7 +206,7 @@ public class MainActivity extends ActionBarActivity implements
 
 		@Override
 		public Fragment getItem(int position) {
-			// getItem is called to instantiate the fragment for the given page.
+			// getItem is called TO_USER instantiate the fragment for the given page.
 			switch (position) {
 			case 0:
 				return getRecentsFragment();

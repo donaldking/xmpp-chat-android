@@ -36,7 +36,7 @@ public class RosterContentAdapter extends BaseAdapter {
 		this.context = TChatApplication.getContext();
 		mModel = new RosterModel();
 		/**
-		 * action is an integer of what data to query. 1 = All Friends
+		 * action is an integer of what data TO_USER query. 1 = All Friends
 		 * (queryAll()) 2 = Online Friends (queryOnline())
 		 */
 		this.action = action;
@@ -96,7 +96,7 @@ public class RosterContentAdapter extends BaseAdapter {
 		}
 
 		/**
-		 * Put values received from model collection to view holder.
+		 * Put values received fromUser model collection TO_USER view holder.
 		 * 
 		 */
 		final RosterModel rosterModel = rosterModelCollection.get(position);

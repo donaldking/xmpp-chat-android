@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.TChatApplication.CHAT_STATUS_ENUM;
+import co.uk.tusksolutions.tchat.android.models.ChatMessagesModel;
 import co.uk.tusksolutions.tchat.android.xmpp.notifications.XMPPNotificationManager;
 
 public class XMPPChatMessageListener implements PacketListener {
@@ -42,9 +43,18 @@ public class XMPPChatMessageListener implements PacketListener {
 					Intent intent = new Intent();
 					intent.putExtra("chatFromFriendBundle", b);
 
-					// Send to notification manager
+					// Send TO_USER notification manager
 					new XMPPNotificationManager()
 							.sendNormalChatNotification(intent);
+
+					/*
+					 * Insert received message to db
+					 */
+					ChatMessagesModel mChatMessageModel = new ChatMessagesModel();
+					mChatMessageModel.saveMessageToDB(
+							TChatApplication.getCurrentJid(),
+							StringUtils.parseBareAddress(packet.getFrom()),
+							message.getBody(), System.currentTimeMillis(), 1);
 
 				} else if (TChatApplication.getChatActivityStatus() == CHAT_STATUS_ENUM.NOT_VISIBLE) {
 
@@ -61,12 +71,22 @@ public class XMPPChatMessageListener implements PacketListener {
 					Intent intent = new Intent();
 					intent.putExtra("chatFromFriendBundle", b);
 
-					// Send to notification manager
+					// Send TO_USER notification manager
 					new XMPPNotificationManager()
 							.sendNormalChatNotification(intent);
 
+					/*
+					 * Insert received message to db
+					 */
+					ChatMessagesModel mChatMessageModel = new ChatMessagesModel();
+					mChatMessageModel.saveMessageToDB(
+							TChatApplication.getCurrentJid(),
+							StringUtils.parseBareAddress(packet.getFrom()),
+							message.getBody(), System.currentTimeMillis(), 1);
+
 				} else {
-					Log.i(TAG, "Unknown state to display message received!");
+					Log.i(TAG,
+							"Unknown state TO_USER display message received!");
 				}
 			}
 		}

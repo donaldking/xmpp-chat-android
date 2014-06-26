@@ -40,7 +40,7 @@ public class RosterModel implements Parcelable {
 		db = TChatApplication.getTChatDBWritable();
 		Collection<RosterEntry> entries = roster.getEntries();
 		/*
-		 * This method inserts the roster received from the server to the local
+		 * This method inserts the roster received fromUser the server TO_USER the local
 		 * db.
 		 */
 
@@ -187,8 +187,8 @@ public class RosterModel implements Parcelable {
 
 		while (cursor.moveToNext()) {
 			/*
-			 * Request for the values to be pulled from this cursor and returned
-			 * back to us.
+			 * Request for the values TO_USER be pulled fromUser this cursor and returned
+			 * back TO_USER us.
 			 */
 			rosterModelCollection.add(fromCursor(cursor));
 		}
@@ -218,8 +218,8 @@ public class RosterModel implements Parcelable {
 
 		while (cursor.moveToNext()) {
 			/*
-			 * Request for the values to be pulled from this cursor and returned
-			 * back to us.
+			 * Request for the values TO_USER be pulled fromUser this cursor and returned
+			 * back TO_USER us.
 			 */
 			rosterModelCollection.add(fromCursor(cursor));
 		}
@@ -228,7 +228,7 @@ public class RosterModel implements Parcelable {
 
 	private RosterModel fromCursor(Cursor cursor) {
 		/*
-		 * Pulls the values from the cursor object and returns it to the caller
+		 * Pulls the values fromUser the cursor object and returns it TO_USER the caller
 		 */
 		RosterModel rosterModel = new RosterModel();
 
@@ -279,7 +279,7 @@ public class RosterModel implements Parcelable {
 		}
 	};
 
-	/** recreate object from parcel */
+	/** recreate object fromUser parcel */
 	private RosterModel(Parcel in) {
 		this.user = in.readString();
 		this.name = in.readString();

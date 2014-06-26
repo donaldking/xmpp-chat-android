@@ -49,8 +49,8 @@ public class TChatDBHelper extends SQLiteOpenHelper {
 	public static final String CM_UID = "_id";
 	public static final String MESSAGE = "message";
 	public static final String MESSAGE_DATE = "messageDate";
-	public static final String RECEIVER = "receiver";
-	public static final String SENDER = "sender";
+	public static final String FROM_USER = "fromUser";
+	public static final String TO_USER = "toUser";
 	public static final String MESSAGE_STATUS = "messageStatus";
 
 	public TChatDBHelper(Context context) {
@@ -88,11 +88,13 @@ public class TChatDBHelper extends SQLiteOpenHelper {
 	 */
 	private static final String CREATE_CHAT_MESSAGES_TABLE = "CREATE TABLE "
 			+ CHAT_MESSAGES_TABLE + " ( " + CM_UID
-			+ " INTEGER PRIMARY KEY AUTOINCREMENT," + "  " + MESSAGE + " blob,"
-			+ "  " + MESSAGE_DATE + " varchar(255) DEFAULT NULL," + "  "
-			+ RECEIVER + " varchar(255) DEFAULT NULL," + "  " + SENDER
+			+ " INTEGER PRIMARY KEY AUTOINCREMENT," + "  " + MESSAGE 
+			+ " blob,"+ MESSAGE_DATE 
+			+ " varchar(255) DEFAULT NULL," + "  "+ FROM_USER 
+			+ " varchar(255) DEFAULT NULL," + "  " + TO_USER
 			+ " varchar(255) DEFAULT NULL," + MESSAGE_STATUS
 			+ " varchar(255) DEFAULT NULL);";
+	
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
