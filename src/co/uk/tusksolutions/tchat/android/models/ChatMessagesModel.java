@@ -3,12 +3,14 @@ package co.uk.tusksolutions.tchat.android.models;
 import java.util.ArrayList;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
+import co.uk.tusksolutions.tchat.android.constants.Constants;
 import co.uk.tusksolutions.tchat.android.dbHelper.TChatDBHelper;
 
 public class ChatMessagesModel implements Parcelable {
@@ -27,8 +29,8 @@ public class ChatMessagesModel implements Parcelable {
 
 	}
 
-	public boolean saveMessageToDB(String to, String from,
-			String message, long timeStamp, int messageStatus) {
+	public boolean saveMessageToDB(String to, String from, String message,
+			long timeStamp, int messageStatus) {
 		db = TChatApplication.getTChatDBWritable();
 
 		try {
@@ -41,7 +43,13 @@ public class ChatMessagesModel implements Parcelable {
 			contentValues.put(TChatDBHelper.MESSAGE_STATUS, messageStatus);
 
 			// Insert
-			db.insert(TABLE, null, contentValues);
+			long id = db.insert(TABLE, null, contentValues);
+			if (id > 0) {
+				Intent i = new Intent();
+				i.putExtra("id", id);
+				i.setAction(Constants.CHAT_MESSAGE_READY);
+				TChatApplication.getContext().sendBroadcast(i);
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -49,6 +57,30 @@ public class ChatMessagesModel implements Parcelable {
 
 		Log.i(TAG, "Chat Message insert complete! send BroadCast!");
 		return true;
+	}
+
+	// Get chat messages: to & from
+	public ArrayList<ChatMessagesModel> getAllMessagesFromDB(String to,
+			String from) {
+		ArrayList<ChatMessagesModel> chatMessageModelCollection = new ArrayList<ChatMessagesModel>();
+
+		String whereClause = TChatDBHelper.TO_USER + " LIKE ? AND "
+				+ TChatDBHelper.FROM_USER + " LIKE ? OR "
+				+ TChatDBHelper.TO_USER + " LIKE ? AND "
+				+ TChatDBHelper.FROM_USER + " LIKE ?";
+
+		String[] whereArgs = new String[] { to, from, from, to };
+		String orderBy = TChatDBHelper.MESSAGE_DATE + " ASC";
+		Cursor cursor = TChatApplication.getTChatDBReadable().query(TABLE,
+				null, whereClause, whereArgs, null, null, orderBy);
+
+		while (cursor.moveToNext()) {
+
+			chatMessageModelCollection.add(fromCursor(cursor));
+		}
+		Log.d("ChatMessagesModel", "Found " + chatMessageModelCollection.size()
+				+ " Messages");
+		return chatMessageModelCollection;
 	}
 
 	public ArrayList<ChatMessagesModel> query() {
@@ -59,8 +91,8 @@ public class ChatMessagesModel implements Parcelable {
 
 		while (cursor.moveToNext()) {
 			/*
-			 * Request for the values TO_USER be pulled fromUser this cursor and returned
-			 * back TO_USER us.
+			 * Request for the values TO_USER be pulled fromUser this cursor and
+			 * returned back TO_USER us.
 			 */
 			chatMessageModelCollection.add(fromCursor(cursor));
 		}
@@ -69,7 +101,8 @@ public class ChatMessagesModel implements Parcelable {
 
 	private ChatMessagesModel fromCursor(Cursor cursor) {
 		/*
-		 * Pulls the values fromUser the cursor object and returns it TO_USER the caller
+		 * Pulls the values fromUser the cursor object and returns it TO_USER
+		 * the caller
 		 */
 		ChatMessagesModel chatMessageModel = new ChatMessagesModel();
 

@@ -32,6 +32,7 @@ public class TChatApplication extends Application {
 	public SQLiteDatabase tChatDBReadable;
 	private static UserModel mUserModel;
 	private static RosterModel mRosterModel;
+	public static String chatSessionBuddy;
 
 	@Override
 	public void onCreate() {

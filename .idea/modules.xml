@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$USER_HOME$/Documents/GitRepos/Android/CircularImageView/CircularImageView.iml" filepath="$USER_HOME$/Documents/GitRepos/Android/CircularImageView/CircularImageView.iml" />
+      <module fileurl="file://$PROJECT_DIR$/TChat.iml" filepath="$PROJECT_DIR$/TChat.iml" />
+      <module fileurl="file://$USER_HOME$/Documents/GitRepos/Android/android-support-v7-appcompat/android-support-v7-appcompat.iml" filepath="$USER_HOME$/Documents/GitRepos/Android/android-support-v7-appcompat/android-support-v7-appcompat.iml" />
+    </modules>
+  </component>
+</project>
+

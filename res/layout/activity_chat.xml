@@ -1,83 +1,111 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/chat_activity"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@color/white"
-    android:orientation="vertical" >
+    tools:context="${packageName}.${activityClass}" >
 
     <LinearLayout
-        android:id="@+id/chat_messages_view"
         android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:layout_weight="2"
+        android:layout_height="fill_parent"
+        android:background="@color/white"
         android:orientation="vertical" >
 
-        <ListView
-            android:id="@+id/chat_messages_list_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" >
-        </ListView>
+        <LinearLayout
+            android:id="@+id/chat_messages_view"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2"
+            android:orientation="vertical" >
+
+            <ListView
+                android:id="@+id/chat_messages_list_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:divider="@null" >
+            </ListView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/chat_message_entry_view"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/textlines"
+            android:baselineAligned="true"
+            android:orientation="horizontal"
+            android:padding="10dp" >
+
+            <FrameLayout
+                android:id="@+id/emoji_frame_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp" >
+
+                <Button
+                    android:id="@+id/emoji_button"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:background="@drawable/emoji_btn_normal"
+                    android:paddingLeft="5dp" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/chat_message_frame_view"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" >
+
+                <EditText
+                    android:id="@+id/chat_message_edit_text"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:autoLink="all"
+                    android:fontFamily="co.uk.tusksolutions.extensions.RobotoRegularTextView"
+                    android:gravity="top|left"
+                    android:hapticFeedbackEnabled="true"
+                    android:hint="@string/chat_message_hint"
+                    android:inputType="textMultiLine|textCapSentences"
+                    android:lines="5"
+                    android:maxLines="15"
+                    android:minLines="1"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:scrollbars="vertical" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/chat_send_button_frame_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="3dp" >
+
+                <Button
+                    android:id="@+id/chat_send_button"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/chat_send_button"
+                    android:enabled="false" />
+            </FrameLayout>
+        </LinearLayout>
     </LinearLayout>
+
+     <!-- Loading progress start -->
 
     <LinearLayout
-        android:id="@+id/chat_message_entry_view"
+        android:id="@+id/loading_view"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:baselineAligned="true"
-        android:orientation="horizontal"
-        android:padding="10dp"
-        android:background="@drawable/textlines" >
+        android:layout_height="fill_parent"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="visible" >
 
-        <FrameLayout
-            android:id="@+id/emoji_frame_view"
+        <ProgressBar
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="5dp" >
-
-            <Button
-                android:id="@+id/emoji_button"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:background="@drawable/emoji_btn_normal"
-                android:paddingLeft="5dp" />
-        </FrameLayout>
-
-        <FrameLayout
-            android:id="@+id/chat_message_frame_view"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" >
-
-            <EditText
-                android:id="@+id/chat_message_edit_text"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:autoLink="all"
-                android:gravity="top|left"
-                android:hapticFeedbackEnabled="true"
-                android:hint="@string/chat_message_hint"
-                android:inputType="textMultiLine|textCapSentences"
-                android:lines="5"
-                android:maxLines="15"
-                android:minLines="1"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:fontFamily="co.uk.tusksolutions.extensions.RobotoRegularTextView"
-                android:scrollbars="vertical" />
-        </FrameLayout>
-
-        <FrameLayout
-            android:id="@+id/chat_send_button_frame_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="3dp" >
-
-            <Button
-                android:id="@+id/chat_send_button"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:background="@drawable/chat_send_button"
-                android:enabled="false" />
-        </FrameLayout>
+            android:layout_marginBottom="8dp" />
     </LinearLayout>
 
-</LinearLayout>
+    <!-- Loading progress end -->
+</RelativeLayout>

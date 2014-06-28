@@ -29,67 +29,70 @@ public class XMPPChatMessageListener implements PacketListener {
 			} else if (message.getBody().length() == 0) {
 				Log.i(TAG, "Stopped composing...: ");
 			} else if (message.getBody().length() > 0) {
-				if (TChatApplication.getChatActivityStatus() == CHAT_STATUS_ENUM.VISIBLE) {
-					/*
-					 * Ideally, do nothing!
-					 */
 
-					Bundle b = new Bundle();
-					b.putString("buddyJid", packet.getFrom());
-					b.putString("fromName", StringUtils.parseName(StringUtils
-							.parseBareAddress(message.getFrom())));
-					b.putString("message", message.getBody());
+				Log.d(TAG,
+						"Current buddy: "
+								+ TChatApplication.chatSessionBuddy
+								+ " Packet received: "
+								+ StringUtils.parseBareAddress(packet.getFrom()));
 
-					Intent intent = new Intent();
-					intent.putExtra("chatFromFriendBundle", b);
+				if (TChatApplication.getChatActivityStatus() == CHAT_STATUS_ENUM.VISIBLE
+						&& TChatApplication.chatSessionBuddy.equalsIgnoreCase(StringUtils
+								.parseBareAddress(packet.getFrom()))) {
 
-					// Send TO_USER notification manager
-					new XMPPNotificationManager()
-							.sendNormalChatNotification(intent);
+					// 1. Visible and chatting with buddy
 
-					/*
-					 * Insert received message to db
-					 */
-					ChatMessagesModel mChatMessageModel = new ChatMessagesModel();
-					mChatMessageModel.saveMessageToDB(
-							TChatApplication.getCurrentJid(),
-							StringUtils.parseBareAddress(packet.getFrom()),
-							message.getBody(), System.currentTimeMillis(), 1);
+					// Save to DB
+					saveMessageToDb(packet, message);
 
-				} else if (TChatApplication.getChatActivityStatus() == CHAT_STATUS_ENUM.NOT_VISIBLE) {
+				} else if (TChatApplication.getChatActivityStatus() == CHAT_STATUS_ENUM.VISIBLE
+						&& !TChatApplication.chatSessionBuddy.equalsIgnoreCase(StringUtils
+								.parseBareAddress(packet.getFrom()))) {
 
+					// 2. Visible and not chatting with buddy
 					/*
 					 * Prepare message bundle.
 					 */
+					sendNotification(packet, message);
 
-					Bundle b = new Bundle();
-					b.putString("buddyJid", packet.getFrom());
-					b.putString("fromName", StringUtils.parseName(StringUtils
-							.parseBareAddress(message.getFrom())));
-					b.putString("message", message.getBody());
+				} else if (TChatApplication.getChatActivityStatus() == CHAT_STATUS_ENUM.NOT_VISIBLE) {
 
-					Intent intent = new Intent();
-					intent.putExtra("chatFromFriendBundle", b);
-
-					// Send TO_USER notification manager
-					new XMPPNotificationManager()
-							.sendNormalChatNotification(intent);
-
+					// 3. Not Visible and not chatting
 					/*
-					 * Insert received message to db
+					 * Prepare message bundle.
 					 */
-					ChatMessagesModel mChatMessageModel = new ChatMessagesModel();
-					mChatMessageModel.saveMessageToDB(
-							TChatApplication.getCurrentJid(),
-							StringUtils.parseBareAddress(packet.getFrom()),
-							message.getBody(), System.currentTimeMillis(), 1);
+					sendNotification(packet, message);
 
-				} else {
-					Log.i(TAG,
-							"Unknown state TO_USER display message received!");
 				}
 			}
 		}
 	}
 
+	private void sendNotification(Packet packet, Message message) {
+		Bundle b = new Bundle();
+		b.putString("buddyJid", packet.getFrom());
+		b.putString("fromName", StringUtils.parseName(StringUtils
+				.parseBareAddress(message.getFrom())));
+		b.putString("message", message.getBody());
+
+		Intent intent = new Intent();
+		intent.putExtra("chatFromFriendBundle", b);
+
+		// Send TO_USER notification manager
+		new XMPPNotificationManager().sendNormalChatNotification(intent);
+
+		// Save to DB
+		saveMessageToDb(packet, message);
+
+	}
+
+	private void saveMessageToDb(Packet packet, Message message) {
+		/*
+		 * Insert received message to db
+		 */
+		ChatMessagesModel mChatMessageModel = new ChatMessagesModel();
+		mChatMessageModel.saveMessageToDB(TChatApplication.getCurrentJid(),
+				StringUtils.parseBareAddress(packet.getFrom()),
+				message.getBody(), System.currentTimeMillis(), 1);
+	}
 }

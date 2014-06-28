@@ -84,7 +84,7 @@
                 android:layout_marginLeft="2dp"
                 android:baselineAlignBottom="false"
                 android:gravity="left"
-                android:text="some resource name"
+                android:text="MOBILE"
                 android:textAllCaps="true"
                 android:textColor="@color/light_green"
                 android:textSize="12sp" />
