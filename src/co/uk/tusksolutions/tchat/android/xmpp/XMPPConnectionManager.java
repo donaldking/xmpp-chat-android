@@ -1,7 +1,6 @@
 package co.uk.tusksolutions.tchat.android.xmpp;
 
 import org.jivesoftware.smack.XMPPConnection;
-import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.filter.MessageTypeFilter;
 import org.jivesoftware.smack.filter.PacketFilter;
 import org.jivesoftware.smack.filter.PacketTypeFilter;
@@ -31,7 +30,11 @@ public class XMPPConnectionManager {
 				TChatApplication.connection = new XMPPConnection(
 						Constants.CURRENT_SERVER);
 				try {
-					TChatApplication.connection.connect();
+					try {
+						TChatApplication.connection.connect();
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
 
 					try {
 						TChatApplication.connection.login(
@@ -142,7 +145,7 @@ public class XMPPConnectionManager {
 						e.printStackTrace();
 					}
 
-				} catch (XMPPException e) {
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}

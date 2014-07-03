@@ -15,6 +15,7 @@ import android.widget.Toast;
 import co.uk.tusksolutions.tchat.android.activities.LoginActivity;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
 import co.uk.tusksolutions.tchat.android.dbHelper.TChatDBHelper;
+import co.uk.tusksolutions.tchat.android.models.RecentsModel;
 import co.uk.tusksolutions.tchat.android.models.RosterModel;
 import co.uk.tusksolutions.tchat.android.models.UserModel;
 import co.uk.tusksolutions.tchat.android.xmpp.XMPPConnectionManager;
@@ -32,7 +33,9 @@ public class TChatApplication extends Application {
 	public SQLiteDatabase tChatDBReadable;
 	private static UserModel mUserModel;
 	private static RosterModel mRosterModel;
+	private static RecentsModel mRecentsModel;
 	public static String chatSessionBuddy;
+	public static int CHAT_SECTION_QUERY_ACTION;
 
 	@Override
 	public void onCreate() {
@@ -46,6 +49,7 @@ public class TChatApplication extends Application {
 		TChatApplication.getTChatDBWritable();
 		mUserModel = new UserModel();
 		mRosterModel = new RosterModel();
+		mRecentsModel = new RecentsModel();
 
 		/**
 		 * This method makes sure we have network and can login. If so, send us
@@ -70,7 +74,7 @@ public class TChatApplication extends Application {
 	}
 
 	public static String getCurrentJid() {
-		return getUserModel().getUsername()+"@"+ Constants.CURRENT_SERVER;
+		return getUserModel().getUsername() + "@" + Constants.CURRENT_SERVER;
 	}
 
 	public static Context getContext() {
@@ -100,6 +104,10 @@ public class TChatApplication extends Application {
 
 	public static RosterModel getRosterModel() {
 		return mRosterModel;
+	}
+
+	public static RecentsModel getRecentsModel() {
+		return mRecentsModel;
 	}
 
 	public synchronized static SQLiteDatabase getTChatDBWritable() {

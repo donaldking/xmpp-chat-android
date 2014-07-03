@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import co.uk.tusksolutions.extensions.TimeAgo;
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.models.ChatMessagesModel;
@@ -101,7 +102,11 @@ public class ChatMessagesAdapter extends BaseAdapter {
 			} else {
 				chatFromViewHolder = (ChatFromViewHolder) row.getTag();
 			}
-			chatFromViewHolder.textView.setText(chatMessagesModel.message);
+			chatFromViewHolder.chatMessageTextView
+					.setText(chatMessagesModel.message);
+			chatFromViewHolder.chatMessageTimestampTextView.setText(TimeAgo
+					.getTimeAgo(Long.parseLong(chatMessagesModel.messageDate),
+							context));
 
 			break;
 		case 1:
@@ -118,11 +123,25 @@ public class ChatMessagesAdapter extends BaseAdapter {
 			} else {
 				chatToViewHolder = (ChatToViewHolder) row.getTag();
 			}
-			chatToViewHolder.textView.setText(chatMessagesModel.message);
+			chatToViewHolder.chatMessageTextView
+					.setText(chatMessagesModel.message);
+			chatToViewHolder.chatMessageTimestampTextView.setText(TimeAgo
+					.getTimeAgo(Long.parseLong(chatMessagesModel.messageDate),
+							context));
 
 			break;
 		}
 
 		return row;
+	}
+
+	private String getTimeAsString(int seconds) {
+		if (seconds < 60) { // rule 1
+			return String.format("%s seconds ago", seconds);
+		} else if (seconds < 3600) { // rule 2
+			return String.format("%s minutes ago", seconds / 60);
+		} // ... and so on
+
+		return null;
 	}
 }

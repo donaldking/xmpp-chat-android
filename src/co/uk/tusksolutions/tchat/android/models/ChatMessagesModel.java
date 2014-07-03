@@ -44,19 +44,50 @@ public class ChatMessagesModel implements Parcelable {
 
 			// Insert
 			long id = db.insert(TABLE, null, contentValues);
-			if (id > 0) {
+			
+			/*if (id > 0) {
+				Intent i = new Intent();
+				i.putExtra("id", id);
+				i.setAction(Constants.CHAT_MESSAGE_READY);
+				TChatApplication.getContext().sendBroadcast(i);
+			}*/
+
+			if( updateRosterTable(to, message,timeStamp) == true);
+			{
+				Log.i(TAG, "Chat Message insert complete! send BroadCast!");
 				Intent i = new Intent();
 				i.putExtra("id", id);
 				i.setAction(Constants.CHAT_MESSAGE_READY);
 				TChatApplication.getContext().sendBroadcast(i);
 			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return true;
+	}
+
+	private boolean updateRosterTable(String to, String message, long timeStamp) {
+		try {
+
+			ContentValues contentValues = new ContentValues();
+			contentValues.put(TChatDBHelper.LAST_MESSAGE, message);
+			contentValues.put(TChatDBHelper.LAST_MESSAGE_TIMESTAMP, timeStamp);
+			contentValues.put(TChatDBHelper.LAST_MESSAGE_STATUS, messageStatus);
+
+			// Insert
+			String whereClause = TChatDBHelper.USER + " = ? ";
+			String[] whereArgs = new String[] { to };
+			
+			db.update("ROSTER_TABLE", contentValues, whereClause, whereArgs);
+			return true;
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		return false;
 
-		Log.i(TAG, "Chat Message insert complete! send BroadCast!");
-		return true;
 	}
 
 	// Get chat messages: to & from

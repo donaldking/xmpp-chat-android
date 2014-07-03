@@ -13,6 +13,8 @@ import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -93,6 +95,13 @@ public class ChatActivity extends ActionBarActivity {
 		}
 	}
 
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+	    MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.chat_activity_menu, menu);
+	    return true;
+	}
+	
 	@Override
 	public void onResume() {
 		super.onResume();

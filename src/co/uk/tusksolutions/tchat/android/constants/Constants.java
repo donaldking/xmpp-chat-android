@@ -1,5 +1,6 @@
 package co.uk.tusksolutions.tchat.android.constants;
 
+
 public class Constants {
 
 	/**
@@ -35,5 +36,7 @@ public class Constants {
 	public static String RECONNECTION_SUCCESSFULL = "co.uk.tusksolutions.tchat.android.action.RECONNECTION_SUCCESSFULL";
 	public static String ROSTER_UPDATED = "co.uk.tusksolutions.tchat.android.action.ROSTER_UPDATED";
 	public static String ROSTER_EMPTY = "co.uk.tusksolutions.tchat.android.action.ROSTER_EMPTY";
+	public static String RECENTS_EMPTY = "co.uk.tusksolutions.tchat.android.action.RECENTS_EMPTY";
+	public static String RECENTS_UPDATED = "co.uk.tusksolutions.tchat.android.action.RECENTS_UPDATED";
 
 }

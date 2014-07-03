@@ -1,6 +1,5 @@
 package co.uk.tusksolutions.tchat.android.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -11,6 +10,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.fragments.GroupsFragment;
@@ -127,7 +127,8 @@ public class MainActivity extends ActionBarActivity implements
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 
 		// When swiping between different sections, select the corresponding
-		// tab. We can also use ActionBar.Tab#select() TO_USER do this if we have
+		// tab. We can also use ActionBar.Tab#select() TO_USER do this if we
+		// have
 		// a reference TO_USER the Tab.
 		mViewPager
 				.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
@@ -137,7 +138,8 @@ public class MainActivity extends ActionBarActivity implements
 					}
 				});
 
-		// For each of the sections in the app, add a tab TO_USER the action bar.
+		// For each of the sections in the app, add a tab TO_USER the action
+		// bar.
 		for (int i = 0; i < mSectionsPagerAdapter.getCount(); i++) {
 			actionBar.addTab(actionBar
 					.newTab()
@@ -155,8 +157,9 @@ public class MainActivity extends ActionBarActivity implements
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 
-		// Inflate the menu; this adds items TO_USER the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
+		// Inflate the menu; this adds items TO_USER the action bar if it is
+		// present.
+		getMenuInflater().inflate(R.menu.main_activity_menu, menu);
 		return true;
 	}
 
@@ -167,7 +170,11 @@ public class MainActivity extends ActionBarActivity implements
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 		if (id == R.id.action_chat) {
-			startActivity(new Intent(this, ChatActivity.class));
+
+			Toast.makeText(TChatApplication.getContext(),
+					"Go through friends list for now...", Toast.LENGTH_LONG)
+					.show();
+			//startActivity(new Intent(this, ChatActivity.class));
 			return true;
 		}
 		if (id == R.id.action_search) {
@@ -179,7 +186,8 @@ public class MainActivity extends ActionBarActivity implements
 	@Override
 	public void onTabSelected(ActionBar.Tab tab,
 			FragmentTransaction fragmentTransaction) {
-		// When the given tab is selected, switch TO_USER the corresponding page in
+		// When the given tab is selected, switch TO_USER the corresponding page
+		// in
 		// the ViewPager.
 		mViewPager.setCurrentItem(tab.getPosition());
 	}
@@ -195,8 +203,8 @@ public class MainActivity extends ActionBarActivity implements
 	}
 
 	/**
-	 * A {@link FragmentPagerAdapter} that returns a fragment corresponding TO_USER
-	 * one of the sections/tabs/pages.
+	 * A {@link FragmentPagerAdapter} that returns a fragment corresponding
+	 * TO_USER one of the sections/tabs/pages.
 	 */
 	public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
@@ -206,7 +214,8 @@ public class MainActivity extends ActionBarActivity implements
 
 		@Override
 		public Fragment getItem(int position) {
-			// getItem is called TO_USER instantiate the fragment for the given page.
+			// getItem is called TO_USER instantiate the fragment for the given
+			// page.
 			switch (position) {
 			case 0:
 				return getRecentsFragment();

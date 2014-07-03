@@ -41,6 +41,10 @@ public class TChatDBHelper extends SQLiteOpenHelper {
 	public static final String TYPE = "type";
 	public static final String PRESENCE_STATUS = "presenceStatus";
 	public static final String PRESENCE_TYPE = "presenceType";
+	public static final String LAST_MESSAGE = "lastMessage";
+	public static final String LAST_MESSAGE_STATUS = "lastMessageStatus";
+	public static final String LAST_SEEN_TIMESTAMP = "lastSeenTimestamp";
+	public static final String LAST_MESSAGE_TIMESTAMP = "lastMessageTimestamp";
 	public static final String RESOURCE = "resource";
 
 	/*
@@ -81,6 +85,10 @@ public class TChatDBHelper extends SQLiteOpenHelper {
 			+ " varchar(255) DEFAULT NULL," + "  " + PRESENCE_STATUS
 			+ " varchar(255) DEFAULT NULL," + PRESENCE_TYPE
 			+ " varchar(255) DEFAULT NULL," + RESOURCE
+			+ " varchar(255) DEFAULT NULL," + LAST_MESSAGE
+			+ " varchar(255) DEFAULT NULL," + LAST_MESSAGE_STATUS
+			+ " varchar(255) DEFAULT NULL," + LAST_SEEN_TIMESTAMP
+			+ " varchar(255) DEFAULT NULL," + LAST_MESSAGE_TIMESTAMP
 			+ " varchar(255) DEFAULT NULL);";
 
 	/*
@@ -88,13 +96,11 @@ public class TChatDBHelper extends SQLiteOpenHelper {
 	 */
 	private static final String CREATE_CHAT_MESSAGES_TABLE = "CREATE TABLE "
 			+ CHAT_MESSAGES_TABLE + " ( " + CM_UID
-			+ " INTEGER PRIMARY KEY AUTOINCREMENT," + "  " + MESSAGE 
-			+ " blob,"+ MESSAGE_DATE 
-			+ " varchar(255) DEFAULT NULL," + "  "+ FROM_USER 
+			+ " INTEGER PRIMARY KEY AUTOINCREMENT," + "  " + MESSAGE + " blob,"
+			+ MESSAGE_DATE + " varchar(255) DEFAULT NULL," + "  " + FROM_USER
 			+ " varchar(255) DEFAULT NULL," + "  " + TO_USER
 			+ " varchar(255) DEFAULT NULL," + MESSAGE_STATUS
 			+ " varchar(255) DEFAULT NULL);";
-	
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {

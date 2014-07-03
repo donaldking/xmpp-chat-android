@@ -25,7 +25,7 @@
             android:textSize="16dp" />
 
         <co.uk.tusksolutions.extensions.RobotoLightTextView
-            android:id="@+id/chat_from_timestamp"
+            android:id="@+id/chat_to_timestamp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="left"

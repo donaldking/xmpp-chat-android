@@ -26,8 +26,10 @@ public class RosterModel implements Parcelable {
 	public String status;
 	public String presenceStatus;
 	public String presenceType;
+	public String lastSeenTimestamp;
+	public String lastMessageTimestamp;
 	public String resourceName;
-	private String TABLE = TChatDBHelper.ROSTER_TABLE;
+	public String TABLE = TChatDBHelper.ROSTER_TABLE;
 	private SQLiteDatabase db;
 
 	static final String TAG = "RosterModel";
@@ -40,8 +42,8 @@ public class RosterModel implements Parcelable {
 		db = TChatApplication.getTChatDBWritable();
 		Collection<RosterEntry> entries = roster.getEntries();
 		/*
-		 * This method inserts the roster received fromUser the server TO_USER the local
-		 * db.
+		 * This method inserts the roster received fromUser the server TO_USER
+		 * the local db.
 		 */
 
 		for (RosterEntry entry : entries) {
@@ -187,8 +189,8 @@ public class RosterModel implements Parcelable {
 
 		while (cursor.moveToNext()) {
 			/*
-			 * Request for the values TO_USER be pulled fromUser this cursor and returned
-			 * back TO_USER us.
+			 * Request for the values TO_USER be pulled fromUser this cursor and
+			 * returned back TO_USER us.
 			 */
 			rosterModelCollection.add(fromCursor(cursor));
 		}
@@ -210,7 +212,7 @@ public class RosterModel implements Parcelable {
 		String whereClause = TChatDBHelper.PRESENCE_TYPE + " = ? OR "
 				+ TChatDBHelper.PRESENCE_TYPE + " = ? ";
 
-		String[] whereArgs = new String[] { "available", "unavailable"};
+		String[] whereArgs = new String[] { "available", "unavailable" };
 		String orderBy = TChatDBHelper.NAME + " ASC";
 
 		Cursor cursor = TChatApplication.getTChatDBReadable().query(TABLE,
@@ -218,17 +220,18 @@ public class RosterModel implements Parcelable {
 
 		while (cursor.moveToNext()) {
 			/*
-			 * Request for the values TO_USER be pulled fromUser this cursor and returned
-			 * back TO_USER us.
+			 * Request for the values TO_USER be pulled fromUser this cursor and
+			 * returned back TO_USER us.
 			 */
 			rosterModelCollection.add(fromCursor(cursor));
 		}
 		return rosterModelCollection;
 	}
 
-	private RosterModel fromCursor(Cursor cursor) {
+	protected RosterModel fromCursor(Cursor cursor) {
 		/*
-		 * Pulls the values fromUser the cursor object and returns it TO_USER the caller
+		 * Pulls the values fromUser the cursor object and returns it TO_USER
+		 * the caller
 		 */
 		RosterModel rosterModel = new RosterModel();
 
@@ -242,6 +245,10 @@ public class RosterModel implements Parcelable {
 				.getColumnIndex(TChatDBHelper.PRESENCE_STATUS));
 		rosterModel.presenceType = cursor.getString(cursor
 				.getColumnIndex(TChatDBHelper.PRESENCE_TYPE));
+		rosterModel.lastSeenTimestamp = cursor.getString(cursor
+				.getColumnIndex(TChatDBHelper.LAST_SEEN_TIMESTAMP));
+		rosterModel.lastMessageTimestamp = cursor.getString(cursor
+				.getColumnIndex(TChatDBHelper.LAST_MESSAGE_TIMESTAMP));
 		rosterModel.resourceName = cursor.getString(cursor
 				.getColumnIndex(TChatDBHelper.RESOURCE));
 
@@ -266,6 +273,8 @@ public class RosterModel implements Parcelable {
 		dest.writeString(status);
 		dest.writeString(presenceStatus);
 		dest.writeString(presenceType);
+		dest.writeString(lastSeenTimestamp);
+		dest.writeString(lastMessageTimestamp);
 		dest.writeString(resourceName);
 	}
 
@@ -280,12 +289,14 @@ public class RosterModel implements Parcelable {
 	};
 
 	/** recreate object fromUser parcel */
-	private RosterModel(Parcel in) {
+	protected RosterModel(Parcel in) {
 		this.user = in.readString();
 		this.name = in.readString();
 		this.status = in.readString();
 		this.presenceStatus = in.readString();
 		this.presenceType = in.readString();
+		this.lastSeenTimestamp = in.readString();
+		this.lastMessageTimestamp = in.readString();
 		this.resourceName = in.readString();
 	}
 

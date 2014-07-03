@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/main_row_view"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginTop="5dp"
+        android:baselineAligned="true"
+        android:orientation="horizontal" >
+
+        <FrameLayout
+            android:id="@+id/avatar_frame"
+            android:layout_width="50dp"
+            android:layout_height="50dp" >
+
+            <ImageView
+                android:id="@+id/roster_avatar"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:scaleType="fitCenter"
+                android:src="@drawable/mondobar_jewel_friends_on" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="true"
+            android:orientation="vertical" >
+
+            <co.uk.tusksolutions.extensions.RobotoRegularTextView
+                android:id="@+id/roster_name"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="Donald King"
+                android:textColor="@color/black"
+                android:textSize="17sp" />
+
+            <co.uk.tusksolutions.extensions.RobotoLightTextView
+                android:id="@+id/last_message"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="5dp"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="Lorem ipsum dolor"
+                android:textColor="@color/silver"
+                android:textSize="15sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Divider line layout -->
+
+    <LinearLayout
+        android:id="@+id/divider_layout_frame"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:layout_marginLeft="75dp"
+        android:layout_marginRight="25dp"
+        android:baselineAligned="true" >
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="#EEE" />
+    </LinearLayout>
+
+</LinearLayout>

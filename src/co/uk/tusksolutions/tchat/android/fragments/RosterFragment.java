@@ -35,8 +35,8 @@ public class RosterFragment extends Fragment {
 	private static int shortAnimTime;
 	private static int ALL_QUERY_ACTION = 1; // See adapter for notes
 	private int ONLINE_QUERY_ACTION = 2; // See adapter for notes
-	private static int CURRENT_QUERY_ACTION;
 	private RadioButton allButton, onlineButton;
+	private Bundle instanceState;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -56,8 +56,12 @@ public class RosterFragment extends Fragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-
-		mRosterReceiver = new RosterReceiver();
+		
+		instanceState = savedInstanceState;
+		if (TChatApplication.CHAT_SECTION_QUERY_ACTION == 0) {
+			TChatApplication.CHAT_SECTION_QUERY_ACTION = ALL_QUERY_ACTION;
+		}
+		
 		shortAnimTime = getResources().getInteger(
 				android.R.integer.config_shortAnimTime);
 
@@ -71,13 +75,33 @@ public class RosterFragment extends Fragment {
 		onlineButton = (RadioButton) rootView.findViewById(R.id.online_button);
 		onlineButton.setOnClickListener(new SegmentButtonOnClickListener());
 
-		if (savedInstanceState != null && mAdapter != null) {
-			CURRENT_QUERY_ACTION = savedInstanceState
+		if (instanceState != null && mAdapter != null) {
+			TChatApplication.CHAT_SECTION_QUERY_ACTION = instanceState
 					.getInt("currentQueryAction");
-			prepareListView(CURRENT_QUERY_ACTION);
+
+			if (TChatApplication.getRosterModel().queryAll().size() == 0) {
+				showProgress(true);
+				new Thread() {
+					public void run() {
+						XMPPPresenceListener.loadRoster();
+					}
+				}.start();
+			} else {
+				prepareListView(TChatApplication.CHAT_SECTION_QUERY_ACTION);
+			}
+
 		} else {
-			CURRENT_QUERY_ACTION = 1;
-			prepareListView(CURRENT_QUERY_ACTION);
+			
+			if (TChatApplication.getRosterModel().queryAll().size() == 0) {
+				showProgress(true);
+				new Thread() {
+					public void run() {
+						XMPPPresenceListener.loadRoster();
+					}
+				}.start();
+			} else {
+				prepareListView(TChatApplication.CHAT_SECTION_QUERY_ACTION);
+			}
 		}
 
 	}
@@ -85,23 +109,21 @@ public class RosterFragment extends Fragment {
 	@Override
 	public void onResume() {
 		super.onResume();
+		
+		mRosterReceiver = new RosterReceiver();
 		filter = new IntentFilter();
 		filter.addAction(Constants.ROSTER_EMPTY);
 		filter.addAction(Constants.ROSTER_UPDATED);
 		getActivity().registerReceiver(mRosterReceiver, filter);
-
-		if (TChatApplication.getRosterModel().queryAll().size() == 0) {
-			showProgress(true);
-			new Thread() {
-				public void run() {
-					XMPPPresenceListener.loadRoster();
-				}
-			}.start();
-		} else {
-			prepareListView(CURRENT_QUERY_ACTION);
-		}
 	}
 
+	@Override
+	public void onPause(){
+		super.onPause();
+		if (mRosterReceiver !=null) {
+			getActivity().unregisterReceiver(mRosterReceiver);
+		}
+	}
 	/**
 	 * Shows the progress UI and hides the login form.
 	 */
@@ -109,7 +131,8 @@ public class RosterFragment extends Fragment {
 	private static void showProgress(final boolean show) {
 
 		// On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
-		// for very easy animations. If available, use these APIs TO_USER fade-in
+		// for very easy animations. If available, use these APIs TO_USER
+		// fade-in
 		// the progress spinner.
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
 
@@ -131,12 +154,12 @@ public class RosterFragment extends Fragment {
 	}
 
 	private static void prepareListView(final int queryInt) {
-
+		
 		/**
 		 * Load Friends fromUser DB
 		 */
 
-		CURRENT_QUERY_ACTION = queryInt;
+		TChatApplication.CHAT_SECTION_QUERY_ACTION = queryInt;
 		mAdapter = new RosterContentAdapter(TChatApplication.getContext(),
 				queryInt);
 
@@ -162,12 +185,14 @@ public class RosterFragment extends Fragment {
 			int id = v.getId();
 			switch (id) {
 			case R.id.all_button:
-				Log.d(TAG, "Switching TO_USER tab: " + ALL_QUERY_ACTION);
+				// Log.d(TAG, "Switching TO_USER tab: " + ALL_QUERY_ACTION);
+				TChatApplication.CHAT_SECTION_QUERY_ACTION = ALL_QUERY_ACTION;
 				RosterFragment.prepareListView(ALL_QUERY_ACTION);
 				break;
 
 			case R.id.online_button:
-				Log.d(TAG, "Switching TO_USER tab: " + ONLINE_QUERY_ACTION);
+				// Log.d(TAG, "Switching TO_USER tab: " + ONLINE_QUERY_ACTION);
+				TChatApplication.CHAT_SECTION_QUERY_ACTION = ONLINE_QUERY_ACTION;
 				RosterFragment.prepareListView(ONLINE_QUERY_ACTION);
 				break;
 
@@ -191,12 +216,12 @@ public class RosterFragment extends Fragment {
 			if (intent.getAction().equalsIgnoreCase(Constants.ROSTER_UPDATED)) {
 
 				if (intent.getExtras() != null) {
-					int inserts = intent.getExtras().getInt("inserts");
-					if (inserts > mAdapter.getCount()
-							&& CURRENT_QUERY_ACTION == 1) {
+					//int inserts = intent.getExtras().getInt("inserts");
+					showProgress(true);
+					if (TChatApplication.CHAT_SECTION_QUERY_ACTION == ALL_QUERY_ACTION) {
 						prepareListView(ALL_QUERY_ACTION);
 					}
-				} else if (CURRENT_QUERY_ACTION == ONLINE_QUERY_ACTION) {
+				} else if (TChatApplication.CHAT_SECTION_QUERY_ACTION == ONLINE_QUERY_ACTION) {
 					prepareListView(ONLINE_QUERY_ACTION);
 				}
 
@@ -212,7 +237,7 @@ public class RosterFragment extends Fragment {
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 
-		outState.putInt("currentQueryAction", CURRENT_QUERY_ACTION);
+		outState.putInt("currentQueryAction",
+				TChatApplication.CHAT_SECTION_QUERY_ACTION);
 	}
-
 }
