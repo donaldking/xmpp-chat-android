@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -29,7 +30,7 @@ import co.uk.tusksolutions.tchat.android.constants.Constants;
 import co.uk.tusksolutions.tchat.android.xmpp.XMPPChatMessageManager;
 
 public class ChatActivity extends ActionBarActivity {
-
+private  MediaPlayer mp;
 	private TextView chatMessageEditText;
 	private Button chatSendButton, emojiButton;
 	private String buddyName;
@@ -62,7 +63,7 @@ public class ChatActivity extends ActionBarActivity {
 
 		chatSendButton = (Button) findViewById(R.id.chat_send_button);
 		chatSendButton.setOnClickListener(new ChatSendOnClickListener());
-
+		
 		chatMessageEditText = (TextView) findViewById(R.id.chat_message_edit_text);
 		chatMessageEditText.addTextChangedListener(new ChatTextListener());
 
@@ -291,6 +292,11 @@ public class ChatActivity extends ActionBarActivity {
 		@Override
 		public void onClick(View v) {
 			if (chatMessageEditText.getText().toString().length() >= 1) {
+				mp = MediaPlayer.create(v.getContext(), R.raw.received_message);
+				  mp.setVolume(1, 1);
+
+				 mp.start();
+				
 				XMPPChatMessageManager.sendMessage(buddyJid,
 						chatMessageEditText.getText().toString());
 				chatMessageEditText.setText("");

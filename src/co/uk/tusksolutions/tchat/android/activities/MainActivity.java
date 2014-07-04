@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
+import co.uk.tusksolutions.tchat.android.fragments.ChatRoomsFragment;
 import co.uk.tusksolutions.tchat.android.fragments.GroupsFragment;
 import co.uk.tusksolutions.tchat.android.fragments.RecentsFragment;
 import co.uk.tusksolutions.tchat.android.fragments.RosterFragment;
@@ -41,6 +42,8 @@ public class MainActivity extends ActionBarActivity implements
 	private GroupsFragment mGroupsFragment;
 	private RosterFragment mRosterFragment;
 	private SettingsFragment mSettingsFragment;
+	
+	private ChatRoomsFragment mChatRoomFragment;
 	ActionBar actionBar;
 	boolean mHomeForeGround = false;
 
@@ -56,6 +59,18 @@ public class MainActivity extends ActionBarActivity implements
 		return mRecentsFragment;
 	}
 
+	public ChatRoomsFragment getChatRoomsFragment()
+	{
+		if(mChatRoomFragment==null)
+		{
+			mChatRoomFragment=new ChatRoomsFragment();
+			Bundle bundle = new Bundle();
+			bundle.putString("title", "ChatRooms");
+			bundle.putInt("icon", R.drawable.ic_action_group);
+			mChatRoomFragment.setArguments(bundle);
+		}
+		return mChatRoomFragment;
+	}
 	public GroupsFragment getGroupsFragment() {
 
 		if (mGroupsFragment == null) {
@@ -220,10 +235,13 @@ public class MainActivity extends ActionBarActivity implements
 			case 0:
 				return getRecentsFragment();
 			case 1:
-				return getGroupsFragment();
+				return getChatRoomsFragment();
+				
 			case 2:
-				return getRosterFragment();
+				return getGroupsFragment();
 			case 3:
+				return getRosterFragment();
+			case 4:
 				return getSettingsFragment();
 			}
 			return null;
@@ -232,7 +250,7 @@ public class MainActivity extends ActionBarActivity implements
 		@Override
 		public int getCount() {
 			// Show 4 total pages.
-			return 4;
+			return 5;
 		}
 	}
 
