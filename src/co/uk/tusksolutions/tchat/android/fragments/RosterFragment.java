@@ -115,6 +115,8 @@ public class RosterFragment extends Fragment {
 		filter.addAction(Constants.ROSTER_EMPTY);
 		filter.addAction(Constants.ROSTER_UPDATED);
 		getActivity().registerReceiver(mRosterReceiver, filter);
+		
+		prepareListView(TChatApplication.CHAT_SECTION_QUERY_ACTION);
 	}
 
 	@Override

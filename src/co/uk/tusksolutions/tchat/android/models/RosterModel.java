@@ -28,6 +28,7 @@ public class RosterModel implements Parcelable {
 	public String presenceType;
 	public String lastSeenTimestamp;
 	public String lastMessageTimestamp;
+	public String lastMessage;
 	public String resourceName;
 	public String TABLE = TChatDBHelper.ROSTER_TABLE;
 	private SQLiteDatabase db;
@@ -249,6 +250,8 @@ public class RosterModel implements Parcelable {
 				.getColumnIndex(TChatDBHelper.LAST_SEEN_TIMESTAMP));
 		rosterModel.lastMessageTimestamp = cursor.getString(cursor
 				.getColumnIndex(TChatDBHelper.LAST_MESSAGE_TIMESTAMP));
+		rosterModel.lastMessage = cursor.getString(cursor
+				.getColumnIndex(TChatDBHelper.LAST_MESSAGE));
 		rosterModel.resourceName = cursor.getString(cursor
 				.getColumnIndex(TChatDBHelper.RESOURCE));
 
@@ -275,6 +278,7 @@ public class RosterModel implements Parcelable {
 		dest.writeString(presenceType);
 		dest.writeString(lastSeenTimestamp);
 		dest.writeString(lastMessageTimestamp);
+		dest.writeString(lastMessage);
 		dest.writeString(resourceName);
 	}
 
@@ -297,6 +301,7 @@ public class RosterModel implements Parcelable {
 		this.presenceType = in.readString();
 		this.lastSeenTimestamp = in.readString();
 		this.lastMessageTimestamp = in.readString();
+		this.lastMessage = in.readString();
 		this.resourceName = in.readString();
 	}
 

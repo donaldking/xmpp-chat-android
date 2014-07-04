@@ -44,15 +44,16 @@ public class ChatMessagesModel implements Parcelable {
 
 			// Insert
 			long id = db.insert(TABLE, null, contentValues);
-			
-			/*if (id > 0) {
-				Intent i = new Intent();
-				i.putExtra("id", id);
-				i.setAction(Constants.CHAT_MESSAGE_READY);
-				TChatApplication.getContext().sendBroadcast(i);
-			}*/
 
-			if( updateRosterTable(to, message,timeStamp) == true);
+			/*
+			 * if (id > 0) { Intent i = new Intent(); i.putExtra("id", id);
+			 * i.setAction(Constants.CHAT_MESSAGE_READY);
+			 * TChatApplication.getContext().sendBroadcast(i); }
+			 */
+
+			if (updateRosterTable(to.equalsIgnoreCase(TChatApplication
+					.getCurrentJid()) ? from : to, message, timeStamp) == true)
+				;
 			{
 				Log.i(TAG, "Chat Message insert complete! send BroadCast!");
 				Intent i = new Intent();
@@ -60,11 +61,11 @@ public class ChatMessagesModel implements Parcelable {
 				i.setAction(Constants.CHAT_MESSAGE_READY);
 				TChatApplication.getContext().sendBroadcast(i);
 			}
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return true;
 	}
 
@@ -79,7 +80,7 @@ public class ChatMessagesModel implements Parcelable {
 			// Insert
 			String whereClause = TChatDBHelper.USER + " = ? ";
 			String[] whereArgs = new String[] { to };
-			
+
 			db.update("ROSTER_TABLE", contentValues, whereClause, whereArgs);
 			return true;
 

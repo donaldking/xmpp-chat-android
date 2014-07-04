@@ -134,14 +134,4 @@ public class ChatMessagesAdapter extends BaseAdapter {
 
 		return row;
 	}
-
-	private String getTimeAsString(int seconds) {
-		if (seconds < 60) { // rule 1
-			return String.format("%s seconds ago", seconds);
-		} else if (seconds < 3600) { // rule 2
-			return String.format("%s minutes ago", seconds / 60);
-		} // ... and so on
-
-		return null;
-	}
 }

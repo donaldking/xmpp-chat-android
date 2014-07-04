@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.BaseAdapter;
+import co.uk.tusksolutions.extensions.TimeAgo;
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.activities.ChatActivity;
@@ -81,8 +82,7 @@ public class RecentsContentAdapter extends BaseAdapter {
 		 * Put values received fromUser model collection TO_USER view holder.
 		 * 
 		 */
-		final RosterModel model = recentsModelCollection
-				.get(position);
+		final RosterModel model = recentsModelCollection.get(position);
 
 		String[] username = model.user.split("@");
 		try {
@@ -95,7 +95,9 @@ public class RecentsContentAdapter extends BaseAdapter {
 		}
 
 		holder.rosterName.setText(model.name);
-		holder.lastMessage.setText(model.lastSeenTimestamp);
+		holder.lastMessage.setText(model.lastMessage);
+		holder.lastMessageTimestamp.setText(TimeAgo.getTimeAgo(
+				Long.parseLong(model.lastMessageTimestamp), context));
 
 		row.setOnClickListener(new OnClickListener() {
 

@@ -81,7 +81,10 @@ public class RecentsFragment extends Fragment {
 		filter = new IntentFilter();
 		filter.addAction(Constants.RECENTS_EMPTY);
 		filter.addAction(Constants.RECENTS_UPDATED);
+		filter.addAction(Constants.CHAT_MESSAGE_READY);
 		getActivity().registerReceiver(mRecentsReceiver, filter);
+		
+		prepareListView();
 	}
 
 	@Override
@@ -164,6 +167,8 @@ public class RecentsFragment extends Fragment {
 					Constants.RECENTS_EMPTY)) {
 				showProgress(false);
 				Log.i(TAG, "Recents Empty!");
+			}else if (intent.getAction().equalsIgnoreCase(Constants.CHAT_MESSAGE_READY)){
+				prepareListView();
 			}
 		}
 	}

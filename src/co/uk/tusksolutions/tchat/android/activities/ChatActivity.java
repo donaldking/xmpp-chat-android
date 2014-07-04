@@ -97,11 +97,11 @@ public class ChatActivity extends ActionBarActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-	    MenuInflater inflater = getMenuInflater();
-	    inflater.inflate(R.menu.chat_activity_menu, menu);
-	    return true;
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.chat_activity_menu, menu);
+		return true;
 	}
-	
+
 	@Override
 	public void onResume() {
 		super.onResume();
@@ -111,6 +111,7 @@ public class ChatActivity extends ActionBarActivity {
 		filter.addAction(Constants.CHAT_MESSAGE_READY); // From sender (me)
 		filter.addAction(Constants.CHAT_MESSAGE_RECEIVED); // From Receiver
 															// (buddy)
+
 		registerReceiver(mChatMessageReceiver, filter);
 
 		/**
@@ -137,8 +138,9 @@ public class ChatActivity extends ActionBarActivity {
 		mAdapter = new ChatMessagesAdapter(buddyJid, currentJid, action, id);
 
 		if (mAdapter.getCount() == 0) {
-			showProgress(true);
-			listView.setVisibility(View.GONE);
+			// TODO Sync from API
+			//showProgress(true);
+			//listView.setVisibility(View.GONE);
 		} else {
 			showProgress(false);
 			listView.setAdapter(mAdapter);
