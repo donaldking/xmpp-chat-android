@@ -18,7 +18,6 @@ import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.activities.ChatActivity;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
 import co.uk.tusksolutions.tchat.android.models.RecentsModel;
-import co.uk.tusksolutions.tchat.android.models.RosterModel;
 import co.uk.tusksolutions.tchat.android.viewHolders.RecentsViewHolder;
 
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
@@ -31,7 +30,7 @@ public class RecentsContentAdapter extends BaseAdapter {
 	private Context context;
 	private RecentsModel mModel;
 
-	private ArrayList<RosterModel> recentsModelCollection;
+	private ArrayList<RecentsModel> recentsModelCollection;
 
 	public RecentsContentAdapter(Context context) {
 		this.context = TChatApplication.getContext();
@@ -82,9 +81,9 @@ public class RecentsContentAdapter extends BaseAdapter {
 		 * Put values received fromUser model collection TO_USER view holder.
 		 * 
 		 */
-		final RosterModel model = recentsModelCollection.get(position);
+		final RecentsModel model = recentsModelCollection.get(position);
 
-		String[] username = model.user.split("@");
+		String[] username = model.chatWithUser.split("@");
 		try {
 			UrlImageViewHelper.setUrlDrawable(holder.rosterAvatar,
 					Constants.PROXY_SERVER + username[0]
@@ -95,9 +94,9 @@ public class RecentsContentAdapter extends BaseAdapter {
 		}
 
 		holder.rosterName.setText(model.name);
-		holder.lastMessage.setText(model.lastMessage);
+		holder.lastMessage.setText(model.message);
 		holder.lastMessageTimestamp.setText(TimeAgo.getTimeAgo(
-				Long.parseLong(model.lastMessageTimestamp), context));
+				Long.parseLong(model.timestamp), context));
 
 		row.setOnClickListener(new OnClickListener() {
 
@@ -106,7 +105,7 @@ public class RecentsContentAdapter extends BaseAdapter {
 
 				doSelectionAnimationForView(v);
 				Bundle b = new Bundle();
-				b.putString("buddyJid", model.user);
+				b.putString("buddyJid", model.chatWithUser);
 				b.putString("friendName", model.name);
 
 				Intent intent = new Intent(context, ChatActivity.class);

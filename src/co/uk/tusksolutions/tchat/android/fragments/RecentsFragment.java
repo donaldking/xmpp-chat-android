@@ -10,7 +10,6 @@ import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +17,7 @@ import android.widget.ListView;
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.adapters.RecentsContentAdapter;
+import co.uk.tusksolutions.tchat.android.api.APIRecents;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
 
 public class RecentsFragment extends Fragment {
@@ -27,10 +27,10 @@ public class RecentsFragment extends Fragment {
 	private View rootView;
 	private static RecentsContentAdapter mAdapter;
 	private IntentFilter filter;
-	private Bundle instanceState;
 	private static int shortAnimTime;
 	private static View mLodingStatusView;
 	private RecentsReceiver mRecentsReceiver;
+	private APIRecents recentsApi;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -49,51 +49,45 @@ public class RecentsFragment extends Fragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		
-		instanceState = savedInstanceState;
-		
+
 		shortAnimTime = getResources().getInteger(
 				android.R.integer.config_shortAnimTime);
 
-		mLodingStatusView = getActivity().findViewById(R.id.loading_view);
+		mLodingStatusView = getActivity().findViewById(
+				R.id.recents_loading_view);
 		listView = (ListView) rootView.findViewById(R.id.list_view);
 		listView.setVerticalScrollBarEnabled(false);
 		listView.setHorizontalScrollBarEnabled(false);
 
-		if (instanceState != null && mAdapter != null) {
-			TChatApplication.CHAT_SECTION_QUERY_ACTION = instanceState
-					.getInt("currentQueryAction");
+		showProgress(true);
 
-			prepareListView();
-
-		} else {
-
-			prepareListView();
-		}
-
+		// Load recents from API
+		recentsApi = new APIRecents();
+		recentsApi.getRecents();
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
-		
+
 		mRecentsReceiver = new RecentsReceiver();
 		filter = new IntentFilter();
 		filter.addAction(Constants.RECENTS_EMPTY);
 		filter.addAction(Constants.RECENTS_UPDATED);
 		filter.addAction(Constants.CHAT_MESSAGE_READY);
 		getActivity().registerReceiver(mRecentsReceiver, filter);
-		
+
 		prepareListView();
 	}
 
 	@Override
-	public void onPause(){
+	public void onPause() {
 		super.onPause();
-		if (mRecentsReceiver !=null) {
+		if (mRecentsReceiver != null) {
 			getActivity().unregisterReceiver(mRecentsReceiver);
 		}
 	}
+
 	/**
 	 * Shows the progress UI and hides the login form.
 	 */
@@ -131,9 +125,7 @@ public class RecentsFragment extends Fragment {
 		mAdapter = new RecentsContentAdapter(TChatApplication.getContext());
 
 		if (mAdapter.getCount() == 0) {
-			//showProgress(true);
 			listView.setVisibility(View.GONE);
-			
 		} else {
 			showProgress(false);
 			listView.setAdapter(mAdapter);
@@ -159,15 +151,19 @@ public class RecentsFragment extends Fragment {
 				if (intent.getExtras() != null) {
 					int inserts = intent.getExtras().getInt("inserts");
 					if (inserts > mAdapter.getCount()) {
+						showProgress(false);
 						prepareListView();
 					}
+				} else {
+					showProgress(false);
+					prepareListView();
 				}
 
 			} else if (intent.getAction().equalsIgnoreCase(
 					Constants.RECENTS_EMPTY)) {
 				showProgress(false);
-				Log.i(TAG, "Recents Empty!");
-			}else if (intent.getAction().equalsIgnoreCase(Constants.CHAT_MESSAGE_READY)){
+			} else if (intent.getAction().equalsIgnoreCase(
+					Constants.CHAT_MESSAGE_READY)) {
 				prepareListView();
 			}
 		}

@@ -75,7 +75,7 @@
     <!-- Loading progress start -->
 
     <LinearLayout
-        android:id="@+id/loading_view"
+        android:id="@+id/roster_loading_view"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_gravity="center"

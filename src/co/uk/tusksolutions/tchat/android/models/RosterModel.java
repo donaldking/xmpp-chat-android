@@ -248,10 +248,6 @@ public class RosterModel implements Parcelable {
 				.getColumnIndex(TChatDBHelper.PRESENCE_TYPE));
 		rosterModel.lastSeenTimestamp = cursor.getString(cursor
 				.getColumnIndex(TChatDBHelper.LAST_SEEN_TIMESTAMP));
-		rosterModel.lastMessageTimestamp = cursor.getString(cursor
-				.getColumnIndex(TChatDBHelper.LAST_MESSAGE_TIMESTAMP));
-		rosterModel.lastMessage = cursor.getString(cursor
-				.getColumnIndex(TChatDBHelper.LAST_MESSAGE));
 		rosterModel.resourceName = cursor.getString(cursor
 				.getColumnIndex(TChatDBHelper.RESOURCE));
 

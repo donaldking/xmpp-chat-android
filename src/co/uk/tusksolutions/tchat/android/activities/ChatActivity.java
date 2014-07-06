@@ -1,5 +1,7 @@
 package co.uk.tusksolutions.tchat.android.activities;
 
+import org.jivesoftware.smack.util.StringUtils;
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
@@ -26,11 +28,12 @@ import android.widget.Toast;
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.adapters.ChatMessagesAdapter;
+import co.uk.tusksolutions.tchat.android.api.APICloudStorage;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
 import co.uk.tusksolutions.tchat.android.xmpp.XMPPChatMessageManager;
 
 public class ChatActivity extends ActionBarActivity {
-private  MediaPlayer mp;
+	private MediaPlayer mp;
 	private TextView chatMessageEditText;
 	private Button chatSendButton, emojiButton;
 	private String buddyName;
@@ -50,7 +53,7 @@ private  MediaPlayer mp;
 		currentJid = TChatApplication.getCurrentJid();
 		shortAnimTime = getResources().getInteger(
 				android.R.integer.config_shortAnimTime);
-		mLodingStatusView = this.findViewById(R.id.loading_view);
+		mLodingStatusView = this.findViewById(R.id.chat_loading_view);
 
 		listView = (ListView) findViewById(R.id.chat_messages_list_view);
 		listView.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
@@ -63,7 +66,7 @@ private  MediaPlayer mp;
 
 		chatSendButton = (Button) findViewById(R.id.chat_send_button);
 		chatSendButton.setOnClickListener(new ChatSendOnClickListener());
-		
+
 		chatMessageEditText = (TextView) findViewById(R.id.chat_message_edit_text);
 		chatMessageEditText.addTextChangedListener(new ChatTextListener());
 
@@ -140,8 +143,8 @@ private  MediaPlayer mp;
 
 		if (mAdapter.getCount() == 0) {
 			// TODO Sync from API
-			//showProgress(true);
-			//listView.setVisibility(View.GONE);
+			// showProgress(true);
+			// listView.setVisibility(View.GONE);
 		} else {
 			showProgress(false);
 			listView.setAdapter(mAdapter);
@@ -292,16 +295,21 @@ private  MediaPlayer mp;
 		@Override
 		public void onClick(View v) {
 			if (chatMessageEditText.getText().toString().length() >= 1) {
-				mp = MediaPlayer.create(v.getContext(), R.raw.received_message);
-				  mp.setVolume(1, 1);
+				String message = chatMessageEditText.getText().toString();
 
-				 mp.start();
-				
-				XMPPChatMessageManager.sendMessage(buddyJid,
-						chatMessageEditText.getText().toString());
+				mp = MediaPlayer.create(v.getContext(), R.raw.received_message);
+				mp.setVolume(1, 1);
+				mp.start();
+
+				XMPPChatMessageManager.sendMessage(buddyJid, message);
 				chatMessageEditText.setText("");
 				chatSendButton.setEnabled(false);
-				// TODO Wait for packet call back TO_USER set it as delivered.
+
+				// Save to cloud
+				APICloudStorage cloudStorage = new APICloudStorage();
+				cloudStorage.saveToCloud(TChatApplication.getUserModel()
+						.getUsername(), StringUtils.parseName(buddyJid),
+						message, "none");
 			}
 		}
 

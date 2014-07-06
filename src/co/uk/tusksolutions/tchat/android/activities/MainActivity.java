@@ -42,7 +42,7 @@ public class MainActivity extends ActionBarActivity implements
 	private GroupsFragment mGroupsFragment;
 	private RosterFragment mRosterFragment;
 	private SettingsFragment mSettingsFragment;
-	
+
 	private ChatRoomsFragment mChatRoomFragment;
 	ActionBar actionBar;
 	boolean mHomeForeGround = false;
@@ -59,30 +59,6 @@ public class MainActivity extends ActionBarActivity implements
 		return mRecentsFragment;
 	}
 
-	public ChatRoomsFragment getChatRoomsFragment()
-	{
-		if(mChatRoomFragment==null)
-		{
-			mChatRoomFragment=new ChatRoomsFragment();
-			Bundle bundle = new Bundle();
-			bundle.putString("title", "ChatRooms");
-			bundle.putInt("icon", R.drawable.ic_action_group);
-			mChatRoomFragment.setArguments(bundle);
-		}
-		return mChatRoomFragment;
-	}
-	public GroupsFragment getGroupsFragment() {
-
-		if (mGroupsFragment == null) {
-			mGroupsFragment = new GroupsFragment();
-			Bundle bundle = new Bundle();
-			bundle.putString("title", "Groups");
-			bundle.putInt("icon", R.drawable.ic_action_group);
-			mGroupsFragment.setArguments(bundle);
-		}
-		return mGroupsFragment;
-	}
-
 	public RosterFragment getRosterFragment() {
 
 		if (mRosterFragment == null) {
@@ -93,6 +69,29 @@ public class MainActivity extends ActionBarActivity implements
 			mRosterFragment.setArguments(bundle);
 		}
 		return mRosterFragment;
+	}
+
+	public ChatRoomsFragment getChatRoomsFragment() {
+		if (mChatRoomFragment == null) {
+			mChatRoomFragment = new ChatRoomsFragment();
+			Bundle bundle = new Bundle();
+			bundle.putString("title", "ChatRooms");
+			bundle.putInt("icon", R.drawable.ic_action_group);
+			mChatRoomFragment.setArguments(bundle);
+		}
+		return mChatRoomFragment;
+	}
+
+	public GroupsFragment getGroupsFragment() {
+
+		if (mGroupsFragment == null) {
+			mGroupsFragment = new GroupsFragment();
+			Bundle bundle = new Bundle();
+			bundle.putString("title", "Groups");
+			bundle.putInt("icon", R.drawable.ic_action_group);
+			mGroupsFragment.setArguments(bundle);
+		}
+		return mGroupsFragment;
 	}
 
 	public SettingsFragment getSettingsFragment() {
@@ -125,10 +124,10 @@ public class MainActivity extends ActionBarActivity implements
 
 		/*
 		 * Hide Actionbar but only display tabs
-		 * 
-		 * actionBar.setDisplayShowTitleEnabled(false);
-		 * actionBar.setDisplayShowHomeEnabled(false);
-		 */
+		 */ 
+		 actionBar.setDisplayShowTitleEnabled(false);
+		 actionBar.setDisplayShowHomeEnabled(false);
+		 
 
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections of the activity.
@@ -189,7 +188,7 @@ public class MainActivity extends ActionBarActivity implements
 			Toast.makeText(TChatApplication.getContext(),
 					"Go through friends list for now...", Toast.LENGTH_LONG)
 					.show();
-			//startActivity(new Intent(this, ChatActivity.class));
+			// startActivity(new Intent(this, ChatActivity.class));
 			return true;
 		}
 		if (id == R.id.action_search) {
@@ -235,12 +234,11 @@ public class MainActivity extends ActionBarActivity implements
 			case 0:
 				return getRecentsFragment();
 			case 1:
-				return getChatRoomsFragment();
-				
+				return getRosterFragment();
 			case 2:
 				return getGroupsFragment();
 			case 3:
-				return getRosterFragment();
+				return getChatRoomsFragment();
 			case 4:
 				return getSettingsFragment();
 			}

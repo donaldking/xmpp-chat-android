@@ -65,7 +65,7 @@ public class RosterFragment extends Fragment {
 		shortAnimTime = getResources().getInteger(
 				android.R.integer.config_shortAnimTime);
 
-		mLodingStatusView = getActivity().findViewById(R.id.loading_view);
+		mLodingStatusView = getActivity().findViewById(R.id.roster_loading_view);
 		listView = (ListView) rootView.findViewById(R.id.list_view);
 		listView.setVerticalScrollBarEnabled(false);
 		listView.setHorizontalScrollBarEnabled(false);
@@ -116,7 +116,6 @@ public class RosterFragment extends Fragment {
 		filter.addAction(Constants.ROSTER_UPDATED);
 		getActivity().registerReceiver(mRosterReceiver, filter);
 		
-		prepareListView(TChatApplication.CHAT_SECTION_QUERY_ACTION);
 	}
 
 	@Override
@@ -166,7 +165,11 @@ public class RosterFragment extends Fragment {
 				queryInt);
 
 		if (mAdapter.getCount() == 0) {
-			showProgress(true);
+			if (TChatApplication.CHAT_SECTION_QUERY_ACTION == 2) {
+				showProgress(false);
+			}else{
+				showProgress(true);
+			}
 			listView.setVisibility(View.GONE);
 		} else {
 			showProgress(false);
