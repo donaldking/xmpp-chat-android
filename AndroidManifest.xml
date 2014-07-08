@@ -95,7 +95,8 @@
         
         
         <activity android:name="co.uk.tusksolutions.tchat.android.activities.SearchActivity"
-          android:launchMode="singleTop" >
+          android:launchMode="singleTop"
+          android:noHistory="true">
     <intent-filter>
         <action android:name="android.intent.action.SEARCH" />
     </intent-filter>

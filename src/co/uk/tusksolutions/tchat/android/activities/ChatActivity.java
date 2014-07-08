@@ -81,9 +81,9 @@ public class ChatActivity extends ActionBarActivity {
 				buddyName = getIntent().getExtras()
 						.getBundle("chatFromFriendBundle")
 						.getString("fromName");
-				buddyJid = getIntent().getExtras()
+				buddyJid = StringUtils.parseBareAddress(getIntent().getExtras()
 						.getBundle("chatFromFriendBundle")
-						.getString("buddyJid");
+						.getString("buddyJid"));
 
 			} else if (getIntent().getExtras().containsKey(
 					"chatWithFriendBundle")) {

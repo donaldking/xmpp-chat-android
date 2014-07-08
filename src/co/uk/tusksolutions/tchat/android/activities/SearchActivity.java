@@ -2,8 +2,6 @@ package co.uk.tusksolutions.tchat.android.activities;
 
 import java.util.ArrayList;
 
-import org.w3c.dom.ls.LSInput;
-
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
@@ -78,20 +76,20 @@ public class SearchActivity extends ActionBarActivity implements TextWatcher {
 
 		listView.setVerticalScrollBarEnabled(false);
 		listView.setHorizontalScrollBarEnabled(false);
-		
+
 		if (clear_text_search.getVisibility() != View.VISIBLE) {
 			clear_text_search.setOnClickListener(new OnClickListener() {
-				
+
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
-                    clear_text_search.setVisibility(View.GONE);
+					clear_text_search.setVisibility(View.GONE);
 					searchView.setText("");
-					
+
 				}
 			});
 		}
-		
+
 	}
 
 	/*

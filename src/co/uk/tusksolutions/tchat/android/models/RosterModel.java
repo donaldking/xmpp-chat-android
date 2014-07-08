@@ -8,8 +8,6 @@ import org.jivesoftware.smack.Roster;
 import org.jivesoftware.smack.RosterEntry;
 import org.jivesoftware.smack.packet.Presence;
 
-
-
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
@@ -230,24 +228,18 @@ public class RosterModel implements Parcelable {
 		}
 		return rosterModelCollection;
 	}
+
 	public ArrayList<RosterModel> querySearch(String text) {
 
 		ArrayList<RosterModel> rosterModelCollection = new ArrayList<RosterModel>();
 
-		String whereClause = TChatDBHelper.NAME + " = ? OR "
-				+ TChatDBHelper.USER + " = ? ";
+		String whereClause = TChatDBHelper.NAME + " LIKE ? ";
 
-		String[] whereArgs = new String[] { "LIKE '%" + text + "' "};
+		String[] whereArgs = new String[] { "%" + text + "%" };
 		String orderBy = TChatDBHelper.NAME + " ASC";
-		
-		
-		
-		
-	//Cursor cursor= TChatApplication.getTChatDBHelper().query(TABLE, null , TChatDBHelper.NAME +" like '%"+text+"%' or "+TChatDBHelper.USER+" like '%"+text+"%' ", null, null, null, TChatDBHelper.NAME +" DESC");
-		String query="select * from ROSTER_TABLE where name like '%"+text+"%' or user like '%"+text+"%'";
-		Cursor cursor=TChatApplication.getTChatDBReadable().rawQuery(query,null);
-/*	Cursor cursor = TChatApplication.getTChatDBReadable().query(TABLE,
-				null, whereClause, whereArgs, null, null, orderBy);*/
+
+		Cursor cursor = TChatApplication.getTChatDBReadable().query(TABLE,
+				null, whereClause, whereArgs, null, null, orderBy);
 
 		while (cursor.moveToNext()) {
 			/*
@@ -266,6 +258,7 @@ public class RosterModel implements Parcelable {
 		}
 		return rosterModelCollection;
 	}
+
 	protected RosterModel fromCursor(Cursor cursor) {
 		/*
 		 * Pulls the values fromUser the cursor object and returns it TO_USER

@@ -41,8 +41,12 @@ public class XMPPPresenceListener implements PacketListener {
 		/**
 		 * Request and process our roster
 		 */
-		Roster roster = TChatApplication.connection.getRoster();
-		TChatApplication.getRosterModel().saveRosterToDB(roster);
+		try {
+			Roster roster = TChatApplication.connection.getRoster();
+			TChatApplication.getRosterModel().saveRosterToDB(roster);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 	}
 }
