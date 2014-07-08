@@ -57,7 +57,7 @@ public class LoginActivity extends Activity {
 		// Set up the login form.
 		mUsernameView = (EditText) findViewById(R.id.username);
 		mUsernameView.setText(mUsername);
-		mUsernameView.setText("donaldking");
+		mUsernameView.setText("");
 
 		mPasswordView = (EditText) findViewById(R.id.password);
 		mPasswordView.setText("default");
@@ -116,7 +116,7 @@ public class LoginActivity extends Activity {
 		mPasswordView.setError(null);
 
 		// Store values at the time of the login attempt.
-		mUsername = mUsernameView.getText().toString();
+		mUsername = mUsernameView.getText().toString().trim();
 		mPassword = mPasswordView.getText().toString();
 
 		boolean cancel = false;

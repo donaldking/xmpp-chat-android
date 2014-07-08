@@ -101,13 +101,13 @@ public class XMPPConnectionManager {
 									@Override
 									public void run() { // Show who we are
 														// logged in as
-										Toast.makeText(
+										/*Toast.makeText(
 												TChatApplication.getContext(),
 												(String) TAG
 														+ " Logged in as: "
 														+ TChatApplication.connection
 																.getUser(),
-												Toast.LENGTH_LONG).show();
+												Toast.LENGTH_LONG).show();*/
 										/*
 										 * Send login successful broadcast
 										 */

@@ -51,7 +51,7 @@ public class ChatMessagesModel implements Parcelable {
 			 * TChatApplication.getContext().sendBroadcast(i); }
 			 */
 
-			if (updateRosterTable(to.equalsIgnoreCase(TChatApplication
+			if (updateRecentsTable(to.equalsIgnoreCase(TChatApplication
 					.getCurrentJid()) ? from : to, message, timeStamp) == true)
 				;
 			{
@@ -69,19 +69,19 @@ public class ChatMessagesModel implements Parcelable {
 		return true;
 	}
 
-	private boolean updateRosterTable(String to, String message, long timeStamp) {
+	private boolean updateRecentsTable(String to, String message, long timeStamp) {
 		try {
 
 			ContentValues contentValues = new ContentValues();
-			contentValues.put(TChatDBHelper.LAST_MESSAGE, message);
-			contentValues.put(TChatDBHelper.LAST_MESSAGE_TIMESTAMP, timeStamp);
-			contentValues.put(TChatDBHelper.LAST_MESSAGE_STATUS, messageStatus);
+			contentValues.put(TChatDBHelper.R_MESSAGE, message);
+			contentValues.put(TChatDBHelper.R_TIMESTAMP, timeStamp);
+			contentValues.put(TChatDBHelper.R_IS_READ, messageStatus);
 
 			// Insert
-			String whereClause = TChatDBHelper.USER + " = ? ";
+			String whereClause = TChatDBHelper.R_CHAT_WITH + " = ? ";
 			String[] whereArgs = new String[] { to };
 
-			db.update("ROSTER_TABLE", contentValues, whereClause, whereArgs);
+			db.update(TChatDBHelper.RECENTS_TABLE, contentValues, whereClause, whereArgs);
 			return true;
 
 		} catch (Exception e) {
@@ -151,6 +151,16 @@ public class ChatMessagesModel implements Parcelable {
 
 		return chatMessageModel;
 
+	}
+
+	public boolean deleteAllChats() {
+		db = TChatApplication.getTChatDBWritable();
+		/*
+		 * Delete all chat messages
+		 */
+		db.delete(TChatDBHelper.CHAT_MESSAGES_TABLE, null, null);
+
+		return true;
 	}
 
 	/*

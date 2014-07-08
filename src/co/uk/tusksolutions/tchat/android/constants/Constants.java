@@ -1,6 +1,5 @@
 package co.uk.tusksolutions.tchat.android.constants;
 
-
 public class Constants {
 
 	/**
@@ -12,6 +11,8 @@ public class Constants {
 	public static final String PRODUCTION_SERVER = "yookoschat.com";
 	public static String HTTP_SCHEME = "https://";
 	public static String PROXY_PATH = "/service/proxy/proxy.yookos.php?path=/people/";
+	public static String RECENTS_ENDPOINT = "/mobileservices/v1/get_recents.php";
+	public static String CLOUD_STORAGE_ENDPOINT = "/mobileservices/v1/store_message.php";
 
 	/**
 	 * Login Actions
@@ -38,5 +39,7 @@ public class Constants {
 	public static String ROSTER_EMPTY = "co.uk.tusksolutions.tchat.android.action.ROSTER_EMPTY";
 	public static String RECENTS_EMPTY = "co.uk.tusksolutions.tchat.android.action.RECENTS_EMPTY";
 	public static String RECENTS_UPDATED = "co.uk.tusksolutions.tchat.android.action.RECENTS_UPDATED";
+	public static String CLOUD_SAVE_SUCCESS = "co.uk.tusksolutions.tchat.android.action.CLOUD_SAVE_SUCCESS";
+	public static String CLOUD_SAVE_ERROR = "co.uk.tusksolutions.tchat.android.action.CLOUD_SAVE_ERROR";
 
 }
