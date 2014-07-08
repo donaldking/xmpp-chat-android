@@ -211,7 +211,7 @@ public class RosterFragment extends Fragment {
 	 * Broad cast fromUser that gets called When we receive new data form cloud
 	 * TO_USER db
 	 */
-	private class RosterReceiver extends BroadcastReceiver {
+	 class RosterReceiver extends BroadcastReceiver {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {

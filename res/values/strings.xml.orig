@@ -19,8 +19,11 @@
     <string name="chat_message_hint">Write a message</string>
     <string name="title_activity_boot_strap">BootStrapActivity</string>
     <string name="hello_world">Hello world!</string>
+<<<<<<< HEAD
 <string name="sound_notification_setting">Turn Chat notification On/Off</string>
 <string name="app_name_staging">TChatStaging</string>
+=======
    <string name="search_hint">Search for people</string>
 
+>>>>>>> b6650b5b635dc545e5bcad335e4c8663e1606450
 </resources>

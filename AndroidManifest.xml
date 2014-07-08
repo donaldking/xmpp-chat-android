@@ -12,6 +12,7 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
         android:name="co.uk.tusksolutions.tchat.android.TChatApplication"
@@ -91,6 +92,17 @@
             android:label="@string/title_activity_login"
             android:windowSoftInputMode="adjustResize|stateVisible" >
         </activity>
+        
+        
+        <activity android:name="co.uk.tusksolutions.tchat.android.activities.SearchActivity"
+          android:launchMode="singleTop" >
+    <intent-filter>
+        <action android:name="android.intent.action.SEARCH" />
+    </intent-filter>
+    <meta-data android:name="android.app.searchable"
+                      android:resource="@string/abc_action_menu_overflow_description"/>
+  </activity>
+        
     </application>
 
 </manifest>

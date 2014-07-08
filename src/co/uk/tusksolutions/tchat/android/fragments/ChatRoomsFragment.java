@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 
 public class ChatRoomsFragment extends Fragment {
 	
-	private View rootView;
+	
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -23,7 +23,7 @@ public class ChatRoomsFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		 rootView = (View) inflater.inflate(R.layout.fragment_chatrooms,
+		View rootView = (View) inflater.inflate(R.layout.fragment_chatrooms,
 				container, false);
 
 		return rootView;

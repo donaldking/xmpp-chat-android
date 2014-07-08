@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/search_remaining_messages"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:paddingBottom="10.0dip"
+        android:paddingTop="10.0dip"
+        android:textColor="#ff888888"
+        android:textSize="17.0sp"
+        android:textStyle="bold" />
+
+</LinearLayout>

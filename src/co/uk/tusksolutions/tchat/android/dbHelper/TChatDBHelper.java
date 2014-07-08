@@ -1,9 +1,15 @@
 package co.uk.tusksolutions.tchat.android.dbHelper;
 
+import org.jivesoftware.smack.packet.Message;
+
+
+
+
 import android.content.Context;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Environment;
 
 public class TChatDBHelper extends SQLiteOpenHelper {
 
@@ -145,6 +151,29 @@ public class TChatDBHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
+	}
+	
+	
+	
+	
+	public void SearchResult(String searchText)
+	{
+		String[] projection = new String[] { ROSTER_TABLE + "." + R_UID, USER ,
+				NAME, STATUS , TYPE , PRESENCE_STATUS ,
+				PRESENCE_TYPE , LAST_SEEN_TIMESTAMP , RESOURCE };
+
+		String selection = USER + "!=? AND " + NAME + " IS NULL";
+		String[] selectionArgs = new String[] { Message.Type.groupchat.name() };
+		String sortOrder = NAME + " DESC";
+
+		if (searchText != null) {
+			
+
+			if (searchText != null && searchText.length() > 0) {
+				selection = selection + " AND " + NAME + " LIKE '%" + searchText + "%'";
+			}
+		}
 
 	}
 

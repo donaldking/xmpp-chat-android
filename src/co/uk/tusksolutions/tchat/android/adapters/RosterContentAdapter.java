@@ -15,6 +15,7 @@ import android.widget.BaseAdapter;
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.activities.ChatActivity;
+import co.uk.tusksolutions.tchat.android.activities.SearchActivity;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
 import co.uk.tusksolutions.tchat.android.models.RosterModel;
 import co.uk.tusksolutions.tchat.android.viewHolders.RosterViewHolder;
@@ -48,6 +49,10 @@ public class RosterContentAdapter extends BaseAdapter {
 			break;
 		case 2:
 			rosterModelCollection = mModel.queryOnline();
+			notifyDataSetChanged();
+			break;
+		case 3:
+			rosterModelCollection=SearchActivity.rosterModelCollection;
 			notifyDataSetChanged();
 			break;
 		default:
@@ -122,6 +127,9 @@ public class RosterContentAdapter extends BaseAdapter {
 			break;
 		case 2:
 			holder.rosterPresenceFrame.setVisibility(View.VISIBLE);
+			break;
+		case 3:
+			holder.rosterPresenceFrame.setVisibility(View.GONE);
 			break;
 		default:
 			break;
