@@ -297,7 +297,7 @@ public class ChatActivity extends ActionBarActivity {
 			if (chatMessageEditText.getText().toString().length() >= 1) {
 				String message = chatMessageEditText.getText().toString();
 
-				mp = MediaPlayer.create(v.getContext(), R.raw.sound_send);
+				mp = MediaPlayer.create(v.getContext(), R.raw.received_message);
 				mp.setVolume(1, 1);
 				mp.start();
 
