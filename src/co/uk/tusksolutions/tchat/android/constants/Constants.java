@@ -13,6 +13,7 @@ public class Constants {
 	public static String PROXY_PATH = "/service/proxy/proxy.yookos.php?path=/people/";
 	public static String RECENTS_ENDPOINT = "/mobileservices/v1/get_recents.php";
 	public static String CLOUD_STORAGE_ENDPOINT = "/mobileservices/v1/store_message.php";
+	public static String CHAT_MESSAGES_ENDPOINT = "/mobileservices/v1/get_message.php";
 
 	/**
 	 * Login Actions
@@ -26,6 +27,7 @@ public class Constants {
 	public static final String CHAT_MESSAGE_RECEIVED = "co.uk.tusksolutions.tchat.android.action.CHAT_MESSAGE_RECEIVED";
 	public static String CHAT_MESSAGE_READY = "co.uk.tusksolutions.tchat.android.action.CHAT_MESSAGE_READY";
 	public static String OPEN_FOR_NEW_CHAT_RECEIVED = "co.uk.tusksolutions.tchat.android.action.OPEN_FOR_NEW_CHAT_RECEIVED";
+	public static String CHAT_MESSAGE_EMPTY = "co.uk.tusksolutions.tchat.android.action.CHAT_MESSAGE_EMPTY";
 
 	/**
 	 * Network Connection Actions

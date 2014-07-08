@@ -29,6 +29,7 @@ import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.adapters.ChatMessagesAdapter;
 import co.uk.tusksolutions.tchat.android.api.APICloudStorage;
+import co.uk.tusksolutions.tchat.android.api.APIGetMessages;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
 import co.uk.tusksolutions.tchat.android.xmpp.XMPPChatMessageManager;
 
@@ -44,6 +45,7 @@ public class ChatActivity extends ActionBarActivity {
 	private static ListView listView;
 	private ChatMessageReceiver mChatMessageReceiver;
 	private String currentJid;
+	private static APIGetMessages mGetMessagesApi;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +70,7 @@ public class ChatActivity extends ActionBarActivity {
 		chatSendButton.setOnClickListener(new ChatSendOnClickListener());
 
 		chatMessageEditText = (TextView) findViewById(R.id.chat_message_edit_text);
+		chatMessageEditText.setFocusableInTouchMode(true);
 		chatMessageEditText.addTextChangedListener(new ChatTextListener());
 
 		if (getIntent().getExtras() != null) {
@@ -116,6 +119,8 @@ public class ChatActivity extends ActionBarActivity {
 		filter.addAction(Constants.CHAT_MESSAGE_RECEIVED); // From Receiver
 															// (buddy)
 
+		filter.addAction(Constants.CHAT_MESSAGE_EMPTY); // No recent
+														// conversation
 		registerReceiver(mChatMessageReceiver, filter);
 
 		/**
@@ -141,10 +146,15 @@ public class ChatActivity extends ActionBarActivity {
 		 */
 		mAdapter = new ChatMessagesAdapter(buddyJid, currentJid, action, id);
 
+		Log.d("TAG", "RES: " + mAdapter.getCount());
 		if (mAdapter.getCount() == 0) {
-			// TODO Sync from API
-			// showProgress(true);
-			// listView.setVisibility(View.GONE);
+			// Sync with API
+			showProgress(true);
+			listView.setVisibility(View.GONE);
+			mGetMessagesApi = new APIGetMessages();
+			mGetMessagesApi.getMessages(StringUtils.parseName(buddyJid),
+					mAdapter.getCount(), 25);
+
 		} else {
 			showProgress(false);
 			listView.setAdapter(mAdapter);
@@ -301,7 +311,8 @@ public class ChatActivity extends ActionBarActivity {
 				mp.setVolume(1, 1);
 				mp.start();
 
-				XMPPChatMessageManager.sendMessage(buddyJid, message);
+				XMPPChatMessageManager
+						.sendMessage(buddyJid, buddyName, message);
 				chatMessageEditText.setText("");
 				chatSendButton.setEnabled(false);
 
@@ -343,7 +354,10 @@ public class ChatActivity extends ActionBarActivity {
 			if (intent.getAction().equalsIgnoreCase(
 					Constants.CHAT_MESSAGE_READY)) {
 				prepareListView(buddyJid, currentJid, 1,
-						intent.getLongExtra("id", 0));
+						intent.getLongExtra("id", -1));
+			} else if (intent.getAction().equalsIgnoreCase(
+					Constants.CHAT_MESSAGE_EMPTY)) {
+				showProgress(false);
 			}
 
 		}

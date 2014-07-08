@@ -2,6 +2,9 @@ package co.uk.tusksolutions.tchat.android.models;
 
 import java.util.ArrayList;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
@@ -15,11 +18,14 @@ import co.uk.tusksolutions.tchat.android.dbHelper.TChatDBHelper;
 
 public class ChatMessagesModel implements Parcelable {
 
-	public String toUser;
-	public String fromUser;
+	public String objectId;
+	public String sender;
+	public String receiver;
 	public String message;
-	public String messageDate;
-	public String messageStatus;
+	public String mid;
+	public String isRead;
+	public String timeStamp;
+
 	private String TABLE = TChatDBHelper.CHAT_MESSAGES_TABLE;
 	private SQLiteDatabase db;
 
@@ -29,37 +35,90 @@ public class ChatMessagesModel implements Parcelable {
 
 	}
 
-	public boolean saveMessageToDB(String to, String from, String message,
-			long timeStamp, int messageStatus) {
+	private void sendBroadcast(long id) {
+		Log.i(TAG, "Chat Message insert complete! send BroadCast!");
+		Intent i = new Intent();
+		i.putExtra("id", id);
+		i.setAction(Constants.CHAT_MESSAGE_READY);
+		TChatApplication.getContext().sendBroadcast(i);
+	}
+
+	public boolean saveMessageToDB(JSONArray messages) {
+		int counter = 0;
+		db = TChatApplication.getTChatDBWritable();
+
+		/*
+		 * This method inserts the recent chats for the current user to db.
+		 */
+		for (int i = 0; i < messages.length(); i++) {
+
+			try {
+				JSONObject messageObject = messages.getJSONObject(i);
+
+				ContentValues contentValues = new ContentValues();
+				contentValues.put(TChatDBHelper.CM_OBJECT_ID,
+						messageObject.getString("id"));
+				contentValues.put(TChatDBHelper.CM_SENDER,
+						messageObject.getString("sender"));
+				contentValues.put(TChatDBHelper.CM_RECEIVER,
+						messageObject.getString("receiver"));
+				contentValues.put(TChatDBHelper.CM_MESSAGE,
+						messageObject.getString("message"));
+				contentValues.put(TChatDBHelper.CM_MESSAGE_ID,
+						messageObject.getString("mid"));
+				contentValues.put(TChatDBHelper.CM_IS_READ,
+						messageObject.getString("isRead"));
+				contentValues.put(TChatDBHelper.CM_TIMESTAMP,
+						messageObject.getString("time_stamp"));
+
+				// Insert
+				db.insertWithOnConflict(TABLE, null, contentValues,
+						SQLiteDatabase.CONFLICT_IGNORE);
+
+				counter++;
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		Log.d(TAG, "Total Messages " + counter);
+		return true;
+	}
+
+	public boolean saveMessageToDB(String to, String from, String buddyName,
+			String message, long timeStamp, int isRead) {
+
 		db = TChatApplication.getTChatDBWritable();
 
 		try {
 
 			ContentValues contentValues = new ContentValues();
-			contentValues.put(TChatDBHelper.TO_USER, to);
-			contentValues.put(TChatDBHelper.FROM_USER, from);
-			contentValues.put(TChatDBHelper.MESSAGE, message);
-			contentValues.put(TChatDBHelper.MESSAGE_DATE, timeStamp);
-			contentValues.put(TChatDBHelper.MESSAGE_STATUS, messageStatus);
+
+			contentValues.put(TChatDBHelper.CM_SENDER, from);
+			contentValues.put(TChatDBHelper.CM_RECEIVER, to);
+			contentValues.put(TChatDBHelper.CM_MESSAGE, message);
+			contentValues.put(TChatDBHelper.CM_MESSAGE_ID, mid);
+			contentValues.put(TChatDBHelper.CM_TIMESTAMP, timeStamp);
+			contentValues.put(TChatDBHelper.CM_IS_READ, isRead);
 
 			// Insert
 			long id = db.insert(TABLE, null, contentValues);
 
-			/*
-			 * if (id > 0) { Intent i = new Intent(); i.putExtra("id", id);
-			 * i.setAction(Constants.CHAT_MESSAGE_READY);
-			 * TChatApplication.getContext().sendBroadcast(i); }
-			 */
-
 			if (updateRecentsTable(to.equalsIgnoreCase(TChatApplication
-					.getCurrentJid()) ? from : to, message, timeStamp) == true)
-				;
-			{
-				Log.i(TAG, "Chat Message insert complete! send BroadCast!");
-				Intent i = new Intent();
-				i.putExtra("id", id);
-				i.setAction(Constants.CHAT_MESSAGE_READY);
-				TChatApplication.getContext().sendBroadcast(i);
+					.getCurrentJid()) ? from : to, message, timeStamp, isRead) == true) {
+
+				sendBroadcast(id);
+
+			} else {
+				if (saveToRecentsTable(to, from, buddyName, message, timeStamp,
+						isRead) == true) {
+
+					sendBroadcast(id);
+				} else {
+					Log.d("SOME", "AN ERROR");
+				}
+
 			}
 
 		} catch (Exception e) {
@@ -69,20 +128,61 @@ public class ChatMessagesModel implements Parcelable {
 		return true;
 	}
 
-	private boolean updateRecentsTable(String to, String message, long timeStamp) {
+	private boolean updateRecentsTable(String to, String message,
+			long timeStamp, int isRead) {
 		try {
 
 			ContentValues contentValues = new ContentValues();
 			contentValues.put(TChatDBHelper.R_MESSAGE, message);
 			contentValues.put(TChatDBHelper.R_TIMESTAMP, timeStamp);
-			contentValues.put(TChatDBHelper.R_IS_READ, messageStatus);
+			contentValues.put(TChatDBHelper.R_IS_READ, isRead);
 
 			// Insert
 			String whereClause = TChatDBHelper.R_CHAT_WITH + " = ? ";
 			String[] whereArgs = new String[] { to };
 
-			db.update(TChatDBHelper.RECENTS_TABLE, contentValues, whereClause, whereArgs);
-			return true;
+			long id = db.update(TChatDBHelper.RECENTS_TABLE, contentValues,
+					whereClause, whereArgs);
+
+			if (id > 0) {
+				return true;
+			} else {
+				return false;
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+
+	}
+
+	private boolean saveToRecentsTable(String to, String from,
+			String buddyName, String message, long timeStamp, int isRead) {
+		try {
+
+			ContentValues contentValues = new ContentValues();
+
+			contentValues.put(TChatDBHelper.R_CHAT_WITH, to
+					.equalsIgnoreCase(TChatApplication.getCurrentJid()) ? from
+					: to);
+			contentValues.put(TChatDBHelper.R_NAME, buddyName);
+			contentValues.put(TChatDBHelper.R_SENDER, from);
+			contentValues.put(TChatDBHelper.R_RECEIVER, to);
+			contentValues.put(TChatDBHelper.R_MESSAGE, message);
+			contentValues.put(TChatDBHelper.R_MESSAGE_ID, mid);
+			contentValues.put(TChatDBHelper.R_TIMESTAMP, timeStamp);
+			contentValues.put(TChatDBHelper.R_IS_READ, isRead);
+
+			// Insert
+			long id = db.insertWithOnConflict(TChatDBHelper.RECENTS_TABLE,
+					null, contentValues, SQLiteDatabase.CONFLICT_IGNORE);
+
+			if (id > 0) {
+				return true;
+			} else {
+				return false;
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -96,13 +196,13 @@ public class ChatMessagesModel implements Parcelable {
 			String from) {
 		ArrayList<ChatMessagesModel> chatMessageModelCollection = new ArrayList<ChatMessagesModel>();
 
-		String whereClause = TChatDBHelper.TO_USER + " LIKE ? AND "
-				+ TChatDBHelper.FROM_USER + " LIKE ? OR "
-				+ TChatDBHelper.TO_USER + " LIKE ? AND "
-				+ TChatDBHelper.FROM_USER + " LIKE ?";
+		String whereClause = TChatDBHelper.CM_RECEIVER + " LIKE ? AND "
+				+ TChatDBHelper.CM_SENDER + " LIKE ? OR "
+				+ TChatDBHelper.CM_RECEIVER + " LIKE ? AND "
+				+ TChatDBHelper.CM_SENDER + " LIKE ?";
 
 		String[] whereArgs = new String[] { to, from, from, to };
-		String orderBy = TChatDBHelper.MESSAGE_DATE + " ASC";
+		String orderBy = TChatDBHelper.CM_TIMESTAMP + " ASC";
 		Cursor cursor = TChatApplication.getTChatDBReadable().query(TABLE,
 				null, whereClause, whereArgs, null, null, orderBy);
 
@@ -123,8 +223,8 @@ public class ChatMessagesModel implements Parcelable {
 
 		while (cursor.moveToNext()) {
 			/*
-			 * Request for the values TO_USER be pulled fromUser this cursor and
-			 * returned back TO_USER us.
+			 * Request for the values RECEIVER be pulled fromUser this cursor
+			 * and returned back SENDER us.
 			 */
 			chatMessageModelCollection.add(fromCursor(cursor));
 		}
@@ -138,16 +238,20 @@ public class ChatMessagesModel implements Parcelable {
 		 */
 		ChatMessagesModel chatMessageModel = new ChatMessagesModel();
 
-		chatMessageModel.toUser = cursor.getString(cursor
-				.getColumnIndex(TChatDBHelper.TO_USER));
-		chatMessageModel.fromUser = cursor.getString(cursor
-				.getColumnIndex(TChatDBHelper.FROM_USER));
+		chatMessageModel.receiver = cursor.getString(cursor
+				.getColumnIndex(TChatDBHelper.CM_OBJECT_ID));
+		chatMessageModel.receiver = cursor.getString(cursor
+				.getColumnIndex(TChatDBHelper.CM_RECEIVER));
+		chatMessageModel.sender = cursor.getString(cursor
+				.getColumnIndex(TChatDBHelper.CM_SENDER));
 		chatMessageModel.message = cursor.getString(cursor
-				.getColumnIndex(TChatDBHelper.MESSAGE));
-		chatMessageModel.messageDate = cursor.getString(cursor
-				.getColumnIndex(TChatDBHelper.MESSAGE_DATE));
-		chatMessageModel.messageStatus = cursor.getString(cursor
-				.getColumnIndex(TChatDBHelper.MESSAGE_STATUS));
+				.getColumnIndex(TChatDBHelper.CM_MESSAGE));
+		chatMessageModel.mid = cursor.getString(cursor
+				.getColumnIndex(TChatDBHelper.CM_MESSAGE_ID));
+		chatMessageModel.timeStamp = cursor.getString(cursor
+				.getColumnIndex(TChatDBHelper.CM_TIMESTAMP));
+		chatMessageModel.isRead = cursor.getString(cursor
+				.getColumnIndex(TChatDBHelper.CM_IS_READ));
 
 		return chatMessageModel;
 
@@ -175,11 +279,13 @@ public class ChatMessagesModel implements Parcelable {
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeString(toUser);
-		dest.writeString(fromUser);
+		dest.writeString(objectId);
+		dest.writeString(receiver);
+		dest.writeString(sender);
 		dest.writeString(message);
-		dest.writeString(messageDate);
-		dest.writeString(messageStatus);
+		dest.writeString(mid);
+		dest.writeString(timeStamp);
+		dest.writeString(isRead);
 	}
 
 	public static final Parcelable.Creator<ChatMessagesModel> CREATOR = new Parcelable.Creator<ChatMessagesModel>() {
@@ -194,11 +300,13 @@ public class ChatMessagesModel implements Parcelable {
 
 	/** recreate object fromUser parcel */
 	private ChatMessagesModel(Parcel in) {
-		this.toUser = in.readString();
-		this.fromUser = in.readString();
+		this.objectId = in.readString();
+		this.receiver = in.readString();
+		this.sender = in.readString();
 		this.message = in.readString();
-		this.messageDate = in.readString();
-		this.messageStatus = in.readString();
+		this.mid = in.readString();
+		this.timeStamp = in.readString();
+		this.isRead = in.readString();
 	}
 
 }

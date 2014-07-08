@@ -13,27 +13,34 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
-import co.uk.tusksolutions.tchat.android.models.RecentsModel;
+import co.uk.tusksolutions.tchat.android.models.ChatMessagesModel;
 import co.uk.tusksolutions.utility.Utility;
 
-public class APIRecents {
+public class APIGetMessages {
 	JSONArray jsonArray;
-	private RecentsModel mRecentsModel;
-	private AsyncApiRecents mTask = null;
+	private ChatMessagesModel mChatMessagesModel;
+	private AsyncApiGetMessages mTask = null;
+	private String buddyUsername;
+	private int offset, limit;
 
-	public void getRecents() {
+	public void getMessages(String buddyUsername, int offset, int limit) {
 
 		if (mTask != null) {
 			return;
 		}
-		mTask = new AsyncApiRecents();
+
+		this.buddyUsername = buddyUsername;
+		this.offset = offset;
+		this.limit = limit;
+
+		mTask = new AsyncApiGetMessages();
 		mTask.execute((Void) null);
 	}
 
 	/*
 	 * Performing Network request
 	 */
-	private class AsyncApiRecents extends AsyncTask<Void, Void, Boolean> {
+	private class AsyncApiGetMessages extends AsyncTask<Void, Void, Boolean> {
 
 		@Override
 		protected Boolean doInBackground(Void... params) {
@@ -41,15 +48,19 @@ public class APIRecents {
 			boolean apiResult = false;
 
 			/**
-			 * Log.d("APIRecents", "BASE: " + Constants.HTTP_SCHEME +
-			 * Constants.CURRENT_SERVER + Constants.RECENTS_ENDPOINT +
-			 * "?sender="+ TChatApplication.getUserModel().getUsername());
+			 * Log.d("APIGetMessages", "BASE: " + Constants.HTTP_SCHEME +
+			 * Constants.CURRENT_SERVER + Constants.CHAT_MESSAGES_ENDPOINT +
+			 * "?sender=" + TChatApplication.getUserModel().getUsername() +
+			 * "&receiver=" + buddyUsername + "&offset=" + offset + "&limit=" +
+			 * limit);
 			 */
 
 			HttpGet request = new HttpGet(Constants.HTTP_SCHEME
-					+ Constants.CURRENT_SERVER + Constants.RECENTS_ENDPOINT
-					+ "?sender="
-					+ TChatApplication.getUserModel().getUsername());
+					+ Constants.CURRENT_SERVER
+					+ Constants.CHAT_MESSAGES_ENDPOINT + "?sender="
+					+ TChatApplication.getUserModel().getUsername()
+					+ "&receiver=" + buddyUsername + "&offset=" + offset
+					+ "&limit=" + limit);
 
 			HttpClient httpclient = new DefaultHttpClient();
 			HttpResponse response;
@@ -66,8 +77,8 @@ public class APIRecents {
 							.convertStreamToString(instream));
 
 					if (jsonArray.length() >= 0) {
-						mRecentsModel = new RecentsModel();
-						if (mRecentsModel.saveRecentsToDB(jsonArray)) {
+						mChatMessagesModel = new ChatMessagesModel();
+						if (mChatMessagesModel.saveMessageToDB(jsonArray)) {
 							apiResult = true;
 						}
 
@@ -87,10 +98,10 @@ public class APIRecents {
 
 			if (result) {
 				TChatApplication.getContext().sendBroadcast(
-						new Intent(Constants.RECENTS_UPDATED));
+						new Intent(Constants.CHAT_MESSAGE_READY));
 			} else {
 				TChatApplication.getContext().sendBroadcast(
-						new Intent(Constants.RECENTS_EMPTY));
+						new Intent(Constants.CHAT_MESSAGE_EMPTY));
 			}
 		}
 

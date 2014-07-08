@@ -31,6 +31,9 @@ public class RecentsFragment extends Fragment {
 	private static View mLodingStatusView;
 	private RecentsReceiver mRecentsReceiver;
 	private APIRecents recentsApi;
+	private Bundle instanceState;
+	private static int lastViewedPosition;
+	private static int topOffset;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -50,6 +53,8 @@ public class RecentsFragment extends Fragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
+		instanceState = savedInstanceState;
+
 		shortAnimTime = getResources().getInteger(
 				android.R.integer.config_shortAnimTime);
 
@@ -61,9 +66,23 @@ public class RecentsFragment extends Fragment {
 
 		showProgress(true);
 
+		/*
+		 * Load recents from API recentsApi = new APIRecents();
+		 * recentsApi.getRecents();
+		 */
+
 		// Load recents from API
 		recentsApi = new APIRecents();
 		recentsApi.getRecents();
+
+		if (instanceState != null && mAdapter != null) {
+
+			lastViewedPosition = instanceState.getInt("lastViewedPosition");
+			topOffset = instanceState.getInt("topOffset");
+		}else{
+			lastViewedPosition = 0;
+			topOffset = 0;
+		}
 	}
 
 	@Override
@@ -132,6 +151,8 @@ public class RecentsFragment extends Fragment {
 			if (listView.getVisibility() != View.VISIBLE) {
 				listView.setVisibility(View.VISIBLE);
 			}
+
+			listView.setSelectionFromTop(lastViewedPosition, topOffset);
 		}
 	}
 
@@ -172,5 +193,15 @@ public class RecentsFragment extends Fragment {
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
+
+		// Save listview scroll position
+		lastViewedPosition = listView.getFirstVisiblePosition();
+
+		// get offset of first visible view
+		View v = listView.getChildAt(0);
+		topOffset = (v == null) ? 0 : v.getTop();
+
+		outState.putInt("lastViewedPosition", lastViewedPosition);
+		outState.putInt("topOffset", topOffset);
 	}
 }

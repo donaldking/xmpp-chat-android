@@ -60,7 +60,7 @@ public class ChatMessagesAdapter extends BaseAdapter {
 		 * Determine the type of row to create based on the "to" field value
 		 */
 		int rowType;
-		if (chatMessagesModelCollection.get(position).toUser
+		if (chatMessagesModelCollection.get(position).receiver
 				.equalsIgnoreCase(TChatApplication.getCurrentJid())) {
 			rowType = 0;
 		} else {
@@ -105,7 +105,7 @@ public class ChatMessagesAdapter extends BaseAdapter {
 			chatFromViewHolder.chatMessageTextView
 					.setText(chatMessagesModel.message);
 			chatFromViewHolder.chatMessageTimestampTextView.setText(TimeAgo
-					.getTimeAgo(Long.parseLong(chatMessagesModel.messageDate),
+					.getTimeAgo(Long.parseLong(chatMessagesModel.timeStamp),
 							context));
 
 			break;
@@ -126,7 +126,7 @@ public class ChatMessagesAdapter extends BaseAdapter {
 			chatToViewHolder.chatMessageTextView
 					.setText(chatMessagesModel.message);
 			chatToViewHolder.chatMessageTimestampTextView.setText(TimeAgo
-					.getTimeAgo(Long.parseLong(chatMessagesModel.messageDate),
+					.getTimeAgo(Long.parseLong(chatMessagesModel.timeStamp),
 							context));
 
 			break;

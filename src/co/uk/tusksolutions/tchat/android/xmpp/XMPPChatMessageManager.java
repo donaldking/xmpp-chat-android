@@ -9,7 +9,8 @@ public class XMPPChatMessageManager {
 
 	private static ChatMessagesModel mChatMessageModel;
 
-	public static void sendMessage(final String to, final String message) {
+	public static void sendMessage(final String to, String buddyName,
+			final String message) {
 		if (mChatMessageModel == null) {
 			mChatMessageModel = new ChatMessagesModel();
 		}
@@ -17,9 +18,9 @@ public class XMPPChatMessageManager {
 		msg.setBody(message);
 		if (TChatApplication.connection != null) {
 			try {
-				
+
 				mChatMessageModel.saveMessageToDB(to,
-						TChatApplication.getCurrentJid(), message,
+						TChatApplication.getCurrentJid(), buddyName, message,
 						System.currentTimeMillis(), 1);
 				TChatApplication.connection.sendPacket(msg);
 			} catch (Exception e) {
@@ -28,7 +29,7 @@ public class XMPPChatMessageManager {
 		} else {
 			// online offline message
 			mChatMessageModel.saveMessageToDB(to,
-					TChatApplication.getCurrentJid(), message,
+					TChatApplication.getCurrentJid(), buddyName, message,
 					System.currentTimeMillis(), 2);
 		}
 	}

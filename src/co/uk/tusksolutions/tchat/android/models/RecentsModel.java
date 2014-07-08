@@ -23,7 +23,6 @@ public class RecentsModel implements Parcelable {
 	public String receiver;
 	public String message;
 	public String mid;
-	public String created_at;
 	public String isRead;
 	public String timestamp;
 
@@ -35,34 +34,12 @@ public class RecentsModel implements Parcelable {
 	public RecentsModel() {
 	}
 
-	public ArrayList<RecentsModel> queryRecents() {
-
-		ArrayList<RecentsModel> recentsModelCollection = new ArrayList<RecentsModel>();
-		String orderBy = TChatDBHelper.R_TIMESTAMP + " DESC";
-
-		Cursor cursor = TChatApplication.getTChatDBReadable().query(TABLE,
-				null, null, null, null, null, orderBy);
-
-		while (cursor.moveToNext()) {
-
-			recentsModelCollection.add(fromCursor(cursor));
-		}
-
-		// if (recentsModelCollection.size() == 0) {
-		/*
-		 * No recent message to anyone
-		 */
-
-		// }
-		return recentsModelCollection;
-	}
-
 	public boolean saveRecentsToDB(JSONArray recents) {
 		int counter = 0;
 		db = TChatApplication.getTChatDBWritable();
 
 		/*
-		 * This method inserts the recents chats for the current user to db.
+		 * This method inserts the recent chats for the current user to db.
 		 */
 		for (int i = 0; i < recents.length(); i++) {
 
@@ -86,8 +63,6 @@ public class RecentsModel implements Parcelable {
 						lastMessageObj.getString("message"));
 				contentValues.put(TChatDBHelper.R_MESSAGE_ID,
 						lastMessageObj.getString("mid"));
-				contentValues.put(TChatDBHelper.R_CREATED_AT,
-						lastMessageObj.getString("created_at"));
 				contentValues.put(TChatDBHelper.R_IS_READ,
 						lastMessageObj.getString("isRead"));
 				contentValues.put(TChatDBHelper.R_TIMESTAMP,
@@ -96,7 +71,7 @@ public class RecentsModel implements Parcelable {
 				// Insert
 				db.insertWithOnConflict(TABLE, null, contentValues,
 						SQLiteDatabase.CONFLICT_REPLACE);
-				
+
 				counter++;
 
 			} catch (Exception e) {
@@ -106,6 +81,22 @@ public class RecentsModel implements Parcelable {
 
 		Log.d(TAG, "Total Recents contacts " + counter);
 		return true;
+	}
+
+	public ArrayList<RecentsModel> queryRecents() {
+
+		ArrayList<RecentsModel> recentsModelCollection = new ArrayList<RecentsModel>();
+		String orderBy = TChatDBHelper.R_TIMESTAMP + " DESC";
+
+		Cursor cursor = TChatApplication.getTChatDBReadable().query(TABLE,
+				null, null, null, null, null, orderBy);
+
+		while (cursor.moveToNext()) {
+
+			recentsModelCollection.add(fromCursor(cursor));
+		}
+
+		return recentsModelCollection;
 	}
 
 	protected RecentsModel fromCursor(Cursor cursor) {
@@ -128,8 +119,6 @@ public class RecentsModel implements Parcelable {
 				.getColumnIndex(TChatDBHelper.R_MESSAGE));
 		recentsModel.mid = cursor.getString(cursor
 				.getColumnIndex(TChatDBHelper.R_MESSAGE_ID));
-		recentsModel.created_at = cursor.getString(cursor
-				.getColumnIndex(TChatDBHelper.R_CREATED_AT));
 		recentsModel.isRead = cursor.getString(cursor
 				.getColumnIndex(TChatDBHelper.R_IS_READ));
 		recentsModel.timestamp = cursor.getString(cursor
@@ -167,7 +156,6 @@ public class RecentsModel implements Parcelable {
 		dest.writeString(receiver);
 		dest.writeString(message);
 		dest.writeString(mid);
-		dest.writeString(created_at);
 		dest.writeString(isRead);
 		dest.writeString(timestamp);
 	}
@@ -191,7 +179,6 @@ public class RecentsModel implements Parcelable {
 		this.receiver = in.readString();
 		this.message = in.readString();
 		this.mid = in.readString();
-		this.created_at = in.readString();
 		this.isRead = in.readString();
 		this.timestamp = in.readString();
 	}

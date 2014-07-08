@@ -37,8 +37,9 @@ public class XMPPChatMessageListener implements PacketListener {
 								+ StringUtils.parseBareAddress(packet.getFrom()));
 
 				if (TChatApplication.getChatActivityStatus() == CHAT_STATUS_ENUM.VISIBLE
-						&& TChatApplication.chatSessionBuddy.equalsIgnoreCase(StringUtils
-								.parseBareAddress(packet.getFrom()))) {
+						&& TChatApplication.chatSessionBuddy
+								.equalsIgnoreCase(StringUtils
+										.parseBareAddress(packet.getFrom()))) {
 
 					// 1. Visible and chatting with buddy
 
@@ -46,8 +47,9 @@ public class XMPPChatMessageListener implements PacketListener {
 					saveMessageToDb(packet, message);
 
 				} else if (TChatApplication.getChatActivityStatus() == CHAT_STATUS_ENUM.VISIBLE
-						&& !TChatApplication.chatSessionBuddy.equalsIgnoreCase(StringUtils
-								.parseBareAddress(packet.getFrom()))) {
+						&& !TChatApplication.chatSessionBuddy
+								.equalsIgnoreCase(StringUtils
+										.parseBareAddress(packet.getFrom()))) {
 
 					// 2. Visible and not chatting with buddy
 					/*
@@ -93,6 +95,7 @@ public class XMPPChatMessageListener implements PacketListener {
 		ChatMessagesModel mChatMessageModel = new ChatMessagesModel();
 		mChatMessageModel.saveMessageToDB(TChatApplication.getCurrentJid(),
 				StringUtils.parseBareAddress(packet.getFrom()),
-				message.getBody(), System.currentTimeMillis(), 1);
+				StringUtils.parseName(packet.getFrom()), message.getBody(),
+				System.currentTimeMillis(), 1);
 	}
 }

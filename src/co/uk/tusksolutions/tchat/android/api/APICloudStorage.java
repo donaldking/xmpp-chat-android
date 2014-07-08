@@ -3,7 +3,6 @@ package co.uk.tusksolutions.tchat.android.api;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
@@ -44,7 +43,7 @@ public class APICloudStorage {
 		@Override
 		protected Boolean doInBackground(Void... params) {
 
-			boolean getStreamMediaResult = false;
+			boolean apiResult = false;
 
 			HttpPost httpPost = new HttpPost(Constants.HTTP_SCHEME
 					+ Constants.CURRENT_SERVER
@@ -62,14 +61,14 @@ public class APICloudStorage {
 				postParams.add(new BasicNameValuePair("mid", mid));
 				httpPost.setEntity(new UrlEncodedFormEntity(postParams));
 
-				HttpResponse response = httpclient.execute(httpPost);
+				httpclient.execute(httpPost);
 
-				getStreamMediaResult = true;
+				apiResult = true;
 
 			} catch (Exception e) {
-				getStreamMediaResult = false;
+				apiResult = false;
 			}
-			return getStreamMediaResult;
+			return apiResult;
 		}
 
 		@Override

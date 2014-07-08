@@ -83,8 +83,8 @@ public class RecentsContentAdapter extends BaseAdapter {
 		 */
 		final RecentsModel model = recentsModelCollection.get(position);
 
-		String[] username = model.chatWithUser.split("@");
 		try {
+			String[] username = model.chatWithUser.split("@");
 			UrlImageViewHelper.setUrlDrawable(holder.rosterAvatar,
 					Constants.PROXY_SERVER + username[0]
 							+ "/avatar/1288&return=png",
