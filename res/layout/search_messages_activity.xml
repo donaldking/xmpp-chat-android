@@ -5,12 +5,13 @@
     android:background="@color/white"
     tools:context="${packageName}.${activityClass}" >
 
-  <LinearLayout
+    <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:orientation="vertical" >
 
-       <!--    Segment Buttons Layout start
+        <!--
+        Segment Buttons Layout start
 
         <LinearLayout
             android:id="@+id/roster_segment_view_frame"
@@ -37,39 +38,32 @@
         android:layout_marginRight="10dp"
         android:layout_gravity="right|center_vertical"
         android:background="@drawable/abc_ic_clear" />
-        </LinearLayout> -->
-        
-        
+        </LinearLayout>
+        -->
+
         <FrameLayout
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-  android:background="@color/very_light_grey"
-   android:gravity="center"
-   >
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/very_light_grey"
+            android:gravity="center" >
 
-    <EditText
-        android:id="@+id/editTextSearch"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-   
-       
-        android:textSize="17sp"
-        android:textColor="@color/black"
-   
-        android:hint="@string/search_hint"
-        android:singleLine="true" />
+            <EditText
+                android:id="@+id/editTextSearch"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/search_hint"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                android:textSize="17sp" />
 
-    <Button
-        android:id="@+id/clear_txt_search"      
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_marginRight="10dp"
-        android:layout_gravity="right|center_vertical"
-        android:background="@drawable/abc_ic_clear_holo_light" />
-
-</FrameLayout>
-
-      
+            <Button
+                android:id="@+id/clear_txt_search"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_gravity="right|center_vertical"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/abc_ic_clear_holo_light" />
+        </FrameLayout>
 
         <LinearLayout
             android:id="@+id/roster_list_view_frame"
@@ -101,7 +95,7 @@
         android:layout_gravity="center"
         android:gravity="center"
         android:orientation="vertical"
-        android:visibility="gone">
+        android:visibility="gone" >
 
         <ProgressBar
             android:layout_width="wrap_content"

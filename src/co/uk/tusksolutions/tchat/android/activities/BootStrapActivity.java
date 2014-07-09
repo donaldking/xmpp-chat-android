@@ -26,5 +26,6 @@ public class BootStrapActivity extends Activity {
 			startActivity(new Intent(this, MainActivity.class));
 		}
 		finish();
-	}
+	} 
+	
 }
