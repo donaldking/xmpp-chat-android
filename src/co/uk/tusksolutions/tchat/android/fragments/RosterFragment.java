@@ -56,16 +56,17 @@ public class RosterFragment extends Fragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		
+
 		instanceState = savedInstanceState;
 		if (TChatApplication.CHAT_SECTION_QUERY_ACTION == 0) {
 			TChatApplication.CHAT_SECTION_QUERY_ACTION = ALL_QUERY_ACTION;
 		}
-		
+
 		shortAnimTime = getResources().getInteger(
 				android.R.integer.config_shortAnimTime);
 
-		mLodingStatusView = getActivity().findViewById(R.id.roster_loading_view);
+		mLodingStatusView = getActivity()
+				.findViewById(R.id.roster_loading_view);
 		listView = (ListView) rootView.findViewById(R.id.list_view);
 		listView.setVerticalScrollBarEnabled(false);
 		listView.setHorizontalScrollBarEnabled(false);
@@ -83,7 +84,9 @@ public class RosterFragment extends Fragment {
 				showProgress(true);
 				new Thread() {
 					public void run() {
-						XMPPPresenceListener.loadRoster();
+						if (TChatApplication.connection != null) {
+							XMPPPresenceListener.loadRoster();
+						}
 					}
 				}.start();
 			} else {
@@ -91,12 +94,14 @@ public class RosterFragment extends Fragment {
 			}
 
 		} else {
-			
+
 			if (TChatApplication.getRosterModel().queryAll().size() == 0) {
 				showProgress(true);
 				new Thread() {
 					public void run() {
-						XMPPPresenceListener.loadRoster();
+						if (TChatApplication.connection != null) {
+							XMPPPresenceListener.loadRoster();
+						}
 					}
 				}.start();
 			} else {
@@ -109,22 +114,23 @@ public class RosterFragment extends Fragment {
 	@Override
 	public void onResume() {
 		super.onResume();
-		
+
 		mRosterReceiver = new RosterReceiver();
 		filter = new IntentFilter();
 		filter.addAction(Constants.ROSTER_EMPTY);
 		filter.addAction(Constants.ROSTER_UPDATED);
 		getActivity().registerReceiver(mRosterReceiver, filter);
-		
+
 	}
 
 	@Override
-	public void onPause(){
+	public void onPause() {
 		super.onPause();
-		if (mRosterReceiver !=null) {
+		if (mRosterReceiver != null) {
 			getActivity().unregisterReceiver(mRosterReceiver);
 		}
 	}
+
 	/**
 	 * Shows the progress UI and hides the login form.
 	 */
@@ -155,7 +161,7 @@ public class RosterFragment extends Fragment {
 	}
 
 	private static void prepareListView(final int queryInt) {
-		
+
 		/**
 		 * Load Friends fromUser DB
 		 */
@@ -167,7 +173,7 @@ public class RosterFragment extends Fragment {
 		if (mAdapter.getCount() == 0) {
 			if (TChatApplication.CHAT_SECTION_QUERY_ACTION == 2) {
 				showProgress(false);
-			}else{
+			} else {
 				showProgress(true);
 			}
 			listView.setVisibility(View.GONE);
@@ -211,7 +217,7 @@ public class RosterFragment extends Fragment {
 	 * Broad cast fromUser that gets called When we receive new data form cloud
 	 * TO_USER db
 	 */
-	 class RosterReceiver extends BroadcastReceiver {
+	class RosterReceiver extends BroadcastReceiver {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -221,7 +227,7 @@ public class RosterFragment extends Fragment {
 			if (intent.getAction().equalsIgnoreCase(Constants.ROSTER_UPDATED)) {
 
 				if (intent.getExtras() != null) {
-					//int inserts = intent.getExtras().getInt("inserts");
+					// int inserts = intent.getExtras().getInt("inserts");
 					showProgress(true);
 					if (TChatApplication.CHAT_SECTION_QUERY_ACTION == ALL_QUERY_ACTION) {
 						prepareListView(ALL_QUERY_ACTION);

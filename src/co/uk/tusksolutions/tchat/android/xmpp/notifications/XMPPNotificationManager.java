@@ -26,10 +26,10 @@ public class XMPPNotificationManager {
 		 * normal ticker notification
 		 */
 
-		String fromName = intent.getBundleExtra("chatFromFriendBundle").getString(
-				"fromName");
-		String message = intent.getBundleExtra("chatFromFriendBundle").getString(
-				"message");
+		String fromName = intent.getBundleExtra("chatFromFriendBundle")
+				.getString("fromName");
+		String message = intent.getBundleExtra("chatFromFriendBundle")
+				.getString("message");
 		mBuilder = new NotificationCompat.Builder(mContext)
 				.setSmallIcon(R.drawable.ic_action_chat)
 				.setContentTitle(fromName).setTicker(fromName + ": " + message)
@@ -40,9 +40,9 @@ public class XMPPNotificationManager {
 		mBuilder.setAutoCancel(true);
 
 		/**
-		 * Package this TO_USER in a bundle which we will add TO_USER the pending
-		 * intent TO_USER post so that we can navigate TO_USER the exact window when we
-		 * click on the notification.
+		 * Package this TO_USER in a bundle which we will add TO_USER the
+		 * pending intent TO_USER post so that we can navigate TO_USER the exact
+		 * window when we click on the notification.
 		 */
 		Intent chatActivityIntent = new Intent(mContext, ChatActivity.class);
 		chatActivityIntent.putExtra("chatFromFriendBundle",
@@ -50,7 +50,8 @@ public class XMPPNotificationManager {
 		chatActivityIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
 		PendingIntent pi = PendingIntent.getActivity(mContext, 0,
-				chatActivityIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+				chatActivityIntent, PendingIntent.FLAG_UPDATE_CURRENT
+						| PendingIntent.FLAG_ONE_SHOT);
 		mBuilder.setContentIntent(pi);
 
 		NotificationManager mNotificationManager = (NotificationManager) mContext

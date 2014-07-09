@@ -52,7 +52,7 @@ public class RosterContentAdapter extends BaseAdapter {
 			notifyDataSetChanged();
 			break;
 		case 3:
-			rosterModelCollection=SearchActivity.rosterModelCollection;
+			rosterModelCollection = SearchActivity.rosterModelCollection;
 			notifyDataSetChanged();
 			break;
 		default:
@@ -145,10 +145,11 @@ public class RosterContentAdapter extends BaseAdapter {
 				b.putString("buddyJid", rosterModel.user);
 				b.putString("friendName", rosterModel.name);
 
-				Intent intent = new Intent(context, ChatActivity.class);
+				Intent intent = new Intent(TChatApplication.getContext(),
+						ChatActivity.class);
 				intent.putExtra("chatWithFriendBundle", b);
 				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				context.startActivity(intent);
+				TChatApplication.getContext().startActivity(intent);
 			}
 		});
 
