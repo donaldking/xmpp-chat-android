@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">TChat</string>
+    <string name="title_section1">Recents</string>
+    <string name="title_section2">Groups</string>
+    <string name="title_section3">Friends</string>
+    <string name="action_chat">Chat</string>
+    <string name="action_search">Search</string>
+    <string name="title_section4">Settings</string>
+    <string name="title_activity_recents_fragment">RecentsFragment</string>
+    <string name="fragment_recents">Recents Fragment</string>
+    <string name="title_activity_groups_fragment">GroupsFragment</string>
+    <string name="fragment_groups">Groups</string>
+    <string name="fragment_chatrooms">ChatRooms</string>
+    <string name="fragment_friends">Friends Fragment</string>
+    <string name="fragment_settings">Settings Fragment</string>
+    <string name="title_activity_chat">ChatActivity</string>
+    <string name="chat_message_hint">Write a message</string>
+    <string name="title_activity_boot_strap">BootStrapActivity</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="sound_notification_setting">Turn Chat notification On/Off</string>
+    <string name="app_name_staging">TChatStaging</string>
+    <string name="search_hint">Search for people</string>
+    <string name="action_settings">Settings</string>
+
+</resources>
