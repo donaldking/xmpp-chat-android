@@ -22,5 +22,5 @@
 <string name="sound_notification_setting">Turn Chat notification On/Off</string>
 <string name="app_name_staging">TChatStaging</string>
    <string name="search_hint">Search for people</string>
-
+  <string name="send_message_to">To: </string>
 </resources>

@@ -16,21 +16,22 @@
             android:gravity="center" >
 
             <EditText
-                android:id="@+id/editTextSearch"
+                android:id="@+id/friend_add_edittext"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/search_hint"
+                android:hint="@string/send_message_to"
                 android:singleLine="true"
+                android:focusable="false"
                 android:textColor="@color/black"
                 android:textSize="17sp" />
 
-            <Button
+           <!--  <Button
                 android:id="@+id/clear_txt_search"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:layout_gravity="right|center_vertical"
                 android:layout_marginRight="10dp"
-                android:background="@drawable/abc_ic_clear_holo_light" />
+                android:background="@drawable/abc_ic_clear_holo_light" /> -->
         </FrameLayout>
 
         <LinearLayout
@@ -41,7 +42,7 @@
             android:orientation="vertical" >
 
             <ListView
-                android:id="@+id/list_view_search"
+                android:id="@+id/list_view_group_friends"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:cacheColorHint="@color/white"

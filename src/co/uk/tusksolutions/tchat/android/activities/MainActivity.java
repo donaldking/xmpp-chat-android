@@ -196,6 +196,9 @@ public class MainActivity extends ActionBarActivity implements
 			Toast.makeText(TChatApplication.getContext(),
 					"Go through friends list for now...", Toast.LENGTH_LONG)
 					.show();
+			
+			Intent intent=new Intent(MainActivity.this,Group_chat_activity.class);
+			startActivity(intent);
 			// startActivity(new Intent(this, ChatActivity.class));
 			return true;
 		}
