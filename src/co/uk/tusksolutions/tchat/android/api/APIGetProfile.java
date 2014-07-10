@@ -13,46 +13,38 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
-import co.uk.tusksolutions.tchat.android.models.ChatMessagesModel;
+import co.uk.tusksolutions.tchat.android.models.UserModel;
 import co.uk.tusksolutions.utility.Utility;
 
-public class APIGetMessages {
+public class APIGetProfile {
 	JSONArray jsonArray;
-	private ChatMessagesModel mChatMessagesModel;
-	private AsyncApiGetMessages mTask = null;
-	private String buddyUsername;
-	private int offset, limit;
+	private UserModel mUserModel;
+	private AsyncApiGetProfile mTask = null;
 
-	public void getMessages(String buddyUsername, int offset, int limit) {
+	public void doGetProfile(String username) {
 
 		if (mTask != null) {
 			return;
 		}
 
-		this.buddyUsername = buddyUsername;
-		this.offset = offset;
-		this.limit = limit;
-
-		mTask = new AsyncApiGetMessages();
+		mTask = new AsyncApiGetProfile();
 		mTask.execute((Void) null);
 	}
 
 	/*
 	 * Performing Network request
 	 */
-	private class AsyncApiGetMessages extends AsyncTask<Void, Void, Boolean> {
+	private class AsyncApiGetProfile extends AsyncTask<Void, Void, Boolean> {
 
 		@Override
 		protected Boolean doInBackground(Void... params) {
 
 			boolean apiResult = false;
-			
+
 			HttpGet request = new HttpGet(Constants.HTTP_SCHEME
-					+ Constants.CURRENT_SERVER
-					+ Constants.CHAT_MESSAGES_ENDPOINT + "?sender="
-					+ TChatApplication.getUserModel().getUsername()
-					+ "&receiver=" + buddyUsername + "&offset=" + offset
-					+ "&limit=" + limit);
+					+ Constants.CURRENT_SERVER + Constants.GET_PROFILE_ENDPOINT
+					+ "?username="
+					+ TChatApplication.getUserModel().getUsername());
 
 			HttpClient httpclient = new DefaultHttpClient();
 			HttpResponse response;
@@ -69,8 +61,9 @@ public class APIGetMessages {
 							.convertStreamToString(instream));
 
 					if (jsonArray.length() >= 0) {
-						mChatMessagesModel = new ChatMessagesModel();
-						if (mChatMessagesModel.saveMessageToDB(jsonArray)) {
+						mUserModel = new UserModel();
+						if (mUserModel
+								.updateProfile(jsonArray.getJSONObject(0))) {
 							apiResult = true;
 						}
 
@@ -90,10 +83,10 @@ public class APIGetMessages {
 
 			if (result) {
 				TChatApplication.getContext().sendBroadcast(
-						new Intent(Constants.CHAT_MESSAGE_READY));
+						new Intent(Constants.PROFILE_UPDATED));
 			} else {
 				TChatApplication.getContext().sendBroadcast(
-						new Intent(Constants.CHAT_MESSAGE_EMPTY));
+						new Intent(Constants.PROFILE_NOT_UPDATED));
 			}
 		}
 

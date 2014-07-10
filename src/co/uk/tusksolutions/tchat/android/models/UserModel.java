@@ -1,5 +1,7 @@
 package co.uk.tusksolutions.tchat.android.models;
 
+import org.json.JSONObject;
+
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -129,6 +131,38 @@ public class UserModel {
 		}
 
 		db.close();
+	}
+
+	public boolean updateProfile(JSONObject profileObject) {
+
+		db = TChatApplication.getTChatDBWritable();
+
+		try {
+
+			ContentValues contentValues = new ContentValues();
+			contentValues.put(TChatDBHelper.PROFILE_NAME,
+					profileObject.getString("fullName"));
+
+			// Update
+			String whereClause = TChatDBHelper.USERNAME + " = ? ";
+			String[] whereArgs = new String[] { TChatApplication.getUserModel().username };
+
+			int id = db.update(TChatDBHelper.PROFILE_TABLE, contentValues,
+					whereClause, whereArgs);
+
+			prepareProfile();
+
+			if (id >= 0) {
+				return true;
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		db.close();
+
+		return false;
 	}
 
 }

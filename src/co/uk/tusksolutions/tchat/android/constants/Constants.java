@@ -1,5 +1,6 @@
 package co.uk.tusksolutions.tchat.android.constants;
 
+
 public class Constants {
 
 	/**
@@ -14,6 +15,7 @@ public class Constants {
 	public static String RECENTS_ENDPOINT = "/mobileservices/v1/get_recents.php";
 	public static String CLOUD_STORAGE_ENDPOINT = "/mobileservices/v1/store_message.php";
 	public static String CHAT_MESSAGES_ENDPOINT = "/mobileservices/v1/get_message.php";
+	public static final String GET_PROFILE_ENDPOINT = "/mobileservices/v1/get_profile.php";
 
 	/**
 	 * Login Actions
@@ -25,6 +27,7 @@ public class Constants {
 	 * Chat / Packet Actions
 	 */
 	public static final String CHAT_MESSAGE_RECEIVED = "co.uk.tusksolutions.tchat.android.action.CHAT_MESSAGE_RECEIVED";
+
 	public static String CHAT_MESSAGE_READY = "co.uk.tusksolutions.tchat.android.action.CHAT_MESSAGE_READY";
 	public static String OPEN_FOR_NEW_CHAT_RECEIVED = "co.uk.tusksolutions.tchat.android.action.OPEN_FOR_NEW_CHAT_RECEIVED";
 	public static String CHAT_MESSAGE_EMPTY = "co.uk.tusksolutions.tchat.android.action.CHAT_MESSAGE_EMPTY";
@@ -43,5 +46,7 @@ public class Constants {
 	public static String RECENTS_UPDATED = "co.uk.tusksolutions.tchat.android.action.RECENTS_UPDATED";
 	public static String CLOUD_SAVE_SUCCESS = "co.uk.tusksolutions.tchat.android.action.CLOUD_SAVE_SUCCESS";
 	public static String CLOUD_SAVE_ERROR = "co.uk.tusksolutions.tchat.android.action.CLOUD_SAVE_ERROR";
+	public static final String PROFILE_UPDATED = "co.uk.tusksolutions.tchat.android.action.PROFILE_UPDATED";
+	public static final String PROFILE_NOT_UPDATED = "co.uk.tusksolutions.tchat.android.action.PROFILE_NOT_UPDATED";
 
 }

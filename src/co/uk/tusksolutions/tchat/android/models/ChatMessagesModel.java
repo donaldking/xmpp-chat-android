@@ -137,7 +137,7 @@ public class ChatMessagesModel implements Parcelable {
 			contentValues.put(TChatDBHelper.R_TIMESTAMP, timeStamp);
 			contentValues.put(TChatDBHelper.R_IS_READ, isRead);
 
-			// Insert
+			// Update
 			String whereClause = TChatDBHelper.R_CHAT_WITH + " = ? ";
 			String[] whereArgs = new String[] { to };
 

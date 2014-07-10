@@ -18,7 +18,6 @@ import co.uk.tusksolutions.tchat.android.fragments.ChatRoomsFragment;
 import co.uk.tusksolutions.tchat.android.fragments.GroupsFragment;
 import co.uk.tusksolutions.tchat.android.fragments.RecentsFragment;
 import co.uk.tusksolutions.tchat.android.fragments.RosterFragment;
-import co.uk.tusksolutions.tchat.android.fragments.SettingsFragment;
 
 public class MainActivity extends ActionBarActivity implements
 		ActionBar.TabListener {
@@ -42,7 +41,6 @@ public class MainActivity extends ActionBarActivity implements
 	private RecentsFragment mRecentsFragment;
 	private GroupsFragment mGroupsFragment;
 	private RosterFragment mRosterFragment;
-	private SettingsFragment mSettingsFragment;
 
 	private ChatRoomsFragment mChatRoomFragment;
 	ActionBar actionBar;
@@ -95,18 +93,6 @@ public class MainActivity extends ActionBarActivity implements
 		return mGroupsFragment;
 	}
 
-	public SettingsFragment getSettingsFragment() {
-
-		if (mSettingsFragment == null) {
-			mSettingsFragment = new SettingsFragment();
-			Bundle bundle = new Bundle();
-			bundle.putString("title", "Settings");
-			bundle.putInt("icon", R.drawable.ic_action_settings);
-			mSettingsFragment.setArguments(bundle);
-		}
-		return mSettingsFragment;
-	}
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -125,10 +111,9 @@ public class MainActivity extends ActionBarActivity implements
 
 		/*
 		 * Hide Actionbar but only display tabs
-		 */ 
-		 actionBar.setDisplayShowTitleEnabled(false);
-		 actionBar.setDisplayShowHomeEnabled(false);
-		 
+		 */
+		actionBar.setDisplayShowTitleEnabled(false);
+		actionBar.setDisplayShowHomeEnabled(false);
 
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections of the activity.
@@ -176,12 +161,16 @@ public class MainActivity extends ActionBarActivity implements
 		// present.
 		getMenuInflater().inflate(R.menu.main_activity_menu, menu);
 		// Get the SearchView and set the searchable configuration
-	  /*  SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-	    SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
-	    // Assumes current activity is the searchable activity
-	    searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-	    searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
-*/
+		/*
+		 * SearchManager searchManager = (SearchManager)
+		 * getSystemService(Context.SEARCH_SERVICE); SearchView searchView =
+		 * (SearchView) menu.findItem(R.id.action_search).getActionView(); //
+		 * Assumes current activity is the searchable activity
+		 * searchView.setSearchableInfo
+		 * (searchManager.getSearchableInfo(getComponentName()));
+		 * searchView.setIconifiedByDefault(false); // Do not iconify the
+		 * widget; expand it by default
+		 */
 		return true;
 	}
 
@@ -200,10 +189,16 @@ public class MainActivity extends ActionBarActivity implements
 			return true;
 		}
 		if (id == R.id.action_search) {
-		Intent intent=new Intent(MainActivity.this,SearchActivity.class);
-		startActivity(intent);
-		
-			
+			Intent intent = new Intent(MainActivity.this, SearchActivity.class);
+			startActivity(intent);
+
+			return true;
+		}
+		if (id == R.id.action_settings) {
+			Intent intent = new Intent(MainActivity.this,
+					SettingsActivity.class);
+			startActivity(intent);
+
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -251,8 +246,6 @@ public class MainActivity extends ActionBarActivity implements
 				return getGroupsFragment();
 			case 3:
 				return getChatRoomsFragment();
-			case 4:
-				return getSettingsFragment();
 			}
 			return null;
 		}
@@ -260,7 +253,7 @@ public class MainActivity extends ActionBarActivity implements
 		@Override
 		public int getCount() {
 			// Show 4 total pages.
-			return 5;
+			return 4;
 		}
 	}
 
