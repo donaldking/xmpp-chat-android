@@ -225,7 +225,7 @@ public class RosterFragment extends Fragment {
 			 * Load friends fromUser db and reload the list view
 			 */
 			if (intent.getAction().equalsIgnoreCase(Constants.ROSTER_UPDATED)) {
-
+				
 				if (intent.getExtras() != null) {
 					// int inserts = intent.getExtras().getInt("inserts");
 					showProgress(true);

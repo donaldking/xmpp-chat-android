@@ -1,0 +1,165 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/white"
+    android:fillViewport="true" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@drawable/square_grey_box"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingTop="10dp">
+
+            <ImageView
+                android:id="@+id/profile_image"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_gravity="center"
+                android:background="@drawable/square_grey_box"
+                android:src="@drawable/orca_groups_icon_unselected" />
+
+            <co.uk.tusksolutions.extensions.RobotoBoldTextView
+                android:id="@+id/profile_full_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Full Name"
+                android:textSize="20sp" />
+            
+            <co.uk.tusksolutions.extensions.RobotoLightTextView
+                android:id="@+id/profile_username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="username"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <!-- Setting layout start -->
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_marginBottom="20dp"
+            android:layout_weight="1.5"
+            android:background="@color/white"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:orientation="horizontal"
+                    android:padding="10dp" >
+
+                    <co.uk.tusksolutions.extensions.RobotoBoldTextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:gravity="left"
+                        android:text="Sound Notifications"
+                        android:textColor="@color/black"
+                        android:textSize="14sp" />
+
+                    <CheckBox
+                        android:id="@+id/sound_notification_checkbox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+
+                <!-- Divider line layout -->
+
+                <LinearLayout
+                    android:id="@+id/divider_layout_frame1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="1dp"
+                    android:baselineAligned="true"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp" >
+
+                    <View
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:background="#EEE" />
+                </LinearLayout>
+
+                <!-- Divider line layout end -->
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:orientation="horizontal"
+                    android:padding="10dp" >
+
+                    <co.uk.tusksolutions.extensions.RobotoBoldTextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:gravity="left"
+                        android:text="Show Last Seen Online"
+                        android:textColor="@color/black"
+                        android:textSize="14sp" />
+
+                    <CheckBox
+                        android:id="@+id/show_last_seen_checkbox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <!-- Divider line layout -->
+
+                <LinearLayout
+                    android:id="@+id/divider_layout_frame2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="1dp"
+                    android:baselineAligned="true"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp" >
+
+                    <View
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:background="#EEE" />
+                </LinearLayout>
+
+                <!-- Divider line layout end -->
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="50dp"
+                    android:background="@color/white"
+                    android:orientation="horizontal" >
+
+                    <Button
+                        android:id="@+id/logout_button"
+                        android:layout_width="fill_parent"
+                        android:layout_height="42dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:background="@color/yookos_blue"
+                        android:text="Logout"
+                        android:textColor="@color/white" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</ScrollView>

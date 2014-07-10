@@ -14,5 +14,11 @@
         android:icon="@drawable/ic_action_chat"
         android:title="@string/action_chat"
         app:showAsAction="always"/>
+    <item
+        android:id="@+id/action_settings"
+        android:icon="@drawable/ic_action_settings"
+        android:title="@string/action_settings"
+        app:showAsAction="always">
+    </item>
 
 </menu>

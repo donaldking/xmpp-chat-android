@@ -98,7 +98,7 @@ public class RosterModel implements Parcelable {
 		i.putExtra("inserts", counter);
 		i.setAction(Constants.ROSTER_UPDATED);
 		TChatApplication.getContext().sendBroadcast(i);
-
+		
 		return true;
 	}
 

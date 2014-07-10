@@ -11,7 +11,6 @@ import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
@@ -21,11 +20,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
+import co.uk.tusksolutions.tchat.android.api.APIGetProfile;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
 
 /**
- * Activity which displays a login screen TO_USER the user, offering registration as
- * well.
+ * Activity which displays a login screen TO_USER the user, offering
+ * registration as well.
  */
 public class LoginActivity extends Activity {
 
@@ -96,6 +96,9 @@ public class LoginActivity extends Activity {
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(Constants.LOGIN_SUCCESSFUL);
 		filter.addAction(Constants.LOGIN_UNSUCCESSFUL);
+		filter.addAction(Constants.PROFILE_UPDATED);
+		filter.addAction(Constants.PROFILE_NOT_UPDATED);
+
 		registerReceiver(mLoginReceiver, filter);
 	}
 
@@ -185,19 +188,26 @@ public class LoginActivity extends Activity {
 			 * Login result fromUser
 			 */
 			if (intent.getAction().equalsIgnoreCase(Constants.LOGIN_SUCCESSFUL)) {
-				showProgress(false);
-				finish();
-				loginSuccessful();
+				// TODO Call initializer method
+				APIGetProfile getProfile = new APIGetProfile();
+				getProfile.doGetProfile(TChatApplication.getUserModel()
+						.getUsername());
 			} else if (intent.getAction().equalsIgnoreCase(
 					Constants.LOGIN_UNSUCCESSFUL)) {
 				showProgress(false);
 				loginUnSuccessful();
+			} else if (intent.getAction().equalsIgnoreCase(
+					Constants.PROFILE_UPDATED)) {
+
+				showProgress(false);
+				finish();
+				loginSuccessful();
 			}
 		}
 	}
 
 	private void loginSuccessful() {
-		Log.d("LoginActivity", "Login successfull");
+
 		Intent intent = new Intent(context, MainActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
 				| Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -220,7 +230,8 @@ public class LoginActivity extends Activity {
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
 	private void showProgress(final boolean show) {
 		// On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
-		// for very easy animations. If available, use these APIs TO_USER fade-in
+		// for very easy animations. If available, use these APIs TO_USER
+		// fade-in
 		// the progress spinner.
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
 			int shortAnimTime = getResources().getInteger(
