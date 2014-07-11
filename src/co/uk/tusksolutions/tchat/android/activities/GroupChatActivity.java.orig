@@ -25,7 +25,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.ListView;
 
-public class GroupChatActivity extends ActionBarActivity implements
+public class Group_chat_activity extends ActionBarActivity implements
 		TextWatcher {
 
 	public EditText searchView;

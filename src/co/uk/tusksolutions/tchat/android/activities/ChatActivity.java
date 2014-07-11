@@ -1,6 +1,17 @@
 package co.uk.tusksolutions.tchat.android.activities;
 
+import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.util.StringUtils;
+import org.jivesoftware.smackx.ChatState;
+
+
+
+
+
+
+
+
+
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -31,6 +42,7 @@ import co.uk.tusksolutions.tchat.android.adapters.ChatMessagesAdapter;
 import co.uk.tusksolutions.tchat.android.api.APICloudStorage;
 import co.uk.tusksolutions.tchat.android.api.APIGetMessages;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
+import co.uk.tusksolutions.tchat.android.listeners.XMPPChatMessageListener;
 import co.uk.tusksolutions.tchat.android.xmpp.XMPPChatMessageManager;
 
 public class ChatActivity extends ActionBarActivity {
@@ -46,7 +58,26 @@ public class ChatActivity extends ActionBarActivity {
 	private ChatMessageReceiver mChatMessageReceiver;
 	private String currentJid;
 	private static APIGetMessages mGetMessagesApi;
+  public static String CHATSTATE="ACTION_CHAT_STATE";
+	
+	
+	
+  private BroadcastReceiver incomingChatStateReceiver = new BroadcastReceiver() {
 
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			String chatStateStr = intent.getStringExtra(XMPPChatMessageListener.EXTRA_CHAT_STATE);
+
+			if (chatStateStr != null && chatStateStr.length() > 0) {
+				
+				Log.e("Chatstate ","chat state "+chatStateStr);
+				if(chatStateStr.equalsIgnoreCase("composing.."))
+				getSupportActionBar().setTitle(buddyName+"  "+chatStateStr);
+				else
+					getSupportActionBar().setTitle(buddyName);
+			}
+		}
+	};
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -123,6 +154,12 @@ public class ChatActivity extends ActionBarActivity {
 														// conversation
 		registerReceiver(mChatMessageReceiver, filter);
 
+		
+		
+
+		IntentFilter incomingChatStateFilter = new IntentFilter(XMPPChatMessageListener.ACTION_XMPP_CHAT_STATE_CHANGED);
+		registerReceiver(incomingChatStateReceiver, incomingChatStateFilter);
+		
 		/**
 		 * Set chat visible enum TO_USER visible so when we get a chat packet,
 		 * no status bar notification will be posted.
@@ -285,6 +322,8 @@ public class ChatActivity extends ActionBarActivity {
 			if (s.toString().length() >= 1) {
 				if (chatSendButton.isEnabled() == false) {
 					// TODO Send composing stanza TO_USER friend.
+				
+				
 					chatSendButton.setEnabled(true);
 				}
 			} else {
@@ -293,6 +332,19 @@ public class ChatActivity extends ActionBarActivity {
 					chatSendButton.setEnabled(false);
 				}
 			}
+			
+			/*if (type == Message.Type.chat) {
+				if (charSequence.length() > 0) {
+					if (resendChatState) {
+						resendChatState = false;
+						Ln.d("Sending composing state!");
+						Tools.send("", buddy.getXmppJID(), ChatState.composing, type, getActivity());
+					}
+				} else {
+					Tools.send("", buddy.getXmppJID(), ChatState.active, type, getActivity());
+					resendChatState = true;
+				}
+			}*/
 
 		}
 	}

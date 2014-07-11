@@ -187,7 +187,11 @@ public class MainActivity extends ActionBarActivity implements
 					.show();
 			// startActivity(new Intent(this, ChatActivity.class));
 			
+<<<<<<< HEAD
+			startActivity(new Intent(MainActivity.this,GroupChatActivity.class));
+=======
 			//startActivity(new Intent(MainActivity.this,Group_chat_activity.class));
+>>>>>>> f0ade609d091af96eb016615d099c9f6d3341d54
 			return true;
 		}
 		if (id == R.id.action_search) {
