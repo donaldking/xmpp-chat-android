@@ -8,7 +8,7 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical" >
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -17,7 +17,7 @@
             android:background="@drawable/square_grey_box"
             android:gravity="center"
             android:orientation="vertical"
-            android:paddingTop="10dp">
+            android:paddingTop="10dp" >
 
             <ImageView
                 android:id="@+id/profile_image"
@@ -34,7 +34,7 @@
                 android:layout_gravity="center"
                 android:text="Full Name"
                 android:textSize="20sp" />
-            
+
             <co.uk.tusksolutions.extensions.RobotoLightTextView
                 android:id="@+id/profile_username"
                 android:layout_width="wrap_content"
@@ -67,6 +67,55 @@
                     android:orientation="horizontal"
                     android:padding="10dp" >
 
+                    <Button
+                        android:id="@+id/change_presence_status_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:layout_weight="2"
+                        android:background="@color/white"
+                        android:gravity="left"
+                        android:text="Change Status"
+                        android:textColor="@color/black"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <co.uk.tusksolutions.extensions.RobotoBoldTextView
+                        android:id="@+id/presence_status_text"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="right"
+                        android:text="ONLINE"
+                        android:textAllCaps="true"
+                        android:textColor="@color/light_green"
+                        android:textSize="15sp" />
+                </LinearLayout>
+
+                <!-- Divider line layout -->
+
+                <LinearLayout
+                    android:id="@+id/divider_layout_frame1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="1dp"
+                    android:baselineAligned="true"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp" >
+
+                    <View
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:background="#EEE" />
+                </LinearLayout>
+
+                <!-- Divider line layout end -->
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:orientation="horizontal"
+                    android:padding="10dp" >
+
                     <co.uk.tusksolutions.extensions.RobotoBoldTextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -80,13 +129,12 @@
                         android:id="@+id/sound_notification_checkbox"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
-
                 </LinearLayout>
 
                 <!-- Divider line layout -->
 
                 <LinearLayout
-                    android:id="@+id/divider_layout_frame1"
+                    android:id="@+id/divider_layout_frame2"
                     android:layout_width="wrap_content"
                     android:layout_height="1dp"
                     android:baselineAligned="true"
@@ -126,7 +174,7 @@
                 <!-- Divider line layout -->
 
                 <LinearLayout
-                    android:id="@+id/divider_layout_frame2"
+                    android:id="@+id/divider_layout_frame3"
                     android:layout_width="wrap_content"
                     android:layout_height="1dp"
                     android:baselineAligned="true"

@@ -15,6 +15,7 @@ public class UserModel {
 	private String username;
 	private String password;
 	private String profileName;
+	private String currentPresence;
 	private String lastLogin;
 	SQLiteDatabase db;
 
@@ -44,6 +45,14 @@ public class UserModel {
 
 	public void setProfileName(String name) {
 		this.profileName = name;
+	}
+
+	public String getCurrentPresence() {
+		return currentPresence;
+	}
+
+	public void setCurrentPresence(String currentPresence) {
+		this.currentPresence = currentPresence;
 	}
 
 	public String getLastLogin() {
@@ -115,7 +124,8 @@ public class UserModel {
 		 * Pulls and sets the user's profile fromUser db TO_USER user object
 		 */
 		String[] columns = { TChatDBHelper.USERNAME, TChatDBHelper.PASSWORD,
-				TChatDBHelper.PROFILE_NAME, TChatDBHelper.LAST_LOGIN };
+				TChatDBHelper.PROFILE_NAME, TChatDBHelper.CURRENT_PRESENCE,
+				TChatDBHelper.LAST_LOGIN };
 		Cursor cursor = db.query(TChatDBHelper.PROFILE_TABLE, columns, null,
 				null, null, null, null);
 		while (cursor.moveToNext()) {
@@ -126,6 +136,8 @@ public class UserModel {
 					.getColumnIndex(TChatDBHelper.PASSWORD)));
 			setProfileName(cursor.getString(cursor
 					.getColumnIndex(TChatDBHelper.PROFILE_NAME)));
+			setCurrentPresence(cursor.getString(cursor
+					.getColumnIndex(TChatDBHelper.CURRENT_PRESENCE)));
 			setLastLogin(cursor.getString(cursor
 					.getColumnIndex(TChatDBHelper.LAST_LOGIN)));
 		}
@@ -142,6 +154,36 @@ public class UserModel {
 			ContentValues contentValues = new ContentValues();
 			contentValues.put(TChatDBHelper.PROFILE_NAME,
 					profileObject.getString("fullName"));
+
+			// Update
+			String whereClause = TChatDBHelper.USERNAME + " = ? ";
+			String[] whereArgs = new String[] { TChatApplication.getUserModel().username };
+
+			int id = db.update(TChatDBHelper.PROFILE_TABLE, contentValues,
+					whereClause, whereArgs);
+
+			prepareProfile();
+
+			if (id >= 0) {
+				return true;
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		db.close();
+
+		return false;
+	}
+
+	public boolean updateCurrentPresence(String currentPresence) {
+		db = TChatApplication.getTChatDBWritable();
+
+		try {
+
+			ContentValues contentValues = new ContentValues();
+			contentValues.put(TChatDBHelper.CURRENT_PRESENCE, currentPresence);
 
 			// Update
 			String whereClause = TChatDBHelper.USERNAME + " = ? ";

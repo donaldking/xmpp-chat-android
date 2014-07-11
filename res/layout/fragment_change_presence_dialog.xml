@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/change_presence_layout"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:orientation="vertical"
+    android:paddingBottom="20dp"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp" >
+
+    <RadioGroup
+        android:id="@+id/radio_presence_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <RadioButton
+            android:id="@+id/radio_online"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:padding="10dp"
+            android:text="@string/radio_online" />
+        <!-- Divider line layout -->
+
+        <LinearLayout
+            android:id="@+id/divider_layout_frame1"
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:baselineAligned="true"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp" >
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:background="#EEE" />
+        </LinearLayout>
+
+        <!-- Divider line layout end -->
+
+        <RadioButton
+            android:id="@+id/radio_invisible"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="@string/radio_invisible" />
+
+        <!-- Divider line layout -->
+
+        <LinearLayout
+            android:id="@+id/divider_layout_frame2"
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:baselineAligned="true"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp" >
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:background="#EEE" />
+        </LinearLayout>
+
+        <!-- Divider line layout end -->
+
+        <RadioButton
+            android:id="@+id/radio_offline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="@string/radio_offline" />
+    </RadioGroup>
+
+</LinearLayout>

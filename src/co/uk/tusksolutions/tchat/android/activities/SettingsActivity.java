@@ -1,8 +1,11 @@
 package co.uk.tusksolutions.tchat.android.activities;
 
-import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
-
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -17,17 +20,22 @@ import co.uk.tusksolutions.extensions.RobotoLightTextView;
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
+import co.uk.tusksolutions.tchat.android.fragments.ChangePresenceFragment;
 import co.uk.tusksolutions.tchat.android.models.UserModel;
+
+import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 
 public class SettingsActivity extends ActionBarActivity {
 
-	Button mLogoutButton;
+	private PresenceChangeReceiver mPresenceChangeReceiver;
+	private IntentFilter filter;
+	Button mLogoutButton, mChangePresenceButton;
 	LayoutInflater inflater;
 	ViewGroup container;
 	CheckBox mSoundNotificationCheckbox, mShowLastSeenOnlineCheckbox;
 
 	ImageView mProfileAvatar;
-	RobotoBoldTextView mFullNameTextView;
+	RobotoBoldTextView mFullNameTextView, mPresenceStatusText;
 	RobotoLightTextView mUserNameTextView;
 	UserModel mUserModel;
 
@@ -46,6 +54,27 @@ public class SettingsActivity extends ActionBarActivity {
 		mSoundNotificationCheckbox = (CheckBox) findViewById(R.id.sound_notification_checkbox);
 		mShowLastSeenOnlineCheckbox = (CheckBox) findViewById(R.id.show_last_seen_checkbox);
 
+		mChangePresenceButton = (Button) findViewById(R.id.change_presence_status_button);
+		mChangePresenceButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Show presence change dialog fragment
+
+				showEditDialog();
+			}
+		});
+
+		mPresenceStatusText = (RobotoBoldTextView) findViewById(R.id.presence_status_text);
+		mPresenceStatusText.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				showEditDialog();
+			}
+		});
+
 		mLogoutButton = (Button) findViewById(R.id.logout_button);
 		mLogoutButton.setOnClickListener(new OnClickListener() {
 
@@ -57,10 +86,36 @@ public class SettingsActivity extends ActionBarActivity {
 		});
 
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		this.setCurrentPreferences();
+		this.prepareProfile();
 	}
 
-	private void setCurrentPreferences() {
+	@Override
+	public void onResume() {
+		super.onResume();
+		
+		mPresenceChangeReceiver = new PresenceChangeReceiver();
+		filter = new IntentFilter();
+		filter.addAction(Constants.USER_PRESENCE_CHANGED);
+		registerReceiver(mPresenceChangeReceiver, filter);
+		
+		setUserPresence();
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		if (mPresenceChangeReceiver != null) {
+			unregisterReceiver(mPresenceChangeReceiver);
+		}
+	}
+	
+	private void showEditDialog() {
+		FragmentManager fm = getSupportFragmentManager();
+		ChangePresenceFragment changePresenceFragment = new ChangePresenceFragment();
+		changePresenceFragment.show(fm, "fragment_edit_name");
+	}
+
+	private void prepareProfile() {
 
 		try {
 			UrlImageViewHelper.setUrlDrawable(mProfileAvatar,
@@ -79,6 +134,27 @@ public class SettingsActivity extends ActionBarActivity {
 		mShowLastSeenOnlineCheckbox.setChecked(true);
 	}
 
+	public void setUserPresence() {
+		String presence = mUserModel.getCurrentPresence();
+		
+		if (presence.equalsIgnoreCase("online")) {
+			mPresenceStatusText.setTextColor(getResources().getColor(
+					R.color.light_green));
+			mPresenceStatusText.setText("ONLINE");
+
+		} else if (presence.equalsIgnoreCase("invisible")) {
+			mPresenceStatusText.setTextColor(getResources().getColor(
+					R.color.silver));
+			mPresenceStatusText.setText("INVISIBLE");
+		} else if (presence.equalsIgnoreCase("offline")) {
+			mPresenceStatusText.setTextColor(getResources().getColor(
+					R.color.silver));
+			mPresenceStatusText.setText("OFFLINE");
+		}
+		
+		mPresenceStatusText.invalidate();
+	}
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem menuItem) {
 		switch (menuItem.getItemId()) {
@@ -90,5 +166,24 @@ public class SettingsActivity extends ActionBarActivity {
 			break;
 		}
 		return true;
+	}
+
+	/*
+	 * Broad cast fromUser that gets called When we receive new data form cloud
+	 * TO_USER db
+	 */
+	private class PresenceChangeReceiver extends BroadcastReceiver {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			/*
+			 * Load friends fromUser db and reload the list view
+			 */
+			if (intent.getAction().equalsIgnoreCase(
+					Constants.USER_PRESENCE_CHANGED)) {
+
+				setUserPresence();
+			}
+		}
 	}
 }

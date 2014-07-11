@@ -31,6 +31,8 @@ public class Constants {
 	public static String CHAT_MESSAGE_READY = "co.uk.tusksolutions.tchat.android.action.CHAT_MESSAGE_READY";
 	public static String OPEN_FOR_NEW_CHAT_RECEIVED = "co.uk.tusksolutions.tchat.android.action.OPEN_FOR_NEW_CHAT_RECEIVED";
 	public static String CHAT_MESSAGE_EMPTY = "co.uk.tusksolutions.tchat.android.action.CHAT_MESSAGE_EMPTY";
+	
+	public static final String USER_PRESENCE_CHANGED = "co.uk.tusksolutions.tchat.android.action.USER_PRESENCE_CHANGED";
 
 	/**
 	 * Network Connection Actions

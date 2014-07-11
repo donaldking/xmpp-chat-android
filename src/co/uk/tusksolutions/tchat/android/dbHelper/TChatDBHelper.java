@@ -30,6 +30,7 @@ public class TChatDBHelper extends SQLiteOpenHelper {
 	public static final String USERNAME = "username";
 	public static final String PASSWORD = "password";
 	public static final String PROFILE_NAME = "name";
+	public static final String CURRENT_PRESENCE = "currentPresence";
 	public static final String LAST_LOGIN = "lastLogin";
 
 	/*
@@ -84,6 +85,7 @@ public class TChatDBHelper extends SQLiteOpenHelper {
 			+ " INTEGER PRIMARY KEY AUTOINCREMENT," + "  " + USERNAME
 			+ " varchar(255) DEFAULT NULL," + "  " + PASSWORD
 			+ " varchar(255) DEFAULT NULL," + "  " + PROFILE_NAME
+			+ " varchar(255) DEFAULT NULL," + "  " + CURRENT_PRESENCE
 			+ " varchar(255) DEFAULT NULL," + "  " + LAST_LOGIN
 			+ " varchar(255) DEFAULT NULL);";
 

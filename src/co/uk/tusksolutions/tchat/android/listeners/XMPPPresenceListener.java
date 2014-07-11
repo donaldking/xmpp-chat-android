@@ -12,15 +12,29 @@ public class XMPPPresenceListener implements PacketListener {
 
 	private static final String TAG = "XMPPPresenceListener";
 	Context mContext = TChatApplication.getContext();
+	Presence presenceObject;
 
 	public XMPPPresenceListener() {
-		Presence presence;
+
 		/**
 		 * Tell the server we are online
 		 */
-		presence = new Presence(Presence.Type.available);
-		presence.setPriority(1);
-		TChatApplication.connection.sendPacket(presence);
+		this.setXMPPPresence(Presence.Type.available);
+	}
+
+	public void setXMPPPresence(Presence.Type presence) {
+
+		if (presence.equals(Presence.Type.available)) {
+			presenceObject = new Presence(Presence.Type.available);
+			/**
+			 * Update our presence in db
+			 */
+			TChatApplication.getUserModel().updateCurrentPresence("online");
+
+		} else if (presence.equals(Presence.Type.unavailable)) {
+			presenceObject = new Presence(Presence.Type.unavailable);
+		}
+		TChatApplication.connection.sendPacket(presenceObject);
 	}
 
 	@Override
