@@ -182,12 +182,12 @@ public class MainActivity extends ActionBarActivity implements
 		int id = item.getItemId();
 		if (id == R.id.action_chat) {
 
-			/*Toast.makeText(TChatApplication.getContext(),
+			Toast.makeText(TChatApplication.getContext(),
 					"Go through friends list for now...", Toast.LENGTH_LONG)
-					.show();*/
+					.show();
 			// startActivity(new Intent(this, ChatActivity.class));
 			
-			startActivity(new Intent(MainActivity.this,Group_chat_activity.class));
+			//startActivity(new Intent(MainActivity.this,Group_chat_activity.class));
 			return true;
 		}
 		if (id == R.id.action_search) {
