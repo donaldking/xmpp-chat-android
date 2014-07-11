@@ -6,7 +6,6 @@ import co.uk.tusksolutions.extensions.RobotoBoldTextView;
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.adapters.GroupContentAdapter;
-import co.uk.tusksolutions.tchat.android.adapters.RosterContentAdapter;
 import co.uk.tusksolutions.tchat.android.models.RosterModel;
 import co.uk.tusksolutions.tchat.android.viewHolders.GroupViewHolder;
 import android.animation.Animator;
@@ -15,7 +14,6 @@ import android.annotation.TargetApi;
 import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -26,8 +24,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 public class Group_chat_activity extends ActionBarActivity implements
 		TextWatcher {
@@ -49,10 +45,15 @@ public class Group_chat_activity extends ActionBarActivity implements
 	private Bundle instanceState;
 
 	private RosterModel mModel;
+	
+
 	RobotoBoldTextView selected_user;
 	private int action;
 	public static ArrayList<RosterModel> rosterModelCollection;
+	
+	
 	StringBuilder builder;
+	public static ArrayList<String> users_selected_array = new ArrayList<String>();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +62,10 @@ public class Group_chat_activity extends ActionBarActivity implements
 		setContentView(R.layout.group_chat_activity);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		mModel = new RosterModel();
+		
+		
 		rosterModelCollection = new ArrayList<RosterModel>();
+	
 		listView = (ListView) findViewById(R.id.list_view_group_friends);
 		listView.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
 		listView.setStackFromBottom(true);
@@ -83,42 +87,81 @@ public class Group_chat_activity extends ActionBarActivity implements
 		mAdapter = new GroupContentAdapter(TChatApplication.getContext(),
 				ALL_QUERY_ACTION);
 		listView.setAdapter(mAdapter);
+		
+	
 
+		scrollToTop();
 		listView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> adapter, View view,
 					int postion, long id) {
 				// TODO Auto-generated method stub
-
+				GroupViewHolder groupViewHolder = new GroupViewHolder(view);
 				Log.e("Debug",
 						"User name click "
 								+ GroupContentAdapter.rosterModelCollection
 										.get(postion).name);
-				Toast.makeText(
-						Group_chat_activity.this,
-						"User name click "
-								+ GroupContentAdapter.rosterModelCollection
-										.get(postion).name, Toast.LENGTH_SHORT)
-						.show();
+				
+				
 
-				if (!(selected_user.getText().toString()
+				if (!(users_selected_array
 						.contains(GroupContentAdapter.rosterModelCollection
 								.get(postion).name))) {
-					builder.append(" "
-							+ GroupContentAdapter.rosterModelCollection
-									.get(postion).name);
-					selected_user.setText(builder.toString());
+					selected_user.setText("");
+					String friend_username = GroupContentAdapter.rosterModelCollection
+							.get(postion).name;
+					users_selected_array.add(friend_username);
+					Log.e("debug", " add user " + friend_username);
+					setNametoTextView();
+
+					groupViewHolder.rosterPresenceFrame
+							.setVisibility(view.VISIBLE);
+					
+					
+					
+
+				} else {
+					String friend_username = GroupContentAdapter.rosterModelCollection
+							.get(postion).name;
+
+					Log.e("debug", " removed user " + friend_username);
+					users_selected_array.remove(friend_username);
+					setNametoTextView();
+				
+					groupViewHolder.rosterPresenceFrame
+							.setVisibility(view.GONE);
+				
 				}
-				
-				
-				GroupViewHolder groupViewHolder=new GroupViewHolder(view);
-				
-				groupViewHolder.rosterPresenceFrame.setVisibility(View.VISIBLE);
 
 			}
 		});
 
+	}
+
+	@Override
+	protected void onStart() {
+		// TODO Auto-generated method stub
+		super.onStart();
+
+		users_selected_array = new ArrayList<String>();
+	}
+
+	protected void setNametoTextView() {
+		// TODO Auto-generated method stub
+		builder = new StringBuilder();
+		for (String s : users_selected_array) {
+
+			builder.append(s).append(" ");
+
+		}
+
+		selected_user.setText(builder.toString());
+	}
+
+	public static void scrollToTop() {
+		Log.d("ChatActivity", "ScrollToBottom");
+		listView.setSelection(0);
 	}
 
 	/**
@@ -196,8 +239,7 @@ public class Group_chat_activity extends ActionBarActivity implements
 
 			performSearch(s);
 		} else {
-
-			listView.setVisibility(View.GONE);
+			scrollToTop();
 		}
 	}
 

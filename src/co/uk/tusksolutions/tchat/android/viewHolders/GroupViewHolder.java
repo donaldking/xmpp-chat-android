@@ -15,6 +15,7 @@ public class GroupViewHolder {
 
 	public GroupViewHolder(View v) {
 		rosterPresenceFrame = v.findViewById(R.id.roster_presence_frame);
+		rosterPresenceFrame.setVisibility(View.GONE);
 		rosterAvatar = (ImageView) v.findViewById(R.id.roster_avatar);
 		rosterName = (RobotoRegularTextView) v.findViewById(R.id.roster_name);
 		

@@ -119,11 +119,30 @@ public class GroupContentAdapter extends BaseAdapter {
 		}
 
 		holder.rosterName.setText(rosterModel.name);
+		
+			for(int j=0;j<rosterModelCollection.size();j++)
+			{
+				for(int i=0;i<Group_chat_activity.users_selected_array.size();i++)
+				{
+			if(Group_chat_activity.users_selected_array.get(i).toString().equalsIgnoreCase(rosterModelCollection.get(j).name))
+			{
+				
+				//holder.rosterPresenceFrame.setVisibility(View.VISIBLE);
+			}
+			else
+			{
+				
+				//holder.rosterPresenceFrame.setVisibility(View.GONE);
+			}
+			}
+		}
+		
+		
 		//holder.resource.setText(rosterModel.resourceName);
 		/*
 		 * Show presenceType if we are loading action 2 (Online)
 		 */
-		switch (action) {
+		/*switch (action) {
 		case 1:
 			holder.rosterPresenceFrame.setVisibility(View.GONE);
 			break;
@@ -131,11 +150,11 @@ public class GroupContentAdapter extends BaseAdapter {
 			holder.rosterPresenceFrame.setVisibility(View.VISIBLE);
 			break;
 		case 3:
-			holder.rosterPresenceFrame.setVisibility(View.GONE);
+			
 			break;
 		default:
 			break;
-		}
+		}*/
 /*
 		row.setOnClickListener(new OnClickListener() {
 
