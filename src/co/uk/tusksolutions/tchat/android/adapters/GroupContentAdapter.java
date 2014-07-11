@@ -3,24 +3,18 @@ package co.uk.tusksolutions.tchat.android.adapters;
 import java.util.ArrayList;
 
 import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.BaseAdapter;
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
-import co.uk.tusksolutions.tchat.android.activities.ChatActivity;
 import co.uk.tusksolutions.tchat.android.activities.GroupChatActivity;
-import co.uk.tusksolutions.tchat.android.activities.SearchActivity;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
 import co.uk.tusksolutions.tchat.android.models.RosterModel;
 import co.uk.tusksolutions.tchat.android.viewHolders.GroupViewHolder;
-import co.uk.tusksolutions.tchat.android.viewHolders.RosterViewHolder;
 
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 
@@ -33,8 +27,9 @@ public class GroupContentAdapter extends BaseAdapter {
 	private RosterModel mModel;
 	private int action;
 
-	public static  ArrayList<RosterModel> rosterModelCollection;
+	public static ArrayList<RosterModel> rosterModelCollection;
 	GroupViewHolder holder = null;
+
 	public GroupContentAdapter(Context context, int action) {
 		this.context = TChatApplication.getContext();
 		mModel = new RosterModel();
@@ -88,7 +83,6 @@ public class GroupContentAdapter extends BaseAdapter {
 	public View getView(final int position, View convertView, ViewGroup parent) {
 
 		View row = convertView;
-		
 
 		if (row == null) {
 			LayoutInflater inflater = (LayoutInflater) context
@@ -119,67 +113,54 @@ public class GroupContentAdapter extends BaseAdapter {
 		}
 
 		holder.rosterName.setText(rosterModel.name);
-		
-			for(int j=0;j<rosterModelCollection.size();j++)
-			{
-				for(int i=0;i<Group_chat_activity.users_selected_array.size();i++)
-				{
-			if(Group_chat_activity.users_selected_array.get(i).toString().equalsIgnoreCase(rosterModelCollection.get(j).name))
-			{
-				
-				//holder.rosterPresenceFrame.setVisibility(View.VISIBLE);
-			}
-			else
-			{
-				
-				//holder.rosterPresenceFrame.setVisibility(View.GONE);
-			}
+
+		for (int j = 0; j < rosterModelCollection.size(); j++) {
+			for (int i = 0; i < GroupChatActivity.users_selected_array.size(); i++) {
+				if (GroupChatActivity.users_selected_array.get(i).toString()
+						.equalsIgnoreCase(rosterModelCollection.get(j).name)) {
+
+					// holder.rosterPresenceFrame.setVisibility(View.VISIBLE);
+				} else {
+
+					// holder.rosterPresenceFrame.setVisibility(View.GONE);
+				}
 			}
 		}
-		
-		
-		//holder.resource.setText(rosterModel.resourceName);
+
+		// holder.resource.setText(rosterModel.resourceName);
 		/*
 		 * Show presenceType if we are loading action 2 (Online)
 		 */
-		/*switch (action) {
-		case 1:
-			holder.rosterPresenceFrame.setVisibility(View.GONE);
-			break;
-		case 2:
-			holder.rosterPresenceFrame.setVisibility(View.VISIBLE);
-			break;
-		case 3:
-			
-			break;
-		default:
-			break;
-		}*/
-/*
-		row.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-  
-  
-                
-				doSelectionAnimationForView(v);
-				Bundle b = new Bundle();
-				b.putString("buddyJid", rosterModel.user);
-				b.putString("friendName", rosterModel.name);
-
-				Intent intent = new Intent(TChatApplication.getContext(),
-						ChatActivity.class);
-				intent.putExtra("chatWithFriendBundle", b);
-				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				TChatApplication.getContext().startActivity(intent);
-			
-				
-				//action=2;
-			
-			
-			}
-		});*/
+		/*
+		 * switch (action) { case 1:
+		 * holder.rosterPresenceFrame.setVisibility(View.GONE); break; case 2:
+		 * holder.rosterPresenceFrame.setVisibility(View.VISIBLE); break; case
+		 * 3:
+		 * 
+		 * break; default: break; }
+		 */
+		/*
+		 * row.setOnClickListener(new OnClickListener() {
+		 * 
+		 * @Override public void onClick(View v) {
+		 * 
+		 * 
+		 * 
+		 * doSelectionAnimationForView(v); Bundle b = new Bundle();
+		 * b.putString("buddyJid", rosterModel.user); b.putString("friendName",
+		 * rosterModel.name);
+		 * 
+		 * Intent intent = new Intent(TChatApplication.getContext(),
+		 * ChatActivity.class); intent.putExtra("chatWithFriendBundle", b);
+		 * intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		 * TChatApplication.getContext().startActivity(intent);
+		 * 
+		 * 
+		 * //action=2;
+		 * 
+		 * 
+		 * } });
+		 */
 
 		return row;
 	}

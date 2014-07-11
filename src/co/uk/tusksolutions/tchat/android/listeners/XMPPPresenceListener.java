@@ -10,19 +10,18 @@ import co.uk.tusksolutions.tchat.android.TChatApplication;
 
 public class XMPPPresenceListener implements PacketListener {
 
-	private static final String TAG = "XMPPPresenceListener";
 	Context mContext = TChatApplication.getContext();
-	Presence presenceObject;
+	static Presence presenceObject;
 
 	public XMPPPresenceListener() {
 
 		/**
 		 * Tell the server we are online
 		 */
-		this.setXMPPPresence(Presence.Type.available);
+		XMPPPresenceListener.setXMPPPresence(Presence.Type.available);
 	}
 
-	public void setXMPPPresence(Presence.Type presence) {
+	public static void setXMPPPresence(Presence.Type presence) {
 
 		if (presence.equals(Presence.Type.available)) {
 			presenceObject = new Presence(Presence.Type.available);
@@ -30,11 +29,13 @@ public class XMPPPresenceListener implements PacketListener {
 			 * Update our presence in db
 			 */
 			TChatApplication.getUserModel().updateCurrentPresence("online");
+			TChatApplication.connection.sendPacket(presenceObject);
 
 		} else if (presence.equals(Presence.Type.unavailable)) {
 			presenceObject = new Presence(Presence.Type.unavailable);
+			TChatApplication.connection.disconnect();
 		}
-		TChatApplication.connection.sendPacket(presenceObject);
+
 	}
 
 	@Override

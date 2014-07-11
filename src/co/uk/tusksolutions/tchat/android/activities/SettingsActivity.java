@@ -1,5 +1,6 @@
 package co.uk.tusksolutions.tchat.android.activities;
 
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -92,6 +93,8 @@ public class SettingsActivity extends ActionBarActivity {
 	public void onResume() {
 		super.onResume();
 
+		TChatApplication.presenceDialogHandler = new PresenceDialogFragmentDismissHandler();
+
 		mPresenceChangeReceiver = new PresenceChangeReceiver();
 		filter = new IntentFilter();
 		filter.addAction(Constants.USER_PRESENCE_CHANGED);
@@ -110,8 +113,7 @@ public class SettingsActivity extends ActionBarActivity {
 
 	private void showPresenceDialog() {
 		FragmentManager fm = getSupportFragmentManager();
-		ChangePresenceFragment changePresenceFragment = new ChangePresenceFragment(
-				new PresenceDialogFragmentDismissHandler());
+		ChangePresenceFragment changePresenceFragment = new ChangePresenceFragment();
 		changePresenceFragment.show(fm, "presence_dialog");
 	}
 
@@ -149,13 +151,12 @@ public class SettingsActivity extends ActionBarActivity {
 			mPresenceStatusText.setTextColor(getResources().getColor(
 					R.color.silver));
 			mPresenceStatusText.setText("INVISIBLE");
+
 		} else if (presence.equalsIgnoreCase("offline")) {
 			mPresenceStatusText.setTextColor(getResources().getColor(
 					R.color.silver));
 			mPresenceStatusText.setText("OFFLINE");
 		}
-
-		mPresenceStatusText.invalidate();
 	}
 
 	@Override
@@ -171,6 +172,8 @@ public class SettingsActivity extends ActionBarActivity {
 		return true;
 	}
 
+	// Dialog handler
+	@SuppressLint("HandlerLeak")
 	public class PresenceDialogFragmentDismissHandler extends Handler {
 
 		@Override
@@ -181,10 +184,7 @@ public class SettingsActivity extends ActionBarActivity {
 		}
 	}
 
-	/*
-	 * Broad cast fromUser that gets called When we receive new data form cloud
-	 * TO_USER db
-	 */
+	// Broadcast receiver
 	private class PresenceChangeReceiver extends BroadcastReceiver {
 
 		@Override
@@ -195,7 +195,7 @@ public class SettingsActivity extends ActionBarActivity {
 			if (intent.getAction().equalsIgnoreCase(
 					Constants.USER_PRESENCE_CHANGED)) {
 
-				setUserPresence();
+				prepareProfile();
 			}
 		}
 	}

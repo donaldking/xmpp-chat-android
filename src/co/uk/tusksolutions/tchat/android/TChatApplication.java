@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Handler;
 import android.widget.Toast;
 import co.uk.tusksolutions.tchat.android.activities.LoginActivity;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
@@ -38,6 +39,7 @@ public class TChatApplication extends Application {
 	private static ChatMessagesModel mChatMessagesModel;
 	public static String chatSessionBuddy;
 	public static int CHAT_SECTION_QUERY_ACTION;
+	public static Handler presenceDialogHandler;
 
 	@Override
 	public void onCreate() {

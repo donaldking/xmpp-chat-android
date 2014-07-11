@@ -11,7 +11,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.fragments.ChatRoomsFragment;
@@ -181,13 +180,8 @@ public class MainActivity extends ActionBarActivity implements
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 		if (id == R.id.action_chat) {
-
-			Toast.makeText(TChatApplication.getContext(),
-					"Go through friends list for now...", Toast.LENGTH_LONG)
-					.show();
-			// startActivity(new Intent(this, ChatActivity.class));
 			
-			//startActivity(new Intent(MainActivity.this,Group_chat_activity.class));
+			startActivity(new Intent(MainActivity.this,GroupChatActivity.class));
 			return true;
 		}
 		if (id == R.id.action_search) {

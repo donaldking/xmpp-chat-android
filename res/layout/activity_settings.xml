@@ -76,7 +76,7 @@
                         android:gravity="left"
                         android:text="Change Status"
                         android:textColor="@color/black"
-                        android:textSize="15sp"
+                        android:textSize="17sp"
                         android:textStyle="bold" />
 
                     <co.uk.tusksolutions.extensions.RobotoBoldTextView
@@ -88,7 +88,7 @@
                         android:text="ONLINE"
                         android:textAllCaps="true"
                         android:textColor="@color/light_green"
-                        android:textSize="15sp" />
+                        android:textSize="17sp" />
                 </LinearLayout>
 
                 <!-- Divider line layout -->
@@ -123,7 +123,7 @@
                         android:gravity="left"
                         android:text="Sound Notifications"
                         android:textColor="@color/black"
-                        android:textSize="14sp" />
+                        android:textSize="18sp" />
 
                     <CheckBox
                         android:id="@+id/sound_notification_checkbox"
@@ -163,7 +163,7 @@
                         android:gravity="left"
                         android:text="Show Last Seen Online"
                         android:textColor="@color/black"
-                        android:textSize="14sp" />
+                        android:textSize="18sp" />
 
                     <CheckBox
                         android:id="@+id/show_last_seen_checkbox"

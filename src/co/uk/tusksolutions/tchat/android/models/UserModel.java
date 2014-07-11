@@ -74,6 +74,7 @@ public class UserModel {
 
 		contentValues.put(TChatDBHelper.USERNAME, username);
 		contentValues.put(TChatDBHelper.PASSWORD, password);
+		contentValues.put(TChatDBHelper.CURRENT_PRESENCE, "online");
 
 		if (db.insert(TChatDBHelper.PROFILE_TABLE, null, contentValues) >= 1) {
 
