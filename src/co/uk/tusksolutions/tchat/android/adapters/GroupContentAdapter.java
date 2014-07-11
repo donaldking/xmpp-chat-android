@@ -15,7 +15,7 @@ import android.widget.BaseAdapter;
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.activities.ChatActivity;
-import co.uk.tusksolutions.tchat.android.activities.Group_chat_activity;
+import co.uk.tusksolutions.tchat.android.activities.GroupChatActivity;
 import co.uk.tusksolutions.tchat.android.activities.SearchActivity;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
 import co.uk.tusksolutions.tchat.android.models.RosterModel;
@@ -54,7 +54,7 @@ public class GroupContentAdapter extends BaseAdapter {
 			notifyDataSetChanged();
 			break;
 		case 3:
-			rosterModelCollection = Group_chat_activity.rosterModelCollection;
+			rosterModelCollection = GroupChatActivity.rosterModelCollection;
 			notifyDataSetChanged();
 			break;
 		default:

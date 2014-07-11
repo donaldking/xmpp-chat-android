@@ -1,7 +1,9 @@
 package co.uk.tusksolutions.tchat.android.fragments;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,10 +20,14 @@ public class ChangePresenceFragment extends DialogFragment implements
 
 	private RadioGroup mRadioPresenceGroup;
 	private RadioButton mRadioOnline, mRadioInvisible, mRadioOffline;
+	Handler handler;
+	
 	private static final String TAG = "ChangePresenceFragment";
 
-	public ChangePresenceFragment() {
+	public ChangePresenceFragment(Handler handler) {
 		// Empty constructor required for DialogFragment
+		
+		this.handler = handler;
 	}
 
 	@Override
@@ -79,6 +85,13 @@ public class ChangePresenceFragment extends DialogFragment implements
 			break;
 		}
 
+	}
+	
+	@Override
+	public void onDismiss(DialogInterface dialog){
+		super.onDismiss(dialog);
+		
+		handler.sendEmptyMessage(0);
 	}
 
 	private void setPresence(String presence) {

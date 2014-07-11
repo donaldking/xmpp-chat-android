@@ -29,7 +29,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class Group_chat_activity extends ActionBarActivity implements
+public class GroupChatActivity extends ActionBarActivity implements
 		TextWatcher {
 
 	public EditText searchView;
@@ -96,7 +96,7 @@ public class Group_chat_activity extends ActionBarActivity implements
 								+ GroupContentAdapter.rosterModelCollection
 										.get(postion).name);
 				Toast.makeText(
-						Group_chat_activity.this,
+						GroupChatActivity.this,
 						"User name click "
 								+ GroupContentAdapter.rosterModelCollection
 										.get(postion).name, Toast.LENGTH_SHORT)

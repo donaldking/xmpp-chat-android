@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
@@ -44,8 +46,6 @@ public class SettingsActivity extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_settings);
 
-		mUserModel = new UserModel();
-
 		mProfileAvatar = (ImageView) findViewById(R.id.profile_image);
 
 		mFullNameTextView = (RobotoBoldTextView) findViewById(R.id.profile_full_name);
@@ -61,7 +61,7 @@ public class SettingsActivity extends ActionBarActivity {
 			public void onClick(View v) {
 				// TODO Show presence change dialog fragment
 
-				showEditDialog();
+				showPresenceDialog();
 			}
 		});
 
@@ -71,7 +71,7 @@ public class SettingsActivity extends ActionBarActivity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				showEditDialog();
+				showPresenceDialog();
 			}
 		});
 
@@ -86,19 +86,18 @@ public class SettingsActivity extends ActionBarActivity {
 		});
 
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		this.prepareProfile();
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
-		
+
 		mPresenceChangeReceiver = new PresenceChangeReceiver();
 		filter = new IntentFilter();
 		filter.addAction(Constants.USER_PRESENCE_CHANGED);
 		registerReceiver(mPresenceChangeReceiver, filter);
-		
-		setUserPresence();
+
+		prepareProfile();
 	}
 
 	@Override
@@ -108,14 +107,18 @@ public class SettingsActivity extends ActionBarActivity {
 			unregisterReceiver(mPresenceChangeReceiver);
 		}
 	}
-	
-	private void showEditDialog() {
+
+	private void showPresenceDialog() {
 		FragmentManager fm = getSupportFragmentManager();
-		ChangePresenceFragment changePresenceFragment = new ChangePresenceFragment();
-		changePresenceFragment.show(fm, "fragment_edit_name");
+		ChangePresenceFragment changePresenceFragment = new ChangePresenceFragment(
+				new PresenceDialogFragmentDismissHandler());
+		changePresenceFragment.show(fm, "presence_dialog");
 	}
 
 	private void prepareProfile() {
+
+		mUserModel = new UserModel();
+		this.setUserPresence();
 
 		try {
 			UrlImageViewHelper.setUrlDrawable(mProfileAvatar,
@@ -136,7 +139,7 @@ public class SettingsActivity extends ActionBarActivity {
 
 	public void setUserPresence() {
 		String presence = mUserModel.getCurrentPresence();
-		
+
 		if (presence.equalsIgnoreCase("online")) {
 			mPresenceStatusText.setTextColor(getResources().getColor(
 					R.color.light_green));
@@ -151,7 +154,7 @@ public class SettingsActivity extends ActionBarActivity {
 					R.color.silver));
 			mPresenceStatusText.setText("OFFLINE");
 		}
-		
+
 		mPresenceStatusText.invalidate();
 	}
 
@@ -166,6 +169,16 @@ public class SettingsActivity extends ActionBarActivity {
 			break;
 		}
 		return true;
+	}
+
+	public class PresenceDialogFragmentDismissHandler extends Handler {
+
+		@Override
+		public void handleMessage(Message msg) {
+			super.handleMessage(msg);
+
+			prepareProfile();
+		}
 	}
 
 	/*
