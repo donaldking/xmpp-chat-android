@@ -1,0 +1,94 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context="${packageName}.${activityClass}" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical" >
+ <co.uk.tusksolutions.extensions.RobotoBoldTextView
+                android:id="@+id/selected_user_group"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+              
+               
+                android:textColor="@color/black"
+                android:textSize="17sp" />
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/very_light_grey"
+            android:gravity="center" >
+
+           
+
+            <EditText
+                android:id="@+id/friend_add_edittext"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+               
+                 android:ems="10"
+                android:inputType="textMultiLine" 
+                android:textColor="@color/black"
+                android:textSize="17sp" />
+
+            <!--
+                 <Button
+                android:id="@+id/clear_txt_search"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_gravity="right|center_vertical"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/abc_ic_clear_holo_light" />
+            -->
+
+           
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/roster_list_view_frame"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@color/white"
+            android:orientation="vertical" >
+
+            <ListView
+                android:id="@+id/list_view_group_friends"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:cacheColorHint="@color/white"
+                android:divider="@null"
+                android:dividerHeight="0dp"
+                android:fastScrollAlwaysVisible="true"
+                android:fastScrollEnabled="true"
+                android:scrollingCache="true"
+                android:visibility="visible" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Loading progress start -->
+
+    <LinearLayout
+        android:id="@+id/roster_loading_view"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp" />
+    </LinearLayout>
+
+    <!-- Loading progress end -->
+
+</RelativeLayout>

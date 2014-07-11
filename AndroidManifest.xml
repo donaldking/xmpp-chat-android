@@ -109,6 +109,8 @@
                 android:name="android.app.searchable"
                 android:resource="@string/abc_action_menu_overflow_description" />
         </activity>
+        <activity android:name="co.uk.tusksolutions.tchat.android.activities.Group_chat_activity"
+           android:launchMode="singleTop"></activity>
     </application>
 
 </manifest>
