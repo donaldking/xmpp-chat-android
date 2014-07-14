@@ -7,6 +7,8 @@ import java.util.Locale;
 import org.jivesoftware.smack.Roster;
 import org.jivesoftware.smack.RosterEntry;
 import org.jivesoftware.smack.packet.Presence;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.content.ContentValues;
 import android.content.Intent;
@@ -98,7 +100,7 @@ public class RosterModel implements Parcelable {
 		i.putExtra("inserts", counter);
 		i.setAction(Constants.ROSTER_UPDATED);
 		TChatApplication.getContext().sendBroadcast(i);
-		
+
 		return true;
 	}
 
@@ -151,6 +153,75 @@ public class RosterModel implements Parcelable {
 		TChatApplication.getContext().sendBroadcast(
 				new Intent(Constants.ROSTER_UPDATED));
 
+	}
+
+	public String getLastSeen(String buddyJid) {
+
+		String lastSeen = null;
+
+		String[] columns = { TChatDBHelper.LAST_SEEN_TIMESTAMP };
+		String whereClause = TChatDBHelper.USER + " = ? ";
+
+		String[] whereArgs = new String[] { buddyJid };
+
+		Cursor cursor = TChatApplication.getTChatDBReadable().query(TABLE,
+				columns, whereClause, whereArgs, null, null, null);
+
+		while (cursor.moveToNext()) {
+			/*
+			 * Request for the values TO_USER be pulled fromUser this cursor and
+			 * returned back TO_USER us.
+			 */
+			lastSeen = cursor.getString(cursor
+					.getColumnIndex(TChatDBHelper.LAST_SEEN_TIMESTAMP));
+		}
+
+		return lastSeen;
+	}
+
+	public boolean isBuddyOnline(String buddyJid) {
+
+		String whereClause = TChatDBHelper.PRESENCE_TYPE + " = ? AND "
+				+ TChatDBHelper.USER + " = ? ";
+
+		String[] whereArgs = new String[] { "available", buddyJid };
+		String[] columns = { TChatDBHelper.USER };
+		String orderBy = TChatDBHelper.NAME + " ASC";
+
+		Cursor cursor = TChatApplication.getTChatDBReadable().query(TABLE,
+				columns, whereClause, whereArgs, null, null, orderBy);
+		if (cursor.getCount() > 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public boolean updateLastOnline(JSONObject jsonObject, String buddyJid) {
+
+		String lastseen;
+		try {
+			lastseen = jsonObject.getString("seconds");
+			if (lastseen.matches("[0-9]+") && lastseen.length() >= 1) {
+				String whereClause = TChatDBHelper.USER + " = ? ";
+				String[] whereArgs = { buddyJid };
+
+				ContentValues contentValues = new ContentValues();
+				contentValues.put(TChatDBHelper.LAST_SEEN_TIMESTAMP, lastseen);
+
+				TChatApplication.getTChatDBWritable().updateWithOnConflict(
+						TABLE, contentValues, whereClause, whereArgs,
+						SQLiteDatabase.CONFLICT_REPLACE);
+
+				return true;
+			}
+
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return false;
 	}
 
 	public void setAllOffline() {

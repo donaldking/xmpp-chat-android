@@ -19,8 +19,8 @@ public class XMPPChatMessageListener implements PacketListener {
 	private static final String TAG = "XMPPChatMessageListener";
 	Context mContext = TChatApplication.getContext();
 	public static final String EXTRA_CHAT_STATE = "chatState";
-	
 	public static final String ACTION_XMPP_CHAT_STATE_CHANGED = "XMPP_CHAT_STATE_CHANGED";
+	
 	@Override
 	public void processPacket(Packet packet) {
 

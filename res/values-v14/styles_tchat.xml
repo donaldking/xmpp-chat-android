@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- File created by the Android Action Bar Style Generator
+<!--
+     File created by the Android Action Bar Style Generator
 
      Copyright (C) 2011 The Android Open Source Project
      Copyright (C) 2012 readyState Software Ltd
@@ -29,10 +30,9 @@
         <item name="android:actionModeBackground">@drawable/cab_background_top_tchat</item>
         <item name="android:actionModeSplitBackground">@drawable/cab_background_bottom_tchat</item>
         <item name="android:actionModeCloseButtonStyle">@style/ActionButton.CloseMode.Tchat</item>
-        
-                <!-- Light.DarkActionBar specific -->
-        <item name="android:actionBarWidgetTheme">@style/Theme.Tchat.Widget</item>
 
+        <!-- Light.DarkActionBar specific -->
+        <item name="android:actionBarWidgetTheme">@style/Theme.Tchat.Widget</item>
     </style>
 
     <style name="ActionBar.Solid.Tchat" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
@@ -46,7 +46,7 @@
         <item name="android:background">@drawable/ab_transparent_tchat</item>
         <item name="android:progressBarStyle">@style/ProgressBar.Tchat</item>
     </style>
-    
+
     <!-- this style is only referenced in a Light.DarkActionBar based theme -->
     <style name="Theme.Tchat.Widget" parent="@style/Theme.AppCompat">
         <item name="android:popupMenuStyle">@style/PopupMenu.Tchat</item>

@@ -1,17 +1,6 @@
 package co.uk.tusksolutions.tchat.android.activities;
 
-import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.util.StringUtils;
-import org.jivesoftware.smackx.ChatState;
-
-
-
-
-
-
-
-
-
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -25,6 +14,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
@@ -36,13 +26,16 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import co.uk.tusksolutions.extensions.TimeAgo;
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.adapters.ChatMessagesAdapter;
 import co.uk.tusksolutions.tchat.android.api.APICloudStorage;
+import co.uk.tusksolutions.tchat.android.api.APIGetLastOnlineTime;
 import co.uk.tusksolutions.tchat.android.api.APIGetMessages;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
 import co.uk.tusksolutions.tchat.android.listeners.XMPPChatMessageListener;
+import co.uk.tusksolutions.tchat.android.models.RosterModel;
 import co.uk.tusksolutions.tchat.android.xmpp.XMPPChatMessageManager;
 
 public class ChatActivity extends ActionBarActivity {
@@ -58,26 +51,10 @@ public class ChatActivity extends ActionBarActivity {
 	private ChatMessageReceiver mChatMessageReceiver;
 	private String currentJid;
 	private static APIGetMessages mGetMessagesApi;
-  public static String CHATSTATE="ACTION_CHAT_STATE";
-	
-	
-	
-  private BroadcastReceiver incomingChatStateReceiver = new BroadcastReceiver() {
+	private RosterModel mRosterModel;
+	public String lastSeen;
+	public static String CHATSTATE = "ACTION_CHAT_STATE";
 
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			String chatStateStr = intent.getStringExtra(XMPPChatMessageListener.EXTRA_CHAT_STATE);
-
-			if (chatStateStr != null && chatStateStr.length() > 0) {
-				
-				Log.e("Chatstate ","chat state "+chatStateStr);
-				if(chatStateStr.equalsIgnoreCase("composing.."))
-				getSupportActionBar().setTitle(buddyName+"  "+chatStateStr);
-				else
-					getSupportActionBar().setTitle(buddyName);
-			}
-		}
-	};
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -144,6 +121,7 @@ public class ChatActivity extends ActionBarActivity {
 	public void onResume() {
 		super.onResume();
 
+		mRosterModel = new RosterModel();
 		mChatMessageReceiver = new ChatMessageReceiver();
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(Constants.CHAT_MESSAGE_READY); // From sender (me)
@@ -152,14 +130,16 @@ public class ChatActivity extends ActionBarActivity {
 
 		filter.addAction(Constants.CHAT_MESSAGE_EMPTY); // No recent
 														// conversation
+		filter.addAction(XMPPChatMessageListener.ACTION_XMPP_CHAT_STATE_CHANGED); // For
+																					// composing
+																					// notification
+		filter.addAction(Constants.LAST_ONLINE_TIME_STATE_CHANGED); // For
+																	// Lastseen
+																	// time
+		filter.addAction(Constants.ROSTER_UPDATED); // To monitor buddy presence
+
 		registerReceiver(mChatMessageReceiver, filter);
 
-		
-		
-
-		IntentFilter incomingChatStateFilter = new IntentFilter(XMPPChatMessageListener.ACTION_XMPP_CHAT_STATE_CHANGED);
-		registerReceiver(incomingChatStateReceiver, incomingChatStateFilter);
-		
 		/**
 		 * Set chat visible enum TO_USER visible so when we get a chat packet,
 		 * no status bar notification will be posted.
@@ -173,6 +153,9 @@ public class ChatActivity extends ActionBarActivity {
 		TChatApplication.chatSessionBuddy = buddyJid;
 
 		prepareListView(buddyJid, currentJid, 1, -1);
+
+		// Get last online time for this buddy
+		getLastOnlineTime();
 	}
 
 	private static void prepareListView(String buddyJid, String currentJid,
@@ -182,11 +165,9 @@ public class ChatActivity extends ActionBarActivity {
 		 * Load Chat from DB
 		 */
 		mAdapter = new ChatMessagesAdapter(buddyJid, currentJid, action, id);
-
-		Log.d("TAG", "RES: " + mAdapter.getCount());
 		if (mAdapter.getCount() == 0) {
 			// Sync with API
-			showProgress(true);
+			// showProgress(true);
 			listView.setVisibility(View.GONE);
 			mGetMessagesApi = new APIGetMessages();
 			mGetMessagesApi.getMessages(StringUtils.parseName(buddyJid),
@@ -220,7 +201,7 @@ public class ChatActivity extends ActionBarActivity {
 		// the progress spinner.
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
 
-			mLodingStatusView.setVisibility(View.VISIBLE);
+			// mLodingStatusView.setVisibility(View.VISIBLE);
 			mLodingStatusView.animate().setDuration(shortAnimTime)
 					.alpha(show ? 1 : 0)
 					.setListener(new AnimatorListenerAdapter() {
@@ -238,12 +219,16 @@ public class ChatActivity extends ActionBarActivity {
 	}
 
 	@Override
-	public void onDestroy() {
-		super.onDestroy();
+	public void onPause() {
+		super.onPause();
 		if (mChatMessageReceiver != null) {
 			unregisterReceiver(mChatMessageReceiver);
 		}
+	}
 
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
 		/**
 		 * Set chat visible enum TO_USER not visible so when we get a chat
 		 * packet, status bar notification will be posted.
@@ -299,6 +284,34 @@ public class ChatActivity extends ActionBarActivity {
 		}
 	}
 
+	public void showLastOnlineTime() {
+
+		String lastOnlineTime = mRosterModel.getLastSeen(buddyJid);
+
+		if (lastOnlineTime != null) {
+			lastSeen = TimeAgo.getTimeAgo(Long.parseLong(lastOnlineTime), this);
+			getSupportActionBar().setSubtitle(
+					Html.fromHtml("<font color='#FFFFFF'>last seen " + lastSeen
+							+ "</font>"));
+		}
+	}
+
+	// Get last online time for this buddy
+
+	private void getLastOnlineTime() {
+
+		if (mRosterModel.isBuddyOnline(buddyJid) == true) {
+			lastSeen = "online";
+			getSupportActionBar().setSubtitle(
+					Html.fromHtml("<font color='#FFFFFF'> " + lastSeen
+							+ "</font>"));
+			return;
+		}
+		showLastOnlineTime();
+		APIGetLastOnlineTime getLastOnlineTimeObject = new APIGetLastOnlineTime();
+		getLastOnlineTimeObject.doGetLastOnlineTime(buddyJid);
+	}
+
 	/*
 	 * TextChange watcher
 	 */
@@ -322,30 +335,18 @@ public class ChatActivity extends ActionBarActivity {
 			if (s.toString().length() >= 1) {
 				if (chatSendButton.isEnabled() == false) {
 					// TODO Send composing stanza TO_USER friend.
-				
-				
+
+					XMPPChatMessageManager.sendComposing(buddyJid, buddyJid);
 					chatSendButton.setEnabled(true);
 				}
 			} else {
 				if (chatSendButton.isEnabled() == true) {
 					// TODO Send stopped composing stanza TO_USER friend.
+
+					XMPPChatMessageManager.sendPaused(buddyJid, buddyJid);
 					chatSendButton.setEnabled(false);
 				}
 			}
-			
-			/*if (type == Message.Type.chat) {
-				if (charSequence.length() > 0) {
-					if (resendChatState) {
-						resendChatState = false;
-						Ln.d("Sending composing state!");
-						Tools.send("", buddy.getXmppJID(), ChatState.composing, type, getActivity());
-					}
-				} else {
-					Tools.send("", buddy.getXmppJID(), ChatState.active, type, getActivity());
-					resendChatState = true;
-				}
-			}*/
-
 		}
 	}
 
@@ -393,13 +394,30 @@ public class ChatActivity extends ActionBarActivity {
 
 	}
 
+	public void displayComposing(String chatStateStr) {
+		Log.e("Chatstate ", "chat state " + chatStateStr);
+
+		if (chatStateStr.equalsIgnoreCase("composing..")) {
+
+			getSupportActionBar()
+					.setSubtitle(
+							Html.fromHtml("<font color='#FFFFFF'> is typing...</font>"));
+		} else {
+			if (lastSeen != null) {
+				getSupportActionBar().setSubtitle(
+						Html.fromHtml("<font color='#FFFFFF'>" + lastSeen
+								+ "</font>"));
+			}
+		}
+	}
+
 	/**
 	 * Programatically register for broadcast TO_USER be notified when chat
 	 * message has been received, processed and inserted TO_USER the db so we
 	 * can reload this view with the new message.
 	 * 
 	 */
-	class ChatMessageReceiver extends BroadcastReceiver {
+	private class ChatMessageReceiver extends BroadcastReceiver {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -410,10 +428,24 @@ public class ChatActivity extends ActionBarActivity {
 			} else if (intent.getAction().equalsIgnoreCase(
 					Constants.CHAT_MESSAGE_EMPTY)) {
 				showProgress(false);
-			}
+			} else if (intent.getAction().equalsIgnoreCase(
+					XMPPChatMessageListener.ACTION_XMPP_CHAT_STATE_CHANGED)) {
 
+				String chatStateStr = intent
+						.getStringExtra(XMPPChatMessageListener.EXTRA_CHAT_STATE);
+
+				if (chatStateStr != null && chatStateStr.length() > 0) {
+
+					displayComposing(chatStateStr);
+				}
+			} else if (intent.getAction().equalsIgnoreCase(
+					Constants.LAST_ONLINE_TIME_STATE_CHANGED)) {
+				showLastOnlineTime();
+			} else if (intent.getAction().equalsIgnoreCase(
+					Constants.ROSTER_UPDATED)) {
+				getLastOnlineTime();
+			}
 		}
 
 	}
-
 }

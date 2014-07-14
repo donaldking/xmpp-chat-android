@@ -1,6 +1,8 @@
 package co.uk.tusksolutions.tchat.android.xmpp;
 
 import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smackx.ChatState;
+import org.jivesoftware.smackx.packet.ChatStateExtension;
 
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.models.ChatMessagesModel;
@@ -8,7 +10,8 @@ import co.uk.tusksolutions.tchat.android.models.ChatMessagesModel;
 public class XMPPChatMessageManager {
 
 	private static ChatMessagesModel mChatMessageModel;
-
+	private static ChatStateExtension cm;
+	
 	public static void sendMessage(final String to, String buddyName,
 			final String message) {
 		if (mChatMessageModel == null) {
@@ -31,6 +34,26 @@ public class XMPPChatMessageManager {
 			mChatMessageModel.saveMessageToDB(to,
 					TChatApplication.getCurrentJid(), buddyName, message,
 					System.currentTimeMillis(), 2);
+		}
+	}
+
+	public static void sendComposing(String to, String packetId) {
+
+		cm = new ChatStateExtension(ChatState.composing);
+		Message msg = new Message(to,Message.Type.chat);
+		msg.addExtension(cm);
+		
+		if (TChatApplication.connection != null) {
+			TChatApplication.connection.sendPacket(msg);
+		}
+	}
+
+	public static void sendPaused(String to, String packetId) {
+		Message msg = new Message(to,Message.Type.chat);
+		msg.addExtension(new ChatStateExtension(ChatState.paused));
+		
+		if (TChatApplication.connection != null) {
+			TChatApplication.connection.sendPacket(msg);
 		}
 	}
 
