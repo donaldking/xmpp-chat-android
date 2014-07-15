@@ -9,31 +9,29 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:orientation="vertical" >
- <co.uk.tusksolutions.extensions.RobotoBoldTextView
-                android:id="@+id/selected_user_group"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:focusable="false"
-              
-               
-                android:textColor="@color/black"
-                android:textSize="17sp" />
+
+        <co.uk.tusksolutions.extensions.RobotoBoldTextView
+            android:id="@+id/selected_user_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:freezesText="true"
+            android:textColor="@color/black"
+            android:textSize="17sp" />
+
         <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:background="@color/very_light_grey"
             android:gravity="center" >
 
-           
-
             <EditText
                 android:id="@+id/friend_add_edittext"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:ems="10"
                 android:focusable="false"
-               
-                 android:ems="10"
-                android:inputType="textMultiLine" 
+                android:inputType="textMultiLine"
                 android:textColor="@color/black"
                 android:textSize="17sp" />
 
@@ -44,10 +42,8 @@
                 android:layout_height="25dp"
                 android:layout_gravity="right|center_vertical"
                 android:layout_marginRight="10dp"
-                android:background="@drawable/abc_ic_clear_holo_light" />
+                android:background="@drawable/abc_ic_clear_holo_light" />
             -->
-
-           
 
         </RelativeLayout>
 

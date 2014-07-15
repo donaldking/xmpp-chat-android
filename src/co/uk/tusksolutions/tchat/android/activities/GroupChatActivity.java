@@ -79,6 +79,7 @@ actionBar.setDisplayHomeAsUpEnabled(true);
 		rosterModelCollection = new ArrayList<GroupItemsModel>();
 		listView = getListView();
 		listView.setItemsCanFocus(false);
+		listView.setFastScrollEnabled(true);
 	
 		selected_user = (RobotoBoldTextView) findViewById(R.id.selected_user_group);
 		actionBar.setTitle("New Message");
@@ -96,11 +97,7 @@ actionBar.setDisplayHomeAsUpEnabled(true);
 		listView.setVerticalScrollBarEnabled(false);
 		listView.setHorizontalScrollBarEnabled(false);
 		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-		/*
-		 * mAdapter = new GroupContentAdapter(TChatApplication.getContext(),
-		 * ALL_QUERY_ACTION); //listView.setAdapter(mAdapter);
-		 * setListAdapter(mAdapter);
-		 */
+		
 		rosterModelCollection = mModel.queryAllFriends();
 		mAdapter= new GroupFriendsAdapter(getApplicationContext(),
 				rosterModelCollection);
@@ -221,6 +218,9 @@ actionBar.setDisplayHomeAsUpEnabled(true);
 
 			performSearch(s);
 		} else {
+			rosterModelCollection=mModel.queryAllFriends();
+			mAdapter = new GroupFriendsAdapter(this,rosterModelCollection);
+			setListAdapter(mAdapter);
 			scrollToTop();
 		}
 	}
@@ -230,21 +230,6 @@ actionBar.setDisplayHomeAsUpEnabled(true);
 		mAdapter = new GroupFriendsAdapter(this,rosterModelCollection);
 		setListAdapter(mAdapter);
 		Log.d("TCHAT", "result Size " + mAdapter.getCount());
-		/*if (mAdapter.getCount() == 0) {
-			if (TChatApplication.CHAT_SECTION_QUERY_ACTION == 2) {
-				showProgress(false);
-			} else {
-				showProgress(true);
-			}
-
-			listView.setVisibility(View.GONE);
-		} else {
-			showProgress(false);
-			listView.setAdapter(mAdapter);
-			if (listView.getVisibility() != View.VISIBLE) {
-				listView.setVisibility(View.VISIBLE);
-			}
-		}*/
 	}
 
 	@Override
@@ -270,7 +255,7 @@ actionBar.setDisplayHomeAsUpEnabled(true);
 	}
 
 	public static void showSelectedItems() {
-		final StringBuffer sb = new StringBuffer("To: ");
+	final StringBuffer sb = new StringBuffer("To: ");
 
 		// Get an array that tells us for each position whether the item is
 		// checked or not
@@ -303,16 +288,27 @@ actionBar.setDisplayHomeAsUpEnabled(true);
 				sb.append(rosterModelCollection.get(position).name);
 				users_selected_array.add(sb.toString());
 				
-				selected_user.setText(sb);
+				
+				
 				isFirstSelected = false;
 			}
 			else
 			{
 				selected_user.setText(sb);
 			}
+			
+			for(String s:users_selected_array)
+			{
+				StringBuilder name=new StringBuilder();
+			name.append(s).append(", ");
+				selected_user.setText(name.toString());
+				
+			}
 		}
 
 	}
+	
+	
 
 
 }
