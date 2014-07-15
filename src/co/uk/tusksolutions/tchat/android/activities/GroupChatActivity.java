@@ -261,6 +261,7 @@ actionBar.setDisplayHomeAsUpEnabled(true);
 		// checked or not
 		// --
 		final SparseBooleanArray checkedItems = listView.getCheckedItemPositions();
+		users_selected_array=new ArrayList<String>();
 		if (checkedItems == null) {
 			
 		selected_user.setText("");
@@ -296,11 +297,12 @@ actionBar.setDisplayHomeAsUpEnabled(true);
 			{
 				selected_user.setText(sb);
 			}
-			
+			Log.e("DEbug","size "+users_selected_array.size());
 			for(String s:users_selected_array)
 			{
+			
 				StringBuilder name=new StringBuilder();
-			name.append(s).append(", ");
+			     name.append(s).append(", ");
 				selected_user.setText(name.toString());
 				
 			}
