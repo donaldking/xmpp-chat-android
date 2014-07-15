@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 
-import co.uk.tusksolutions.extensions.CheckableRelativeLayout;
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
 import co.uk.tusksolutions.tchat.android.models.GroupItemsModel;
@@ -14,14 +13,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 
 public class GroupFriendsAdapter extends ArrayAdapter<GroupItemsModel>{
 
-	
+	private LayoutInflater li;
 	public GroupFriendsAdapter(Context context, List<GroupItemsModel> items) {
 		super(context, 0, items);
 		li = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -35,18 +32,18 @@ public class GroupFriendsAdapter extends ArrayAdapter<GroupItemsModel>{
 
 		// Re-use the view if possible
 		// --
-		ViewHolder holder;
+		GroupFriendsViewHolder holder;
 		if (convertView == null) {
-			convertView = li.inflate(R.layout.item, null);
-			holder = new ViewHolder(convertView);
+			convertView = li.inflate(R.layout.group_chat_friends_row, null);
+			holder = new GroupFriendsViewHolder(convertView);
 			convertView.setTag(R.id.holder, holder);
 		} else {
-			holder = (ViewHolder) convertView.getTag(R.id.holder);
+			holder = (GroupFriendsViewHolder) convertView.getTag(R.id.holder);
 		}
 		
 		String[] username = item.user.split("@");
 		try {
-			UrlImageViewHelper.setUrlDrawable(holder.id,
+			UrlImageViewHelper.setUrlDrawable(holder.rosterAvatar,
 					Constants.PROXY_SERVER + username[0]
 							+ "/avatar/1288&return=png",
 					R.drawable.mondobar_jewel_friends_on);
@@ -56,12 +53,12 @@ public class GroupFriendsAdapter extends ArrayAdapter<GroupItemsModel>{
 
 
 		// Set some view properties
-		holder.caption.setText(item.name);
+		holder.rosterName.setText(item.name);
 		
 
 		// Restore the checked state properly
 		final ListView lv = (ListView) parent;
-		holder.layout.setChecked(lv.isItemChecked(position));
+		holder.rosterPresenceFrame.setChecked(lv.isItemChecked(position));
 
 		return convertView;
 	}
@@ -76,17 +73,7 @@ public class GroupFriendsAdapter extends ArrayAdapter<GroupItemsModel>{
 		return true;
 	}
 
-	private LayoutInflater li;
+	
 
-	private static class ViewHolder {
-		public ViewHolder(View root) {
-			id = (ImageView) root.findViewById(R.id.roster_avatar);
-			caption = (TextView) root.findViewById(R.id.roster_name);
-			layout = (CheckableRelativeLayout) root.findViewById(R.id.layout);
-		}
-
-		public ImageView id;
-		public TextView caption;
-		public CheckableRelativeLayout layout;
-	}
+	
 }

@@ -2,24 +2,11 @@ package co.uk.tusksolutions.tchat.android.activities;
 
 import java.util.ArrayList;
 
-import co.uk.tusksolutions.extensions.RobotoBoldTextView;
-import co.uk.tusksolutions.tchat.android.R;
-import co.uk.tusksolutions.tchat.android.TChatApplication;
-import co.uk.tusksolutions.tchat.android.adapters.GroupContentAdapter;
-import co.uk.tusksolutions.tchat.android.adapters.GroupFriendsAdapter;
-import co.uk.tusksolutions.tchat.android.models.GroupItemsModel;
-import co.uk.tusksolutions.tchat.android.models.RosterModel;
-import co.uk.tusksolutions.tchat.android.viewHolders.GroupViewHolder;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.app.Fragment.SavedState;
-import android.app.ListActivity;
-import android.content.IntentFilter;
-import android.opengl.Visibility;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar.OnMenuVisibilityListener;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
@@ -30,45 +17,40 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
+import co.uk.tusksolutions.extensions.RobotoBoldTextView;
+import co.uk.tusksolutions.tchat.android.R;
+import co.uk.tusksolutions.tchat.android.TChatApplication;
+import co.uk.tusksolutions.tchat.android.adapters.GroupFriendsAdapter;
+import co.uk.tusksolutions.tchat.android.models.GroupItemsModel;
 
-public class GroupChatActivity extends ListActivity implements TextWatcher {
+public class GroupChatActivity extends ActionBarActivity implements TextWatcher {
 
 	public EditText searchView;
 	public static ListView listView;
 	public String TAG = "RosterFragment";
-	private View rootView;
 	private static GroupFriendsAdapter mAdapter;
-	private IntentFilter filter;
 	// private RosterReceiver mRosterReceiver;
 	private static View mLodingStatusView;
 	private static int shortAnimTime;
-	private static int ALL_QUERY_ACTION = 1; // See adapter for notes
-	private int ONLINE_QUERY_ACTION = 2; // See adapter for notes
 
-	private int SEARCH_ACTION = 3; // for search result
-
-	private Bundle instanceState;
-
+		
 	private GroupItemsModel mModel;
 
-	 static RobotoBoldTextView selected_user;
-	private int action;
+	static RobotoBoldTextView selected_user;
 	public static ArrayList<GroupItemsModel> rosterModelCollection;
 	StringBuilder builder;
 	public static ArrayList<String> users_selected_array = new ArrayList<String>();
-	android.app.ActionBar actionBar;
+	ActionBar actionBar;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.group_chat_activity);
-		actionBar = getActionBar();
+		actionBar = getSupportActionBar();
 		// getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		actionBar.setHomeButtonEnabled(true);
 		
@@ -77,7 +59,7 @@ actionBar.setDisplayHomeAsUpEnabled(true);
 		mModel = new GroupItemsModel();
 
 		rosterModelCollection = new ArrayList<GroupItemsModel>();
-		listView = getListView();
+		listView = (ListView) findViewById(R.id.group_list_view);
 		listView.setItemsCanFocus(false);
 		listView.setFastScrollEnabled(true);
 	
@@ -87,7 +69,6 @@ actionBar.setDisplayHomeAsUpEnabled(true);
 		searchView.clearFocus();
 		searchView.setFocusableInTouchMode(true);
 		searchView.addTextChangedListener(this);
-		instanceState = savedInstanceState;
 		builder = new StringBuilder();
 		shortAnimTime = getResources().getInteger(
 				android.R.integer.config_shortAnimTime);
@@ -101,7 +82,7 @@ actionBar.setDisplayHomeAsUpEnabled(true);
 		rosterModelCollection = mModel.queryAllFriends();
 		mAdapter= new GroupFriendsAdapter(getApplicationContext(),
 				rosterModelCollection);
-		setListAdapter(mAdapter);
+		listView.setAdapter(mAdapter);
           
 		scrollToTop();
 		
@@ -172,32 +153,6 @@ actionBar.setDisplayHomeAsUpEnabled(true);
 		}
 	}
 
-	/*private static void prepareListView(final int queryInt) {
-
-		*//**
-		 * Load Friends fromUser DB
-		 *//*
-
-		TChatApplication.CHAT_SECTION_QUERY_ACTION = queryInt;
-		mAdapter = new GroupContentAdapter(TChatApplication.getContext(),
-				queryInt);
-
-		if (mAdapter.getCount() == 0) {
-			if (TChatApplication.CHAT_SECTION_QUERY_ACTION == 2) {
-				showProgress(false);
-			} else {
-				showProgress(true);
-			}
-			listView.setVisibility(View.GONE);
-		} else {
-			// showProgress(false);
-			listView.setAdapter(mAdapter);
-			if (listView.getVisibility() != View.VISIBLE) {
-				listView.setVisibility(View.VISIBLE);
-			}
-		}
-	}
-*/
 	@Override
 	public void afterTextChanged(Editable s) {
 		// TODO Auto-generated method stub
@@ -220,7 +175,7 @@ actionBar.setDisplayHomeAsUpEnabled(true);
 		} else {
 			rosterModelCollection=mModel.queryAllFriends();
 			mAdapter = new GroupFriendsAdapter(this,rosterModelCollection);
-			setListAdapter(mAdapter);
+			listView.setAdapter(mAdapter);
 			scrollToTop();
 		}
 	}
@@ -228,7 +183,7 @@ actionBar.setDisplayHomeAsUpEnabled(true);
 	public void performSearch(CharSequence s) {
 		rosterModelCollection = mModel.querySearch(s.toString());
 		mAdapter = new GroupFriendsAdapter(this,rosterModelCollection);
-		setListAdapter(mAdapter);
+		listView.setAdapter(mAdapter);
 		Log.d("TCHAT", "result Size " + mAdapter.getCount());
 	}
 

@@ -14,7 +14,7 @@ public class GroupFriendsViewHolder {
 	public CheckableRelativeLayout rosterPresenceFrame;
 
 	public GroupFriendsViewHolder(View v) {
-		rosterPresenceFrame = (CheckableRelativeLayout)v.findViewById(R.id.group_chat_friends_row);
+		rosterPresenceFrame = (CheckableRelativeLayout)v.findViewById(R.id.layout);
 		rosterAvatar = (ImageView) v.findViewById(R.id.roster_avatar);
 		rosterName = (RobotoRegularTextView) v.findViewById(R.id.roster_name);
 		

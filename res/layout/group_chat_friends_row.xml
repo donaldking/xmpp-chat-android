@@ -1,97 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <co.uk.tusksolutions.extensions.CheckableRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/group_chat_friends_row"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:id="@+id/layout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_marginLeft="15dp"
+    android:layout_marginRight="25dp"
+    android:layout_marginTop="5dp"
+    android:baselineAligned="true"
+    android:orientation="horizontal" >
 
-    <LinearLayout
-        android:id="@+id/main_row_view"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_marginLeft="15dp"
+    <ImageView
+        android:id="@+id/roster_avatar"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="5dp"
+        android:focusable="false"
+        android:scaleType="fitCenter"
+        android:src="@drawable/mondobar_jewel_friends_on" />
+
+    <co.uk.tusksolutions.extensions.RobotoRegularTextView
+        android:id="@+id/roster_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@id/roster_avatar"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:text="Donald King"
+        android:textColor="@color/black"
+        android:textSize="17sp" />
+
+    <co.uk.tusksolutions.extensions.InertCheckBox
+        android:id="@+id/roster_presence_frame"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
         android:layout_marginRight="25dp"
-        android:layout_marginTop="5dp"
-        android:baselineAligned="true"
-        android:orientation="horizontal" >
-
-        <LinearLayout
-            android:id="@+id/roster_frame"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="1dp"
-            android:layout_weight="3"
-            android:baselineAligned="true"
-            android:gravity="left"
-            android:orientation="horizontal" >
-
-            <FrameLayout
-                android:id="@+id/avatar_frame"
-                android:layout_width="50dp"
-                android:layout_height="50dp" >
-
-                <ImageView
-                    android:id="@+id/roster_avatar"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/mondobar_jewel_friends_on" />
-            </FrameLayout>
-
-            <co.uk.tusksolutions.extensions.RobotoRegularTextView
-                android:id="@+id/roster_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginTop="10dp"
-                android:ellipsize="end"
-                android:singleLine="true"
-                android:text="Donald King"
-                android:textColor="@color/black"
-                android:textSize="17sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/check_box_main_frame"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginTop="15dp"
-            android:layout_weight="1"
-            android:baselineAligned="true"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:visibility="visible" >
-
-            <FrameLayout
-                android:id="@+id/check_box_frame"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
-
-                <!--
-                	<ImageView
-                    android:id="@+id/online_caret_image"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:baselineAlignBottom="false"
-                    android:paddingLeft="30dp"
-                    android:src="@drawable/orca_neue_checkmark" />
-                -->
-
-                <co.uk.tusksolutions.extensions.InertCheckBox
-                    android:id="@+id/selected_checkbox"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="right"
-                    android:layout_marginRight="25dp"
-                    android:button="@drawable/orca_neue_checkmark"
-                    android:focusable="false"
-                    android:paddingLeft="30dp" />
-            </FrameLayout>
-        </LinearLayout>
-    </LinearLayout>
+        android:button="@drawable/checkbox"
+        android:focusable="false" />
 
     <!-- Divider line layout -->
 
