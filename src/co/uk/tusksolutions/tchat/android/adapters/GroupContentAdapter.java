@@ -15,7 +15,7 @@ import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.activities.GroupChatActivity;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
 import co.uk.tusksolutions.tchat.android.models.RosterModel;
-import co.uk.tusksolutions.tchat.android.viewHolders.GroupViewHolder;
+import co.uk.tusksolutions.tchat.android.viewHolders.GroupFriendsViewHolder;
 
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 
@@ -29,7 +29,7 @@ public class GroupContentAdapter extends BaseAdapter {
 	private int action;
 
 	public static ArrayList<RosterModel> rosterModelCollection;
-	GroupViewHolder holder = null;
+	GroupFriendsViewHolder holder = null;
 
 	public GroupContentAdapter(Context context, int action) {
 		this.context = TChatApplication.getContext();
@@ -88,13 +88,13 @@ public class GroupContentAdapter extends BaseAdapter {
 		if (row == null) {
 			LayoutInflater inflater = (LayoutInflater) context
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			row = inflater.inflate(R.layout.group_chat_row, parent, false);
+			row = inflater.inflate(R.layout.group_chat_friends_row, parent, false);
 
-			holder = new GroupViewHolder(row);
+			holder = new GroupFriendsViewHolder(row);
 			row.setTag(holder);
 
 		} else {
-			holder = (GroupViewHolder) row.getTag();
+			holder = (GroupFriendsViewHolder) row.getTag();
 		}
 
 		/**
