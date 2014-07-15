@@ -71,7 +71,8 @@ public class GroupChatActivity extends ListActivity implements TextWatcher {
 		actionBar = getActionBar();
 		// getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		actionBar.setHomeButtonEnabled(true);
-		actionBar.setDisplayShowHomeEnabled(true);
+		
+actionBar.setDisplayHomeAsUpEnabled(true);
 
 		mModel = new GroupItemsModel();
 
@@ -110,12 +111,15 @@ public class GroupChatActivity extends ListActivity implements TextWatcher {
 
 	}
 
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.group_activity_menu, menu);
-		return true;
+	    // Inflate the menu items for use in the action bar
+	    MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.activity_main_actions, menu);
+	    return super.onCreateOptionsMenu(menu);
 	}
+	
 
 	@Override
 	protected void onStart() {

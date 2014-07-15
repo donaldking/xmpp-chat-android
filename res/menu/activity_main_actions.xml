@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <!-- Search Widget -->
+    <item android:id="@+id/action_search"
+          android:icon="@drawable/ic_action_search"
+          android:title="@string/action_search"
+          android:showAsAction="never"
+          android:actionViewClass="android.widget.SearchView"/>
+    
+   
+    
+    <!-- Refresh -->
+    <item android:id="@+id/action_refresh"
+          android:icon="@drawable/ic_action_refresh"
+          android:title="refresh" 
+          android:showAsAction="never" />
+    
+  
+    
+    <!-- Nexxt -->
+    <item android:id="@+id/submit_next"
+          android:icon="@drawable/ic_action_done"
+          
+          android:title="Next"
+          android:showAsAction="always" />
+</menu>
