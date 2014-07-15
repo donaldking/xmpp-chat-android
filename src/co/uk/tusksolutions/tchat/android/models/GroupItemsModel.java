@@ -2,14 +2,13 @@ package co.uk.tusksolutions.tchat.android.models;
 
 import java.util.ArrayList;
 
+import android.content.Intent;
+import android.database.Cursor;
+import android.os.Parcel;
+import android.os.Parcelable;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
 import co.uk.tusksolutions.tchat.android.dbHelper.TChatDBHelper;
-import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.os.Parcel;
-import android.os.Parcelable;
 
 public class GroupItemsModel implements Parcelable {
 
@@ -24,45 +23,35 @@ public class GroupItemsModel implements Parcelable {
 	public String lastMessageTimestamp;
 	public String lastMessage;
 	public String resourceName;
-	private SQLiteDatabase db;
-	private String TABLE = TChatDBHelper.RECENTS_TABLE;
+	private String TABLE = TChatDBHelper.ROSTER_TABLE;
 
 	public static final String TAG = "GroupItemModel";
 
 	public GroupItemsModel() {
 	}
 
-	
-	
 	public ArrayList<GroupItemsModel> queryAllFriends() {
 
-		db = TChatApplication.getTChatDBWritable();
 		ArrayList<GroupItemsModel> rosterModelCollection = new ArrayList<GroupItemsModel>();
 
-		/*String whereClause = TChatDBHelper.PRESENCE_TYPE + " = ? OR "
-				+ TChatDBHelper.PRESENCE_TYPE + " = ? ";
+		String orderBy = TChatDBHelper.NAME + " ASC";
 
-		String[] whereArgs = new String[] { "available", "unavailable" };
-		String orderBy = TChatDBHelper.NAME + " ASC";*/
-		//String orderBy = TChatDBHelper.NAME + " ASC";
-		//Cursor cursor = TChatApplication.getTChatDBReadable().query(TABLE,
-			//	null, null, null, null, null, null);
+		Cursor cursor = TChatApplication.getTChatDBReadable().query(TABLE,
+				null, null, null, null, null, orderBy);
 
-		Cursor cursor;
-		String query="select * from ROSTER_TABLE";
-		cursor=db.rawQuery(query, null);
 		while (cursor.moveToNext()) {
 			/*
 			 * Request for the values TO_USER be pulled fromUser this cursor and
 			 * returned back TO_USER us.
 			 */
-			
 			rosterModelCollection.add(fromCursor(cursor));
 		}
 		return rosterModelCollection;
+
 	}
+
 	public ArrayList<GroupItemsModel> querySearch(String text) {
-       Cursor cursor;
+
 		ArrayList<GroupItemsModel> rosterModelCollection = new ArrayList<GroupItemsModel>();
 
 		String whereClause = TChatDBHelper.NAME + " LIKE ? ";
@@ -70,7 +59,7 @@ public class GroupItemsModel implements Parcelable {
 		String[] whereArgs = new String[] { "%" + text + "%" };
 		String orderBy = TChatDBHelper.NAME + " ASC";
 
-		 cursor = TChatApplication.getTChatDBReadable().query(TABLE,
+		Cursor cursor = TChatApplication.getTChatDBReadable().query(TABLE,
 				null, whereClause, whereArgs, null, null, orderBy);
 
 		while (cursor.moveToNext()) {
@@ -91,14 +80,13 @@ public class GroupItemsModel implements Parcelable {
 		return rosterModelCollection;
 	}
 
-	
 	protected GroupItemsModel fromCursor(Cursor cursor) {
 		/*
 		 * Pulls the values fromUser the cursor object and returns it TO_USER
 		 * the caller
 		 */
 		GroupItemsModel rosterModel = new GroupItemsModel();
-        rosterModel.id=cursor.getString(0);
+		rosterModel.id = cursor.getString(0);
 		rosterModel.user = cursor.getString(cursor
 				.getColumnIndex(TChatDBHelper.USER));
 		rosterModel.name = cursor.getString(cursor
@@ -117,8 +105,7 @@ public class GroupItemsModel implements Parcelable {
 		return rosterModel;
 
 	}
-	
-	
+
 	/*
 	 * Parcelable stuff non-Javadoc)
 	 * 
@@ -155,7 +142,7 @@ public class GroupItemsModel implements Parcelable {
 
 	/** recreate object fromUser parcel */
 	protected GroupItemsModel(Parcel in) {
-		this.id=in.readString();
+		this.id = in.readString();
 		this.user = in.readString();
 		this.name = in.readString();
 		this.status = in.readString();
