@@ -29,6 +29,7 @@ import android.widget.Toast;
 import co.uk.tusksolutions.extensions.TimeAgo;
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
+import co.uk.tusksolutions.tchat.android.TChatApplication.CHAT_STATUS_ENUM;
 import co.uk.tusksolutions.tchat.android.adapters.ChatMessagesAdapter;
 import co.uk.tusksolutions.tchat.android.api.APICloudStorage;
 import co.uk.tusksolutions.tchat.android.api.APIGetLastOnlineTime;
@@ -394,14 +395,17 @@ public class ChatActivity extends ActionBarActivity {
 
 	}
 
-	public void displayComposing(String chatStateStr) {
-		Log.e("Chatstate ", "chat state " + chatStateStr);
+	public void displayComposing(String chatStateStr,String ComposingBuddyJid) {
+		Log.e("Chatstate ", "chat state " + chatStateStr+" composing friend "+ComposingBuddyJid);
 
-		if (chatStateStr.equalsIgnoreCase("composing..")) {
-
+		if (chatStateStr.equalsIgnoreCase("composing..")&&buddyJid.equalsIgnoreCase(ComposingBuddyJid)) {
+			
+		 	
+		
 			getSupportActionBar()
 					.setSubtitle(
 							Html.fromHtml("<font color='#FFFFFF'> is typing...</font>"));
+		
 		} else {
 			if (lastSeen != null) {
 				getSupportActionBar().setSubtitle(
@@ -433,10 +437,12 @@ public class ChatActivity extends ActionBarActivity {
 
 				String chatStateStr = intent
 						.getStringExtra(XMPPChatMessageListener.EXTRA_CHAT_STATE);
+				
+				String chatStateUserJid=intent.getStringExtra(XMPPChatMessageListener.EXTRA_CHAT_BUDDY_NAME);
 
 				if (chatStateStr != null && chatStateStr.length() > 0) {
 
-					displayComposing(chatStateStr);
+					displayComposing(chatStateStr,chatStateUserJid);
 				}
 			} else if (intent.getAction().equalsIgnoreCase(
 					Constants.LAST_ONLINE_TIME_STATE_CHANGED)) {

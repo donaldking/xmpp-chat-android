@@ -6,33 +6,43 @@ import co.uk.tusksolutions.extensions.RobotoBoldTextView;
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.adapters.GroupContentAdapter;
+import co.uk.tusksolutions.tchat.android.adapters.GroupFriendsAdapter;
+import co.uk.tusksolutions.tchat.android.models.GroupItemsModel;
 import co.uk.tusksolutions.tchat.android.models.RosterModel;
 import co.uk.tusksolutions.tchat.android.viewHolders.GroupViewHolder;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.Fragment.SavedState;
+import android.app.ListActivity;
 import android.content.IntentFilter;
+import android.opengl.Visibility;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar.OnMenuVisibilityListener;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.util.SparseBooleanArray;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
-public class GroupChatActivity extends ActionBarActivity implements
-		TextWatcher {
+public class GroupChatActivity extends ListActivity implements TextWatcher {
 
 	public EditText searchView;
 	public static ListView listView;
 	public String TAG = "RosterFragment";
 	private View rootView;
-	private static GroupContentAdapter mAdapter;
+	private static GroupFriendsAdapter mAdapter;
 	private IntentFilter filter;
 	// private RosterReceiver mRosterReceiver;
 	private static View mLodingStatusView;
@@ -44,33 +54,33 @@ public class GroupChatActivity extends ActionBarActivity implements
 
 	private Bundle instanceState;
 
-	private RosterModel mModel;
-	
+	private GroupItemsModel mModel;
 
-	RobotoBoldTextView selected_user;
+	 static RobotoBoldTextView selected_user;
 	private int action;
-	public static ArrayList<RosterModel> rosterModelCollection;
-	
-	
+	public static ArrayList<GroupItemsModel> rosterModelCollection;
 	StringBuilder builder;
 	public static ArrayList<String> users_selected_array = new ArrayList<String>();
+	android.app.ActionBar actionBar;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.group_chat_activity);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		mModel = new RosterModel();
-		
-		
-		rosterModelCollection = new ArrayList<RosterModel>();
+		actionBar = getActionBar();
+		// getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		actionBar.setHomeButtonEnabled(true);
+		actionBar.setDisplayShowHomeEnabled(true);
+
+		mModel = new GroupItemsModel();
+
+		rosterModelCollection = new ArrayList<GroupItemsModel>();
+		listView = getListView();
+		listView.setItemsCanFocus(false);
 	
-		listView = (ListView) findViewById(R.id.list_view_group_friends);
-		listView.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
-		listView.setStackFromBottom(true);
 		selected_user = (RobotoBoldTextView) findViewById(R.id.selected_user_group);
-		getSupportActionBar().setTitle("New Message");
+		actionBar.setTitle("New Message");
 		searchView = (EditText) findViewById(R.id.friend_add_edittext);
 		searchView.clearFocus();
 		searchView.setFocusableInTouchMode(true);
@@ -84,59 +94,27 @@ public class GroupChatActivity extends ActionBarActivity implements
 
 		listView.setVerticalScrollBarEnabled(false);
 		listView.setHorizontalScrollBarEnabled(false);
-		mAdapter = new GroupContentAdapter(TChatApplication.getContext(),
-				ALL_QUERY_ACTION);
-		listView.setAdapter(mAdapter);
-		
-	
-
+		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+		/*
+		 * mAdapter = new GroupContentAdapter(TChatApplication.getContext(),
+		 * ALL_QUERY_ACTION); //listView.setAdapter(mAdapter);
+		 * setListAdapter(mAdapter);
+		 */
+		rosterModelCollection = mModel.queryAllFriends();
+		mAdapter= new GroupFriendsAdapter(getApplicationContext(),
+				rosterModelCollection);
+		setListAdapter(mAdapter);
+          
 		scrollToTop();
-		listView.setOnItemClickListener(new OnItemClickListener() {
+		
 
-			@Override
-			public void onItemClick(AdapterView<?> adapter, View view,
-					int postion, long id) {
-				// TODO Auto-generated method stub
-				GroupViewHolder groupViewHolder = new GroupViewHolder(view);
-				Log.e("Debug",
-						"User name click "
-								+ GroupContentAdapter.rosterModelCollection
-										.get(postion).name);
-				
-				
+	}
 
-				if (!(users_selected_array
-						.contains(GroupContentAdapter.rosterModelCollection
-								.get(postion).name))) {
-					selected_user.setText("");
-					String friend_username = GroupContentAdapter.rosterModelCollection
-							.get(postion).name;
-					users_selected_array.add(friend_username);
-					Log.e("debug", " add user " + friend_username);
-					setNametoTextView();
-
-					groupViewHolder.rosterPresenceFrame
-							.setVisibility(view.VISIBLE);
-					
-					
-					
-
-				} else {
-					String friend_username = GroupContentAdapter.rosterModelCollection
-							.get(postion).name;
-
-					Log.e("debug", " removed user " + friend_username);
-					users_selected_array.remove(friend_username);
-					setNametoTextView();
-				
-					groupViewHolder.rosterPresenceFrame
-							.setVisibility(view.GONE);
-				
-				}
-
-			}
-		});
-
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.group_activity_menu, menu);
+		return true;
 	}
 
 	@Override
@@ -152,7 +130,7 @@ public class GroupChatActivity extends ActionBarActivity implements
 		builder = new StringBuilder();
 		for (String s : users_selected_array) {
 
-			builder.append(s).append(" ");
+			builder.append(s).append(", ");
 
 		}
 
@@ -193,11 +171,11 @@ public class GroupChatActivity extends ActionBarActivity implements
 		}
 	}
 
-	private static void prepareListView(final int queryInt) {
+	/*private static void prepareListView(final int queryInt) {
 
-		/**
+		*//**
 		 * Load Friends fromUser DB
-		 */
+		 *//*
 
 		TChatApplication.CHAT_SECTION_QUERY_ACTION = queryInt;
 		mAdapter = new GroupContentAdapter(TChatApplication.getContext(),
@@ -218,7 +196,7 @@ public class GroupChatActivity extends ActionBarActivity implements
 			}
 		}
 	}
-
+*/
 	@Override
 	public void afterTextChanged(Editable s) {
 		// TODO Auto-generated method stub
@@ -245,10 +223,10 @@ public class GroupChatActivity extends ActionBarActivity implements
 
 	public void performSearch(CharSequence s) {
 		rosterModelCollection = mModel.querySearch(s.toString());
-		mAdapter = new GroupContentAdapter(TChatApplication.getContext(),
-				SEARCH_ACTION);
+		mAdapter = new GroupFriendsAdapter(this,rosterModelCollection);
+		setListAdapter(mAdapter);
 		Log.d("TCHAT", "result Size " + mAdapter.getCount());
-		if (mAdapter.getCount() == 0) {
+		/*if (mAdapter.getCount() == 0) {
 			if (TChatApplication.CHAT_SECTION_QUERY_ACTION == 2) {
 				showProgress(false);
 			} else {
@@ -262,20 +240,75 @@ public class GroupChatActivity extends ActionBarActivity implements
 			if (listView.getVisibility() != View.VISIBLE) {
 				listView.setVisibility(View.VISIBLE);
 			}
-		}
+		}*/
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem menuItem) {
 		switch (menuItem.getItemId()) {
 		case android.R.id.home:
-			finish();
+			 finish();
 			break;
-
+		case R.id.submit_next:
+			Toast.makeText(GroupChatActivity.this,
+					"implementing group chat...", Toast.LENGTH_SHORT).show();
+			break;
 		default:
 			break;
 		}
 		return true;
 	}
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+
+	}
+
+	public static void showSelectedItems() {
+		final StringBuffer sb = new StringBuffer("To: ");
+
+		// Get an array that tells us for each position whether the item is
+		// checked or not
+		// --
+		final SparseBooleanArray checkedItems = listView.getCheckedItemPositions();
+		if (checkedItems == null) {
+			
+		selected_user.setText("");
+			Toast.makeText(TChatApplication.getContext(), "Not Selected Any friend", Toast.LENGTH_LONG).show();
+			return;
+		}
+
+		// For each element in the status array
+		// --
+		boolean isFirstSelected = true;
+		final int checkedItemsCount = checkedItems.size();
+		for (int i = 0; i < checkedItemsCount; ++i) {
+			// This tells us the item position we are looking at
+			// --
+			final int position = checkedItems.keyAt(i);
+
+			// This tells us the item status at the above position
+			// --
+			final boolean isChecked = checkedItems.valueAt(i);
+
+			if (isChecked) {
+				if (!isFirstSelected) {
+					sb.append(", ");
+				}
+				sb.append(rosterModelCollection.get(position).name);
+				users_selected_array.add(sb.toString());
+				
+				selected_user.setText(sb);
+				isFirstSelected = false;
+			}
+			else
+			{
+				selected_user.setText(sb);
+			}
+		}
+
+	}
+
 
 }

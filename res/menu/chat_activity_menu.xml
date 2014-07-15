@@ -1,0 +1,26 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" >
+
+    <item
+        android:id="@+id/photo_menu"
+        android:orderInCategory="10"
+        android:icon="@drawable/ic_action_photo"
+        app:showAsAction="never"
+        android:title="@string/send_photo">
+    </item>
+    <item
+        android:id="@+id/video_menu"
+        android:orderInCategory="10"
+        android:icon="@drawable/ic_action_video"
+        app:showAsAction="never"
+        android:title="@string/send_video">
+    </item>
+    <item
+        android:id="@+id/location_menu"
+        android:orderInCategory="10"
+        android:icon="@drawable/ic_action_locate"
+        app:showAsAction="never"
+        android:title="@string/share_location">
+    </item>
+
+</menu>

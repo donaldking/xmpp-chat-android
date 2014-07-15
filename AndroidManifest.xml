@@ -110,6 +110,8 @@
                 android:resource="@string/abc_action_menu_overflow_description" />
         </activity>
         <activity android:name="co.uk.tusksolutions.tchat.android.activities.GroupChatActivity"
+         
+         android:windowSoftInputMode="adjustResize|stateVisible"
            android:launchMode="singleTop"></activity>
     </application>
 

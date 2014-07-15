@@ -20,7 +20,7 @@ public class XMPPChatMessageListener implements PacketListener {
 	Context mContext = TChatApplication.getContext();
 	public static final String EXTRA_CHAT_STATE = "chatState";
 	public static final String ACTION_XMPP_CHAT_STATE_CHANGED = "XMPP_CHAT_STATE_CHANGED";
-	
+	public static final String EXTRA_CHAT_BUDDY_NAME="buddyJid";
 	@Override
 	public void processPacket(Packet packet) {
 
@@ -31,6 +31,8 @@ public class XMPPChatMessageListener implements PacketListener {
 				Intent i = new Intent();
 		        i.setAction(ACTION_XMPP_CHAT_STATE_CHANGED);
 		        i.putExtra(EXTRA_CHAT_STATE, "Composing..");
+		        i.putExtra(EXTRA_CHAT_BUDDY_NAME, StringUtils
+						.parseBareAddress(packet.getFrom()));
 		        mContext.sendBroadcast(i);
 				
 			} else if (message.getBody().length() == 0) {

@@ -3,6 +3,7 @@ package co.uk.tusksolutions.tchat.android.adapters;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,7 +50,7 @@ public class GroupContentAdapter extends BaseAdapter {
 			notifyDataSetChanged();
 			break;
 		case 3:
-			rosterModelCollection = GroupChatActivity.rosterModelCollection;
+			//rosterModelCollection = GroupChatActivity.rosterModelCollection;
 			notifyDataSetChanged();
 			break;
 		default:
@@ -113,19 +114,31 @@ public class GroupContentAdapter extends BaseAdapter {
 		}
 
 		holder.rosterName.setText(rosterModel.name);
+		
+		for(String s:GroupChatActivity.users_selected_array)
+		{
+			if(s.equalsIgnoreCase(rosterModel.name))
+			{
+				Log.e("debug"," name "+s+" comapre to "+rosterModel.name);
+				holder.rosterPresenceFrame.setVisibility(View.VISIBLE);
+				break;
+			}
+			
+		}
 
-		for (int j = 0; j < rosterModelCollection.size(); j++) {
+		/*for (int j = 0; j < rosterModelCollection.size(); j++) {
 			for (int i = 0; i < GroupChatActivity.users_selected_array.size(); i++) {
 				if (GroupChatActivity.users_selected_array.get(i).toString()
 						.equalsIgnoreCase(rosterModelCollection.get(j).name)) {
 
-					// holder.rosterPresenceFrame.setVisibility(View.VISIBLE);
+					holder.rosterPresenceFrame.setVisibility(View.VISIBLE);
+				break;
 				} else {
 
-					// holder.rosterPresenceFrame.setVisibility(View.GONE);
+					 holder.rosterPresenceFrame.setVisibility(View.GONE);
 				}
 			}
-		}
+		}*/
 
 		// holder.resource.setText(rosterModel.resourceName);
 		/*

@@ -256,7 +256,7 @@ public class RosterModel implements Parcelable {
 		String[] whereArgs = new String[] { "available", "busy", "away" };
 		String orderBy = TChatDBHelper.NAME + " ASC";
 
-		Cursor cursor = TChatApplication.getTChatDBReadable().query(TABLE,
+		Cursor cursor = TChatApplication.getTChatDBWritable().query(TABLE,
 				null, whereClause, whereArgs, null, null, orderBy);
 
 		while (cursor.moveToNext()) {
@@ -330,6 +330,11 @@ public class RosterModel implements Parcelable {
 		return rosterModelCollection;
 	}
 
+	
+	
+	
+	
+	
 	protected RosterModel fromCursor(Cursor cursor) {
 		/*
 		 * Pulls the values fromUser the cursor object and returns it TO_USER
@@ -355,6 +360,9 @@ public class RosterModel implements Parcelable {
 		return rosterModel;
 
 	}
+	
+	
+	
 
 	/*
 	 * Parcelable stuff non-Javadoc)

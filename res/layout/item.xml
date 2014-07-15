@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<co.uk.tusksolutions.extensions.CheckableRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_marginLeft="15dp"
+    android:layout_marginRight="25dp"
+    android:layout_marginTop="5dp"
+    android:baselineAligned="true"
+    android:orientation="horizontal" >
+
+    <ImageView
+        android:id="@+id/roster_avatar"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="5dp"
+        android:focusable="false"
+        android:scaleType="fitCenter"
+        android:src="@drawable/mondobar_jewel_friends_on" />
+
+    <co.uk.tusksolutions.extensions.RobotoRegularTextView
+        android:id="@+id/roster_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@id/roster_avatar"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:text="Donald King"
+        android:textColor="@color/black"
+        android:textSize="17sp" />
+
+    <co.uk.tusksolutions.extensions.InertCheckBox
+        android:id="@+id/roster_presence_frame"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="25dp"
+        android:button="@drawable/checkbox"
+        android:focusable="false" />
+
+    <!-- Divider line layout -->
+
+    <LinearLayout
+        android:id="@+id/divider_layout_frame"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:layout_marginLeft="75dp"
+        android:layout_marginRight="25dp"
+        android:baselineAligned="true" >
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="#EEE" />
+    </LinearLayout>
+
+</co.uk.tusksolutions.extensions.CheckableRelativeLayout>
