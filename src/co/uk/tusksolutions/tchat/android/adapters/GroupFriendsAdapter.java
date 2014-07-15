@@ -8,7 +8,7 @@ import co.uk.tusksolutions.extensions.CheckableRelativeLayout;
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
 import co.uk.tusksolutions.tchat.android.models.GroupItemsModel;
-import co.uk.tusksolutions.tchat.android.viewHolders.GroupViewHolder;
+import co.uk.tusksolutions.tchat.android.viewHolders.GroupFriendsViewHolder;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;

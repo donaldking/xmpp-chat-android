@@ -34,17 +34,6 @@
                 android:inputType="textMultiLine"
                 android:textColor="@color/black"
                 android:textSize="17sp" />
-
-            <!--
-                 <Button
-                android:id="@+id/clear_txt_search"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_gravity="right|center_vertical"
-                android:layout_marginRight="10dp"
-                android:background="@drawable/abc_ic_clear_holo_light" />
-            -->
-
         </RelativeLayout>
 
         <LinearLayout
@@ -55,7 +44,7 @@
             android:orientation="vertical" >
 
             <ListView
-                android:id="@android:id/list"
+                android:id="@+id/group_list_view"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:cacheColorHint="@color/white"
