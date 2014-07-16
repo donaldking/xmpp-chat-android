@@ -17,6 +17,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -32,16 +34,15 @@ public class GroupChatActivity extends ActionBarActivity implements TextWatcher 
 	public static ListView listView;
 	public String TAG = "RosterFragment";
 	private static GroupFriendsAdapter mAdapter;
-	// private RosterReceiver mRosterReceiver;
+
 	private static View mLodingStatusView;
 	private static int shortAnimTime;
 
-		
 	private GroupItemsModel mModel;
 
 	static RobotoBoldTextView selected_user;
 	public static ArrayList<GroupItemsModel> rosterModelCollection;
-	StringBuilder builder;
+	static StringBuilder builder;
 	public static ArrayList<String> users_selected_array = new ArrayList<String>();
 	ActionBar actionBar;
 
@@ -51,10 +52,10 @@ public class GroupChatActivity extends ActionBarActivity implements TextWatcher 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.group_chat_activity);
 		actionBar = getSupportActionBar();
-		// getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 		actionBar.setHomeButtonEnabled(true);
-		
-actionBar.setDisplayHomeAsUpEnabled(true);
+
+		actionBar.setDisplayHomeAsUpEnabled(true);
 
 		mModel = new GroupItemsModel();
 
@@ -62,7 +63,7 @@ actionBar.setDisplayHomeAsUpEnabled(true);
 		listView = (ListView) findViewById(R.id.group_list_view);
 		listView.setItemsCanFocus(false);
 		listView.setFastScrollEnabled(true);
-	
+
 		selected_user = (RobotoBoldTextView) findViewById(R.id.selected_user_group);
 		actionBar.setTitle("New Message");
 		searchView = (EditText) findViewById(R.id.friend_add_edittext);
@@ -78,33 +79,36 @@ actionBar.setDisplayHomeAsUpEnabled(true);
 		listView.setVerticalScrollBarEnabled(false);
 		listView.setHorizontalScrollBarEnabled(false);
 		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-		
+
 		rosterModelCollection = mModel.queryAllFriends();
-		mAdapter= new GroupFriendsAdapter(getApplicationContext(),
+		mAdapter = new GroupFriendsAdapter(getApplicationContext(),
 				rosterModelCollection);
 		listView.setAdapter(mAdapter);
-          
+
 		scrollToTop();
-		
-
-	}
-
-	
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-	    // Inflate the menu items for use in the action bar
-	    MenuInflater inflater = getMenuInflater();
-	    inflater.inflate(R.menu.activity_main_actions, menu);
-	    return super.onCreateOptionsMenu(menu);
-	}
-	
-
-	@Override
-	protected void onStart() {
-		// TODO Auto-generated method stub
-		super.onStart();
-
 		users_selected_array = new ArrayList<String>();
+
+		listView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1,
+					int position, long arg3) {
+				// TODO Auto-generated method stub
+				if (!selected_user.getText().toString()
+						.contains(rosterModelCollection.get(position).name)) {
+					builder.append(rosterModelCollection.get(position).name)
+							.append(", ");
+					users_selected_array.add(rosterModelCollection
+							.get(position).name);
+					setNametoTextView();
+				} else {
+					users_selected_array.remove(rosterModelCollection
+							.get(position).name);
+					setNametoTextView();
+				}
+
+			}
+		});
 	}
 
 	protected void setNametoTextView() {
@@ -117,6 +121,22 @@ actionBar.setDisplayHomeAsUpEnabled(true);
 		}
 
 		selected_user.setText(builder.toString());
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu items for use in the action bar
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.activity_main_actions, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
+	protected void onStart() {
+		// TODO Auto-generated method stub
+		super.onStart();
+
+		// users_selected_array = new ArrayList<String>();
 	}
 
 	public static void scrollToTop() {
@@ -173,8 +193,8 @@ actionBar.setDisplayHomeAsUpEnabled(true);
 
 			performSearch(s);
 		} else {
-			rosterModelCollection=mModel.queryAllFriends();
-			mAdapter = new GroupFriendsAdapter(this,rosterModelCollection);
+			rosterModelCollection = mModel.queryAllFriends();
+			mAdapter = new GroupFriendsAdapter(this, rosterModelCollection);
 			listView.setAdapter(mAdapter);
 			scrollToTop();
 		}
@@ -182,7 +202,7 @@ actionBar.setDisplayHomeAsUpEnabled(true);
 
 	public void performSearch(CharSequence s) {
 		rosterModelCollection = mModel.querySearch(s.toString());
-		mAdapter = new GroupFriendsAdapter(this,rosterModelCollection);
+		mAdapter = new GroupFriendsAdapter(this, rosterModelCollection);
 		listView.setAdapter(mAdapter);
 		Log.d("TCHAT", "result Size " + mAdapter.getCount());
 	}
@@ -191,7 +211,7 @@ actionBar.setDisplayHomeAsUpEnabled(true);
 	public boolean onOptionsItemSelected(MenuItem menuItem) {
 		switch (menuItem.getItemId()) {
 		case android.R.id.home:
-			 finish();
+			finish();
 			break;
 		case R.id.submit_next:
 			Toast.makeText(GroupChatActivity.this,
@@ -210,17 +230,19 @@ actionBar.setDisplayHomeAsUpEnabled(true);
 	}
 
 	public static void showSelectedItems() {
-	final StringBuffer sb = new StringBuffer("To: ");
+		final StringBuffer sb = new StringBuffer("To: ");
 
 		// Get an array that tells us for each position whether the item is
 		// checked or not
 		// --
-		final SparseBooleanArray checkedItems = listView.getCheckedItemPositions();
-		users_selected_array=new ArrayList<String>();
+		final SparseBooleanArray checkedItems = listView
+				.getCheckedItemPositions();
+
 		if (checkedItems == null) {
-			
-		selected_user.setText("");
-			Toast.makeText(TChatApplication.getContext(), "Not Selected Any friend", Toast.LENGTH_LONG).show();
+
+			selected_user.setText("");
+			Toast.makeText(TChatApplication.getContext(),
+					"Not Selected Any friend", Toast.LENGTH_LONG).show();
 			return;
 		}
 
@@ -240,32 +262,17 @@ actionBar.setDisplayHomeAsUpEnabled(true);
 			if (isChecked) {
 				if (!isFirstSelected) {
 					sb.append(", ");
+
 				}
 				sb.append(rosterModelCollection.get(position).name);
-				users_selected_array.add(sb.toString());
-				
-				
-				
+				// if(!users_selected_array.contains(sb))
+				// users_selected_array.add(sb.toString());
+
 				isFirstSelected = false;
 			}
-			else
-			{
-				selected_user.setText(sb);
-			}
-			Log.e("DEbug","size "+users_selected_array.size());
-			for(String s:users_selected_array)
-			{
-			
-				StringBuilder name=new StringBuilder();
-			     name.append(s).append(", ");
-				selected_user.setText(name.toString());
-				
-			}
+
 		}
 
 	}
-	
-	
-
 
 }
