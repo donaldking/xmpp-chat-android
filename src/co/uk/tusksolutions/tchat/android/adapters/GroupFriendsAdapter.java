@@ -2,18 +2,19 @@ package co.uk.tusksolutions.tchat.android.adapters;
 
 import java.util.List;
 
-import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
-
-import co.uk.tusksolutions.tchat.android.R;
-import co.uk.tusksolutions.tchat.android.constants.Constants;
-import co.uk.tusksolutions.tchat.android.models.GroupItemsModel;
-import co.uk.tusksolutions.tchat.android.viewHolders.GroupFriendsViewHolder;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import co.uk.tusksolutions.tchat.android.R;
+import co.uk.tusksolutions.tchat.android.activities.GroupFriendsSelectionActivity;
+import co.uk.tusksolutions.tchat.android.constants.Constants;
+import co.uk.tusksolutions.tchat.android.models.GroupItemsModel;
+import co.uk.tusksolutions.tchat.android.viewHolders.GroupFriendsViewHolder;
+
+import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 
 
 public class GroupFriendsAdapter extends ArrayAdapter<GroupItemsModel>{
@@ -50,6 +51,7 @@ public class GroupFriendsAdapter extends ArrayAdapter<GroupItemsModel>{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
 
 
 		// Set some view properties
@@ -58,8 +60,11 @@ public class GroupFriendsAdapter extends ArrayAdapter<GroupItemsModel>{
 
 		// Restore the checked state properly
 		final ListView lv = (ListView) parent;
+	
+		
 		holder.rosterPresenceFrame.setChecked(lv.isItemChecked(position));
-
+		
+        
 		return convertView;
 	}
 

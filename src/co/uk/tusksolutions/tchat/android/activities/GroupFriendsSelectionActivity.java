@@ -22,14 +22,14 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
+import co.uk.tusksolutions.extensions.CheckableRelativeLayout;
 import co.uk.tusksolutions.extensions.RobotoBoldTextView;
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.adapters.GroupFriendsAdapter;
-import co.uk.tusksolutions.tchat.android.listeners.XMPPGroupChatMessageListener;
 import co.uk.tusksolutions.tchat.android.models.GroupItemsModel;
 
-public class GroupChatActivity extends ActionBarActivity implements TextWatcher {
+public class GroupFriendsSelectionActivity extends ActionBarActivity implements TextWatcher {
 
 	public EditText searchView;
 	public static ListView listView;
@@ -223,7 +223,7 @@ public class GroupChatActivity extends ActionBarActivity implements TextWatcher 
 			finish();
 			break;
 		case R.id.submit_next:
-			Toast.makeText(GroupChatActivity.this,
+			Toast.makeText(GroupFriendsSelectionActivity.this,
 					"implementing group chat...", Toast.LENGTH_SHORT).show();
 			break;
 		default:
@@ -272,6 +272,11 @@ public class GroupChatActivity extends ActionBarActivity implements TextWatcher 
 				if (!isFirstSelected) {
 					sb.append(", ");
 
+				}
+				if(selected_user.getText().toString().contains(rosterModelCollection.get(position).name))
+				{
+					//CheckableRelativeLayout layout=new CheckableRelativeLayout(context, attrs)
+				  Log.e("Checked Item", "Check item "+checkedItems.keyAt(i));
 				}
 				sb.append(rosterModelCollection.get(position).name);
 				// if(!users_selected_array.contains(sb))

@@ -6,7 +6,7 @@ package co.uk.tusksolutions.extensions;
 import java.util.ArrayList;
 import java.util.List;
 
-import co.uk.tusksolutions.tchat.android.activities.GroupChatActivity;
+import co.uk.tusksolutions.tchat.android.activities.GroupFriendsSelectionActivity;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
@@ -57,7 +57,7 @@ public class CheckableRelativeLayout extends RelativeLayout implements Checkable
 		this.isChecked = isChecked;
 		for (Checkable c : checkableViews) {
 			c.setChecked(isChecked);
-			GroupChatActivity.showSelectedItems();
+			GroupFriendsSelectionActivity.showSelectedItems();
 		}
 
 		if (onCheckedChangeListener != null) {

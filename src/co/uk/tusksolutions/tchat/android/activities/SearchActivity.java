@@ -2,6 +2,9 @@ package co.uk.tusksolutions.tchat.android.activities;
 
 import java.util.ArrayList;
 
+
+
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
@@ -14,6 +17,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -57,7 +61,10 @@ public class SearchActivity extends ActionBarActivity implements TextWatcher {
 
 		listView.setVerticalScrollBarEnabled(false);
 		listView.setHorizontalScrollBarEnabled(false);
-
+		rosterModelCollection=mModel.queryAll();
+		mAdapter = new RosterContentAdapter(TChatApplication.getContext(),
+				SEARCH_ACTION);
+		listView.setAdapter(mAdapter);
 		if (clear_text_search.getVisibility() != View.VISIBLE) {
 			clear_text_search.setOnClickListener(new OnClickListener() {
 
@@ -118,14 +125,28 @@ public class SearchActivity extends ActionBarActivity implements TextWatcher {
 	@Override
 	public void onTextChanged(CharSequence s, int start, int before, int count) {
 		// TODO Auto-generated method stub
-		if (s.length() > 0) {
+	/*	if (s.length() > 0) {
 			clear_text_search.setVisibility(View.VISIBLE);
 			performSearch(s);
 		} else {
 			clear_text_search.setVisibility(View.GONE);
 			listView.setVisibility(View.GONE);
 		}
-	}
+		*/
+		Log.e("OntextChange","Ontextchange called "+s);
+		if(s.length()>0)
+		{
+		mAdapter.getFilter().filter(s);	
+		}
+		else
+		{
+			rosterModelCollection=mModel.queryAll();
+		
+		mAdapter = new RosterContentAdapter(TChatApplication.getContext(),
+				SEARCH_ACTION);
+			listView.setAdapter(mAdapter);
+		}
+		}
 
 	public void performSearch(CharSequence s) {
 		rosterModelCollection = mModel.querySearch(s.toString());

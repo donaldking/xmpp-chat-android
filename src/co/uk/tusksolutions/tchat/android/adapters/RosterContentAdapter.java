@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -12,6 +13,8 @@ import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.BaseAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.activities.ChatActivity;
@@ -22,7 +25,7 @@ import co.uk.tusksolutions.tchat.android.viewHolders.RosterViewHolder;
 
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 
-public class RosterContentAdapter extends BaseAdapter {
+public class RosterContentAdapter extends BaseAdapter implements Filterable {
 
 	static String TAG = "RosterContentAdapter";
 	static float DEFAULT_ALPHA = 1.0f;
@@ -40,6 +43,8 @@ public class RosterContentAdapter extends BaseAdapter {
 		 * action is an integer of what data TO_USER query. 1 = All Friends
 		 * (queryAll()) 2 = Online Friends (queryOnline())
 		 */
+		
+		
 		this.action = action;
 
 		switch (action) {
@@ -156,10 +161,79 @@ public class RosterContentAdapter extends BaseAdapter {
 		return row;
 	}
 
+	
+	
 	private void doSelectionAnimationForView(View v) {
 		Animation fadeAnimation = new AlphaAnimation(DEFAULT_ALPHA,
 				SELECTED_ALPHA);
 		fadeAnimation.setDuration(50);
 		v.startAnimation(fadeAnimation);
 	}
+
+	@Override
+	public Filter getFilter() {
+		// TODO Auto-generated method stub
+		Filter filter = new Filter() {
+
+            @SuppressWarnings("unchecked")
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+
+                rosterModelCollection = (ArrayList<RosterModel>) results.values;
+                notifyDataSetChanged();
+            }
+
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+
+                FilterResults results = new FilterResults();
+                ArrayList<RosterModel> FilteredArrayNames = new ArrayList<RosterModel>();
+
+                if (rosterModelCollection == null)    {
+                	rosterModelCollection = new ArrayList<RosterModel>(rosterModelCollection);
+                   
+                }
+                if (constraint == null || constraint.length() == 0) {
+                    results.count = rosterModelCollection.size();
+                    results.values = rosterModelCollection;
+                } else {
+                    constraint = constraint.toString().toLowerCase();
+                    for (int i = 0; i < rosterModelCollection.size(); i++) {
+                        String dataNames = rosterModelCollection.get(i).name;
+                        String dataUser=rosterModelCollection.get(i).user;
+                        String datastatus=rosterModelCollection.get(i).status;
+                        String presenceStatus = rosterModelCollection.get(i).presenceStatus;
+                		String presenceType = rosterModelCollection.get(i).presenceType;
+                		String lastSeenTimestamp = rosterModelCollection.get(i).lastSeenTimestamp;
+                		String resourceName = rosterModelCollection.get(i).resourceName;
+                        if (dataNames.toLowerCase().contains(constraint.toString())||dataUser.toLowerCase().contains(constraint.toString()))  {
+                            //FilteredArrayNames.add(dataNames);
+                        	RosterModel rosterModel = new RosterModel();
+                        	rosterModel.name=dataNames;
+                        	rosterModel.user=dataUser;
+                        	rosterModel.status=datastatus;
+                        	rosterModel.presenceStatus=presenceStatus;
+                        	rosterModel.presenceType=presenceType;
+                        	rosterModel.lastSeenTimestamp=lastSeenTimestamp;
+                        	rosterModel.resourceName=resourceName;
+                        	FilteredArrayNames.add(rosterModel);
+                        }
+                    }
+
+                    results.count = FilteredArrayNames.size();
+                    System.out.println(results.count);
+
+                    results.values = FilteredArrayNames;
+                    Log.e("VALUES", results.values.toString());
+                }
+
+                return results;
+            }
+        };
+
+        return filter;
+    }
+	
+	
+	
 }

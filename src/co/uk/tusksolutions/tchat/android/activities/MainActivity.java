@@ -181,7 +181,7 @@ public class MainActivity extends ActionBarActivity implements
 		int id = item.getItemId();
 		if (id == R.id.action_chat) {
 			
-			startActivity(new Intent(MainActivity.this,GroupChatActivity.class));
+			startActivity(new Intent(MainActivity.this,GroupFriendsSelectionActivity.class));
 			return true;
 		}
 		if (id == R.id.action_search) {

@@ -12,7 +12,7 @@ import android.view.animation.Animation;
 import android.widget.BaseAdapter;
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
-import co.uk.tusksolutions.tchat.android.activities.GroupChatActivity;
+import co.uk.tusksolutions.tchat.android.activities.GroupFriendsSelectionActivity;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
 import co.uk.tusksolutions.tchat.android.models.RosterModel;
 import co.uk.tusksolutions.tchat.android.viewHolders.GroupFriendsViewHolder;
@@ -50,7 +50,7 @@ public class GroupContentAdapter extends BaseAdapter {
 			notifyDataSetChanged();
 			break;
 		case 3:
-			//rosterModelCollection = GroupChatActivity.rosterModelCollection;
+			//rosterModelCollection = GroupFriendsSelectionActivity.rosterModelCollection;
 			notifyDataSetChanged();
 			break;
 		default:
@@ -115,7 +115,7 @@ public class GroupContentAdapter extends BaseAdapter {
 
 		holder.rosterName.setText(rosterModel.name);
 		
-		for(String s:GroupChatActivity.users_selected_array)
+		for(String s:GroupFriendsSelectionActivity.users_selected_array)
 		{
 			if(s.equalsIgnoreCase(rosterModel.name))
 			{
@@ -127,8 +127,8 @@ public class GroupContentAdapter extends BaseAdapter {
 		}
 
 		/*for (int j = 0; j < rosterModelCollection.size(); j++) {
-			for (int i = 0; i < GroupChatActivity.users_selected_array.size(); i++) {
-				if (GroupChatActivity.users_selected_array.get(i).toString()
+			for (int i = 0; i < GroupFriendsSelectionActivity.users_selected_array.size(); i++) {
+				if (GroupFriendsSelectionActivity.users_selected_array.get(i).toString()
 						.equalsIgnoreCase(rosterModelCollection.get(j).name)) {
 
 					holder.rosterPresenceFrame.setVisibility(View.VISIBLE);
