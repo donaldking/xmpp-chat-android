@@ -22,7 +22,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
-import co.uk.tusksolutions.extensions.CheckableRelativeLayout;
 import co.uk.tusksolutions.extensions.RobotoBoldTextView;
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
@@ -134,7 +133,7 @@ public class GroupFriendsSelectionActivity extends ActionBarActivity implements 
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu items for use in the action bar
 		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.activity_main_actions, menu);
+		inflater.inflate(R.menu.group_friends_selection_menu, menu);
 		return true;
 	}
 

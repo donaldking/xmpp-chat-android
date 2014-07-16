@@ -49,8 +49,9 @@ public class XMPPChatMessageManager {
 	}
 
 	public static void sendPaused(String to, String packetId) {
+		cm = new ChatStateExtension(ChatState.paused);
 		Message msg = new Message(to,Message.Type.chat);
-		msg.addExtension(new ChatStateExtension(ChatState.paused));
+		msg.addExtension(cm);
 		
 		if (TChatApplication.connection != null) {
 			TChatApplication.connection.sendPacket(msg);

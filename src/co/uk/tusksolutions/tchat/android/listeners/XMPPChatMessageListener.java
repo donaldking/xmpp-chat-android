@@ -3,7 +3,9 @@ package co.uk.tusksolutions.tchat.android.listeners;
 import org.jivesoftware.smack.PacketListener;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Packet;
+import org.jivesoftware.smack.packet.PacketExtension;
 import org.jivesoftware.smack.util.StringUtils;
+import org.jivesoftware.smackx.ChatState;
 
 import android.content.Context;
 import android.content.Intent;
@@ -20,30 +22,43 @@ public class XMPPChatMessageListener implements PacketListener {
 	Context mContext = TChatApplication.getContext();
 	public static final String EXTRA_CHAT_STATE = "chatState";
 	public static final String ACTION_XMPP_CHAT_STATE_CHANGED = "XMPP_CHAT_STATE_CHANGED";
-	public static final String EXTRA_CHAT_BUDDY_NAME="buddyJid";
+	public static final String EXTRA_CHAT_BUDDY_NAME = "buddyJid";
+
 	@Override
 	public void processPacket(Packet packet) {
 
 		Message message = (Message) packet;
 		if (message.getType() == Message.Type.chat) {
 			if (message.getBody() == null) {
-				Log.i(TAG, "Composing...: ");
-				Intent i = new Intent();
-		        i.setAction(ACTION_XMPP_CHAT_STATE_CHANGED);
-		        i.putExtra(EXTRA_CHAT_STATE, "Composing..");
-		        i.putExtra(EXTRA_CHAT_BUDDY_NAME, StringUtils
-						.parseBareAddress(packet.getFrom()));
-		        mContext.sendBroadcast(i);
-				
+
+				for (PacketExtension extension : message.getExtensions()) {
+					Log.d(TAG, "XML: " + extension.getElementName());
+
+					if (extension.getElementName().equals(
+							ChatState.composing.toString())) {
+						Log.i(TAG, "Composing...: ");
+						this.sendComposeBroadcast(StringUtils
+								.parseBareAddress(packet.getFrom()));
+
+					} else if (extension.getElementName().equals(
+							ChatState.paused.toString())) {
+						Log.i(TAG, "Paused..");
+						this.sendPausedBroadcast(StringUtils
+								.parseBareAddress(packet.getFrom()));
+					}
+				}
+
 			} else if (message.getBody().length() == 0) {
 				Log.i(TAG, "Stopped composing...: ");
-				
+				this.sendPausedBroadcast(StringUtils.parseBareAddress(packet
+						.getFrom()));
+
 			} else if (message.getBody().length() > 0) {
-			
+
 				Intent i = new Intent();
-		        i.setAction(ACTION_XMPP_CHAT_STATE_CHANGED);
-		        i.putExtra(EXTRA_CHAT_STATE, "sent");
-		        mContext.sendBroadcast(i);
+				i.setAction(ACTION_XMPP_CHAT_STATE_CHANGED);
+				i.putExtra(EXTRA_CHAT_STATE, "sent");
+				mContext.sendBroadcast(i);
 				Log.d(TAG,
 						"Current buddy: "
 								+ TChatApplication.chatSessionBuddy
@@ -82,6 +97,22 @@ public class XMPPChatMessageListener implements PacketListener {
 				}
 			}
 		}
+	}
+
+	private void sendComposeBroadcast(String from) {
+		Intent i = new Intent();
+		i.setAction(ACTION_XMPP_CHAT_STATE_CHANGED);
+		i.putExtra(EXTRA_CHAT_STATE, "Composing");
+		i.putExtra(EXTRA_CHAT_BUDDY_NAME, from);
+		mContext.sendBroadcast(i);
+	}
+
+	private void sendPausedBroadcast(String from) {
+		Intent i = new Intent();
+		i.setAction(ACTION_XMPP_CHAT_STATE_CHANGED);
+		i.putExtra(EXTRA_CHAT_STATE, "Paused");
+		i.putExtra(EXTRA_CHAT_BUDDY_NAME, from);
+		mContext.sendBroadcast(i);
 	}
 
 	private void sendNotification(Packet packet, Message message) {

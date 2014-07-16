@@ -29,7 +29,6 @@ import android.widget.Toast;
 import co.uk.tusksolutions.extensions.TimeAgo;
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
-import co.uk.tusksolutions.tchat.android.TChatApplication.CHAT_STATUS_ENUM;
 import co.uk.tusksolutions.tchat.android.adapters.ChatMessagesAdapter;
 import co.uk.tusksolutions.tchat.android.api.APICloudStorage;
 import co.uk.tusksolutions.tchat.android.api.APIGetLastOnlineTime;
@@ -166,7 +165,7 @@ public class ChatActivity extends ActionBarActivity {
 		 * Load Chat from DB
 		 */
 		mAdapter = new ChatMessagesAdapter(buddyJid, currentJid, action, id);
-		if (mAdapter.getCount() == 0) {
+		/*if (mAdapter.getCount() == 0) {
 			// Sync with API
 			// showProgress(true);
 			listView.setVisibility(View.GONE);
@@ -182,7 +181,12 @@ public class ChatActivity extends ActionBarActivity {
 			}
 
 			scrollToBottom();
-		}
+		}*/
+		mGetMessagesApi = new APIGetMessages();
+		mGetMessagesApi.getMessages(StringUtils.parseName(buddyJid),
+				mAdapter.getCount(), 25);
+		listView.setAdapter(mAdapter);
+		scrollToBottom();
 	}
 
 	public static void scrollToBottom() {
@@ -335,17 +339,17 @@ public class ChatActivity extends ActionBarActivity {
 		public void afterTextChanged(Editable s) {
 			if (s.toString().length() >= 1) {
 				if (chatSendButton.isEnabled() == false) {
-					// TODO Send composing stanza TO_USER friend.
-
-					XMPPChatMessageManager.sendComposing(buddyJid, buddyJid);
 					chatSendButton.setEnabled(true);
+				}
+				if (chatSendButton.isEnabled()) {
+					XMPPChatMessageManager.sendComposing(buddyJid, buddyJid);
 				}
 			} else {
 				if (chatSendButton.isEnabled() == true) {
-					// TODO Send stopped composing stanza TO_USER friend.
-
-					XMPPChatMessageManager.sendPaused(buddyJid, buddyJid);
 					chatSendButton.setEnabled(false);
+				}
+				if (chatSendButton.isSelected() == false) {
+					XMPPChatMessageManager.sendPaused(buddyJid, buddyJid);
 				}
 			}
 		}
@@ -395,17 +399,26 @@ public class ChatActivity extends ActionBarActivity {
 
 	}
 
-	public void displayComposing(String chatStateStr,String ComposingBuddyJid) {
-		Log.e("Chatstate ", "chat state " + chatStateStr+" composing friend "+ComposingBuddyJid);
+	public void displayComposing(String chatStateStr, String ComposingBuddyJid) {
+		Log.e("Chatstate ", "chat state " + chatStateStr + " composing friend "
+				+ ComposingBuddyJid);
 
-		if (chatStateStr.equalsIgnoreCase("composing..")&&buddyJid.equalsIgnoreCase(ComposingBuddyJid)) {
-			
-		 	
-		
+		if (chatStateStr.equalsIgnoreCase("composing")
+				&& buddyJid.equalsIgnoreCase(ComposingBuddyJid)) {
+
 			getSupportActionBar()
 					.setSubtitle(
 							Html.fromHtml("<font color='#FFFFFF'> is typing...</font>"));
-		
+
+		} else if (chatStateStr.equalsIgnoreCase("paused")
+				&& buddyJid.equalsIgnoreCase(ComposingBuddyJid)) {
+
+			if (lastSeen != null) {
+				getSupportActionBar().setSubtitle(
+						Html.fromHtml("<font color='#FFFFFF'>" + lastSeen
+								+ "</font>"));
+			}
+
 		} else {
 			if (lastSeen != null) {
 				getSupportActionBar().setSubtitle(
@@ -437,12 +450,13 @@ public class ChatActivity extends ActionBarActivity {
 
 				String chatStateStr = intent
 						.getStringExtra(XMPPChatMessageListener.EXTRA_CHAT_STATE);
-				
-				String chatStateUserJid=intent.getStringExtra(XMPPChatMessageListener.EXTRA_CHAT_BUDDY_NAME);
+
+				String chatStateUserJid = intent
+						.getStringExtra(XMPPChatMessageListener.EXTRA_CHAT_BUDDY_NAME);
 
 				if (chatStateStr != null && chatStateStr.length() > 0) {
 
-					displayComposing(chatStateStr,chatStateUserJid);
+					displayComposing(chatStateStr, chatStateUserJid);
 				}
 			} else if (intent.getAction().equalsIgnoreCase(
 					Constants.LAST_ONLINE_TIME_STATE_CHANGED)) {
