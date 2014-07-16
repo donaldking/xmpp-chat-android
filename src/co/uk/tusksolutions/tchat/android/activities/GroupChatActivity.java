@@ -26,6 +26,7 @@ import co.uk.tusksolutions.extensions.RobotoBoldTextView;
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.adapters.GroupFriendsAdapter;
+import co.uk.tusksolutions.tchat.android.listeners.XMPPGroupChatMessageListener;
 import co.uk.tusksolutions.tchat.android.models.GroupItemsModel;
 
 public class GroupChatActivity extends ActionBarActivity implements TextWatcher {
@@ -60,12 +61,16 @@ public class GroupChatActivity extends ActionBarActivity implements TextWatcher 
 		mModel = new GroupItemsModel();
 
 		rosterModelCollection = new ArrayList<GroupItemsModel>();
+		
+		
+		
 		listView = (ListView) findViewById(R.id.group_list_view);
 		listView.setItemsCanFocus(false);
 		listView.setFastScrollEnabled(true);
 
 		selected_user = (RobotoBoldTextView) findViewById(R.id.selected_user_group);
 		actionBar.setTitle("New Message");
+	
 		searchView = (EditText) findViewById(R.id.friend_add_edittext);
 		searchView.clearFocus();
 		searchView.setFocusableInTouchMode(true);
@@ -109,6 +114,8 @@ public class GroupChatActivity extends ActionBarActivity implements TextWatcher 
 
 			}
 		});
+		
+	
 	}
 
 	protected void setNametoTextView() {
@@ -128,7 +135,7 @@ public class GroupChatActivity extends ActionBarActivity implements TextWatcher 
 		// Inflate the menu items for use in the action bar
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.activity_main_actions, menu);
-		return super.onCreateOptionsMenu(menu);
+		return true;
 	}
 
 	@Override
@@ -143,6 +150,8 @@ public class GroupChatActivity extends ActionBarActivity implements TextWatcher 
 		Log.d("ChatActivity", "ScrollToBottom");
 		listView.setSelection(0);
 	}
+
+	
 
 	/**
 	 * Shows the progress UI and hides the login form.
