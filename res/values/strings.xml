@@ -28,5 +28,5 @@
     <string name="radio_away">Away</string>
     <string name="radio_invisible">Invisible</string>
     <string name="radio_offline">Offline</string>
-
+  <string name="inviteNewBuddyToRoomMessage" formatted="false">%s</string>
 </resources>

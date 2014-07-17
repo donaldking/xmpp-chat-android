@@ -2,11 +2,17 @@ package co.uk.tusksolutions.tchat.android.activities;
 
 import java.util.ArrayList;
 
+import org.jivesoftware.smack.XMPPConnection;
+import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smackx.Form;
+import org.jivesoftware.smackx.muc.MultiUserChat;
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.SyncStateContract.Constants;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
@@ -19,6 +25,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -27,13 +34,20 @@ import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.adapters.GroupFriendsAdapter;
 import co.uk.tusksolutions.tchat.android.models.GroupItemsModel;
+import co.uk.tusksolutions.tchat.android.xmpp.XMPPConnectionManager;
 
 public class GroupFriendsSelectionActivity extends ActionBarActivity implements TextWatcher {
 
+	
+	private XMPPConnection xmppConnection;
+	
+	
 	public EditText searchView;
 	public static ListView listView;
 	public String TAG = "RosterFragment";
 	private static GroupFriendsAdapter mAdapter;
+	
+	ArrayAdapter<String> adapter;
 
 	private static View mLodingStatusView;
 	private static int shortAnimTime;
@@ -85,9 +99,18 @@ public class GroupFriendsSelectionActivity extends ActionBarActivity implements 
 		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 
 		rosterModelCollection = mModel.queryAllFriends();
+		
+		 
+
 		mAdapter = new GroupFriendsAdapter(getApplicationContext(),
 				rosterModelCollection);
 		listView.setAdapter(mAdapter);
+		
+		
+		/*adapter=new ArrayAdapter<String>(TChatApplication.getContext(), R.layout.group_chat_friends_row,R.id.roster_name,products);
+		listView.setAdapter(adapter);*/
+		
+		
 
 		scrollToTop();
 		users_selected_array = new ArrayList<String>();
@@ -197,7 +220,7 @@ public class GroupFriendsSelectionActivity extends ActionBarActivity implements 
 	@Override
 	public void onTextChanged(CharSequence s, int start, int before, int count) {
 		// TODO Auto-generated method stub
-		if (s.length() > 0) {
+	/*	if (s.length() > 0) {
 
 			performSearch(s);
 		} else {
@@ -205,7 +228,9 @@ public class GroupFriendsSelectionActivity extends ActionBarActivity implements 
 			mAdapter = new GroupFriendsAdapter(this, rosterModelCollection);
 			listView.setAdapter(mAdapter);
 			scrollToTop();
-		}
+		}*/
+		//GroupFriendsSelectionActivity.this.adapter.getFilter().filter(s);
+		GroupFriendsSelectionActivity.this.mAdapter.getFilter().filter(s);
 	}
 
 	public void performSearch(CharSequence s) {
@@ -224,6 +249,21 @@ public class GroupFriendsSelectionActivity extends ActionBarActivity implements 
 		case R.id.submit_next:
 			Toast.makeText(GroupFriendsSelectionActivity.this,
 					"implementing group chat...", Toast.LENGTH_SHORT).show();
+			
+			
+			TChatApplication.getUserModel().getUsername();
+			
+			String roomName=TChatApplication.getUserModel().getUsername()+"_"+System.currentTimeMillis();
+			String roomJID=roomName+"@conference."+co.uk.tusksolutions.tchat.android.constants.Constants.STAGING_SERVER;
+			String  nickname=TChatApplication.getUserModel().getUsername();
+			
+		
+			try {
+				createRoom(roomName, roomJID, nickname,"");
+			} catch (XMPPException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			break;
 		default:
 			break;
@@ -287,5 +327,87 @@ public class GroupFriendsSelectionActivity extends ActionBarActivity implements 
 		}
 
 	}
+	
+	private MultiUserChat createRoom(String roomName, String roomJID, String nickname, String password) throws XMPPException {
+
+		MultiUserChat multiUserChat = null;
+
+		// final String subjectInviteStr = getRoomString(number, name);
+
+		Log.i("Creating room [%s]", roomJID);
+    
+		// See issue 136
+		try {
+			if(TChatApplication.connection!=null)
+				
+			{
+				
+				multiUserChat = new MultiUserChat(TChatApplication.connection, roomJID);
+			}
+			else
+			{
+				TChatApplication.connection=TChatApplication.createNewConnection();
+				Log.e("connection closed ", "connection "+TChatApplication.connection);
+				multiUserChat = new MultiUserChat(TChatApplication.connection, roomJID);
+		
+				
+			}
+				
+			
+			boolean service=multiUserChat.isServiceEnabled(TChatApplication.connection, "zoepraise@uat.yookoschat.com");
+			Log.e("TAG","service "+service);
+			
+			
+			
+		} catch (Exception e) {
+			
+		}
+
+		try {
+			multiUserChat.create(nickname);
+			
+			//multiUserChat.join(nickname);
+			
+		} catch (Exception e) {
+			Log.e("MUC create", "MUC creation failed: ");
+			throw new XMPPException("MUC creation failed for " + nickname + ": " + e.getLocalizedMessage(), e);
+		}
+
+		try {
+			// We send an empty configuration to the server. For some reason the
+			// server doesn't accept or process our
+			// completed form, so we just send an empty one. The server defaults
+			// will be used which are fine.
+			multiUserChat.sendConfigurationForm(new Form(Form.TYPE_SUBMIT));
+
+			multiUserChat.changeSubject(roomName);
+
+		} catch (XMPPException e1) {
+			Log.d(e1.toString(), "Unable to send conference room configuration form.");
+			// then we also should not send an invite as the room will be locked
+			throw e1;
+		}
+
+		// Sleep few seconds between creation and invite new user
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			
+		}
+
+		/*
+		 * if (info.isPasswordProtected()) { multiUserChat.join(nickname,
+		 * password, discussionHistory, JOIN_TIMEOUT); } else {
+		 * multiUserChat.join(nickname, null, discussionHistory, JOIN_TIMEOUT);
+		 * }
+		 */
+
+		multiUserChat.join(nickname, null, null, 1000);
+		// IMPORTANT you should join before registerRoom
+		//registerRoom(multiUserChat, roomJID, roomName, password);
+
+		return multiUserChat;
+	}
+
 
 }

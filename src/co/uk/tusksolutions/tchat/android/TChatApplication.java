@@ -3,7 +3,11 @@
  */
 package co.uk.tusksolutions.tchat.android;
 
-import org.jivesoftware.smack.Connection;
+import org.jivesoftware.smack.ConnectionConfiguration;
+import org.jivesoftware.smack.XMPPConnection;
+import org.jivesoftware.smack.XMPPException;
+
+
 
 import android.app.Application;
 import android.content.Context;
@@ -28,7 +32,7 @@ public class TChatApplication extends Application {
 
 	private static CHAT_STATUS_ENUM chatActivityStatus = CHAT_STATUS_ENUM.NOT_VISIBLE;
 	private static Context mContext;
-	public static Connection connection;
+	public static XMPPConnection connection;
 
 	private static TChatDBHelper tChatDBHelper;
 	public SQLiteDatabase tChatDBWritable;
@@ -149,4 +153,47 @@ public class TChatApplication extends Application {
 							.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
 		}
 	}
+	
+	public  static XMPPConnection createNewConnection() throws XMPPException {
+
+		
+
+		//ConnectionConfiguration conf = new ConnectionConfiguration(settings.getServerHost(), settings.getServerPort());
+		ConnectionConfiguration conf = new ConnectionConfiguration(Constants.STAGING_SERVER,5222);
+	
+		//SASLAuthentication.supportSASLMechanism("MD5", 0);
+	//conf.setSASLAuthenticationEnabled(false);
+		conf.setDebuggerEnabled(true);
+		conf.setSecurityMode(ConnectionConfiguration.SecurityMode.enabled);
+
+		/*
+		 * if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+		 * { conf.setTruststoreType("AndroidCAStore");
+		 * conf.setTruststorePassword(null); conf.setTruststorePath(null); }
+		 * else { conf.setTruststoreType("BKS"); String path =
+		 * System.getProperty("javax.net.ssl.trustStore"); if (path == null) {
+		 * path = System.getProperty("java.home") + File.separator + "etc" +
+		 * File.separator + "security" + File.separator + "cacerts.bks"; }
+		 * conf.setTruststorePath(path); }
+		 * 
+		 * switch (settings.xmppSecurityModeInt) { case
+		 * SettingsManager.XMPPSecurityOptional:
+		 * conf.setSecurityMode(ConnectionConfiguration.SecurityMode.enabled);
+		 * break; case SettingsManager.XMPPSecurityRequired:
+		 * conf.setSecurityMode(ConnectionConfiguration.SecurityMode.required);
+		 * break; case SettingsManager.XMPPSecurityDisabled: default:
+		 * conf.setSecurityMode(ConnectionConfiguration.SecurityMode.disabled);
+		 * break; }
+		 * 
+		 * if (settings.useCompression) { conf.setCompressionEnabled(true); }
+		 */
+
+		// disable the built-in ReconnectionManager
+		// since we handle this
+		conf.setReconnectionAllowed(true);
+		conf.setSendPresence(true);
+
+		return new XMPPConnection(conf);
+	}
+
 }
