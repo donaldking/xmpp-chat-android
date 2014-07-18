@@ -104,15 +104,15 @@
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
 
-            
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@string/abc_action_menu_overflow_description" />
         </activity>
-        <activity android:name="co.uk.tusksolutions.tchat.android.activities.GroupFriendsSelectionActivity"
-         
-         android:windowSoftInputMode="adjustResize|stateVisible"
-           android:launchMode="singleTop"></activity>
+        <activity
+            android:name="co.uk.tusksolutions.tchat.android.activities.GroupFriendsSelectionActivity"
+            android:launchMode="singleTop"
+            android:windowSoftInputMode="stateHidden" >
+        </activity>
     </application>
 
 </manifest>

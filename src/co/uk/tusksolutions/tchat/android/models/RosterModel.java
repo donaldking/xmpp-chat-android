@@ -34,12 +34,22 @@ public class RosterModel implements Parcelable {
 	public String resourceName;
 	public String TABLE = TChatDBHelper.ROSTER_TABLE;
 	private SQLiteDatabase db;
+	private boolean selected;
 
 	static final String TAG = "RosterModel";
 
 	public RosterModel() {
+		selected = false;
 	}
 
+	public boolean isSelected(){
+		return selected;
+	}
+	
+	public void setSelected(boolean selected){
+		this.selected = selected;
+	}
+	
 	public boolean saveRosterToDB(Roster roster) {
 		int counter = 0;
 		db = TChatApplication.getTChatDBWritable();
