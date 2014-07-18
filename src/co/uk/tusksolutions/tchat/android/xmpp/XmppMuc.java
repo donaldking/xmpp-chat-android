@@ -1,25 +1,23 @@
 package co.uk.tusksolutions.tchat.android.xmpp;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import org.jivesoftware.smack.Connection;
+import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smackx.Form;
 import org.jivesoftware.smackx.muc.MultiUserChat;
-
-
-
-
-
-
-
 
 import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
+import co.uk.tusksolutions.tchat.android.listeners.XmppConnectionChangeListener;
+import co.uk.tusksolutions.tchat.android.listeners.XmppMucInvitationListener;
 
 public class XmppMuc {
 	private static String TAG="XmppMuc";
@@ -32,6 +30,35 @@ public class XmppMuc {
 	{
 		this.context=ctx;
 		
+	}
+	public void registerListener(Connection connection) {
+		XmppConnectionChangeListener listener = new XmppConnectionChangeListener() {
+			public void newConnection(XMPPConnection connection) {
+
+				
+				// clear the roomNumbers and room ArrayList as we have a new
+				// connection
+				mRooms.clear();
+
+				
+
+				try {
+					Collection<String> mucComponents = MultiUserChat.getServiceNames(connection);
+					if (mucComponents.size() > 0) {
+						Iterator<String> i = mucComponents.iterator();
+						
+					}
+				} catch (XMPPException e) {
+					// This is not fatal, just log a warning
+					Log.v("TAG", "Could not discover local MUC component: ");
+				}
+
+				Log.d("XmppMUC","Register a listener for Room invitations!");
+				MultiUserChat.addInvitationListener(connection, new XmppMucInvitationListener(context));
+			}
+		};
+
+	
 	}
 	
 	public static XmppMuc getInstance(Context ctx) {

@@ -6,6 +6,7 @@ import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smackx.Form;
 import org.jivesoftware.smackx.muc.MultiUserChat;
 
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
@@ -27,9 +28,10 @@ import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.adapters.GroupFriendsSelectionAdapter;
 import co.uk.tusksolutions.tchat.android.models.RosterModel;
+import co.uk.tusksolutions.tchat.android.tasks.CreateMUCAsyncTask;
 
 public class GroupFriendsSelectionActivity extends ActionBarActivity implements
-		TextWatcher {
+		TextWatcher, CreateMUCAsyncTask.OnCreateMUCListener{
 
 	public EditText searchInput;
 	public static ListView listView;
@@ -146,22 +148,10 @@ public class GroupFriendsSelectionActivity extends ActionBarActivity implements
 		case R.id.submit_next:
 			Toast.makeText(GroupFriendsSelectionActivity.this,
 					"implementing group chat...", Toast.LENGTH_SHORT).show();
-
-			TChatApplication.getUserModel().getUsername();
-
 			String roomName = TChatApplication.getUserModel().getUsername()
 					+ "_" + System.currentTimeMillis();
-			String roomJID = roomName
-					+ "@conference."
-					+ co.uk.tusksolutions.tchat.android.constants.Constants.STAGING_SERVER;
-			String nickname = TChatApplication.getUserModel().getUsername();
-
-			try {
-				createRoom(roomName, roomJID, nickname, "");
-			} catch (XMPPException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			
+	new CreateMUCAsyncTask(GroupFriendsSelectionActivity.this, roomName,mSelectedUserModel , listView,this).execute();
 			break;
 		default:
 			break;
@@ -175,88 +165,20 @@ public class GroupFriendsSelectionActivity extends ActionBarActivity implements
 
 	}
 
-	private MultiUserChat createRoom(String roomName, String roomJID,
-			String nickname, String password) throws XMPPException {
+	
+	@Override
+	public void onCreateMUCFailed(boolean alreadyExists, String message) {
+		// TODO Auto-generated method stub
+		
 
-		MultiUserChat multiUserChat = null;
+		
+	}
 
-		// final String subjectInviteStr = getRoomString(number, name);
-
-		Log.i("Creating room [%s]", roomJID);
-
-		// See issue 136
-		try {
-			if (TChatApplication.connection != null)
-
-			{
-
-				multiUserChat = new MultiUserChat(TChatApplication.connection,
-						roomJID);
-			} else {
-				TChatApplication.connection = TChatApplication
-						.createNewConnection();
-				Log.e("connection closed ", "connection "
-						+ TChatApplication.connection);
-				multiUserChat = new MultiUserChat(TChatApplication.connection,
-						roomJID);
-
-			}
-
-			boolean service = MultiUserChat.isServiceEnabled(
-					TChatApplication.connection,
-					TChatApplication.getCurrentJid());
-			Log.e("TAG", "service " + service);
-
-		} catch (Exception e) {
-
-		}
-
-		try {
-			multiUserChat.create(nickname);
-
-			// multiUserChat.join(nickname);
-
-		} catch (Exception e) {
-			Log.e("MUC create", "MUC creation failed: ");
-			throw new XMPPException("MUC creation failed for " + nickname
-					+ ": " + e.getLocalizedMessage(), e);
-		}
-
-		try {
-			// We send an empty configuration to the server. For some reason the
-			// server doesn't accept or process our
-			// completed form, so we just send an empty one. The server defaults
-			// will be used which are fine.
-			multiUserChat.sendConfigurationForm(new Form(Form.TYPE_SUBMIT));
-
-			multiUserChat.changeSubject(roomName);
-
-		} catch (XMPPException e1) {
-			Log.d(e1.toString(),
-					"Unable to send conference room configuration form.");
-			// then we also should not send an invite as the room will be locked
-			throw e1;
-		}
-
-		// Sleep few seconds between creation and invite new user
-		try {
-			Thread.sleep(2000);
-		} catch (InterruptedException e) {
-
-		}
-
-		/*
-		 * if (info.isPasswordProtected()) { multiUserChat.join(nickname,
-		 * password, discussionHistory, JOIN_TIMEOUT); } else {
-		 * multiUserChat.join(nickname, null, discussionHistory, JOIN_TIMEOUT);
-		 * }
-		 */
-
-		multiUserChat.join(nickname, null, null, 1000);
-		// IMPORTANT you should join before registerRoom
-		// registerRoom(multiUserChat, roomJID, roomName, password);
-
-		return multiUserChat;
+	@Override
+	public void onCreateMUCSuccess(String room) {
+		// TODO Auto-generated method stub
+		Log.v("Create Room Succes","Successfully create room  "+room);
+		
 	}
 
 }

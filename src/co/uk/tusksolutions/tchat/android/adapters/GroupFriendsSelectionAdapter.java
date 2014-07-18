@@ -25,7 +25,7 @@ public class GroupFriendsSelectionAdapter extends BaseAdapter implements
 
 	private RosterModel mModel;
 	private Context context;
-	private ArrayList<RosterModel> rosterModelCollection;
+	public static ArrayList<RosterModel> rosterModelCollection;
 	private ArrayList<RosterModel> rosterModelCollectionCopy;
 	private ValueFilter valueFilter;
 

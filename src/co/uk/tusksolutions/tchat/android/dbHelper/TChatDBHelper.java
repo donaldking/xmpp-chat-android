@@ -71,6 +71,19 @@ public class TChatDBHelper extends SQLiteOpenHelper {
 	public static final String R_MESSAGE_ID = "mid";
 	public static final String R_IS_READ = "isRead";
 	public static final String R_TIMESTAMP = "time_stamp";
+	
+	
+	
+	/* information for the muc table */
+    String MUC_TABLE_NAME                       = "rooms";
+    String KEY_MUC_ROOM_NAME                    = "roomName";
+    String KEY_MUC_ROOM_JID                     = "roomJID";
+    String KEY_MUC_PASSWORD                     = "roomPassword";
+    String KEY_MUC_ICON_URI                     = "roomIconUri";
+
+    String MUC_PARTICIPANTS_TABLE_NAME          = "mucParticipants";
+    String KEY_MUC_PARTICIPANTS_ROOM_JID        = "roomJID";
+    String KEY_MUC_PARTICIPANTS_USER_JID        = "roomBuddyJID";
 
 	public TChatDBHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
