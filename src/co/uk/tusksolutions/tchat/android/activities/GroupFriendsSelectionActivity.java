@@ -2,11 +2,6 @@ package co.uk.tusksolutions.tchat.android.activities;
 
 import java.util.ArrayList;
 
-import org.jivesoftware.smack.XMPPException;
-import org.jivesoftware.smackx.Form;
-import org.jivesoftware.smackx.muc.MultiUserChat;
-
-
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;

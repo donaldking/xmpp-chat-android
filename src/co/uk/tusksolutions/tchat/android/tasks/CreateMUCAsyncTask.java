@@ -7,10 +7,10 @@ import org.jivesoftware.smack.XMPPException;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.SparseBooleanArray;
 import android.widget.ListView;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.adapters.GroupFriendsSelectionAdapter;
+import co.uk.tusksolutions.tchat.android.constants.Constants;
 import co.uk.tusksolutions.tchat.android.models.RosterModel;
 import co.uk.tusksolutions.tchat.android.xmpp.XmppMuc;
 
@@ -63,17 +63,14 @@ public class CreateMUCAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
 			XmppMuc xmppMuc = XmppMuc.getInstance(context);
 
-			String roomJID = roomName
-					+ "@conference."
-					+ co.uk.tusksolutions.tchat.android.constants.Constants.STAGING_SERVER;
+			String roomJID = roomName + "@conference."
+					+ Constants.CURRENT_SERVER;
 
 			friendArrayList = GroupFriendsSelectionAdapter.rosterModelCollection;
 
 			for (int i = 0; i < friendArrayList.size(); i++) {
 				if (friendArrayList.get(i).isSelected()) {
-
 					String friendJID = friendArrayList.get(i).user;
-
 					String password = "";
 					xmppMuc.inviteToRoom(roomName, TChatApplication
 							.getUserModel().getUsername(), friendJID, password,
@@ -81,10 +78,9 @@ public class CreateMUCAsyncTask extends AsyncTask<Void, Void, Boolean> {
 				}
 			}
 
-
 		} catch (XMPPException e) {
 			alreadyExists = false;
-			
+
 			return false;
 		}
 
