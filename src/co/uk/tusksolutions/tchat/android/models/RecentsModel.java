@@ -33,7 +33,8 @@ public class RecentsModel implements Parcelable {
 
 	public RecentsModel() {
 	}
-
+	
+	
 	public boolean saveRecentsToDB(JSONArray recents) {
 		int counter = 0;
 		db = TChatApplication.getTChatDBWritable();
