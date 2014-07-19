@@ -1,5 +1,6 @@
 package co.uk.tusksolutions.tchat.android.constants;
 
+
 public class Constants {
 
 	/**
@@ -51,6 +52,8 @@ public class Constants {
 	public static String RECENTS_UPDATED = "co.uk.tusksolutions.tchat.android.action.RECENTS_UPDATED";
 	public static String CLOUD_SAVE_SUCCESS = "co.uk.tusksolutions.tchat.android.action.CLOUD_SAVE_SUCCESS";
 	public static String CLOUD_SAVE_ERROR = "co.uk.tusksolutions.tchat.android.action.CLOUD_SAVE_ERROR";
+	public static String GROUPS_UPDATED = "co.uk.tusksolutions.tchat.android.action.GROUPS_UPDATED";
+	public static String GROUPS_NOT_UPDATED = "co.uk.tusksolutions.tchat.android.action.GROUPS_NOT_UPDATED";
 	public static final String PROFILE_UPDATED = "co.uk.tusksolutions.tchat.android.action.PROFILE_UPDATED";
 	public static final String PROFILE_NOT_UPDATED = "co.uk.tusksolutions.tchat.android.action.PROFILE_NOT_UPDATED";
 	public static final String LAST_ONLINE_TIME_STATE_CHANGED = "co.uk.tusksolutions.tchat.android.action.LAST_ONLINE_TIME_STATE_CHANGED";

@@ -19,7 +19,7 @@ import co.uk.tusksolutions.utility.Utility;
 public class APIGetGroups {
 	JSONArray jsonArray;
 	private GroupUserModel mGroupUserModel;
-	private AsyncApiGetProfile mTask = null;
+	private AsyncApiGetGroups mTask = null;
 
 	public void getGroups() {
 
@@ -27,14 +27,14 @@ public class APIGetGroups {
 			return;
 		}
 
-		mTask = new AsyncApiGetProfile();
+		mTask = new AsyncApiGetGroups();
 		mTask.execute((Void) null);
 	}
 
 	/*
 	 * Performing Network request
 	 */
-	private class AsyncApiGetProfile extends AsyncTask<Void, Void, Boolean> {
+	private class AsyncApiGetGroups extends AsyncTask<Void, Void, Boolean> {
 
 		@Override
 		protected Boolean doInBackground(Void... params) {
@@ -83,10 +83,10 @@ public class APIGetGroups {
 
 			if (result) {
 				TChatApplication.getContext().sendBroadcast(
-						new Intent(Constants.PROFILE_UPDATED));
+						new Intent(Constants.GROUPS_UPDATED));
 			} else {
 				TChatApplication.getContext().sendBroadcast(
-						new Intent(Constants.PROFILE_NOT_UPDATED));
+						new Intent(Constants.GROUPS_NOT_UPDATED));
 			}
 		}
 
