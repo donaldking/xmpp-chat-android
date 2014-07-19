@@ -16,6 +16,7 @@ public class Constants {
 	public static String CLOUD_STORAGE_ENDPOINT = "/mobileservices/v1/store_message.php";
 	public static String CHAT_MESSAGES_ENDPOINT = "/mobileservices/v1/get_message.php";
 	public static final String GET_PROFILE_ENDPOINT = "/mobileservices/v1/get_profile.php";
+	public static final String GET_GROUPS_ENDPOINT = "/mobileservices/v1/get_groups_for_user.php";
 	public static final String GET_LAST_ONLINE_TIME_ENDPOINT = "/mobileservices/v1/get_last_online_time.php";
 	public static final String UPDATE_LAST_ONLINE_PRIVACY_ENDPOINT = "/mobileservices/v1/update_last_online_privacy.php";
 

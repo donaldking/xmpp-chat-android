@@ -73,6 +73,15 @@ public class TChatDBHelper extends SQLiteOpenHelper {
 	public static final String R_TIMESTAMP = "time_stamp";
 	
 	
+	/*
+	 * Groups table definition
+	 */
+	public static final String G_UID="_id";
+	public static final String G_USER_ID="user_id";
+	public static final String G_GROUP_ID="group_id";
+	public static final String G_GROUP_NAME="group_name";
+	
+	
 	
 	/* information for the muc table */
     String MUC_TABLE_NAME                       = "rooms";
@@ -143,6 +152,16 @@ public class TChatDBHelper extends SQLiteOpenHelper {
 			+ R_MESSAGE_ID + " varchar(255) DEFAULT NULL," + R_IS_READ
 			+ " varchar(11)  DEFAULT NULL," + R_TIMESTAMP
 			+ " varchar(255) DEFAULT NULL);";
+	
+	/*
+	 * Groups table schema definition
+	 */
+	
+	private static final String CREATE_GROUPS_TABLE = "CREATE TABLE "
+			+ GROUPS_TABLE + " ( " + G_UID
+			+ " INTEGER PRIMARY KEY AUTOINCREMENT," + G_GROUP_ID
+			+ " varchar(255) UNIQUE," + G_GROUP_NAME
+			+ " varchar(255)," + G_USER_ID + " varchar(255) DEFAULT NULL);";
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
@@ -151,6 +170,7 @@ public class TChatDBHelper extends SQLiteOpenHelper {
 			db.execSQL(CREATE_ROSTER_TABLE);
 			db.execSQL(CREATE_CHAT_MESSAGES_TABLE);
 			db.execSQL(CREATE_RECENTS_MESSAGES_TABLE);
+			db.execSQL(CREATE_GROUPS_TABLE);
 		} catch (SQLException e) {
 
 			e.printStackTrace();
