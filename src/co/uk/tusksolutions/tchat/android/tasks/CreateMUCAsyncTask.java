@@ -14,11 +14,6 @@ import co.uk.tusksolutions.tchat.android.constants.Constants;
 import co.uk.tusksolutions.tchat.android.models.RosterModel;
 import co.uk.tusksolutions.tchat.android.xmpp.XmppMuc;
 
-/**
- * @author Deepak Jangir deepakjangir07@gmail.com
- * 
- * 
- */
 public class CreateMUCAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
 	ProgressDialog progressDialog;
