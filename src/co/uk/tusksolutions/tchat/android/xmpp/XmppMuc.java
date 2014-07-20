@@ -8,7 +8,6 @@ import java.util.Map;
 import org.jivesoftware.smack.Connection;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
-import org.jivesoftware.smackx.Form;
 import org.jivesoftware.smackx.muc.MultiUserChat;
 
 import android.content.Context;
@@ -95,8 +94,10 @@ public class XmppMuc {
 		}
 
 		try {
-			multiUserChat.create(nickname);
-		} catch (Exception e) {
+			//multiUserChat.create(nickname);
+			multiUserChat.join(nickname);
+		} 
+		catch (Exception e) {
 			Log.e(TAG, "MUC creation failed: ");
 			e.printStackTrace();
 			throw new XMPPException("MUC creation failed for " + nickname
@@ -108,9 +109,8 @@ public class XmppMuc {
 			// server doesn't accept or process our
 			// completed form, so we just send an empty one. The server defaults
 			// will be used which are fine.
-			multiUserChat.sendConfigurationForm(new Form(Form.TYPE_SUBMIT));
-
-			multiUserChat.changeSubject(roomName);
+			//multiUserChat.sendConfigurationForm(new Form(Form.TYPE_SUBMIT));
+			multiUserChat.changeSubject(roomName);			
 
 		} catch (XMPPException e1) {
 			Log.d(e1.toString(),
