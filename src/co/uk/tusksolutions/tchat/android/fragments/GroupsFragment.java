@@ -164,8 +164,9 @@ public class GroupsFragment extends Fragment {
 		// TODO Auto-generated method stub
 		getActivity().invalidateOptionsMenu();
 		MenuItem filter = menu.findItem(R.id.action_settings);
-
+		MenuItem filter1 = menu.findItem(R.id.action_chat_one);
 		filter.setVisible(false);
+		filter1.setVisible(false);
 	}
 
 }

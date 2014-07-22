@@ -3,6 +3,7 @@ package co.uk.tusksolutions.tchat.android.fragments;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +13,8 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -253,5 +256,21 @@ public class RosterFragment extends Fragment {
 
 		outState.putInt("currentQueryAction",
 				TChatApplication.CHAT_SECTION_QUERY_ACTION);
+	}
+	
+	@Override
+	public void onAttach(Activity activity) {
+		// TODO Auto-generated method stub
+		super.onAttach(activity);
+		setHasOptionsMenu(true);
+	}
+
+	@Override
+	public void onPrepareOptionsMenu(Menu menu) {
+		// TODO Auto-generated method stub
+		getActivity().invalidateOptionsMenu();
+		MenuItem filter = menu.findItem(R.id.action_chat);
+
+		filter.setVisible(false);
 	}
 }
