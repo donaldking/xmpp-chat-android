@@ -29,8 +29,6 @@ import android.widget.ListView;
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.adapters.GroupFriendsSelectionAdapter;
-import co.uk.tusksolutions.tchat.android.dbHelper.TChatDBHelper;
-import co.uk.tusksolutions.tchat.android.models.GroupUserModel;
 import co.uk.tusksolutions.tchat.android.models.RosterModel;
 import co.uk.tusksolutions.tchat.android.tasks.CreateMUCAsyncTask;
 
@@ -229,50 +227,45 @@ public class GroupFriendsSelectionActivity extends ActionBarActivity implements
 
 	@Override
 	public void onCreateMUCFailed(boolean alreadyExists, String message) {
-		// TODO Auto-generated method stub
 		Log.v("Create Room Error", message);
 	}
 
 	@Override
 	public void onCreateMUCSuccess(String room, String roomJid,
 			ArrayList<RosterModel> participantsList) {
-		// TODO Auto-generated method stub
-		Log.v("Create Room Succes", "Successfully create room  " + room);
-		String group_name = TChatApplication.getUserModel().getUsername()
-				+ "'s Room";
-		String group_admin = TChatApplication.getUserModel().getUsername();
-		JSONObject participants1 = new JSONObject();
-		
+
+		StringBuilder group_name = new StringBuilder();
+		String group_admin = TChatApplication.getCurrentJid();
+		JSONArray jsonArray = new JSONArray();
+		JSONObject participant;
+
 		try {
-			for (int i = 0; i < participantsList.size(); i++) {
-				
-				participants1.put("user_id", participantsList.get(i).user);
-				
-           }
-			
-			
+			int index = 0;
+			for (RosterModel rosterModel : participantsList) {
+				participant = new JSONObject();
+				participant.put("user_id", rosterModel.user);
+				jsonArray.put(participant);
+				group_name.append(rosterModel.name);
+				index++;
+				if (index < participantsList.size()) {
+					group_name.append(", ");
+				}
+			}
+
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		JSONArray jsonArray = new JSONArray();
-
-		jsonArray.put(participants1);
 
 		JSONObject Obj = new JSONObject();
 		try {
 			Obj.put("participants", jsonArray);
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
 		String jsonStr = Obj.toString();
-
-		System.out.println("jsonString: " + jsonStr);
-
-		GroupUserModel groupUserModel = new GroupUserModel();
-		groupUserModel.saveCreatedRoomInDB(room, group_name, group_admin,
-				jsonStr);
+		TChatApplication.getGroupsModel().saveCreatedRoomInDB(room,
+				group_name.toString(), group_admin, jsonStr);
 
 	}
 

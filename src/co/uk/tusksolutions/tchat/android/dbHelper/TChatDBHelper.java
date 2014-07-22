@@ -94,8 +94,6 @@ public class TChatDBHelper extends SQLiteOpenHelper {
 	public static final String GM_IS_READ = "isRead";
 	public static final String GM_TIMESTAMP = "time_stamp";
 
-
-
 	public TChatDBHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 
@@ -170,12 +168,13 @@ public class TChatDBHelper extends SQLiteOpenHelper {
 	 */
 
 	private static final String CREATE_GROUPS_MESSAGE_TABLE = "CREATE TABLE "
-			+ CHAT_MESSAGES_TABLE + " ( " + GM_UID
+			+ GROUP_CHAT_MESSAGES_TABLE + "( " + GM_UID
 			+ " INTEGER PRIMARY KEY AUTOINCREMENT," + GM_GROUP_ID
 			+ " varchar(255) DEFAULT NULL," + GM_SENDER
-			+ "varchar(255) DEFAULT NULL," + GM_RECEIVER
-			+ "varchar(255) DEFAULT NULL," + GM_MESSAGE + "blob,"
-			+ GM_MESSAGE_ID + "	varchar(255) DEFAULT NULL," + GM_IS_READ
+			+ " varchar(255) DEFAULT NULL," + GM_RECEIVER
+			+ " varchar(255) DEFAULT NULL," + GM_MESSAGE 
+			+ " blob," + GM_MESSAGE_ID 
+			+ "	varchar(255) DEFAULT NULL," + GM_IS_READ
 			+ " varchar(1) DEFAULT NULL," + GM_TIMESTAMP
 			+ "	varchar(255) DEFAULT NULL);";
 
@@ -186,8 +185,9 @@ public class TChatDBHelper extends SQLiteOpenHelper {
 			db.execSQL(CREATE_ROSTER_TABLE);
 			db.execSQL(CREATE_CHAT_MESSAGES_TABLE);
 			db.execSQL(CREATE_RECENTS_MESSAGES_TABLE);
-			db.execSQL(CREATE_GROUPS_TABLE);
 			db.execSQL(CREATE_GROUPS_MESSAGE_TABLE);
+			db.execSQL(CREATE_GROUPS_TABLE);
+
 		} catch (SQLException e) {
 
 			e.printStackTrace();

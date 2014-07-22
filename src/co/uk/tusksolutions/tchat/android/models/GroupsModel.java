@@ -59,7 +59,7 @@ public class GroupsModel implements Parcelable {
 	public boolean saveCreatedRoomInDB(String group_id, String group_name,String group_admin,String participants)
 	{
 		try {
-			Log.e("Debug",participants);
+			Log.d("Debug",participants);
 			db = TChatApplication.getTChatDBWritable();
 			ContentValues contentValues = new ContentValues();
 			contentValues.put(TChatDBHelper.G_GROUP_ID,group_id);

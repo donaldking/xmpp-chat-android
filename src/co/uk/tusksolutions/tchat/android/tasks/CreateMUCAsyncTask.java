@@ -41,7 +41,7 @@ public class CreateMUCAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
 		progressDialog.setMessage("Creating Room...");
 		progressDialog.show();
-		progressDialog.setCancelable(true);
+		progressDialog.setCancelable(false);
 
 		super.onPreExecute();
 	}
