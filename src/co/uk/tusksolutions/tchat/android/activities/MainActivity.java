@@ -176,11 +176,12 @@ public class MainActivity extends ActionBarActivity implements
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		if (id == R.id.action_chat) {
+		if (id == R.id.action_chat||id==R.id.action_chat_one) {
 			
 			startActivity(new Intent(MainActivity.this,GroupFriendsSelectionActivity.class));
 			return true;
 		}
+		
 		if (id == R.id.action_search) {
 			Intent intent = new Intent(MainActivity.this, SearchActivity.class);
 			startActivity(intent);
