@@ -1,6 +1,10 @@
 package co.uk.tusksolutions.tchat.android.activities;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -41,7 +45,10 @@ public class SearchActivity extends ActionBarActivity implements TextWatcher {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.search_messages_activity);
-
+		
+		
+		
+		
 		mModel = new RosterModel();
 		rosterModelCollection = new ArrayList<RosterModel>();
 		searchView = (EditText) findViewById(R.id.editTextSearch);

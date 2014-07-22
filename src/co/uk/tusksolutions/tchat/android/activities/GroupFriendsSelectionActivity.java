@@ -2,6 +2,10 @@ package co.uk.tusksolutions.tchat.android.activities;
 
 import java.util.ArrayList;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
@@ -25,6 +29,8 @@ import android.widget.ListView;
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.adapters.GroupFriendsSelectionAdapter;
+import co.uk.tusksolutions.tchat.android.dbHelper.TChatDBHelper;
+import co.uk.tusksolutions.tchat.android.models.GroupUserModel;
 import co.uk.tusksolutions.tchat.android.models.RosterModel;
 import co.uk.tusksolutions.tchat.android.tasks.CreateMUCAsyncTask;
 
@@ -144,7 +150,7 @@ public class GroupFriendsSelectionActivity extends ActionBarActivity implements
 		case R.id.submit_next:
 
 			if (searchInputCleared()) {
-				
+
 				Handler handler = new Handler();
 				handler.postDelayed(new Runnable() {
 					@Override
@@ -228,9 +234,45 @@ public class GroupFriendsSelectionActivity extends ActionBarActivity implements
 	}
 
 	@Override
-	public void onCreateMUCSuccess(String room) {
+	public void onCreateMUCSuccess(String room, String roomJid,
+			ArrayList<RosterModel> participantsList) {
 		// TODO Auto-generated method stub
 		Log.v("Create Room Succes", "Successfully create room  " + room);
+		String group_name = TChatApplication.getUserModel().getUsername()
+				+ "'s Room";
+		String group_admin = TChatApplication.getUserModel().getUsername();
+		JSONObject participants1 = new JSONObject();
+		
+		try {
+			for (int i = 0; i < participantsList.size(); i++) {
+				
+				participants1.put("user_id", participantsList.get(i).user);
+				
+           }
+			
+			
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		JSONArray jsonArray = new JSONArray();
+
+		jsonArray.put(participants1);
+
+		JSONObject Obj = new JSONObject();
+		try {
+			Obj.put("participants", jsonArray);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		String jsonStr = Obj.toString();
+
+		System.out.println("jsonString: " + jsonStr);
+
+		GroupUserModel groupUserModel = new GroupUserModel();
+		groupUserModel.saveCreatedRoomInDB(room, group_name, group_admin,
+				jsonStr);
 
 	}
 

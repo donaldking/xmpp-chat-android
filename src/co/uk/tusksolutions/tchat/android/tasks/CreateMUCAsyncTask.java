@@ -22,7 +22,7 @@ public class CreateMUCAsyncTask extends AsyncTask<Void, Void, Boolean> {
 	private ArrayList<RosterModel> friendArrayList;
 	private boolean alreadyExists;
 	private String errorMessage = "Error creating room";
-
+	String roomJID;
 	public CreateMUCAsyncTask(final Context context, final String roomName,
 			final ArrayList<RosterModel> friendArrayList,
 			final OnCreateMUCListener listener) {
@@ -53,7 +53,7 @@ public class CreateMUCAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
 			XmppMuc xmppMuc = XmppMuc.getInstance(context);
 
-			String roomJID = roomName + "@conference."
+			 roomJID = roomName + "@conference."
 					+ Constants.CURRENT_SERVER;
 			
 			for (int i = 0; i < friendArrayList.size(); i++) {
@@ -81,6 +81,8 @@ public class CreateMUCAsyncTask extends AsyncTask<Void, Void, Boolean> {
 			progressDialog.dismiss();
 		if (result) {
 			
+			listener.onCreateMUCSuccess(roomName,roomJID,friendArrayList);
+			
 		} else {
 			listener.onCreateMUCFailed(alreadyExists, errorMessage);
 		}
@@ -89,7 +91,7 @@ public class CreateMUCAsyncTask extends AsyncTask<Void, Void, Boolean> {
 	}
 
 	public interface OnCreateMUCListener {
-		void onCreateMUCSuccess(String room);
+		void onCreateMUCSuccess(String room,String roomjid,ArrayList<RosterModel> friendArrayList);
 		void onCreateMUCFailed(boolean alreadyExists, String message);
 	}
 }
