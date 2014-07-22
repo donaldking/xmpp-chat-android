@@ -7,9 +7,7 @@ import org.jivesoftware.smack.XMPPException;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.widget.ListView;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
-import co.uk.tusksolutions.tchat.android.adapters.GroupFriendsSelectionAdapter;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
 import co.uk.tusksolutions.tchat.android.models.RosterModel;
 import co.uk.tusksolutions.tchat.android.xmpp.XmppMuc;
@@ -22,18 +20,15 @@ public class CreateMUCAsyncTask extends AsyncTask<Void, Void, Boolean> {
 	private final String roomName;
 	private final OnCreateMUCListener listener;
 	private ArrayList<RosterModel> friendArrayList;
-	private final ListView friendsList;
 	private boolean alreadyExists;
-	private String errorMessage;
+	private String errorMessage = "Error creating room";
 
 	public CreateMUCAsyncTask(final Context context, final String roomName,
 			final ArrayList<RosterModel> friendArrayList,
-			final ListView friendsList, final OnCreateMUCListener listener) {
+			final OnCreateMUCListener listener) {
 		this.context = context;
 		this.roomName = roomName;
 		this.friendArrayList = friendArrayList;
-		this.friendsList = friendsList;
-
 		this.listener = listener;
 
 	}
@@ -60,15 +55,12 @@ public class CreateMUCAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
 			String roomJID = roomName + "@conference."
 					+ Constants.CURRENT_SERVER;
-
-			friendArrayList = GroupFriendsSelectionAdapter.rosterModelCollection;
-
+			
 			for (int i = 0; i < friendArrayList.size(); i++) {
 				if (friendArrayList.get(i).isSelected()) {
 					String friendJID = friendArrayList.get(i).user;
-					String password = "";
 					xmppMuc.inviteToRoom(roomName, TChatApplication
-							.getUserModel().getUsername(), friendJID, password,
+							.getUserModel().getUsername(), friendJID, "",
 							roomJID);
 				}
 			}
@@ -84,13 +76,11 @@ public class CreateMUCAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
 	@Override
 	protected void onPostExecute(Boolean result) {
-
-		// baseActivity.dismissPleaseWaitDialog();
+		
 		if (progressDialog != null)
 			progressDialog.dismiss();
 		if (result) {
-			// listener.onCreateMUCSuccess(room);
-			// MUCFriendsAdapter.checkedItems.clear();
+			
 		} else {
 			listener.onCreateMUCFailed(alreadyExists, errorMessage);
 		}
@@ -100,7 +90,6 @@ public class CreateMUCAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
 	public interface OnCreateMUCListener {
 		void onCreateMUCSuccess(String room);
-
 		void onCreateMUCFailed(boolean alreadyExists, String message);
 	}
 }

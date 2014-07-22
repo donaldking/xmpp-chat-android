@@ -18,21 +18,18 @@ public class GroupUserModel implements Parcelable {
 	final static String TAG = "GroupUserModel";
 	private String TABLE = TChatDBHelper.GROUPS_TABLE;
 	public String group_id;
-	public String user_id;
+	public String participants;
 	public String group_name;
 
 	SQLiteDatabase db;
 
-	public GroupUserModel()
-	{
-		
+	public GroupUserModel() {
+
 	}
 
 	public boolean saveGroupsToDB(JSONArray groupsJson) {
-		int counter = 0;
 		db = TChatApplication.getTChatDBWritable();
 
-		
 		for (int i = 0; i < groupsJson.length(); i++) {
 
 			try {
@@ -43,13 +40,11 @@ public class GroupUserModel implements Parcelable {
 						groupsObject.getString("group_id"));
 				contentValues.put(TChatDBHelper.G_GROUP_NAME,
 						groupsObject.getString("group_name"));
-				contentValues.put(TChatDBHelper.G_USER_ID,
-						groupsObject.getString("user_id"));
+				contentValues.put(TChatDBHelper.G_PARTICIPANTS,
+						groupsObject.getString("participants"));
 				// Insert
 				db.insertWithOnConflict(TChatDBHelper.GROUPS_TABLE, null,
 						contentValues, SQLiteDatabase.CONFLICT_REPLACE);
-
-				counter++;
 
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -58,11 +53,10 @@ public class GroupUserModel implements Parcelable {
 		}
 		return true;
 	}
-	
+
 	public ArrayList<GroupUserModel> queryGroups() {
 
 		ArrayList<GroupUserModel> groupsModelCollection = new ArrayList<GroupUserModel>();
-		
 
 		Cursor cursor = TChatApplication.getTChatDBReadable().query(TABLE,
 				null, null, null, null, null, null);
@@ -74,7 +68,7 @@ public class GroupUserModel implements Parcelable {
 
 		return groupsModelCollection;
 	}
-	
+
 	protected GroupUserModel fromCursor(Cursor cursor) {
 		/*
 		 * Pulls the values fromUser the cursor object and returns it TO_USER
@@ -85,13 +79,12 @@ public class GroupUserModel implements Parcelable {
 				.getColumnIndex(TChatDBHelper.G_GROUP_ID));
 		groupsModel.group_name = cursor.getString(cursor
 				.getColumnIndex(TChatDBHelper.G_GROUP_NAME));
-		groupsModel.user_id = cursor.getString(cursor
-				.getColumnIndex(TChatDBHelper.G_USER_ID));
-		
+		groupsModel.participants = cursor.getString(cursor
+				.getColumnIndex(TChatDBHelper.G_PARTICIPANTS));
+
 		return groupsModel;
 
 	}
-	
 
 	@Override
 	public int describeContents() {
@@ -102,8 +95,8 @@ public class GroupUserModel implements Parcelable {
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeString(group_id);
 		dest.writeString(group_name);
-		dest.writeString(user_id);
-		
+		dest.writeString(participants);
+
 	}
 
 	public static final Parcelable.Creator<GroupUserModel> CREATOR = new Parcelable.Creator<GroupUserModel>() {
@@ -120,7 +113,7 @@ public class GroupUserModel implements Parcelable {
 	protected GroupUserModel(Parcel in) {
 		this.group_id = in.readString();
 		this.group_name = in.readString();
-		this.user_id = in.readString();
-		
+		this.participants = in.readString();
+
 	}
 }

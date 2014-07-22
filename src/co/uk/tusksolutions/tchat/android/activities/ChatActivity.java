@@ -165,23 +165,6 @@ public class ChatActivity extends ActionBarActivity {
 		 * Load Chat from DB
 		 */
 		mAdapter = new ChatMessagesAdapter(buddyJid, currentJid, action, id);
-		/*if (mAdapter.getCount() == 0) {
-			// Sync with API
-			// showProgress(true);
-			listView.setVisibility(View.GONE);
-			mGetMessagesApi = new APIGetMessages();
-			mGetMessagesApi.getMessages(StringUtils.parseName(buddyJid),
-					mAdapter.getCount(), 25);
-
-		} else {
-			showProgress(false);
-			listView.setAdapter(mAdapter);
-			if (listView.getVisibility() != View.VISIBLE) {
-				listView.setVisibility(View.VISIBLE);
-			}
-
-			scrollToBottom();
-		}*/
 		mGetMessagesApi = new APIGetMessages();
 		mGetMessagesApi.getMessages(StringUtils.parseName(buddyJid),
 				mAdapter.getCount(), 25);

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,7 @@ public class GroupFriendsSelectionAdapter extends BaseAdapter implements
 	public static ArrayList<RosterModel> rosterModelCollection;
 	private ArrayList<RosterModel> rosterModelCollectionCopy;
 	private ValueFilter valueFilter;
+	private final static String TAG = "GroupFriendsSelectionAdapter";
 
 	public GroupFriendsSelectionAdapter() {
 		this.context = TChatApplication.getContext();
@@ -81,8 +83,12 @@ public class GroupFriendsSelectionAdapter extends BaseAdapter implements
 				@Override
 				public void onCheckedChanged(CompoundButton buttonView,
 						boolean isChecked) {
-					final RosterModel rosterModel = (RosterModel) vH.checkMark.getTag();
+					final RosterModel rosterModel = (RosterModel) vH.checkMark
+							.getTag();
 					rosterModel.setSelected(buttonView.isChecked());
+					
+					Log.d(TAG, "Model status: " + rosterModel.name
+							+ " Selection: " + rosterModel.isSelected());
 				}
 			});
 			row.setTag(holder);
@@ -93,9 +99,11 @@ public class GroupFriendsSelectionAdapter extends BaseAdapter implements
 			((GroupFriendsSelectionViewHolder) row.getTag()).checkMark
 					.setTag(rosterModelCollection.get(position));
 		}
-		
-		GroupFriendsSelectionViewHolder mHolder = (GroupFriendsSelectionViewHolder) row.getTag();
-		mHolder.checkMark.setChecked(rosterModelCollection.get(position).isSelected());
+
+		GroupFriendsSelectionViewHolder mHolder = (GroupFriendsSelectionViewHolder) row
+				.getTag();
+		mHolder.checkMark.setChecked(rosterModelCollection.get(position)
+				.isSelected());
 
 		String[] username = rosterModel.user.split("@");
 		try {

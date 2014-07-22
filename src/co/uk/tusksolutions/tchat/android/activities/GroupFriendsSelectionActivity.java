@@ -5,8 +5,11 @@ import java.util.ArrayList;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
@@ -16,9 +19,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.adapters.GroupFriendsSelectionAdapter;
@@ -26,7 +29,7 @@ import co.uk.tusksolutions.tchat.android.models.RosterModel;
 import co.uk.tusksolutions.tchat.android.tasks.CreateMUCAsyncTask;
 
 public class GroupFriendsSelectionActivity extends ActionBarActivity implements
-		TextWatcher, CreateMUCAsyncTask.OnCreateMUCListener{
+		TextWatcher, CreateMUCAsyncTask.OnCreateMUCListener {
 
 	public EditText searchInput;
 	public static ListView listView;
@@ -42,7 +45,7 @@ public class GroupFriendsSelectionActivity extends ActionBarActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.activity_group_chat);
+		setContentView(R.layout.activity_group_friends_selection);
 		actionBar = getSupportActionBar();
 		actionBar.setHomeButtonEnabled(true);
 		actionBar.setDisplayHomeAsUpEnabled(true);
@@ -64,9 +67,7 @@ public class GroupFriendsSelectionActivity extends ActionBarActivity implements
 		listView.setVerticalScrollBarEnabled(false);
 		listView.setHorizontalScrollBarEnabled(false);
 		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-
 		mAdapter = new GroupFriendsSelectionAdapter();
-		mSelectedUserModel = new ArrayList<RosterModel>();
 		listView.setAdapter(mAdapter);
 
 		scrollToTop();
@@ -141,17 +142,77 @@ public class GroupFriendsSelectionActivity extends ActionBarActivity implements
 			finish();
 			break;
 		case R.id.submit_next:
-			Toast.makeText(GroupFriendsSelectionActivity.this,
-					"implementing group chat...", Toast.LENGTH_SHORT).show();
-			String roomName = TChatApplication.getUserModel().getUsername()
-					+ "_" + System.currentTimeMillis();
-			
-	new CreateMUCAsyncTask(GroupFriendsSelectionActivity.this, roomName,mSelectedUserModel , listView,this).execute();
+
+			if (searchInputCleared()) {
+				
+				Handler handler = new Handler();
+				handler.postDelayed(new Runnable() {
+					@Override
+					public void run() {
+						handleSelection();
+
+					}
+				}, 100);
+			}
+
 			break;
 		default:
 			break;
 		}
 		return true;
+	}
+
+	private boolean searchInputCleared() {
+		searchInput.setText("");
+		mAdapter.getFilter().filter(searchInput.getText().toString());
+
+		if (searchInput.length() == 0) {
+			return true;
+		}
+		return false;
+	}
+
+	private void handleSelection() {
+		ArrayList<RosterModel> totalSelectedModel = new ArrayList<RosterModel>();
+
+		for (RosterModel selectedModel : GroupFriendsSelectionAdapter.rosterModelCollection) {
+			if (selectedModel.isSelected()) {
+				totalSelectedModel.add(selectedModel);
+			}
+		}
+
+		/** Check if we need to create a group or a normal conversation **/
+		if (totalSelectedModel.size() > 1) {
+			hideKeyboard();
+			// Create group as we have selected more than one person
+
+			String roomName = TChatApplication.getUserModel().getUsername()
+					+ "_" + System.currentTimeMillis();
+
+			new CreateMUCAsyncTask(GroupFriendsSelectionActivity.this,
+					roomName, totalSelectedModel, this).execute();
+
+		} else if (totalSelectedModel.size() == 1) {
+			// Start a normal conversation as we only selected one person
+			hideKeyboard();
+
+			Bundle b = new Bundle();
+			b.putString("buddyJid", totalSelectedModel.get(0).user);
+			b.putString("friendName", totalSelectedModel.get(0).name);
+
+			Intent intent = new Intent(TChatApplication.getContext(),
+					ChatActivity.class);
+			intent.putExtra("chatWithFriendBundle", b);
+			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			TChatApplication.getContext().startActivity(intent);
+		} else {
+			Log.d(TAG, "No selection made");
+		}
+	}
+
+	public void hideKeyboard() {
+		InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.hideSoftInputFromWindow(searchInput.getWindowToken(), 0);
 	}
 
 	@Override
@@ -160,20 +221,17 @@ public class GroupFriendsSelectionActivity extends ActionBarActivity implements
 
 	}
 
-	
 	@Override
 	public void onCreateMUCFailed(boolean alreadyExists, String message) {
 		// TODO Auto-generated method stub
-		
-
-		
+		Log.v("Create Room Error", message);
 	}
 
 	@Override
 	public void onCreateMUCSuccess(String room) {
 		// TODO Auto-generated method stub
-		Log.v("Create Room Succes","Successfully create room  "+room);
-		
+		Log.v("Create Room Succes", "Successfully create room  " + room);
+
 	}
 
 }

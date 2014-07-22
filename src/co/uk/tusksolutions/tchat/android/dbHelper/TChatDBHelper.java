@@ -71,28 +71,39 @@ public class TChatDBHelper extends SQLiteOpenHelper {
 	public static final String R_MESSAGE_ID = "mid";
 	public static final String R_IS_READ = "isRead";
 	public static final String R_TIMESTAMP = "time_stamp";
-	
-	
+
 	/*
 	 * Groups table definition
 	 */
-	public static final String G_UID="_id";
-	public static final String G_USER_ID="user_id";
-	public static final String G_GROUP_ID="group_id";
-	public static final String G_GROUP_NAME="group_name";
-	
-	
-	
-	/* information for the muc table */
-    String MUC_TABLE_NAME                       = "rooms";
-    String KEY_MUC_ROOM_NAME                    = "roomName";
-    String KEY_MUC_ROOM_JID                     = "roomJID";
-    String KEY_MUC_PASSWORD                     = "roomPassword";
-    String KEY_MUC_ICON_URI                     = "roomIconUri";
+	public static final String G_UID = "_id";
+	public static final String G_GROUP_ID = "group_id";
+	public static final String G_ADMIN = "group_admin";
+	public static final String G_GROUP_NAME = "group_name";
+	public static final String G_PARTICIPANTS = "participants";
+	public static final String G_TIMESTAMP = "time_stamp";
 
-    String MUC_PARTICIPANTS_TABLE_NAME          = "mucParticipants";
-    String KEY_MUC_PARTICIPANTS_ROOM_JID        = "roomJID";
-    String KEY_MUC_PARTICIPANTS_USER_JID        = "roomBuddyJID";
+	/*
+	 * Groups message table definition
+	 */
+	public static final String GM_UID = "_id";
+	public static final String GM_GROUP_ID = "group_id";
+	public static final String GM_SENDER = "sender";
+	public static final String GM_RECEIVER = "receiver";
+	public static final String GM_MESSAGE = "message";
+	public static final String GM_MESSAGE_ID = "mid";
+	public static final String GM_IS_READ = "isRead";
+	public static final String GM_TIMESTAMP = "time_stamp";
+
+	/* information for the muc table */
+	String MUC_TABLE_NAME = "rooms";
+	String KEY_MUC_ROOM_NAME = "roomName";
+	String KEY_MUC_ROOM_JID = "roomJID";
+	String KEY_MUC_PASSWORD = "roomPassword";
+	String KEY_MUC_ICON_URI = "roomIconUri";
+
+	String MUC_PARTICIPANTS_TABLE_NAME = "mucParticipants";
+	String KEY_MUC_PARTICIPANTS_ROOM_JID = "roomJID";
+	String KEY_MUC_PARTICIPANTS_USER_JID = "roomBuddyJID";
 
 	public TChatDBHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -152,16 +163,30 @@ public class TChatDBHelper extends SQLiteOpenHelper {
 			+ R_MESSAGE_ID + " varchar(255) DEFAULT NULL," + R_IS_READ
 			+ " varchar(11)  DEFAULT NULL," + R_TIMESTAMP
 			+ " varchar(255) DEFAULT NULL);";
-	
+
 	/*
-	 * Groups table schema definition
+	 * Chat messages table schema definition
 	 */
-	
 	private static final String CREATE_GROUPS_TABLE = "CREATE TABLE "
 			+ GROUPS_TABLE + " ( " + G_UID
 			+ " INTEGER PRIMARY KEY AUTOINCREMENT," + G_GROUP_ID
-			+ " varchar(255) UNIQUE," + G_GROUP_NAME
-			+ " varchar(255)," + G_USER_ID + " varchar(255) DEFAULT NULL);";
+			+ " varchar(255) UNIQUE," + G_ADMIN + " varchar(255) DEFAULT NULL,"
+			+ G_GROUP_NAME + " varchar(255) DEFAULT NULL," + G_PARTICIPANTS
+			+ " blob," + G_TIMESTAMP + " varchar(255) DEFAULT NULL);";
+
+	/*
+	 * Groups table schema definition
+	 */
+
+	private static final String CREATE_GROUPS_MESSAGE_TABLE = "CREATE TABLE "
+			+ CHAT_MESSAGES_TABLE + " ( " + GM_UID
+			+ " INTEGER PRIMARY KEY AUTOINCREMENT," + GM_GROUP_ID
+			+ " varchar(255) DEFAULT NULL," + GM_SENDER
+			+ "varchar(255) DEFAULT NULL," + GM_RECEIVER
+			+ "varchar(255) DEFAULT NULL," + GM_MESSAGE + "blob,"
+			+ GM_MESSAGE_ID + "	varchar(255) DEFAULT NULL," + GM_IS_READ
+			+ " varchar(1) DEFAULT NULL," + GM_TIMESTAMP
+			+ "	varchar(255) DEFAULT NULL);";
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
@@ -171,6 +196,7 @@ public class TChatDBHelper extends SQLiteOpenHelper {
 			db.execSQL(CREATE_CHAT_MESSAGES_TABLE);
 			db.execSQL(CREATE_RECENTS_MESSAGES_TABLE);
 			db.execSQL(CREATE_GROUPS_TABLE);
+			db.execSQL(CREATE_GROUPS_MESSAGE_TABLE);
 		} catch (SQLException e) {
 
 			e.printStackTrace();

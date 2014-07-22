@@ -6,7 +6,6 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.jivesoftware.smack.Connection;
-import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smackx.muc.MultiUserChat;
 
@@ -15,7 +14,6 @@ import android.util.Log;
 import android.widget.Toast;
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
-import co.uk.tusksolutions.tchat.android.listeners.XmppConnectionChangeListener;
 import co.uk.tusksolutions.tchat.android.listeners.XmppMucInvitationListener;
 
 public class XmppMuc {
@@ -31,32 +29,37 @@ public class XmppMuc {
 
 	}
 
-	public void registerListener(Connection connection) {
-		XmppConnectionChangeListener listener = new XmppConnectionChangeListener() {
-			public void newConnection(XMPPConnection connection) {
+	/*
+	 * public void registerListener(Connection connection) {
+	 * XmppConnectionChangeListener listener = new
+	 * XmppConnectionChangeListener() { public void newConnection(XMPPConnection
+	 * connection) {
+	 * 
+	 * // clear the roomNumbers and room ArrayList as we have a new //
+	 * connection mRooms.clear();
+	 * 
+	 * // removed from here } };
+	 * 
+	 * }
+	 */
 
-				// clear the roomNumbers and room ArrayList as we have a new
-				// connection
-				mRooms.clear();
+	public void mucServiceDiscovery() {
+		mRooms.clear();
+		try {
+			Collection<String> mucComponents = MultiUserChat
+					.getServiceNames(TChatApplication.connection);
+			if (mucComponents.size() > 0) {
+				Iterator<String> i = mucComponents.iterator();
 
-				try {
-					Collection<String> mucComponents = MultiUserChat
-							.getServiceNames(connection);
-					if (mucComponents.size() > 0) {
-						Iterator<String> i = mucComponents.iterator();
-
-					}
-				} catch (XMPPException e) {
-					// This is not fatal, just log a warning
-					Log.v("TAG", "Could not discover local MUC component: ");
-				}
-
-				Log.d("XmppMUC", "Register a listener for Room invitations!");
-				MultiUserChat.addInvitationListener(connection,
-						new XmppMucInvitationListener(context));
 			}
-		};
+		} catch (XMPPException e) {
+			// This is not fatal, just log a warning
+			Log.v("TAG", "Could not discover local MUC component: ");
+		}
 
+		Log.d("XmppMUC", "Register a listener for Room invitations!");
+		MultiUserChat.addInvitationListener(TChatApplication.connection,
+				new XmppMucInvitationListener(context));
 	}
 
 	public static XmppMuc getInstance(Context ctx) {
@@ -94,23 +97,22 @@ public class XmppMuc {
 		}
 
 		try {
-			//multiUserChat.create(nickname);
+			// multiUserChat.create(nickname);
 			multiUserChat.join(nickname);
-		} 
-		catch (Exception e) {
+		} catch (Exception e) {
 			Log.e(TAG, "MUC creation failed: ");
 			e.printStackTrace();
 			throw new XMPPException("MUC creation failed for " + nickname
 					+ ": " + e.getLocalizedMessage(), e);
-			
+
 		}
 		try {
 			// We send an empty configuration to the server. For some reason the
 			// server doesn't accept or process our
 			// completed form, so we just send an empty one. The server defaults
 			// will be used which are fine.
-			//multiUserChat.sendConfigurationForm(new Form(Form.TYPE_SUBMIT));
-			multiUserChat.changeSubject(roomName);			
+			// multiUserChat.sendConfigurationForm(new Form(Form.TYPE_SUBMIT));
+			multiUserChat.changeSubject(roomName);
 
 		} catch (XMPPException e1) {
 			Log.d(e1.toString(),
@@ -145,13 +147,6 @@ public class XmppMuc {
 			throws XMPPException {
 		MultiUserChat muc;
 
-		// String roomJID = MyRoom.getRoomJIDFromRoomName(context, roomName);
-		/*
-		 * if(roomJID.contains("@conference.uat.yookoschat.com"))
-		 * roomJID=roomJID
-		 * .replace("@conference.uat.yookoschat.com","")+"_"+System
-		 * .currentTimeMillis()+"@uat.yookoschat.com";
-		 */
 		if (!mRooms.containsKey(roomJID)) {
 			muc = CreateRoom(roomName, roomJID, nickname, password);
 			mRooms.put(roomJID, muc);
@@ -164,13 +159,6 @@ public class XmppMuc {
 			muc.invite(buddyJID, String.format(
 					context.getString(R.string.inviteNewBuddyToRoomMessage),
 					roomName));
-
-			/*
-			 * Collection<Occupant> occupants = muc.getParticipants(); for
-			 * (Occupant occupant : occupants) { if
-			 * (occupant.getJid().startsWith(buddyJID)) { muc.invite(buddyJID,
-			 * "Invitation to " + roomName); break; } }
-			 */
 		}
 
 		return muc;

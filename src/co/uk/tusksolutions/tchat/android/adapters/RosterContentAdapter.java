@@ -1,6 +1,7 @@
 package co.uk.tusksolutions.tchat.android.adapters;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import android.content.Context;
 import android.content.Intent;
@@ -43,8 +44,7 @@ public class RosterContentAdapter extends BaseAdapter implements Filterable {
 		 * action is an integer of what data TO_USER query. 1 = All Friends
 		 * (queryAll()) 2 = Online Friends (queryOnline())
 		 */
-		
-		
+
 		this.action = action;
 
 		switch (action) {
@@ -161,8 +161,6 @@ public class RosterContentAdapter extends BaseAdapter implements Filterable {
 		return row;
 	}
 
-	
-	
 	private void doSelectionAnimationForView(View v) {
 		Animation fadeAnimation = new AlphaAnimation(DEFAULT_ALPHA,
 				SELECTED_ALPHA);
@@ -175,65 +173,70 @@ public class RosterContentAdapter extends BaseAdapter implements Filterable {
 		// TODO Auto-generated method stub
 		Filter filter = new Filter() {
 
-            @SuppressWarnings("unchecked")
-            @Override
-            protected void publishResults(CharSequence constraint, FilterResults results) {
+			@SuppressWarnings("unchecked")
+			@Override
+			protected void publishResults(CharSequence constraint,
+					FilterResults results) {
 
-                rosterModelCollection = (ArrayList<RosterModel>) results.values;
-                notifyDataSetChanged();
-            }
+				rosterModelCollection = (ArrayList<RosterModel>) results.values;
+				notifyDataSetChanged();
+			}
 
-            @Override
-            protected FilterResults performFiltering(CharSequence constraint) {
+			@Override
+			protected FilterResults performFiltering(CharSequence constraint) {
 
-                FilterResults results = new FilterResults();
-                ArrayList<RosterModel> FilteredArrayNames = new ArrayList<RosterModel>();
+				FilterResults results = new FilterResults();
+				ArrayList<RosterModel> FilteredArrayNames = new ArrayList<RosterModel>();
 
-                if (rosterModelCollection == null)    {
-                	rosterModelCollection = new ArrayList<RosterModel>(rosterModelCollection);
-                   
-                }
-                if (constraint == null || constraint.length() == 0) {
-                    results.count = rosterModelCollection.size();
-                    results.values = rosterModelCollection;
-                } else {
-                    constraint = constraint.toString().toLowerCase();
-                    for (int i = 0; i < rosterModelCollection.size(); i++) {
-                        String dataNames = rosterModelCollection.get(i).name;
-                        String dataUser=rosterModelCollection.get(i).user;
-                        String datastatus=rosterModelCollection.get(i).status;
-                        String presenceStatus = rosterModelCollection.get(i).presenceStatus;
-                		String presenceType = rosterModelCollection.get(i).presenceType;
-                		String lastSeenTimestamp = rosterModelCollection.get(i).lastSeenTimestamp;
-                		String resourceName = rosterModelCollection.get(i).resourceName;
-                        if (dataNames.toLowerCase().contains(constraint.toString())||dataUser.toLowerCase().contains(constraint.toString()))  {
-                            //FilteredArrayNames.add(dataNames);
-                        	RosterModel rosterModel = new RosterModel();
-                        	rosterModel.name=dataNames;
-                        	rosterModel.user=dataUser;
-                        	rosterModel.status=datastatus;
-                        	rosterModel.presenceStatus=presenceStatus;
-                        	rosterModel.presenceType=presenceType;
-                        	rosterModel.lastSeenTimestamp=lastSeenTimestamp;
-                        	rosterModel.resourceName=resourceName;
-                        	FilteredArrayNames.add(rosterModel);
-                        }
-                    }
+				if (rosterModelCollection == null) {
+					rosterModelCollection = new ArrayList<RosterModel>(
+							rosterModelCollection);
 
-                    results.count = FilteredArrayNames.size();
-                    System.out.println(results.count);
+				}
+				if (constraint == null || constraint.length() == 0) {
+					results.count = rosterModelCollection.size();
+					results.values = rosterModelCollection;
+				} else {
+					constraint = constraint.toString().toLowerCase(
+							Locale.ENGLISH);
+					// TODO Refactor this call
+					for (int i = 0; i < rosterModelCollection.size(); i++) {
+						String dataNames = rosterModelCollection.get(i).name;
+						String dataUser = rosterModelCollection.get(i).user;
+						String datastatus = rosterModelCollection.get(i).status;
+						String presenceStatus = rosterModelCollection.get(i).presenceStatus;
+						String presenceType = rosterModelCollection.get(i).presenceType;
+						String lastSeenTimestamp = rosterModelCollection.get(i).lastSeenTimestamp;
+						String resourceName = rosterModelCollection.get(i).resourceName;
+						if (dataNames.toLowerCase(Locale.ENGLISH).contains(
+								constraint.toString())
+								|| dataUser.toLowerCase(Locale.ENGLISH)
+										.contains(constraint.toString())) {
+							// FilteredArrayNames.add(dataNames);
+							RosterModel rosterModel = new RosterModel();
+							rosterModel.name = dataNames;
+							rosterModel.user = dataUser;
+							rosterModel.status = datastatus;
+							rosterModel.presenceStatus = presenceStatus;
+							rosterModel.presenceType = presenceType;
+							rosterModel.lastSeenTimestamp = lastSeenTimestamp;
+							rosterModel.resourceName = resourceName;
+							FilteredArrayNames.add(rosterModel);
+						}
+					}
 
-                    results.values = FilteredArrayNames;
-                    Log.e("VALUES", results.values.toString());
-                }
+					results.count = FilteredArrayNames.size();
+					System.out.println(results.count);
 
-                return results;
-            }
-        };
+					results.values = FilteredArrayNames;
+					Log.e("VALUES", results.values.toString());
+				}
 
-        return filter;
-    }
-	
-	
-	
+				return results;
+			}
+		};
+
+		return filter;
+	}
+
 }
