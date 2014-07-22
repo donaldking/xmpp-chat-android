@@ -13,9 +13,9 @@ import android.os.Parcelable;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.dbHelper.TChatDBHelper;
 
-public class GroupUserModel implements Parcelable {
+public class GroupsModel implements Parcelable {
 
-	final static String TAG = "GroupUserModel";
+	final static String TAG = "GroupsModel";
 	private String TABLE = TChatDBHelper.GROUPS_TABLE;
 	public String group_id;
 	public String participants;
@@ -23,7 +23,7 @@ public class GroupUserModel implements Parcelable {
 
 	SQLiteDatabase db;
 
-	public GroupUserModel() {
+	public GroupsModel() {
 
 	}
 
@@ -54,9 +54,9 @@ public class GroupUserModel implements Parcelable {
 		return true;
 	}
 
-	public ArrayList<GroupUserModel> queryGroups() {
+	public ArrayList<GroupsModel> queryGroups() {
 
-		ArrayList<GroupUserModel> groupsModelCollection = new ArrayList<GroupUserModel>();
+		ArrayList<GroupsModel> groupsModelCollection = new ArrayList<GroupsModel>();
 
 		Cursor cursor = TChatApplication.getTChatDBReadable().query(TABLE,
 				null, null, null, null, null, null);
@@ -68,13 +68,22 @@ public class GroupUserModel implements Parcelable {
 
 		return groupsModelCollection;
 	}
+	
+	public boolean deleteGroups() {
 
-	protected GroupUserModel fromCursor(Cursor cursor) {
+		db = TChatApplication.getTChatDBWritable();
+		db.delete(TChatDBHelper.GROUPS_TABLE, null, null);
+		db.close();
+
+		return true;
+	}
+
+	protected GroupsModel fromCursor(Cursor cursor) {
 		/*
 		 * Pulls the values fromUser the cursor object and returns it TO_USER
 		 * the caller
 		 */
-		GroupUserModel groupsModel = new GroupUserModel();
+		GroupsModel groupsModel = new GroupsModel();
 		groupsModel.group_id = cursor.getString(cursor
 				.getColumnIndex(TChatDBHelper.G_GROUP_ID));
 		groupsModel.group_name = cursor.getString(cursor
@@ -99,18 +108,18 @@ public class GroupUserModel implements Parcelable {
 
 	}
 
-	public static final Parcelable.Creator<GroupUserModel> CREATOR = new Parcelable.Creator<GroupUserModel>() {
-		public GroupUserModel createFromParcel(Parcel in) {
-			return new GroupUserModel(in);
+	public static final Parcelable.Creator<GroupsModel> CREATOR = new Parcelable.Creator<GroupsModel>() {
+		public GroupsModel createFromParcel(Parcel in) {
+			return new GroupsModel(in);
 		}
 
-		public GroupUserModel[] newArray(int size) {
-			return new GroupUserModel[size];
+		public GroupsModel[] newArray(int size) {
+			return new GroupsModel[size];
 		}
 	};
 
 	/** recreate object fromUser parcel */
-	protected GroupUserModel(Parcel in) {
+	protected GroupsModel(Parcel in) {
 		this.group_id = in.readString();
 		this.group_name = in.readString();
 		this.participants = in.readString();

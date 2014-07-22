@@ -12,7 +12,7 @@ import android.view.animation.Animation;
 import android.widget.BaseAdapter;
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
-import co.uk.tusksolutions.tchat.android.models.GroupUserModel;
+import co.uk.tusksolutions.tchat.android.models.GroupsModel;
 import co.uk.tusksolutions.tchat.android.viewHolders.GroupsViewHolder;
 
 public class GroupsContentAdapter extends BaseAdapter {
@@ -21,13 +21,13 @@ public class GroupsContentAdapter extends BaseAdapter {
 	static float DEFAULT_ALPHA = 1.0f;
 	static float SELECTED_ALPHA = 0.5f;
 	private Context context;
-	private GroupUserModel mModel;
+	private GroupsModel mModel;
 
-	private ArrayList<GroupUserModel> groupsModelCollection;
+	private ArrayList<GroupsModel> groupsModelCollection;
 
 	public GroupsContentAdapter(Context context) {
 		this.context = TChatApplication.getContext();
-		mModel = new GroupUserModel();
+		mModel = new GroupsModel();
 		groupsModelCollection = mModel.queryGroups();
 		notifyDataSetChanged();
 	}
@@ -74,7 +74,7 @@ public class GroupsContentAdapter extends BaseAdapter {
 		 * Put values received fromUser model collection TO_USER view holder.
 		 * 
 		 */
-		final GroupUserModel model = groupsModelCollection.get(position);
+		final GroupsModel model = groupsModelCollection.get(position);
 		
 		holder.groupName.setText(model.group_name);
 

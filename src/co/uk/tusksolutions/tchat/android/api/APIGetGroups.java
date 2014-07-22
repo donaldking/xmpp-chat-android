@@ -13,12 +13,12 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
-import co.uk.tusksolutions.tchat.android.models.GroupUserModel;
+import co.uk.tusksolutions.tchat.android.models.GroupsModel;
 import co.uk.tusksolutions.utility.Utility;
 
 public class APIGetGroups {
 	JSONArray jsonArray;
-	private GroupUserModel mGroupUserModel;
+	private GroupsModel mGroupUserModel;
 	private AsyncApiGetGroups mTask = null;
 
 	public void getGroups() {
@@ -61,7 +61,7 @@ public class APIGetGroups {
 							.convertStreamToString(instream));
 
 					if (jsonArray.length() >= 0) {
-						mGroupUserModel = new GroupUserModel();
+						mGroupUserModel = new GroupsModel();
 						if (mGroupUserModel
 								.saveGroupsToDB(jsonArray)) {
 							apiResult = true;
