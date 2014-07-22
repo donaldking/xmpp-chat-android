@@ -9,8 +9,10 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.fragments.ChatRoomsFragment;
@@ -140,14 +142,9 @@ public class MainActivity extends ActionBarActivity implements
 		// For each of the sections in the app, add a tab TO_USER the action
 		// bar.
 		for (int i = 0; i < mSectionsPagerAdapter.getCount(); i++) {
-			actionBar.addTab(actionBar
-					.newTab()
-					.setText(
-							mSectionsPagerAdapter.getItem(i).getArguments()
-									.getString("title"))
-					.setIcon(
-							mSectionsPagerAdapter.getItem(i).getArguments()
-									.getInt("icon"))
+		
+			actionBar.addTab(actionBar.newTab().setText(mSectionsPagerAdapter.getItem(i).getArguments().getString("title"))
+					.setIcon(mSectionsPagerAdapter.getItem(i).getArguments().getInt("icon"))
 
 					.setTabListener(this));
 		}
@@ -253,4 +250,5 @@ public class MainActivity extends ActionBarActivity implements
 		}
 	}
 
+	
 }

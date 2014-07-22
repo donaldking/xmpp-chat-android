@@ -1,15 +1,17 @@
 package co.uk.tusksolutions.tchat.android.fragments;
 
 import co.uk.tusksolutions.tchat.android.R;
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 public class ChatRoomsFragment extends Fragment {
-	
-	
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -28,11 +30,28 @@ public class ChatRoomsFragment extends Fragment {
 
 		return rootView;
 	}
-	
+
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onActivityCreated(savedInstanceState);
-	 
+
 	}
+
+	@Override
+	public void onAttach(Activity activity) {
+		// TODO Auto-generated method stub
+		super.onAttach(activity);
+		setHasOptionsMenu(true);
+	}
+
+	@Override
+	public void onPrepareOptionsMenu(Menu menu) {
+		// TODO Auto-generated method stub
+		getActivity().invalidateOptionsMenu();
+		MenuItem filter = menu.findItem(R.id.action_settings);
+
+		filter.setVisible(false);
+	}
+
 }

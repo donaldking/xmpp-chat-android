@@ -3,10 +3,16 @@ package co.uk.tusksolutions.tchat.android.fragments;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.Activity;
+import android.app.AppOpsManager.OnOpChangedListener;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
@@ -33,7 +39,7 @@ public class GroupsFragment extends Fragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		setHasOptionsMenu(true);
 		/**
 		 * Load Groups fromUser DB
 		 */
@@ -144,6 +150,22 @@ public class GroupsFragment extends Fragment {
 
 			listView.setSelectionFromTop(lastViewedPosition, topOffset);
 		}
+	}
+
+	@Override
+	public void onAttach(Activity activity) {
+		// TODO Auto-generated method stub
+		super.onAttach(activity);
+		setHasOptionsMenu(true);
+	}
+
+	@Override
+	public void onPrepareOptionsMenu(Menu menu) {
+		// TODO Auto-generated method stub
+		getActivity().invalidateOptionsMenu();
+		MenuItem filter = menu.findItem(R.id.action_settings);
+
+		filter.setVisible(false);
 	}
 
 }
