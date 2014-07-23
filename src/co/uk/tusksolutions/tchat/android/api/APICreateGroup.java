@@ -1,20 +1,18 @@
 package co.uk.tusksolutions.tchat.android.api;
 
-import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONArray;
+import org.apache.http.message.BasicNameValuePair;
 
 import android.os.AsyncTask;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
-import co.uk.tusksolutions.utility.Utility;
 
 public class APICreateGroup {
-	JSONArray jsonArray;
 	
 	String group_id;
 	String group_name;
@@ -46,37 +44,27 @@ public class APICreateGroup {
 
 			boolean apiResult = false;
 
-			HttpGet request = new HttpGet(Constants.HTTP_SCHEME
-					+ Constants.CURRENT_SERVER + Constants.CREATE_GROUP
-					+ "?group_id="
-					+ group_id+"&group_name="
-					+group_name+"&admin_name="
-					+admin_name+"&password="
-					+password);
+			HttpPost httpPost = new HttpPost(Constants.HTTP_SCHEME
+					+ Constants.CURRENT_SERVER
+					+ Constants.CREATE_GROUP_ENDPOINT);
 
 			HttpClient httpclient = new DefaultHttpClient();
-			HttpResponse response;
 
 			try {
-				response = httpclient.execute(request);
-				HttpEntity entity = response.getEntity();
 
-				if (entity != null) {
-					// JSON Response Read
-					InputStream instream = entity.getContent();
-					Utility utility = new Utility();
-					jsonArray = utility.convertToJSON(utility
-							.convertStreamToString(instream));
+				List<BasicNameValuePair> postParams = new ArrayList<BasicNameValuePair>();
+				postParams.add(new BasicNameValuePair("group_id", group_id));
+				postParams
+						.add(new BasicNameValuePair("group_name", group_name));
+				postParams
+						.add(new BasicNameValuePair("admin_name", admin_name));
+				postParams.add(new BasicNameValuePair("password", password));
+				httpPost.setEntity(new UrlEncodedFormEntity(postParams));
 
-					if (jsonArray.length() >= 0) {
-						
-							apiResult = true;
-						
+				httpclient.execute(httpPost);
 
-					} else {
-						apiResult = false;
-					}
-				}
+				apiResult = true;
+
 			} catch (Exception e) {
 				apiResult = false;
 			}
@@ -88,9 +76,9 @@ public class APICreateGroup {
 			mTask = null;
 
 			if (result) {
-				
+
 			} else {
-				
+
 			}
 		}
 

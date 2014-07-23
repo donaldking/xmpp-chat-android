@@ -39,7 +39,7 @@ public class CreateMUCAsyncTask extends AsyncTask<Void, Void, Boolean> {
 		progressDialog = ProgressDialog.show(context, "", "Please wait...");
 		super.onPreExecute();
 
-		progressDialog.setMessage("Creating Room...");
+		progressDialog.setMessage("Creating Group...");
 		progressDialog.show();
 		progressDialog.setCancelable(false);
 
