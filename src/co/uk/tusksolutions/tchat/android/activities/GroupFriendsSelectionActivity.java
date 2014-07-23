@@ -29,6 +29,7 @@ import android.widget.ListView;
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.adapters.GroupFriendsSelectionAdapter;
+import co.uk.tusksolutions.tchat.android.api.APICreateGroup;
 import co.uk.tusksolutions.tchat.android.models.RosterModel;
 import co.uk.tusksolutions.tchat.android.tasks.CreateMUCAsyncTask;
 
@@ -233,6 +234,7 @@ public class GroupFriendsSelectionActivity extends ActionBarActivity implements
 	@Override
 	public void onCreateMUCSuccess(String room, String roomJid,
 			ArrayList<RosterModel> participantsList) {
+		String password="";
 
 		StringBuilder group_name = new StringBuilder();
 		String group_admin = TChatApplication.getCurrentJid();
@@ -262,11 +264,21 @@ public class GroupFriendsSelectionActivity extends ActionBarActivity implements
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
+		
+		try {
+			APICreateGroup apiCreateGroup=new APICreateGroup();
+			apiCreateGroup.doPostGroup(room, group_name.toString(), group_admin, password);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 
 		String jsonStr = Obj.toString();
 		if (TChatApplication.getGroupsModel().saveCreatedRoomInDB(room,
 				group_name.toString(), group_admin, jsonStr)) {
 
+			
 			Bundle b = new Bundle();
 			b.putString("roomJid", roomJid);
 			b.putString("roomName", group_name.toString());
@@ -276,6 +288,7 @@ public class GroupFriendsSelectionActivity extends ActionBarActivity implements
 			intent.putExtra("groupChatToRoomBundle", b);
 			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			TChatApplication.getContext().startActivity(intent);
+			
 		}
 	}
 
