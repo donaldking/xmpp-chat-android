@@ -21,6 +21,8 @@ public class ChatMessagesModel implements Parcelable {
 	public String objectId;
 	public String sender;
 	public String receiver;
+	public int isGroupMessage;
+	public String messageType;
 	public String message;
 	public String mid;
 	public String isRead;
@@ -39,7 +41,7 @@ public class ChatMessagesModel implements Parcelable {
 		Log.i(TAG, "Chat Message insert complete! send BroadCast!");
 		Intent i = new Intent();
 		i.putExtra("id", id);
-		i.setAction(Constants.CHAT_MESSAGE_READY);
+		i.setAction(Constants.MESSAGE_READY);
 		TChatApplication.getContext().sendBroadcast(i);
 	}
 
@@ -62,6 +64,10 @@ public class ChatMessagesModel implements Parcelable {
 						messageObject.getString("sender"));
 				contentValues.put(TChatDBHelper.CM_RECEIVER,
 						messageObject.getString("receiver"));
+				contentValues.put(TChatDBHelper.CM_IS_GROUP_MESSAGE,
+						messageObject.getString("isGroupMessage"));
+				contentValues.put(TChatDBHelper.CM_MESSAGE_TYPE,
+						messageObject.getString("messageType"));
 				contentValues.put(TChatDBHelper.CM_MESSAGE,
 						messageObject.getString("message"));
 				contentValues.put(TChatDBHelper.CM_MESSAGE_ID,
@@ -87,7 +93,8 @@ public class ChatMessagesModel implements Parcelable {
 	}
 
 	public boolean saveMessageToDB(String to, String from, String buddyName,
-			String message, long timeStamp, int isRead) {
+			String message, boolean isGroupMessage, String messageType,
+			long timeStamp, int isRead) {
 
 		db = TChatApplication.getTChatDBWritable();
 
@@ -105,14 +112,18 @@ public class ChatMessagesModel implements Parcelable {
 			// Insert
 			long id = db.insert(TABLE, null, contentValues);
 
+			/**
+			 * Check message type
+			 * 
+			 */
 			if (updateRecentsTable(to.equalsIgnoreCase(TChatApplication
 					.getCurrentJid()) ? from : to, message, timeStamp, isRead) == true) {
 
 				sendBroadcast(id);
 
 			} else {
-				if (saveToRecentsTable(to, from, buddyName, message, timeStamp,
-						isRead) == true) {
+				if (saveToRecentsTable(to, from, buddyName, message,
+						isGroupMessage, messageType, timeStamp, isRead) == true) {
 
 					sendBroadcast(id);
 				} else {
@@ -158,7 +169,8 @@ public class ChatMessagesModel implements Parcelable {
 	}
 
 	private boolean saveToRecentsTable(String to, String from,
-			String buddyName, String message, long timeStamp, int isRead) {
+			String buddyName, String message, boolean isGroupMessage,
+			String messageType, long timeStamp, int isRead) {
 		try {
 
 			ContentValues contentValues = new ContentValues();
@@ -169,6 +181,8 @@ public class ChatMessagesModel implements Parcelable {
 			contentValues.put(TChatDBHelper.R_NAME, buddyName);
 			contentValues.put(TChatDBHelper.R_SENDER, from);
 			contentValues.put(TChatDBHelper.R_RECEIVER, to);
+			contentValues.put(TChatDBHelper.R_IS_GROUP_MESSAGE, isGroupMessage);
+			contentValues.put(TChatDBHelper.R_MESSAGE_TYPE, messageType);
 			contentValues.put(TChatDBHelper.R_MESSAGE, message);
 			contentValues.put(TChatDBHelper.R_MESSAGE_ID, mid);
 			contentValues.put(TChatDBHelper.R_TIMESTAMP, timeStamp);
@@ -244,6 +258,11 @@ public class ChatMessagesModel implements Parcelable {
 				.getColumnIndex(TChatDBHelper.CM_RECEIVER));
 		chatMessageModel.sender = cursor.getString(cursor
 				.getColumnIndex(TChatDBHelper.CM_SENDER));
+
+		chatMessageModel.isGroupMessage = cursor.getInt(cursor
+				.getColumnIndex(TChatDBHelper.CM_IS_GROUP_MESSAGE));
+		chatMessageModel.messageType = cursor.getString(cursor
+				.getColumnIndex(TChatDBHelper.CM_MESSAGE_TYPE));
 		chatMessageModel.message = cursor.getString(cursor
 				.getColumnIndex(TChatDBHelper.CM_MESSAGE));
 		chatMessageModel.mid = cursor.getString(cursor
@@ -282,6 +301,8 @@ public class ChatMessagesModel implements Parcelable {
 		dest.writeString(objectId);
 		dest.writeString(receiver);
 		dest.writeString(sender);
+		dest.writeInt(isGroupMessage);
+		dest.writeString(messageType);
 		dest.writeString(message);
 		dest.writeString(mid);
 		dest.writeString(timeStamp);
@@ -303,6 +324,8 @@ public class ChatMessagesModel implements Parcelable {
 		this.objectId = in.readString();
 		this.receiver = in.readString();
 		this.sender = in.readString();
+		this.isGroupMessage = in.readInt();
+		this.messageType = in.readString();
 		this.message = in.readString();
 		this.mid = in.readString();
 		this.timeStamp = in.readString();

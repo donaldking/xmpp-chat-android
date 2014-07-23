@@ -107,14 +107,6 @@ public class XMPPConnectionManager {
 										public void run() { // Show who we are
 															// logged in as
 											/*
-											 * Toast.makeText(
-											 * TChatApplication.getContext(),
-											 * (String) TAG + " Logged in as: "
-											 * + TChatApplication.connection
-											 * .getUser(),
-											 * Toast.LENGTH_LONG).show();
-											 */
-											/*
 											 * Send login successful broadcast
 											 */
 											TChatApplication

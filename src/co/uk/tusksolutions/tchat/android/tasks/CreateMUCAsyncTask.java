@@ -51,7 +51,7 @@ public class CreateMUCAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
 		try {
 
-			XMPPMUCManager xMPPMUCManager = XMPPMUCManager.getInstance(context);
+			XMPPMUCManager xmppMucManager = XMPPMUCManager.getInstance(context);
 
 			 roomJID = roomName + "@conference."
 					+ Constants.CURRENT_SERVER;
@@ -59,7 +59,7 @@ public class CreateMUCAsyncTask extends AsyncTask<Void, Void, Boolean> {
 			for (int i = 0; i < friendArrayList.size(); i++) {
 				if (friendArrayList.get(i).isSelected()) {
 					String friendJID = friendArrayList.get(i).user;
-					xMPPMUCManager.inviteToRoom(roomName, TChatApplication
+					xmppMucManager.inviteToRoom(roomName, TChatApplication
 							.getUserModel().getUsername(), friendJID, "",
 							roomJID);
 				}

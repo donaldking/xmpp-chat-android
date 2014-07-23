@@ -13,6 +13,7 @@ import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.TChatApplication.CHAT_STATUS_ENUM;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
 import co.uk.tusksolutions.tchat.android.models.ChatMessagesModel;
+import co.uk.tusksolutions.tchat.android.xmpp.XMPPMUCManager;
 import co.uk.tusksolutions.tchat.android.xmpp.notifications.XMPPNotificationManager;
 
 public class XMPPGroupChatMessageListener implements PacketListener {
@@ -22,20 +23,17 @@ public class XMPPGroupChatMessageListener implements PacketListener {
 	public static final String EXTRA_CHAT_STATE = "chatState";
 	public static final String ACTION_XMPP_CHAT_STATE_CHANGED = "XMPP_CHAT_STATE_CHANGED";
 	public static final String EXTRA_CHAT_BUDDY_NAME = "roomJid";
-
-	/*
-	 * @Override public void processPacket(Packet packet) { Message message =
-	 * (Message) packet;
-	 * 
-	 * if (message.getBody() != null) { String fromName =
-	 * StringUtils.parseBareAddress(message.getFrom()); String toName =
-	 * StringUtils.parseBareAddress(message.getTo()); Log.i(TAG,
-	 * "New group message fromUser " + fromName + ", To: " + toName + " : " +
-	 * message.getBody()); }
-	 * 
-	 * }
-	 */
-
+	
+	public void XMPPChatMessageListener(){
+		// TODO Auto Join groups when it becomes available in db.
+	}
+	
+	/*public void joinRoom() {
+		XMPPMUCManager.getInstance(TChatApplication.getContext()).joinRoom(
+				TChatApplication.connection, roomJid, "",
+				TChatApplication.getUserModel().getProfileName());
+	}*/
+	
 	@Override
 	public void processPacket(Packet packet) {
 
@@ -125,7 +123,7 @@ public class XMPPGroupChatMessageListener implements PacketListener {
 		mChatMessageModel.saveMessageToDB(TChatApplication.getCurrentJid(),
 				StringUtils.parseBareAddress(packet.getFrom()),
 				StringUtils.parseName(packet.getFrom()), message.getBody(),
-				System.currentTimeMillis(), 1);
+				true, "text", System.currentTimeMillis(), 1);
 	}
 
 }

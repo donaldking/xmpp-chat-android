@@ -32,7 +32,6 @@ import co.uk.tusksolutions.tchat.android.api.APICloudStorage;
 import co.uk.tusksolutions.tchat.android.api.APIGetMessages;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
 import co.uk.tusksolutions.tchat.android.xmpp.XMPPChatMessageManager;
-import co.uk.tusksolutions.tchat.android.xmpp.XMPPMUCManager;
 
 public class GroupChatActivity extends ActionBarActivity {
 	private MediaPlayer mp;
@@ -118,10 +117,10 @@ public class GroupChatActivity extends ActionBarActivity {
 
 		mGroupChatMessageReceiver = new GroupChatMessageReceiver();
 		IntentFilter filter = new IntentFilter();
-		filter.addAction(Constants.GROUP_CHAT_MESSAGE_READY); // From sender
-																// (me)
-		filter.addAction(Constants.GROUP_CHAT_MESSAGE_RECEIVED); // From
-																	// Receiver
+		filter.addAction(Constants.MESSAGE_READY); // From sender
+													// (me)
+		filter.addAction(Constants.MESSAGE_RECEIVED); // From
+														// Receiver
 		// (buddy)
 		registerReceiver(mGroupChatMessageReceiver, filter);
 
@@ -306,7 +305,8 @@ public class GroupChatActivity extends ActionBarActivity {
 				mp.setVolume(1, 1);
 				mp.start();
 
-				XMPPMUCManager.sendMessage(roomJid, roomName, message);
+				XMPPChatMessageManager.sendMessage(roomJid, roomName, message,
+						true, "text");
 				chatMessageEditText.setText("");
 				chatSendButton.setEnabled(false);
 
@@ -345,12 +345,11 @@ public class GroupChatActivity extends ActionBarActivity {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			if (intent.getAction().equalsIgnoreCase(
-					Constants.GROUP_CHAT_MESSAGE_READY)) {
+			if (intent.getAction().equalsIgnoreCase(Constants.MESSAGE_READY)) {
 				prepareListView(roomJid, currentJid, 1,
 						intent.getLongExtra("id", -1));
 			} else if (intent.getAction().equalsIgnoreCase(
-					Constants.GROUP_CHAT_MESSAGE_RECEIVED)) {
+					Constants.MESSAGE_RECEIVED)) {
 				prepareListView(roomJid, currentJid, 1,
 						intent.getLongExtra("id", -1));
 			}

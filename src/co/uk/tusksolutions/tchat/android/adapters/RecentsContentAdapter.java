@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -16,6 +17,7 @@ import co.uk.tusksolutions.extensions.TimeAgo;
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.activities.ChatActivity;
+import co.uk.tusksolutions.tchat.android.activities.GroupChatActivity;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
 import co.uk.tusksolutions.tchat.android.models.RecentsModel;
 import co.uk.tusksolutions.tchat.android.viewHolders.RecentsViewHolder;
@@ -64,6 +66,7 @@ public class RecentsContentAdapter extends BaseAdapter {
 
 		View row = convertView;
 		RecentsViewHolder holder = null;
+		
 
 		if (row == null) {
 			LayoutInflater inflater = (LayoutInflater) context
@@ -104,15 +107,20 @@ public class RecentsContentAdapter extends BaseAdapter {
 			public void onClick(View v) {
 
 				doSelectionAnimationForView(v);
+				
 				Bundle b = new Bundle();
 				b.putString("roomJid", model.chatWithUser);
-				b.putString("friendName", model.name);
-
-				Intent intent = new Intent(TChatApplication.getContext(), ChatActivity.class);
-				intent.putExtra("chatWithFriendBundle", b);
-				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 				
-				TChatApplication.getContext().startActivity(intent);
+				Log.d(TAG, "isGroupMessage " + model.isGroupMessage);
+				
+				if (model.isGroupMessage == 1) {
+					b.putString("roomName", model.name);
+					launchGroupChatActivity(b);
+				}else{
+					b.putString("friendName", model.name);
+					launchNormalChatActivity(b);
+				}
+				
 			}
 		});
 
@@ -125,4 +133,24 @@ public class RecentsContentAdapter extends BaseAdapter {
 		fadeAnimation.setDuration(50);
 		v.startAnimation(fadeAnimation);
 	}
+	
+	private void launchGroupChatActivity(Bundle b){
+		
+		Intent intent = new Intent(TChatApplication.getContext(), GroupChatActivity.class);
+		intent.putExtra("groupChatToRoomBundle", b);
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		
+		TChatApplication.getContext().startActivity(intent);
+	}
+	
+	private void launchNormalChatActivity(Bundle b){
+		
+		Intent intent = new Intent(TChatApplication.getContext(), ChatActivity.class);
+		intent.putExtra("chatWithFriendBundle", b);
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		
+		TChatApplication.getContext().startActivity(intent);
+	}
+	
+	
 }

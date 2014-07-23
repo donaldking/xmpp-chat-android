@@ -21,6 +21,8 @@ public class RecentsModel implements Parcelable {
 	public String objectId;
 	public String sender;
 	public String receiver;
+	public int isGroupMessage;
+	public String messageType;
 	public String message;
 	public String mid;
 	public String isRead;
@@ -33,8 +35,7 @@ public class RecentsModel implements Parcelable {
 
 	public RecentsModel() {
 	}
-	
-	
+
 	public boolean saveRecentsToDB(JSONArray recents) {
 		int counter = 0;
 		db = TChatApplication.getTChatDBWritable();
@@ -60,6 +61,10 @@ public class RecentsModel implements Parcelable {
 						lastMessageObj.getString("sender"));
 				contentValues.put(TChatDBHelper.R_RECEIVER,
 						lastMessageObj.getString("receiver"));
+				contentValues.put(TChatDBHelper.R_IS_GROUP_MESSAGE,
+						lastMessageObj.getInt("isGroupMessage"));
+				contentValues.put(TChatDBHelper.R_MESSAGE_TYPE,
+						lastMessageObj.getString("messageType"));
 				contentValues.put(TChatDBHelper.R_MESSAGE,
 						lastMessageObj.getString("message"));
 				contentValues.put(TChatDBHelper.R_MESSAGE_ID,
@@ -116,6 +121,10 @@ public class RecentsModel implements Parcelable {
 				.getColumnIndex(TChatDBHelper.R_SENDER));
 		recentsModel.receiver = cursor.getString(cursor
 				.getColumnIndex(TChatDBHelper.R_RECEIVER));
+		recentsModel.isGroupMessage = cursor.getInt(cursor
+				.getColumnIndex(TChatDBHelper.R_IS_GROUP_MESSAGE));
+		recentsModel.messageType = cursor.getString(cursor
+				.getColumnIndex(TChatDBHelper.R_MESSAGE_TYPE));
 		recentsModel.message = cursor.getString(cursor
 				.getColumnIndex(TChatDBHelper.R_MESSAGE));
 		recentsModel.mid = cursor.getString(cursor
@@ -155,6 +164,8 @@ public class RecentsModel implements Parcelable {
 		dest.writeString(objectId);
 		dest.writeString(sender);
 		dest.writeString(receiver);
+		dest.writeInt(isGroupMessage);
+		dest.writeString(messageType);
 		dest.writeString(message);
 		dest.writeString(mid);
 		dest.writeString(isRead);
@@ -178,6 +189,8 @@ public class RecentsModel implements Parcelable {
 		this.objectId = in.readString();
 		this.sender = in.readString();
 		this.receiver = in.readString();
+		this.isGroupMessage = in.readInt();
+		this.messageType = in.readString();
 		this.message = in.readString();
 		this.mid = in.readString();
 		this.isRead = in.readString();

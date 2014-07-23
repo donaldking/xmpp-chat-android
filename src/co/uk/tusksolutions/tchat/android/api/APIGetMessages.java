@@ -90,7 +90,7 @@ public class APIGetMessages {
 
 			if (result) {
 				TChatApplication.getContext().sendBroadcast(
-						new Intent(Constants.CHAT_MESSAGE_READY));
+						new Intent(Constants.MESSAGE_READY));
 			} else {
 				TChatApplication.getContext().sendBroadcast(
 						new Intent(Constants.CHAT_MESSAGE_EMPTY));

@@ -7,7 +7,6 @@ import java.util.Map;
 
 import org.jivesoftware.smack.Connection;
 import org.jivesoftware.smack.XMPPException;
-import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smackx.muc.MultiUserChat;
 
 import android.content.Context;
@@ -28,33 +27,7 @@ public class XMPPMUCManager {
 	public XMPPMUCManager(Context ctx) {
 		this.context = ctx;
 	}
-
-	public static void sendMessage(final String to, String roomName,
-			final String message) {
-		/*if (mChatMessageModel == null) {
-			mChatMessageModel = new ChatMessagesModel();
-		}*/
-		Message msg = new Message(to, Message.Type.groupchat);
-		msg.setBody(message);
-		if (TChatApplication.connection != null) {
-			try {
-
-				/*mChatMessageModel.saveMessageToDB(to,
-						TChatApplication.getCurrentJid(), roomName, message,
-						System.currentTimeMillis(), 1);*/
-				TChatApplication.connection.sendPacket(msg);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		} else {
-			/* online offline message
-			mChatMessageModel.saveMessageToDB(to,
-					TChatApplication.getCurrentJid(), roomName, message,
-					System.currentTimeMillis(), 2);*/
-		}
-	}
 	
-
 	public void mucServiceDiscovery() {
 		mRooms.clear();
 		try {

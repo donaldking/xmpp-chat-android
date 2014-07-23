@@ -2,16 +2,14 @@ package co.uk.tusksolutions.tchat.android.fragments;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.AppOpsManager.OnOpChangedListener;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -159,6 +157,7 @@ public class GroupsFragment extends Fragment {
 		setHasOptionsMenu(true);
 	}
 
+	@SuppressLint("NewApi")
 	@Override
 	public void onPrepareOptionsMenu(Menu menu) {
 		// TODO Auto-generated method stub

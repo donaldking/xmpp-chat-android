@@ -29,18 +29,12 @@ public class Constants {
 	/**
 	 * Chat / Packet Actions
 	 */
-	public static final String CHAT_MESSAGE_RECEIVED = "co.uk.tusksolutions.tchat.android.action.CHAT_MESSAGE_RECEIVED";
+	public static final String MESSAGE_RECEIVED = "co.uk.tusksolutions.tchat.android.action.CHAT_MESSAGE_RECEIVED";
 
-	public static String CHAT_MESSAGE_READY = "co.uk.tusksolutions.tchat.android.action.CHAT_MESSAGE_READY";
+	public static String MESSAGE_READY = "co.uk.tusksolutions.tchat.android.action.CHAT_MESSAGE_READY";
 	public static String OPEN_FOR_NEW_CHAT_RECEIVED = "co.uk.tusksolutions.tchat.android.action.OPEN_FOR_NEW_CHAT_RECEIVED";
 	public static String CHAT_MESSAGE_EMPTY = "co.uk.tusksolutions.tchat.android.action.CHAT_MESSAGE_EMPTY";
-
-	/**
-	 * Group Chat
-	 */
-	public static final String GROUP_CHAT_MESSAGE_READY = "co.uk.tusksolutions.tchat.android.action.GROUP_CHAT_MESSAGE_READY";
-	public static final String GROUP_CHAT_MESSAGE_RECEIVED = "co.uk.tusksolutions.tchat.android.action.GROUP_CHAT_MESSAGE_RECEIVED";
-
+	
 	public static final String USER_PRESENCE_CHANGED = "co.uk.tusksolutions.tchat.android.action.USER_PRESENCE_CHANGED";
 
 	/**

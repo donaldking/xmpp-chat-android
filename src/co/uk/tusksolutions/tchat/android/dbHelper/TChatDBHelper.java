@@ -56,6 +56,8 @@ public class TChatDBHelper extends SQLiteOpenHelper {
 	public static final String CM_TIMESTAMP = "timeStamp";
 	public static final String CM_SENDER = "sender";
 	public static final String CM_RECEIVER = "receiver";
+	public static final String CM_IS_GROUP_MESSAGE = "isGroupMessage";
+	public static final String CM_MESSAGE_TYPE = "messageType";
 	public static final String CM_IS_READ = "isRead";
 
 	/*
@@ -67,6 +69,8 @@ public class TChatDBHelper extends SQLiteOpenHelper {
 	public static final String R_NAME = "name";
 	public static final String R_SENDER = "sender";
 	public static final String R_RECEIVER = "receiver";
+	public static final String R_IS_GROUP_MESSAGE = "isGroupMessage";
+	public static final String R_MESSAGE_TYPE = "messageType";
 	public static final String R_MESSAGE = "message";
 	public static final String R_MESSAGE_ID = "mid";
 	public static final String R_IS_READ = "isRead";
@@ -81,18 +85,6 @@ public class TChatDBHelper extends SQLiteOpenHelper {
 	public static final String G_GROUP_NAME = "group_name";
 	public static final String G_PARTICIPANTS = "participants";
 	public static final String G_TIMESTAMP = "time_stamp";
-
-	/*
-	 * Groups message table definition
-	 */
-	public static final String GM_UID = "_id";
-	public static final String GM_GROUP_ID = "group_id";
-	public static final String GM_SENDER = "sender";
-	public static final String GM_RECEIVER = "receiver";
-	public static final String GM_MESSAGE = "message";
-	public static final String GM_MESSAGE_ID = "mid";
-	public static final String GM_IS_READ = "isRead";
-	public static final String GM_TIMESTAMP = "time_stamp";
 
 	public TChatDBHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -136,6 +128,8 @@ public class TChatDBHelper extends SQLiteOpenHelper {
 			+ " varchar(255) DEFAULT NULL," + CM_TIMESTAMP
 			+ " varchar(255) DEFAULT NULL," + CM_SENDER
 			+ " varchar(255) DEFAULT NULL," + CM_RECEIVER
+			+ " varchar(255) DEFAULT NULL," + CM_IS_GROUP_MESSAGE
+			+ " INTEGER(1) DEFAULT 0," + CM_MESSAGE_TYPE
 			+ " varchar(255) DEFAULT NULL," + CM_IS_READ
 			+ " varchar(255) DEFAULT NULL);";
 
@@ -148,6 +142,8 @@ public class TChatDBHelper extends SQLiteOpenHelper {
 			+ " varchar(255) DEFAULT NULL," + R_CHAT_WITH
 			+ " varchar(255) UNIQUE," + R_NAME + " varchar(255) DEFAULT NULL,"
 			+ R_SENDER + " varchar(255) DEFAULT NULL," + R_RECEIVER
+			+ " varchar(255) DEFAULT NULL," + R_IS_GROUP_MESSAGE
+			+ " INTEGER(1) DEFAULT 0," + R_MESSAGE_TYPE
 			+ " varchar(255) DEFAULT NULL," + R_MESSAGE + " blob,"
 			+ R_MESSAGE_ID + " varchar(255) DEFAULT NULL," + R_IS_READ
 			+ " varchar(11)  DEFAULT NULL," + R_TIMESTAMP
@@ -163,21 +159,6 @@ public class TChatDBHelper extends SQLiteOpenHelper {
 			+ G_GROUP_NAME + " varchar(255) DEFAULT NULL," + G_PARTICIPANTS
 			+ " blob," + G_TIMESTAMP + " varchar(255) DEFAULT NULL);";
 
-	/*
-	 * Groups table schema definition
-	 */
-
-	private static final String CREATE_GROUPS_MESSAGE_TABLE = "CREATE TABLE "
-			+ GROUP_CHAT_MESSAGES_TABLE + "( " + GM_UID
-			+ " INTEGER PRIMARY KEY AUTOINCREMENT," + GM_GROUP_ID
-			+ " varchar(255) DEFAULT NULL," + GM_SENDER
-			+ " varchar(255) DEFAULT NULL," + GM_RECEIVER
-			+ " varchar(255) DEFAULT NULL," + GM_MESSAGE 
-			+ " blob," + GM_MESSAGE_ID 
-			+ "	varchar(255) DEFAULT NULL," + GM_IS_READ
-			+ " varchar(1) DEFAULT NULL," + GM_TIMESTAMP
-			+ "	varchar(255) DEFAULT NULL);";
-
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		try {
@@ -185,7 +166,6 @@ public class TChatDBHelper extends SQLiteOpenHelper {
 			db.execSQL(CREATE_ROSTER_TABLE);
 			db.execSQL(CREATE_CHAT_MESSAGES_TABLE);
 			db.execSQL(CREATE_RECENTS_MESSAGES_TABLE);
-			db.execSQL(CREATE_GROUPS_MESSAGE_TABLE);
 			db.execSQL(CREATE_GROUPS_TABLE);
 
 		} catch (SQLException e) {

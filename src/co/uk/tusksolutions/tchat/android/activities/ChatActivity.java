@@ -124,8 +124,8 @@ public class ChatActivity extends ActionBarActivity {
 		mRosterModel = new RosterModel();
 		mChatMessageReceiver = new ChatMessageReceiver();
 		IntentFilter filter = new IntentFilter();
-		filter.addAction(Constants.CHAT_MESSAGE_READY); // From sender (me)
-		filter.addAction(Constants.CHAT_MESSAGE_RECEIVED); // From Receiver
+		filter.addAction(Constants.MESSAGE_READY); // From sender (me)
+		filter.addAction(Constants.MESSAGE_RECEIVED); // From Receiver
 															// (buddy)
 
 		filter.addAction(Constants.CHAT_MESSAGE_EMPTY); // No recent
@@ -353,7 +353,7 @@ public class ChatActivity extends ActionBarActivity {
 				mp.start();
 
 				XMPPChatMessageManager
-						.sendMessage(buddyJid, buddyName, message);
+						.sendMessage(buddyJid, buddyName, message, false, "text");
 				chatMessageEditText.setText("");
 				chatSendButton.setEnabled(false);
 
@@ -422,7 +422,7 @@ public class ChatActivity extends ActionBarActivity {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			if (intent.getAction().equalsIgnoreCase(
-					Constants.CHAT_MESSAGE_READY)) {
+					Constants.MESSAGE_READY)) {
 				prepareListView(buddyJid, currentJid, 1,
 						intent.getLongExtra("id", -1));
 			} else if (intent.getAction().equalsIgnoreCase(
