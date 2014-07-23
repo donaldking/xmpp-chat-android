@@ -22,7 +22,7 @@ public class XMPPChatMessageListener implements PacketListener {
 	Context mContext = TChatApplication.getContext();
 	public static final String EXTRA_CHAT_STATE = "chatState";
 	public static final String ACTION_XMPP_CHAT_STATE_CHANGED = "XMPP_CHAT_STATE_CHANGED";
-	public static final String EXTRA_CHAT_BUDDY_NAME = "buddyJid";
+	public static final String EXTRA_CHAT_BUDDY_NAME = "roomJid";
 
 	@Override
 	public void processPacket(Packet packet) {
@@ -117,7 +117,7 @@ public class XMPPChatMessageListener implements PacketListener {
 
 	private void sendNotification(Packet packet, Message message) {
 		Bundle b = new Bundle();
-		b.putString("buddyJid", packet.getFrom());
+		b.putString("roomJid", packet.getFrom());
 		b.putString("fromName", StringUtils.parseName(StringUtils
 				.parseBareAddress(message.getFrom())));
 		b.putString("message", message.getBody());

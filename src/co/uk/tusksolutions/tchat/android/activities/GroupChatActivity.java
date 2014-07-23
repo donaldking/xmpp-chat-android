@@ -14,7 +14,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
-import android.text.Html;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
@@ -26,32 +25,29 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import co.uk.tusksolutions.extensions.TimeAgo;
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.adapters.ChatMessagesAdapter;
 import co.uk.tusksolutions.tchat.android.api.APICloudStorage;
-import co.uk.tusksolutions.tchat.android.api.APIGetLastOnlineTime;
 import co.uk.tusksolutions.tchat.android.api.APIGetMessages;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
-import co.uk.tusksolutions.tchat.android.listeners.XMPPChatMessageListener;
-import co.uk.tusksolutions.tchat.android.models.RosterModel;
 import co.uk.tusksolutions.tchat.android.xmpp.XMPPChatMessageManager;
+import co.uk.tusksolutions.tchat.android.xmpp.XMPPMUCManager;
 
-public class ChatActivity extends ActionBarActivity {
+public class GroupChatActivity extends ActionBarActivity {
 	private MediaPlayer mp;
 	private TextView chatMessageEditText;
 	private Button chatSendButton, emojiButton;
-	private String buddyName;
-	static String buddyJid;
+	private String roomName;
+	static String roomJid;
 	private static ChatMessagesAdapter mAdapter;
 	private static View mLodingStatusView;
 	private static int shortAnimTime;
 	private static ListView listView;
-	private ChatMessageReceiver mChatMessageReceiver;
+	private GroupChatMessageReceiver mGroupChatMessageReceiver;
 	private String currentJid;
 	private static APIGetMessages mGetMessagesApi;
-	private RosterModel mRosterModel;
+
 	public String lastSeen;
 	public static String CHATSTATE = "ACTION_CHAT_STATE";
 
@@ -82,31 +78,30 @@ public class ChatActivity extends ActionBarActivity {
 		chatMessageEditText.addTextChangedListener(new ChatTextListener());
 
 		if (getIntent().getExtras() != null) {
-			if (getIntent().getExtras().containsKey("chatFromFriendBundle")) {
+			if (getIntent().getExtras().containsKey("groupChatFromRoomBundle")) {
 				/*
 				 * Launched fromUser Notification...
 				 */
-				buddyName = getIntent().getExtras()
-						.getBundle("chatFromFriendBundle")
-						.getString("fromName");
-				buddyJid = StringUtils.parseBareAddress(getIntent().getExtras()
-						.getBundle("chatFromFriendBundle")
+				roomName = getIntent().getExtras()
+						.getBundle("groupChatFromRoomBundle")
+						.getString("roomName");
+				roomJid = StringUtils.parseBareAddress(getIntent().getExtras()
+						.getBundle("groupChatFromRoomBundle")
 						.getString("roomJid"));
 
 			} else if (getIntent().getExtras().containsKey(
-					"chatWithFriendBundle")) {
+					"groupChatToRoomBundle")) {
 				/*
-				 * Launched fromUser Roster...
+				 * Launched normally
 				 */
-				buddyName = getIntent().getExtras()
-						.getBundle("chatWithFriendBundle")
-						.getString("friendName");
-				buddyJid = getIntent().getExtras()
-						.getBundle("chatWithFriendBundle")
+				roomName = getIntent().getExtras()
+						.getBundle("groupChatToRoomBundle")
+						.getString("roomName");
+				roomJid = getIntent().getExtras()
+						.getBundle("groupChatToRoomBundle")
 						.getString("roomJid");
 			}
-
-			getSupportActionBar().setTitle(buddyName);
+			getSupportActionBar().setTitle(roomName);
 		}
 	}
 
@@ -121,24 +116,14 @@ public class ChatActivity extends ActionBarActivity {
 	public void onResume() {
 		super.onResume();
 
-		mRosterModel = new RosterModel();
-		mChatMessageReceiver = new ChatMessageReceiver();
+		mGroupChatMessageReceiver = new GroupChatMessageReceiver();
 		IntentFilter filter = new IntentFilter();
-		filter.addAction(Constants.CHAT_MESSAGE_READY); // From sender (me)
-		filter.addAction(Constants.CHAT_MESSAGE_RECEIVED); // From Receiver
-															// (buddy)
-
-		filter.addAction(Constants.CHAT_MESSAGE_EMPTY); // No recent
-														// conversation
-		filter.addAction(XMPPChatMessageListener.ACTION_XMPP_CHAT_STATE_CHANGED); // For
-																					// composing
-																					// notification
-		filter.addAction(Constants.LAST_ONLINE_TIME_STATE_CHANGED); // For
-																	// Lastseen
-																	// time
-		filter.addAction(Constants.ROSTER_UPDATED); // To monitor buddy presence
-
-		registerReceiver(mChatMessageReceiver, filter);
+		filter.addAction(Constants.GROUP_CHAT_MESSAGE_READY); // From sender
+																// (me)
+		filter.addAction(Constants.GROUP_CHAT_MESSAGE_RECEIVED); // From
+																	// Receiver
+		// (buddy)
+		registerReceiver(mGroupChatMessageReceiver, filter);
 
 		/**
 		 * Set chat visible enum TO_USER visible so when we get a chat packet,
@@ -150,12 +135,9 @@ public class ChatActivity extends ActionBarActivity {
 		TChatApplication
 				.setChatActivityStatus(TChatApplication.CHAT_STATUS_ENUM.VISIBLE);
 
-		TChatApplication.chatSessionBuddy = buddyJid;
+		TChatApplication.chatSessionBuddy = roomJid;
 
-		prepareListView(buddyJid, currentJid, 1, -1);
-
-		// Get last online time for this buddy
-		getLastOnlineTime();
+		prepareListView(roomJid, currentJid, 1, -1);
 	}
 
 	private static void prepareListView(String buddyJid, String currentJid,
@@ -209,8 +191,8 @@ public class ChatActivity extends ActionBarActivity {
 	@Override
 	public void onPause() {
 		super.onPause();
-		if (mChatMessageReceiver != null) {
-			unregisterReceiver(mChatMessageReceiver);
+		if (mGroupChatMessageReceiver != null) {
+			unregisterReceiver(mGroupChatMessageReceiver);
 		}
 	}
 
@@ -272,34 +254,6 @@ public class ChatActivity extends ActionBarActivity {
 		}
 	}
 
-	public void showLastOnlineTime() {
-
-		String lastOnlineTime = mRosterModel.getLastSeen(buddyJid);
-
-		if (lastOnlineTime != null) {
-			lastSeen = TimeAgo.getTimeAgo(Long.parseLong(lastOnlineTime), this);
-			getSupportActionBar().setSubtitle(
-					Html.fromHtml("<font color='#FFFFFF'>last seen " + lastSeen
-							+ "</font>"));
-		}
-	}
-
-	// Get last online time for this buddy
-
-	private void getLastOnlineTime() {
-
-		if (mRosterModel.isBuddyOnline(buddyJid) == true) {
-			lastSeen = "online";
-			getSupportActionBar().setSubtitle(
-					Html.fromHtml("<font color='#FFFFFF'> " + lastSeen
-							+ "</font>"));
-			return;
-		}
-		showLastOnlineTime();
-		APIGetLastOnlineTime getLastOnlineTimeObject = new APIGetLastOnlineTime();
-		getLastOnlineTimeObject.doGetLastOnlineTime(buddyJid);
-	}
-
 	/*
 	 * TextChange watcher
 	 */
@@ -325,14 +279,14 @@ public class ChatActivity extends ActionBarActivity {
 					chatSendButton.setEnabled(true);
 				}
 				if (chatSendButton.isEnabled()) {
-					XMPPChatMessageManager.sendComposing(buddyJid, buddyJid);
+					XMPPChatMessageManager.sendComposing(roomJid, roomJid);
 				}
 			} else {
 				if (chatSendButton.isEnabled() == true) {
 					chatSendButton.setEnabled(false);
 				}
 				if (chatSendButton.isSelected() == false) {
-					XMPPChatMessageManager.sendPaused(buddyJid, buddyJid);
+					XMPPChatMessageManager.sendPaused(roomJid, roomJid);
 				}
 			}
 		}
@@ -352,15 +306,14 @@ public class ChatActivity extends ActionBarActivity {
 				mp.setVolume(1, 1);
 				mp.start();
 
-				XMPPChatMessageManager
-						.sendMessage(buddyJid, buddyName, message);
+				XMPPMUCManager.sendMessage(roomJid, roomName, message);
 				chatMessageEditText.setText("");
 				chatSendButton.setEnabled(false);
 
 				// Save to cloud
 				APICloudStorage cloudStorage = new APICloudStorage();
 				cloudStorage.saveToCloud(TChatApplication.getUserModel()
-						.getUsername(), StringUtils.parseName(buddyJid),
+						.getUsername(), StringUtils.parseName(roomJid),
 						message, "none");
 			}
 		}
@@ -382,71 +335,24 @@ public class ChatActivity extends ActionBarActivity {
 
 	}
 
-	public void displayComposing(String chatStateStr, String ComposingBuddyJid) {
-		Log.e("Chatstate ", "chat state " + chatStateStr + " composing friend "
-				+ ComposingBuddyJid);
-
-		if (chatStateStr.equalsIgnoreCase("composing")
-				&& buddyJid.equalsIgnoreCase(ComposingBuddyJid)) {
-
-			getSupportActionBar()
-					.setSubtitle(
-							Html.fromHtml("<font color='#FFFFFF'> is typing...</font>"));
-
-		} else if (chatStateStr.equalsIgnoreCase("paused")
-				&& buddyJid.equalsIgnoreCase(ComposingBuddyJid)) {
-
-			if (lastSeen != null) {
-				getSupportActionBar().setSubtitle(
-						Html.fromHtml("<font color='#FFFFFF'>" + lastSeen
-								+ "</font>"));
-			}
-
-		} else {
-			if (lastSeen != null) {
-				getSupportActionBar().setSubtitle(
-						Html.fromHtml("<font color='#FFFFFF'>" + lastSeen
-								+ "</font>"));
-			}
-		}
-	}
-
 	/**
-	 * Programatically register for broadcast TO_USER be notified when chat
-	 * message has been received, processed and inserted TO_USER the db so we
-	 * can reload this view with the new message.
+	 * Programatically register for broadcast & be notified when group chat
+	 * message has been received, processed and inserted to the db so we can
+	 * reload this view with the new message.
 	 * 
 	 */
-	private class ChatMessageReceiver extends BroadcastReceiver {
+	private class GroupChatMessageReceiver extends BroadcastReceiver {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			if (intent.getAction().equalsIgnoreCase(
-					Constants.CHAT_MESSAGE_READY)) {
-				prepareListView(buddyJid, currentJid, 1,
+					Constants.GROUP_CHAT_MESSAGE_READY)) {
+				prepareListView(roomJid, currentJid, 1,
 						intent.getLongExtra("id", -1));
 			} else if (intent.getAction().equalsIgnoreCase(
-					Constants.CHAT_MESSAGE_EMPTY)) {
-				showProgress(false);
-			} else if (intent.getAction().equalsIgnoreCase(
-					XMPPChatMessageListener.ACTION_XMPP_CHAT_STATE_CHANGED)) {
-
-				String chatStateStr = intent
-						.getStringExtra(XMPPChatMessageListener.EXTRA_CHAT_STATE);
-
-				String chatStateUserJid = intent
-						.getStringExtra(XMPPChatMessageListener.EXTRA_CHAT_BUDDY_NAME);
-
-				if (chatStateStr != null && chatStateStr.length() > 0) {
-
-					displayComposing(chatStateStr, chatStateUserJid);
-				}
-			} else if (intent.getAction().equalsIgnoreCase(
-					Constants.LAST_ONLINE_TIME_STATE_CHANGED)) {
-				showLastOnlineTime();
-			} else if (intent.getAction().equalsIgnoreCase(
-					Constants.ROSTER_UPDATED)) {
-				getLastOnlineTime();
+					Constants.GROUP_CHAT_MESSAGE_RECEIVED)) {
+				prepareListView(roomJid, currentJid, 1,
+						intent.getLongExtra("id", -1));
 			}
 		}
 

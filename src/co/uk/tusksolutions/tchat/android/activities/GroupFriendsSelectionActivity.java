@@ -201,7 +201,7 @@ public class GroupFriendsSelectionActivity extends ActionBarActivity implements
 			hideKeyboard();
 
 			Bundle b = new Bundle();
-			b.putString("buddyJid", totalSelectedModel.get(0).user);
+			b.putString("roomJid", totalSelectedModel.get(0).user);
 			b.putString("friendName", totalSelectedModel.get(0).name);
 
 			Intent intent = new Intent(TChatApplication.getContext(),
@@ -264,9 +264,19 @@ public class GroupFriendsSelectionActivity extends ActionBarActivity implements
 		}
 
 		String jsonStr = Obj.toString();
-		TChatApplication.getGroupsModel().saveCreatedRoomInDB(room,
-				group_name.toString(), group_admin, jsonStr);
+		if (TChatApplication.getGroupsModel().saveCreatedRoomInDB(room,
+				group_name.toString(), group_admin, jsonStr)) {
 
+			Bundle b = new Bundle();
+			b.putString("roomJid", roomJid);
+			b.putString("roomName", group_name.toString());
+
+			Intent intent = new Intent(TChatApplication.getContext(),
+					GroupChatActivity.class);
+			intent.putExtra("groupChatToRoomBundle", b);
+			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			TChatApplication.getContext().startActivity(intent);
+		}
 	}
 
 }

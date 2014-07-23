@@ -21,11 +21,32 @@ public class GroupsModel implements Parcelable {
 	public String group_id;
 	public String participants;
 	public String group_name;
-    public String group_admin;
+	public String group_admin;
 	SQLiteDatabase db;
 
 	public GroupsModel() {
 
+	}
+
+	public String getGroupName(String groupId) {
+		db = TChatApplication.getTChatDBReadable();
+
+		String groupName = null;
+
+		String[] columns = { TChatDBHelper.G_GROUP_NAME };
+		String whereClause = TChatDBHelper.G_GROUP_ID + " = ? ";
+
+		String[] whereArgs = new String[] { groupId };
+
+		Cursor cursor = TChatApplication.getTChatDBReadable().query(TABLE,
+				columns, whereClause, whereArgs, null, null, null);
+
+		while (cursor.moveToNext()) {
+			groupName = cursor.getString(cursor
+					.getColumnIndex(TChatDBHelper.G_GROUP_NAME));
+		}
+
+		return groupName;
 	}
 
 	public boolean saveGroupsToDB(JSONArray groupsJson) {
@@ -39,7 +60,8 @@ public class GroupsModel implements Parcelable {
 				ContentValues contentValues = new ContentValues();
 				contentValues.put(TChatDBHelper.G_GROUP_ID,
 						groupsObject.getString("group_id"));
-				contentValues.put(TChatDBHelper.G_ADMIN, groupsObject.getString("group_admin"));
+				contentValues.put(TChatDBHelper.G_ADMIN,
+						groupsObject.getString("group_admin"));
 				contentValues.put(TChatDBHelper.G_GROUP_NAME,
 						groupsObject.getString("group_name"));
 				contentValues.put(TChatDBHelper.G_PARTICIPANTS,
@@ -55,19 +77,20 @@ public class GroupsModel implements Parcelable {
 		}
 		return true;
 	}
-	
-	public boolean saveCreatedRoomInDB(String group_id, String group_name,String group_admin,String participants)
-	{
+
+	public boolean saveCreatedRoomInDB(String group_id, String group_name,
+			String group_admin, String participants) {
 		try {
-			Log.d("Debug",participants);
+			Log.d("Debug", participants);
 			db = TChatApplication.getTChatDBWritable();
 			ContentValues contentValues = new ContentValues();
-			contentValues.put(TChatDBHelper.G_GROUP_ID,group_id);
-			
-			contentValues.put(TChatDBHelper.G_GROUP_NAME,group_name);
+			contentValues.put(TChatDBHelper.G_GROUP_ID, group_id);
+
+			contentValues.put(TChatDBHelper.G_GROUP_NAME, group_name);
 			contentValues.put(TChatDBHelper.G_ADMIN, group_admin);
-			contentValues.put(TChatDBHelper.G_PARTICIPANTS,participants);
-			contentValues.put(TChatDBHelper.G_TIMESTAMP, System.currentTimeMillis());
+			contentValues.put(TChatDBHelper.G_PARTICIPANTS, participants);
+			contentValues.put(TChatDBHelper.G_TIMESTAMP,
+					System.currentTimeMillis());
 			// Insert
 			db.insertWithOnConflict(TChatDBHelper.GROUPS_TABLE, null,
 					contentValues, SQLiteDatabase.CONFLICT_REPLACE);
@@ -92,7 +115,7 @@ public class GroupsModel implements Parcelable {
 
 		return groupsModelCollection;
 	}
-	
+
 	public boolean deleteGroups() {
 
 		db = TChatApplication.getTChatDBWritable();
@@ -114,7 +137,8 @@ public class GroupsModel implements Parcelable {
 				.getColumnIndex(TChatDBHelper.G_GROUP_NAME));
 		groupsModel.participants = cursor.getString(cursor
 				.getColumnIndex(TChatDBHelper.G_PARTICIPANTS));
-		groupsModel.group_admin=cursor.getString(cursor.getColumnIndex(TChatDBHelper.G_ADMIN));
+		groupsModel.group_admin = cursor.getString(cursor
+				.getColumnIndex(TChatDBHelper.G_ADMIN));
 
 		return groupsModel;
 
@@ -149,7 +173,7 @@ public class GroupsModel implements Parcelable {
 		this.group_id = in.readString();
 		this.group_name = in.readString();
 		this.participants = in.readString();
-		this.group_admin=in.readString();
+		this.group_admin = in.readString();
 
 	}
 }

@@ -147,7 +147,7 @@ public class RosterContentAdapter extends BaseAdapter implements Filterable {
 
 				doSelectionAnimationForView(v);
 				Bundle b = new Bundle();
-				b.putString("buddyJid", rosterModel.user);
+				b.putString("roomJid", rosterModel.user);
 				b.putString("friendName", rosterModel.name);
 
 				Intent intent = new Intent(TChatApplication.getContext(),

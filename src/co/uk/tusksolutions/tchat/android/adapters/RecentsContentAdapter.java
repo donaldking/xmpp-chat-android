@@ -105,7 +105,7 @@ public class RecentsContentAdapter extends BaseAdapter {
 
 				doSelectionAnimationForView(v);
 				Bundle b = new Bundle();
-				b.putString("buddyJid", model.chatWithUser);
+				b.putString("roomJid", model.chatWithUser);
 				b.putString("friendName", model.name);
 
 				Intent intent = new Intent(TChatApplication.getContext(), ChatActivity.class);

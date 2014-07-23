@@ -8,11 +8,6 @@ import org.jivesoftware.smack.packet.Packet;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.util.StringUtils;
 
-/**
- * @author Sebastian Gansca sebigansca@gmail.com
- *         <p/>
- *         Copyright 2012 Gemoro Mobile Media All rights reserved
- */
 public class MUCParticipantListener implements PacketListener {
 
     private Context context;

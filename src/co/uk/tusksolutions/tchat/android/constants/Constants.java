@@ -1,6 +1,5 @@
 package co.uk.tusksolutions.tchat.android.constants;
 
-
 public class Constants {
 
 	/**
@@ -36,6 +35,12 @@ public class Constants {
 	public static String OPEN_FOR_NEW_CHAT_RECEIVED = "co.uk.tusksolutions.tchat.android.action.OPEN_FOR_NEW_CHAT_RECEIVED";
 	public static String CHAT_MESSAGE_EMPTY = "co.uk.tusksolutions.tchat.android.action.CHAT_MESSAGE_EMPTY";
 
+	/**
+	 * Group Chat
+	 */
+	public static final String GROUP_CHAT_MESSAGE_READY = "co.uk.tusksolutions.tchat.android.action.GROUP_CHAT_MESSAGE_READY";
+	public static final String GROUP_CHAT_MESSAGE_RECEIVED = "co.uk.tusksolutions.tchat.android.action.GROUP_CHAT_MESSAGE_RECEIVED";
+
 	public static final String USER_PRESENCE_CHANGED = "co.uk.tusksolutions.tchat.android.action.USER_PRESENCE_CHANGED";
 
 	/**
@@ -57,6 +62,5 @@ public class Constants {
 	public static final String PROFILE_UPDATED = "co.uk.tusksolutions.tchat.android.action.PROFILE_UPDATED";
 	public static final String PROFILE_NOT_UPDATED = "co.uk.tusksolutions.tchat.android.action.PROFILE_NOT_UPDATED";
 	public static final String LAST_ONLINE_TIME_STATE_CHANGED = "co.uk.tusksolutions.tchat.android.action.LAST_ONLINE_TIME_STATE_CHANGED";
-	
 
 }

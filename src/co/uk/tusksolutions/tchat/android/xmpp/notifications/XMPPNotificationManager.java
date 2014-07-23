@@ -11,6 +11,7 @@ import android.util.Log;
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.activities.ChatActivity;
+import co.uk.tusksolutions.tchat.android.activities.GroupChatActivity;
 
 public class XMPPNotificationManager {
 
@@ -51,6 +52,50 @@ public class XMPPNotificationManager {
 
 		PendingIntent pi = PendingIntent.getActivity(mContext, 0,
 				chatActivityIntent, PendingIntent.FLAG_UPDATE_CURRENT
+						| PendingIntent.FLAG_ONE_SHOT);
+		mBuilder.setContentIntent(pi);
+
+		NotificationManager mNotificationManager = (NotificationManager) mContext
+				.getSystemService(Context.NOTIFICATION_SERVICE);
+		mNotificationManager.notify(MID, mBuilder.build());
+
+		Log.i(TAG, "sent message" + " [" + message + "] " + "as notification!");
+	}
+
+	public void sendGroupChatNotification(Intent intent) {
+		// TODO Auto-generated method stub
+
+		/**
+		 * Post Jelly Bean use inbox style notification Pre Jelly Bean, use
+		 * normal ticker notification
+		 */
+
+		String roomName = intent.getBundleExtra("groupChatFromRoomBundle")
+				.getString("roomName");
+		String message = intent.getBundleExtra("groupChatFromRoomBundle")
+				.getString("message");
+		mBuilder = new NotificationCompat.Builder(mContext)
+				.setSmallIcon(R.drawable.ic_action_chat)
+				.setContentTitle(roomName).setTicker(roomName + ": " + message)
+				.setContentText(message);
+		Uri defaultSound = RingtoneManager
+				.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+		mBuilder.setSound(defaultSound);
+		mBuilder.setAutoCancel(true);
+
+		/**
+		 * Package this TO_USER in a bundle which we will add TO_USER the
+		 * pending intent TO_USER post so that we can navigate TO_USER the exact
+		 * window when we click on the notification.
+		 */
+		Intent groupChatActivityIntent = new Intent(mContext,
+				GroupChatActivity.class);
+		groupChatActivityIntent.putExtra("groupChatFromRoomBundle",
+				intent.getBundleExtra("groupChatFromRoomBundle"));
+		groupChatActivityIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+		PendingIntent pi = PendingIntent.getActivity(mContext, 0,
+				groupChatActivityIntent, PendingIntent.FLAG_UPDATE_CURRENT
 						| PendingIntent.FLAG_ONE_SHOT);
 		mBuilder.setContentIntent(pi);
 

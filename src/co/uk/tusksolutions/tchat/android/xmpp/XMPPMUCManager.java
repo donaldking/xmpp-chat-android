@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.jivesoftware.smack.Connection;
 import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smackx.muc.MultiUserChat;
 
 import android.content.Context;
@@ -16,32 +17,43 @@ import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.listeners.XmppMucInvitationListener;
 
-public class XmppMuc {
-	private static String TAG = "XmppMuc";
+public class XMPPMUCManager {
+	private static String TAG = "XMPPMUCManager";
 	private static final int JOIN_TIMEOUT = 5000;
 	private Context context;
 	private Map<String, MultiUserChat> mRooms = new HashMap<String, MultiUserChat>();
 
-	private static XmppMuc xmppMuc;
+	private static XMPPMUCManager XMPPMUCManager;
 
-	public XmppMuc(Context ctx) {
+	public XMPPMUCManager(Context ctx) {
 		this.context = ctx;
-
 	}
 
-	/*
-	 * public void registerListener(Connection connection) {
-	 * XmppConnectionChangeListener listener = new
-	 * XmppConnectionChangeListener() { public void newConnection(XMPPConnection
-	 * connection) {
-	 * 
-	 * // clear the roomNumbers and room ArrayList as we have a new //
-	 * connection mRooms.clear();
-	 * 
-	 * // removed from here } };
-	 * 
-	 * }
-	 */
+	public static void sendMessage(final String to, String roomName,
+			final String message) {
+		/*if (mChatMessageModel == null) {
+			mChatMessageModel = new ChatMessagesModel();
+		}*/
+		Message msg = new Message(to, Message.Type.groupchat);
+		msg.setBody(message);
+		if (TChatApplication.connection != null) {
+			try {
+
+				/*mChatMessageModel.saveMessageToDB(to,
+						TChatApplication.getCurrentJid(), roomName, message,
+						System.currentTimeMillis(), 1);*/
+				TChatApplication.connection.sendPacket(msg);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} else {
+			/* online offline message
+			mChatMessageModel.saveMessageToDB(to,
+					TChatApplication.getCurrentJid(), roomName, message,
+					System.currentTimeMillis(), 2);*/
+		}
+	}
+	
 
 	public void mucServiceDiscovery() {
 		mRooms.clear();
@@ -62,11 +74,11 @@ public class XmppMuc {
 				new XmppMucInvitationListener(context));
 	}
 
-	public static XmppMuc getInstance(Context ctx) {
-		if (xmppMuc == null) {
-			xmppMuc = new XmppMuc(ctx);
+	public static XMPPMUCManager getInstance(Context ctx) {
+		if (XMPPMUCManager == null) {
+			XMPPMUCManager = new XMPPMUCManager(ctx);
 		}
-		return xmppMuc;
+		return XMPPMUCManager;
 	}
 
 	private MultiUserChat CreateRoom(String roomName, String roomJID,

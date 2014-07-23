@@ -47,9 +47,35 @@
             android:noHistory="true" >
         </activity>
         <activity
+            android:name="co.uk.tusksolutions.tchat.android.activities.GroupChatActivity"
+            android:noHistory="true" >
+        </activity>
+        <activity
             android:name="co.uk.tusksolutions.tchat.android.activities.SettingsActivity"
             android:launchMode="singleTop"
             android:noHistory="true" />
+        <activity
+            android:name="co.uk.tusksolutions.tchat.android.activities.LoginActivity"
+            android:label="@string/title_activity_login"
+            android:windowSoftInputMode="adjustResize|stateVisible" >
+        </activity>
+        <activity
+            android:name="co.uk.tusksolutions.tchat.android.activities.SearchActivity"
+            android:launchMode="singleTop"
+            android:noHistory="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@string/abc_action_menu_overflow_description" />
+        </activity>
+        <activity
+            android:name="co.uk.tusksolutions.tchat.android.activities.GroupFriendsSelectionActivity"
+            android:launchMode="singleTop"
+            android:noHistory="true" >
+        </activity>
 
         <!-- Receivers -->
         <receiver
@@ -90,29 +116,6 @@
         <service
             android:name="co.uk.tusksolutions.tchat.android.xmpp.XMPPConnectionManager"
             android:enabled="true" />
-
-        <activity
-            android:name="co.uk.tusksolutions.tchat.android.activities.LoginActivity"
-            android:label="@string/title_activity_login"
-            android:windowSoftInputMode="adjustResize|stateVisible" >
-        </activity>
-        <activity
-            android:name="co.uk.tusksolutions.tchat.android.activities.SearchActivity"
-            android:launchMode="singleTop"
-            android:noHistory="true" >
-            <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.app.searchable"
-                android:resource="@string/abc_action_menu_overflow_description" />
-        </activity>
-        <activity
-            android:name="co.uk.tusksolutions.tchat.android.activities.GroupFriendsSelectionActivity"
-            android:launchMode="singleTop"
-            android:noHistory="true" >
-        </activity>
     </application>
 
 </manifest>

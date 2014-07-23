@@ -50,6 +50,28 @@ public class RosterModel implements Parcelable {
 		this.selected = selected;
 	}
 	
+	
+	public String getBuddyName(String buddyJid) {
+		db = TChatApplication.getTChatDBReadable();
+
+		String buddyName = null;
+
+		String[] columns = { TChatDBHelper.NAME };
+		String whereClause = TChatDBHelper.USER + " = ? ";
+
+		String[] whereArgs = new String[] { buddyJid };
+
+		Cursor cursor = TChatApplication.getTChatDBReadable().query(TABLE,
+				columns, whereClause, whereArgs, null, null, null);
+
+		while (cursor.moveToNext()) {
+			buddyName = cursor.getString(cursor
+					.getColumnIndex(TChatDBHelper.NAME));
+		}
+
+		return buddyName;
+	}
+	
 	public boolean saveRosterToDB(Roster roster) {
 		int counter = 0;
 		db = TChatApplication.getTChatDBWritable();
@@ -340,11 +362,6 @@ public class RosterModel implements Parcelable {
 		return rosterModelCollection;
 	}
 
-	
-	
-	
-	
-	
 	protected RosterModel fromCursor(Cursor cursor) {
 		/*
 		 * Pulls the values fromUser the cursor object and returns it TO_USER
@@ -370,9 +387,6 @@ public class RosterModel implements Parcelable {
 		return rosterModel;
 
 	}
-	
-	
-	
 
 	/*
 	 * Parcelable stuff non-Javadoc)

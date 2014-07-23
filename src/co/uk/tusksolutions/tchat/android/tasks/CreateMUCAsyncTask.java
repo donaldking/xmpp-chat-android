@@ -10,7 +10,7 @@ import android.os.AsyncTask;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
 import co.uk.tusksolutions.tchat.android.models.RosterModel;
-import co.uk.tusksolutions.tchat.android.xmpp.XmppMuc;
+import co.uk.tusksolutions.tchat.android.xmpp.XMPPMUCManager;
 
 public class CreateMUCAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
@@ -51,7 +51,7 @@ public class CreateMUCAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
 		try {
 
-			XmppMuc xmppMuc = XmppMuc.getInstance(context);
+			XMPPMUCManager xMPPMUCManager = XMPPMUCManager.getInstance(context);
 
 			 roomJID = roomName + "@conference."
 					+ Constants.CURRENT_SERVER;
@@ -59,7 +59,7 @@ public class CreateMUCAsyncTask extends AsyncTask<Void, Void, Boolean> {
 			for (int i = 0; i < friendArrayList.size(); i++) {
 				if (friendArrayList.get(i).isSelected()) {
 					String friendJID = friendArrayList.get(i).user;
-					xmppMuc.inviteToRoom(roomName, TChatApplication
+					xMPPMUCManager.inviteToRoom(roomName, TChatApplication
 							.getUserModel().getUsername(), friendJID, "",
 							roomJID);
 				}
