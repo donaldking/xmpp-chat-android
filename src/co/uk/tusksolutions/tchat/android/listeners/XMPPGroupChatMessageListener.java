@@ -26,6 +26,7 @@ public class XMPPGroupChatMessageListener implements PacketListener {
 	
 	public void XMPPChatMessageListener(){
 		// TODO Auto Join groups when it becomes available in db.
+		// TODO API - Add users (full jid) to groups when its being created.
 	}
 	
 	/*public void joinRoom() {

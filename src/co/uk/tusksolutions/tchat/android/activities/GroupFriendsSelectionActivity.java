@@ -2,6 +2,7 @@ package co.uk.tusksolutions.tchat.android.activities;
 
 import java.util.ArrayList;
 
+import org.jivesoftware.smack.util.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,6 +30,7 @@ import android.widget.ListView;
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.adapters.GroupFriendsSelectionAdapter;
+import co.uk.tusksolutions.tchat.android.api.APIAddUserToGroup;
 import co.uk.tusksolutions.tchat.android.api.APICreateGroup;
 import co.uk.tusksolutions.tchat.android.models.RosterModel;
 import co.uk.tusksolutions.tchat.android.tasks.CreateMUCAsyncTask;
@@ -234,7 +236,7 @@ public class GroupFriendsSelectionActivity extends ActionBarActivity implements
 	@Override
 	public void onCreateMUCSuccess(String room, String roomJid,
 			ArrayList<RosterModel> participantsList) {
-		String password="";
+		String password = "";
 
 		StringBuilder group_name = new StringBuilder();
 		String group_admin = TChatApplication.getCurrentJid();
@@ -264,31 +266,49 @@ public class GroupFriendsSelectionActivity extends ActionBarActivity implements
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		
+
 		try {
-			APICreateGroup apiCreateGroup=new APICreateGroup();
-			apiCreateGroup.doPostGroup(room, group_name.toString(), group_admin, password);
+			APICreateGroup apiCreateGroup = new APICreateGroup();
+			apiCreateGroup.doPostGroup(room, group_name.toString(),
+					group_admin, password);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 
-		String jsonStr = Obj.toString();
-		if (TChatApplication.getGroupsModel().saveCreatedRoomInDB(room,
-				group_name.toString(), group_admin, jsonStr)) {
+		// Add creator to group first
+		APIAddUserToGroup addObject = new APIAddUserToGroup();
+		addObject.doAddUserToGroup(StringUtils.parseName(roomJid),
+				TChatApplication.getUserModel().getUsername());
 
-			
-			Bundle b = new Bundle();
-			b.putString("roomJid", roomJid);
-			b.putString("roomName", group_name.toString());
+		int counter = 0;
+		// Add participating users to group api
+		for (RosterModel rosterModel : participantsList) {
+			APIAddUserToGroup addUserToGroupObject = new APIAddUserToGroup();
+			addUserToGroupObject.doAddUserToGroup(
+					StringUtils.parseName(roomJid),
+					StringUtils.parseName(rosterModel.user));
+			counter++;
+		}
 
-			Intent intent = new Intent(TChatApplication.getContext(),
-					GroupChatActivity.class);
-			intent.putExtra("groupChatToRoomBundle", b);
-			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			TChatApplication.getContext().startActivity(intent);
-			
+		// Add participants to local db
+		if (counter == participantsList.size()) {
+			String jsonStr = Obj.toString();
+			if (TChatApplication.getGroupsModel().saveCreatedRoomInDB(room,
+					group_name.toString(), group_admin, jsonStr)) {
+
+				Bundle b = new Bundle();
+				b.putString("roomJid", roomJid);
+				b.putString("roomName", group_name.toString());
+
+				Intent intent = new Intent(TChatApplication.getContext(),
+						GroupChatActivity.class);
+				intent.putExtra("groupChatToRoomBundle", b);
+				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				TChatApplication.getContext().startActivity(intent);
+
+			}
+
 		}
 	}
 

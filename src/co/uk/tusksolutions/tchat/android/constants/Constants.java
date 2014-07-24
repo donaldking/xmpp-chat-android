@@ -20,6 +20,8 @@ public class Constants {
 	public static final String GET_LAST_ONLINE_TIME_ENDPOINT = "/mobileservices/v1/get_last_online_time.php";
 	public static final String UPDATE_LAST_ONLINE_PRIVACY_ENDPOINT = "/mobileservices/v1/update_last_online_privacy.php";
 	public static final String CREATE_GROUP_ENDPOINT = "/mobileservices/v1/create_group.php";
+	public static final String ADD_USER_TO_GROUP_ENDPOINT = "/mobileservices/v1/add_user_to_group.php";
+	
 	/**
 	 * Login Actions
 	 */
