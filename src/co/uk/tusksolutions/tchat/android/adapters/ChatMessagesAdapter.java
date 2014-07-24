@@ -2,7 +2,12 @@ package co.uk.tusksolutions.tchat.android.adapters;
 
 import java.util.ArrayList;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,9 +15,11 @@ import android.widget.BaseAdapter;
 import co.uk.tusksolutions.extensions.TimeAgo;
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
+import co.uk.tusksolutions.tchat.android.constants.Constants;
 import co.uk.tusksolutions.tchat.android.models.ChatMessagesModel;
 import co.uk.tusksolutions.tchat.android.viewHolders.ChatFromViewHolder;
 import co.uk.tusksolutions.tchat.android.viewHolders.ChatToViewHolder;
+import co.uk.tusksolutions.utility.URLImageParser;
 
 /**
  * Created by donaldking on 27/06/2014.
@@ -102,8 +109,30 @@ public class ChatMessagesAdapter extends BaseAdapter {
 			} else {
 				chatFromViewHolder = (ChatFromViewHolder) row.getTag();
 			}
+			
+			if(chatMessagesModel.message.contains("src="))
+			{
+				URLImageParser p = new URLImageParser(chatFromViewHolder.chatMessageTextView, TChatApplication.getContext());
+		
+				Document doc = Jsoup.parse(chatMessagesModel.message);
+				
+				Element element2 = doc.select("img").first(); // Get the
+																// anchor
+																// tag
+																// element
+			
+
+				String path = Constants.HTTP_SCHEME
+						+ element2.attr("src").substring(3).toString();
+				Drawable d=p.getDrawable(path);
+				chatFromViewHolder.chatMessageTextView.setBackgroundDrawable(d);
+			}
+			
+			else
+			{
 			chatFromViewHolder.chatMessageTextView
 					.setText(chatMessagesModel.message);
+			}
 			chatFromViewHolder.chatMessageTimestampTextView.setText(TimeAgo
 					.getTimeAgo(Long.parseLong(chatMessagesModel.timeStamp),
 							context));
@@ -123,8 +152,28 @@ public class ChatMessagesAdapter extends BaseAdapter {
 			} else {
 				chatToViewHolder = (ChatToViewHolder) row.getTag();
 			}
+			if(chatMessagesModel.message.contains("src="))
+			{
+				URLImageParser p = new URLImageParser(chatToViewHolder.chatMessageTextView, TChatApplication.getContext());
+		
+				Document doc = Jsoup.parse(chatMessagesModel.message);
+				
+				Element element2 = doc.select("img").first(); // Get the
+																// anchor
+																// tag
+																// element
+			
+
+				String path = Constants.HTTP_SCHEME
+						+ element2.attr("src").substring(3).toString();
+				Drawable d=p.getDrawable(path);
+				chatToViewHolder.chatMessageTextView.setBackgroundDrawable(d);
+			}
+			else
+			{
 			chatToViewHolder.chatMessageTextView
 					.setText(chatMessagesModel.message);
+			}
 			chatToViewHolder.chatMessageTimestampTextView.setText(TimeAgo
 					.getTimeAgo(Long.parseLong(chatMessagesModel.timeStamp),
 							context));

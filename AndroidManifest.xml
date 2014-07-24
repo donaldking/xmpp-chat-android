@@ -44,7 +44,7 @@
         </activity>
         <activity
             android:name="co.uk.tusksolutions.tchat.android.activities.ChatActivity"
-            android:noHistory="true" >
+            >
         </activity>
         <activity
             android:name="co.uk.tusksolutions.tchat.android.activities.GroupChatActivity"

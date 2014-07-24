@@ -5,13 +5,18 @@ import org.jivesoftware.smack.util.StringUtils;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
 import android.media.MediaPlayer;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.Html;
@@ -33,6 +38,7 @@ import co.uk.tusksolutions.tchat.android.adapters.ChatMessagesAdapter;
 import co.uk.tusksolutions.tchat.android.api.APICloudStorage;
 import co.uk.tusksolutions.tchat.android.api.APIGetLastOnlineTime;
 import co.uk.tusksolutions.tchat.android.api.APIGetMessages;
+import co.uk.tusksolutions.tchat.android.api.APIPostFile;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
 import co.uk.tusksolutions.tchat.android.listeners.XMPPChatMessageListener;
 import co.uk.tusksolutions.tchat.android.models.RosterModel;
@@ -54,6 +60,7 @@ public class ChatActivity extends ActionBarActivity {
 	private RosterModel mRosterModel;
 	public String lastSeen;
 	public static String CHATSTATE = "ACTION_CHAT_STATE";
+	private static final int SELECT_FILE = 1000;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -89,9 +96,10 @@ public class ChatActivity extends ActionBarActivity {
 				buddyName = getIntent().getExtras()
 						.getBundle("chatFromFriendBundle")
 						.getString("fromName");
-				buddyJid = StringUtils.parseBareAddress(getIntent().getExtras()
-						.getBundle("chatFromFriendBundle")
-						.getString("roomJid"));
+				buddyJid = StringUtils
+						.parseBareAddress(getIntent().getExtras()
+								.getBundle("chatFromFriendBundle")
+								.getString("roomJid"));
 
 			} else if (getIntent().getExtras().containsKey(
 					"chatWithFriendBundle")) {
@@ -102,8 +110,7 @@ public class ChatActivity extends ActionBarActivity {
 						.getBundle("chatWithFriendBundle")
 						.getString("friendName");
 				buddyJid = getIntent().getExtras()
-						.getBundle("chatWithFriendBundle")
-						.getString("roomJid");
+						.getBundle("chatWithFriendBundle").getString("roomJid");
 			}
 
 			getSupportActionBar().setTitle(buddyName);
@@ -126,7 +133,7 @@ public class ChatActivity extends ActionBarActivity {
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(Constants.MESSAGE_READY); // From sender (me)
 		filter.addAction(Constants.MESSAGE_RECEIVED); // From Receiver
-															// (buddy)
+														// (buddy)
 
 		filter.addAction(Constants.CHAT_MESSAGE_EMPTY); // No recent
 														// conversation
@@ -239,15 +246,66 @@ public class ChatActivity extends ActionBarActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem menuItem) {
+		Intent intent = new Intent(Intent.ACTION_PICK);
 		switch (menuItem.getItemId()) {
 		case android.R.id.home:
 			doGoBack();
 			break;
-
+		case R.id.photo_menu:
+			intent.setType("image/*");
+			startActivityForResult(
+					Intent.createChooser(intent, "Pick a picture"), SELECT_FILE);
+			break;
+		case R.id.video_menu:
+			intent.setType("video/*");
+			startActivityForResult(
+					Intent.createChooser(intent, "Pick a Video"), SELECT_FILE);
+			break;
+		case R.id.location_menu:
+			break;
 		default:
 			break;
 		}
 		return true;
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+		if (requestCode == SELECT_FILE) {
+			if (resultCode == Activity.RESULT_OK) {
+				String selectedFile = getRealPathFromURI(data.getData());
+				APIPostFile apiPostFile = new APIPostFile();
+				apiPostFile.doPostFile(currentJid, buddyJid, selectedFile,
+						buddyName);
+
+			}
+
+		}
+
+		super.onActivityResult(requestCode, resultCode, data);
+	}
+
+	private String getRealPathFromURI(Uri contentUri) {
+		// can post image
+		String[] proj = { MediaStore.Images.Media.DATA };
+		Cursor cursor = null;
+
+		try {
+			cursor = TChatApplication.getContext().getContentResolver()
+					.query(contentUri, proj, null, null, null);
+
+			cursor.moveToFirst();
+			int column_index = cursor
+					.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+			return cursor.getString(column_index);
+		} catch (Exception ex) {
+			return "";
+		} finally {
+			if (cursor != null) {
+				cursor.close();
+			}
+		}
 	}
 
 	@Override
@@ -352,8 +410,8 @@ public class ChatActivity extends ActionBarActivity {
 				mp.setVolume(1, 1);
 				mp.start();
 
-				XMPPChatMessageManager
-						.sendMessage(buddyJid, buddyName, message, 0, "CHAT");
+				XMPPChatMessageManager.sendMessage(buddyJid, buddyName,
+						message, 0, "CHAT");
 				chatMessageEditText.setText("");
 				chatSendButton.setEnabled(false);
 
@@ -421,8 +479,7 @@ public class ChatActivity extends ActionBarActivity {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			if (intent.getAction().equalsIgnoreCase(
-					Constants.MESSAGE_READY)) {
+			if (intent.getAction().equalsIgnoreCase(Constants.MESSAGE_READY)) {
 				prepareListView(buddyJid, currentJid, 1,
 						intent.getLongExtra("id", -1));
 			} else if (intent.getAction().equalsIgnoreCase(
