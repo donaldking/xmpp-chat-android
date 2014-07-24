@@ -353,7 +353,7 @@ public class ChatActivity extends ActionBarActivity {
 				mp.start();
 
 				XMPPChatMessageManager
-						.sendMessage(buddyJid, buddyName, message, false, "text");
+						.sendMessage(buddyJid, buddyName, message, 0, "CHAT");
 				chatMessageEditText.setText("");
 				chatSendButton.setEnabled(false);
 
@@ -361,7 +361,7 @@ public class ChatActivity extends ActionBarActivity {
 				APICloudStorage cloudStorage = new APICloudStorage();
 				cloudStorage.saveToCloud(TChatApplication.getUserModel()
 						.getUsername(), StringUtils.parseName(buddyJid),
-						message, "none");
+						message, "none", 0, "CHAT");
 			}
 		}
 

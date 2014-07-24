@@ -13,12 +13,12 @@ public class XMPPChatMessageManager {
 	private static ChatStateExtension cm;
 
 	public static void sendMessage(final String to, String buddyName,
-			final String message, boolean isGroupMessage, String messageType) {
+			final String message, int isGroupMessage, String messageType) {
 		if (mChatMessageModel == null) {
 			mChatMessageModel = new ChatMessagesModel();
 		}
 		Message msg;
-		if (isGroupMessage) {
+		if (isGroupMessage == 1) {
 			msg = new Message(to, Message.Type.groupchat);
 		} else {
 			msg = new Message(to, Message.Type.chat);

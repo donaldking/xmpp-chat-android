@@ -141,6 +141,6 @@ public class XMPPChatMessageListener implements PacketListener {
 		mChatMessageModel.saveMessageToDB(TChatApplication.getCurrentJid(),
 				StringUtils.parseBareAddress(packet.getFrom()),
 				StringUtils.parseName(packet.getFrom()), message.getBody(),
-				false, "text", System.currentTimeMillis(), 1);
+				1, "CHAT", System.currentTimeMillis(), 1);
 	}
 }

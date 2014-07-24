@@ -306,7 +306,7 @@ public class GroupChatActivity extends ActionBarActivity {
 				mp.start();
 
 				XMPPChatMessageManager.sendMessage(roomJid, roomName, message,
-						true, "text");
+						1, "GROUP_CHAT");
 				chatMessageEditText.setText("");
 				chatSendButton.setEnabled(false);
 
@@ -314,7 +314,7 @@ public class GroupChatActivity extends ActionBarActivity {
 				APICloudStorage cloudStorage = new APICloudStorage();
 				cloudStorage.saveToCloud(TChatApplication.getUserModel()
 						.getUsername(), StringUtils.parseName(roomJid),
-						message, "none");
+						message, "none", 1, "GROUP_CHAT");
 			}
 		}
 

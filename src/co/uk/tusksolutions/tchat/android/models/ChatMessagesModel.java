@@ -93,7 +93,7 @@ public class ChatMessagesModel implements Parcelable {
 	}
 
 	public boolean saveMessageToDB(String to, String from, String buddyName,
-			String message, boolean isGroupMessage, String messageType,
+			String message, int isGroupMessage, String messageType,
 			long timeStamp, int isRead) {
 
 		db = TChatApplication.getTChatDBWritable();
@@ -169,7 +169,7 @@ public class ChatMessagesModel implements Parcelable {
 	}
 
 	private boolean saveToRecentsTable(String to, String from,
-			String buddyName, String message, boolean isGroupMessage,
+			String buddyName, String message, int isGroupMessage,
 			String messageType, long timeStamp, int isRead) {
 		try {
 

@@ -13,7 +13,6 @@ import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.TChatApplication.CHAT_STATUS_ENUM;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
 import co.uk.tusksolutions.tchat.android.models.ChatMessagesModel;
-import co.uk.tusksolutions.tchat.android.xmpp.XMPPMUCManager;
 import co.uk.tusksolutions.tchat.android.xmpp.notifications.XMPPNotificationManager;
 
 public class XMPPGroupChatMessageListener implements PacketListener {
@@ -124,7 +123,7 @@ public class XMPPGroupChatMessageListener implements PacketListener {
 		mChatMessageModel.saveMessageToDB(TChatApplication.getCurrentJid(),
 				StringUtils.parseBareAddress(packet.getFrom()),
 				StringUtils.parseName(packet.getFrom()), message.getBody(),
-				true, "text", System.currentTimeMillis(), 1);
+				1, "GROUP_CHAT", System.currentTimeMillis(), 1);
 	}
 
 }

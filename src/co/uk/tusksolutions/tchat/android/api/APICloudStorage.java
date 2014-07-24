@@ -18,15 +18,18 @@ import co.uk.tusksolutions.tchat.android.constants.Constants;
 public class APICloudStorage {
 	JSONArray jsonArray;
 	private AsyncApiRecents mTask = null;
-	String sender, receiver, message, mid;
+	String sender, receiver, message, mid, messageType;
+	String isGroupMessage;
 
 	public void saveToCloud(String sender, String receiver, String message,
-			String mid) {
+			String mid, int isGroupMessage, String messageType) {
 
 		this.sender = sender;
 		this.receiver = receiver;
 		this.message = message;
 		this.mid = mid;
+		this.isGroupMessage = Integer.toString(isGroupMessage);
+		this.messageType = messageType;
 
 		if (mTask != null) {
 			return;
@@ -59,6 +62,10 @@ public class APICloudStorage {
 				postParams.add(new BasicNameValuePair("receiver", receiver));
 				postParams.add(new BasicNameValuePair("message", message));
 				postParams.add(new BasicNameValuePair("mid", mid));
+				postParams.add(new BasicNameValuePair("isGroupMessage",
+						isGroupMessage));
+				postParams.add(new BasicNameValuePair("messageType",
+						messageType));
 				httpPost.setEntity(new UrlEncodedFormEntity(postParams));
 
 				httpclient.execute(httpPost);
