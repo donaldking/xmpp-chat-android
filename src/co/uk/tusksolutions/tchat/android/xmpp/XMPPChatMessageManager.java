@@ -49,8 +49,13 @@ public class XMPPChatMessageManager {
 		Message msg = new Message(to, Message.Type.chat);
 		msg.addExtension(cm);
 
-		if (TChatApplication.connection != null) {
-			TChatApplication.connection.sendPacket(msg);
+		try {
+			if (TChatApplication.connection != null) {
+				TChatApplication.connection.sendPacket(msg);
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
@@ -59,8 +64,13 @@ public class XMPPChatMessageManager {
 		Message msg = new Message(to, Message.Type.chat);
 		msg.addExtension(cm);
 
-		if (TChatApplication.connection != null) {
-			TChatApplication.connection.sendPacket(msg);
+		try {
+			if (TChatApplication.connection != null) {
+				TChatApplication.connection.sendPacket(msg);
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 

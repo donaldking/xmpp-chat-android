@@ -118,17 +118,17 @@ public class ChatMessagesAdapter extends BaseAdapter {
 			}
 
 			if (chatMessagesModel.message.startsWith("&lt")) {
+				/*
+				 * Show ImageView in ChatRow @DEEPAK
+				 */
 				chatFromViewHolder.imagesent.setVisibility(View.VISIBLE);
 				chatFromViewHolder.chatMessageTextView.setVisibility(View.GONE);
 
+				/*
+                 * Extract image src from uploaded Link @DEEPAK
+                 */
 				String path = getFirstImage(Html.fromHtml(
 						chatMessagesModel.message).toString());
-				Log.e("path ",
-						" path is "
-								+ path
-								+ "  "
-								+ Html.fromHtml(chatMessagesModel.message)
-										.toString());
 
 				try {
 					UrlImageViewHelper.setUrlDrawable(
@@ -167,16 +167,18 @@ public class ChatMessagesAdapter extends BaseAdapter {
 				chatToViewHolder = (ChatToViewHolder) row.getTag();
 			}
 			if (chatMessagesModel.message.contains("src=")) {
+				/*
+				 * Show ImageView in ChatRow @DEEPAK
+				 */
 				chatToViewHolder.recivedImage.setVisibility(View.VISIBLE);
-				chatToViewHolder.chatMessageTextView.setVisibility(View.GONE);
-                  Log.e("last date ",chatMessagesModel.message);
+				
+				chatToViewHolder.chatMessageTextView.setVisibility(View.GONE);//Hide TextView Field
+                 
+				/*
+                  * Extract image src from uploaded Link @DEEPAK
+                  */
+                 
 				String path = getFirstImage(chatMessagesModel.message);
-				Log.e(" chat to view holder path ",
-						" path is "
-								+ path
-								+ "  "
-								+ Html.fromHtml(chatMessagesModel.message)
-										.toString());
 
 				try {
 					UrlImageViewHelper.setUrlDrawable(
@@ -185,7 +187,7 @@ public class ChatMessagesAdapter extends BaseAdapter {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				// chatFromViewHolder.chatMessageTextView.setText(Html.fromHtml(chatMessagesModel.message));
+				
 			} else {
 				chatToViewHolder.recivedImage.setVisibility(View.GONE);
 				chatToViewHolder.chatMessageTextView
@@ -214,7 +216,7 @@ public class ChatMessagesAdapter extends BaseAdapter {
 
 		for (Element imageElement : imgs) {
 			if (imageElement != null) {
-				// for each element get the srs url
+				// for each element get the src url
 				img = Constants.HTTP_SCHEME
 						+ imageElement.attr("src").substring(3);
 				return img;

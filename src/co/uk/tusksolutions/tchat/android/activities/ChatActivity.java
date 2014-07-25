@@ -175,6 +175,7 @@ public class ChatActivity extends ActionBarActivity {
 		mGetMessagesApi.getMessages(StringUtils.parseName(buddyJid),
 				mAdapter.getCount(), 25);
 		listView.setAdapter(mAdapter);
+		
 		scrollToBottom();
 	}
 
@@ -251,6 +252,8 @@ public class ChatActivity extends ActionBarActivity {
 			doGoBack();
 			break;
 		case R.id.photo_menu:
+			
+		
 			intent.setType("image/*");
 			startActivityForResult(
 					Intent.createChooser(intent, "Pick a picture"), SELECT_FILE);
@@ -273,6 +276,8 @@ public class ChatActivity extends ActionBarActivity {
 
 		if (requestCode == SELECT_FILE) {
 			if (resultCode == Activity.RESULT_OK) {
+				Toast.makeText(ChatActivity.this, "Sending Image please wait",Toast.LENGTH_SHORT).show();
+				
 				String selectedFile = getRealPathFromURI(data.getData());
 				APIPostFile apiPostFile = new APIPostFile();
 				apiPostFile.doPostFile(currentJid, buddyJid, selectedFile,
@@ -405,9 +410,7 @@ public class ChatActivity extends ActionBarActivity {
 			if (chatMessageEditText.getText().toString().length() >= 1) {
 				String message = chatMessageEditText.getText().toString();
 
-				mp = MediaPlayer.create(v.getContext(), R.raw.received_message);
-				mp.setVolume(1, 1);
-				mp.start();
+				PlaySound(true);
 
 				XMPPChatMessageManager.sendMessage(buddyJid, buddyName,
 						message, 0, "CHAT");
@@ -437,6 +440,21 @@ public class ChatActivity extends ActionBarActivity {
 					"Emoji coming soon...", Toast.LENGTH_SHORT).show();
 		}
 
+	}
+
+	public void PlaySound(Boolean sent) {
+		if(sent)
+		{
+		mp = MediaPlayer.create(TChatApplication.getContext(), R.raw.send_message);
+		mp.setVolume(1, 1);
+		mp.start();
+		}
+		else
+		{
+			mp = MediaPlayer.create(TChatApplication.getContext(), R.raw.received_message);
+			mp.setVolume(1, 1);
+			mp.start();
+		}
 	}
 
 	public void displayComposing(String chatStateStr, String ComposingBuddyJid) {
@@ -479,6 +497,7 @@ public class ChatActivity extends ActionBarActivity {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			if (intent.getAction().equalsIgnoreCase(Constants.MESSAGE_READY)) {
+				
 				prepareListView(buddyJid, currentJid, 1,
 						intent.getLongExtra("id", -1));
 			} else if (intent.getAction().equalsIgnoreCase(

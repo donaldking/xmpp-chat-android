@@ -52,23 +52,8 @@ public class APIPostFile {
 
 	private class APIPostFileTask extends AsyncTask<Void, Void, Boolean> {
 
-		/*ProgressDialog progressDialog = new ProgressDialog(
-				TChatApplication.getContext());*/
+		
 		String link;
-
-		@Override
-		protected void onPreExecute() {
-
-			/*progressDialog = ProgressDialog.show(TChatApplication.getContext(),
-					"", "Sending file Please wait...");
-			super.onPreExecute();
-
-			progressDialog.setMessage("File sending...");
-			progressDialog.show();
-			progressDialog.setCancelable(false);*/
-
-		}
-
 		@Override
 		protected Boolean doInBackground(Void... params) {
 
@@ -78,7 +63,7 @@ public class APIPostFile {
 				File file = new File(selectedFile);
 
 				try {
-					link = UploadFile(sender.replace("@dev.yookoschat.com",""), receiver.replace("@dev.yookoschat.com",""), file);
+					link = UploadFile(sender.replace("@"+Constants.CURRENT_SERVER,""), receiver.replace("@"+Constants.CURRENT_SERVER,""), file);
 					Log.e("upload file link ", link);
 				} catch (UnsupportedEncodingException e) {
 					// TODO Auto-generated catch block
@@ -98,6 +83,7 @@ public class APIPostFile {
 			mTask = null;
 
 			if (result) {
+				
 				XMPPChatMessageManager.sendMessage(receiver, buddyName,
 						link, 0, "text");
 
