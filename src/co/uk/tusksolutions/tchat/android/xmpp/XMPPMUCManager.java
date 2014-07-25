@@ -12,9 +12,8 @@ import org.jivesoftware.smackx.muc.MultiUserChat;
 import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
-import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
-import co.uk.tusksolutions.tchat.android.listeners.XmppMucInvitationListener;
+import co.uk.tusksolutions.tchat.android.listeners.XMPPMucInvitationListener;
 
 public class XMPPMUCManager {
 	private static String TAG = "XMPPMUCManager";
@@ -27,7 +26,7 @@ public class XMPPMUCManager {
 	public XMPPMUCManager(Context ctx) {
 		this.context = ctx;
 	}
-	
+
 	public void mucServiceDiscovery() {
 		mRooms.clear();
 		try {
@@ -44,7 +43,7 @@ public class XMPPMUCManager {
 
 		Log.d("XmppMUC", "Register a listener for Room invitations!");
 		MultiUserChat.addInvitationListener(TChatApplication.connection,
-				new XmppMucInvitationListener(context));
+				new XMPPMucInvitationListener(context));
 	}
 
 	public static XMPPMUCManager getInstance(Context ctx) {
@@ -128,8 +127,8 @@ public class XMPPMUCManager {
 	}
 
 	public MultiUserChat inviteToRoom(String roomName, String nickname,
-			String buddyJID, String password, String roomJID)
-			throws XMPPException {
+			String buddyJID, String password, String roomJID,
+			String group_name) throws XMPPException {
 		MultiUserChat muc;
 
 		if (!mRooms.containsKey(roomJID)) {
@@ -140,10 +139,10 @@ public class XMPPMUCManager {
 		}
 
 		if (muc != null) {
+			
+			muc.changeSubject(group_name);
+			muc.invite(buddyJID, group_name);
 
-			muc.invite(buddyJID, String.format(
-					context.getString(R.string.inviteNewBuddyToRoomMessage),
-					roomName));
 		}
 
 		return muc;

@@ -3,6 +3,7 @@ package co.uk.tusksolutions.tchat.android.tasks;
 import java.util.ArrayList;
 
 import org.jivesoftware.smack.XMPPException;
+import org.json.JSONObject;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -23,6 +24,7 @@ public class CreateMUCAsyncTask extends AsyncTask<Void, Void, Boolean> {
 	private boolean alreadyExists;
 	private String errorMessage = "Error creating room";
 	String roomJID;
+
 	public CreateMUCAsyncTask(final Context context, final String roomName,
 			final ArrayList<RosterModel> friendArrayList,
 			final OnCreateMUCListener listener) {
@@ -51,17 +53,29 @@ public class CreateMUCAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
 		try {
 
-			XMPPMUCManager xmppMucManager = XMPPMUCManager.getInstance(context);
+			/**
+			 * Build group name from buddy names. This is used for sending
+			 * invitation reason.
+			 */
+			int index = 0;
+			StringBuilder group_name = new StringBuilder();
+			for (RosterModel rosterModel : friendArrayList) {
+				group_name.append(rosterModel.name);
+				index++;
+				if (index < friendArrayList.size()) {
+					group_name.append(", ");
+				}
+			}
 
-			 roomJID = roomName + "@conference."
-					+ Constants.CURRENT_SERVER;
-			
+			XMPPMUCManager xmppMucManager = XMPPMUCManager.getInstance(context);
+			roomJID = roomName + "@conference." + Constants.CURRENT_SERVER;
+
 			for (int i = 0; i < friendArrayList.size(); i++) {
 				if (friendArrayList.get(i).isSelected()) {
 					String friendJID = friendArrayList.get(i).user;
 					xmppMucManager.inviteToRoom(roomName, TChatApplication
 							.getUserModel().getUsername(), friendJID, "",
-							roomJID);
+							roomJID, group_name.toString());
 				}
 			}
 
@@ -76,13 +90,13 @@ public class CreateMUCAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
 	@Override
 	protected void onPostExecute(Boolean result) {
-		
+
 		if (progressDialog != null)
 			progressDialog.dismiss();
 		if (result) {
-			
-			listener.onCreateMUCSuccess(roomName,roomJID,friendArrayList);
-			
+
+			listener.onCreateMUCSuccess(roomName, roomJID, friendArrayList);
+
 		} else {
 			listener.onCreateMUCFailed(alreadyExists, errorMessage);
 		}
@@ -91,7 +105,9 @@ public class CreateMUCAsyncTask extends AsyncTask<Void, Void, Boolean> {
 	}
 
 	public interface OnCreateMUCListener {
-		void onCreateMUCSuccess(String room,String roomjid,ArrayList<RosterModel> friendArrayList);
+		void onCreateMUCSuccess(String room, String roomjid,
+				ArrayList<RosterModel> friendArrayList);
+
 		void onCreateMUCFailed(boolean alreadyExists, String message);
 	}
 }

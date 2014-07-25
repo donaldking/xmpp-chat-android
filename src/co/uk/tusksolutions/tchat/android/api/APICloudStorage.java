@@ -53,7 +53,6 @@ public class APICloudStorage {
 					+ Constants.CLOUD_STORAGE_ENDPOINT);
 
 			HttpClient httpclient = new DefaultHttpClient();
-			;
 
 			try {
 

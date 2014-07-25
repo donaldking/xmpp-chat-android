@@ -311,6 +311,11 @@ public class GroupChatActivity extends ActionBarActivity {
 				chatSendButton.setEnabled(false);
 
 				// Save to cloud
+				Log.d("APICloudStorage", "Sender: "
+						+ TChatApplication.getUserModel().getUsername()
+						+ ", Receiver: " + StringUtils.parseName(roomJid)
+						+ " Message: " + message);
+
 				APICloudStorage cloudStorage = new APICloudStorage();
 				cloudStorage.saveToCloud(TChatApplication.getUserModel()
 						.getUsername(), StringUtils.parseName(roomJid),

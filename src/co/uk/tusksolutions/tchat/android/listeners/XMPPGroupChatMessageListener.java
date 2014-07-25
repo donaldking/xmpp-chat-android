@@ -4,6 +4,7 @@ import org.jivesoftware.smack.PacketListener;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Packet;
 import org.jivesoftware.smack.util.StringUtils;
+import org.jivesoftware.smackx.muc.MultiUserChat;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +14,7 @@ import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.TChatApplication.CHAT_STATUS_ENUM;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
 import co.uk.tusksolutions.tchat.android.models.ChatMessagesModel;
+import co.uk.tusksolutions.tchat.android.models.GroupsModel;
 import co.uk.tusksolutions.tchat.android.xmpp.notifications.XMPPNotificationManager;
 
 public class XMPPGroupChatMessageListener implements PacketListener {
@@ -22,29 +24,29 @@ public class XMPPGroupChatMessageListener implements PacketListener {
 	public static final String EXTRA_CHAT_STATE = "chatState";
 	public static final String ACTION_XMPP_CHAT_STATE_CHANGED = "XMPP_CHAT_STATE_CHANGED";
 	public static final String EXTRA_CHAT_BUDDY_NAME = "roomJid";
-	
-	public void XMPPChatMessageListener(){
+
+	public XMPPGroupChatMessageListener() {
 		// TODO Auto Join groups when it becomes available in db.
-		// TODO API - Add users (full jid) to groups when its being created.
+
+		// Add invitation listener
+		MultiUserChat.addInvitationListener(TChatApplication.connection,
+				new XMPPMucInvitationListener(TChatApplication.getContext()));
 	}
-	
-	/*public void joinRoom() {
-		XMPPMUCManager.getInstance(TChatApplication.getContext()).joinRoom(
-				TChatApplication.connection, roomJid, "",
-				TChatApplication.getUserModel().getProfileName());
-	}*/
-	
+
 	@Override
 	public void processPacket(Packet packet) {
 
 		Message message = (Message) packet;
-		if (message.getType() == Message.Type.groupchat) {
+		if (message.getType() == Message.Type.groupchat
+				&& !StringUtils.parseResource(message.getFrom())
+						.equalsIgnoreCase(
+								TChatApplication.getUserModel().getUsername())) {
 			if (message.getBody().length() > 0) {
 
 				String roomJid = StringUtils
 						.parseBareAddress(message.getFrom());
-				String roomName = TChatApplication.getGroupsModel()
-						.getGroupName(StringUtils.parseName(message.getFrom()));
+				String roomName = new GroupsModel().getGroupName(StringUtils
+						.parseName(message.getFrom()));
 				String senderJid = StringUtils.parseResource(message.getFrom())
 						+ "@" + Constants.CURRENT_SERVER;
 				String senderName = TChatApplication.getRosterModel()
@@ -54,7 +56,7 @@ public class XMPPGroupChatMessageListener implements PacketListener {
 						+ ", Room Name: " + roomName + ", and sender: "
 						+ senderJid + ", and Sender Name: " + senderName
 						+ " Message: " + message.getBody());
-				
+
 				if (TChatApplication.getChatActivityStatus() == CHAT_STATUS_ENUM.VISIBLE
 						&& TChatApplication.chatSessionBuddy
 								.equalsIgnoreCase(roomJid)) {
@@ -88,16 +90,15 @@ public class XMPPGroupChatMessageListener implements PacketListener {
 	}
 
 	private void sendNotification(Packet packet, Message message) {
-		
-		String roomJid = StringUtils
-				.parseBareAddress(message.getFrom());
-		String roomName = TChatApplication.getGroupsModel()
-				.getGroupName(StringUtils.parseName(message.getFrom()));
-		String senderJid = StringUtils.parseResource(message.getFrom())
-				+ "@" + Constants.CURRENT_SERVER;
-		String senderName = TChatApplication.getRosterModel()
-				.getBuddyName(senderJid);
-		
+
+		String roomJid = StringUtils.parseBareAddress(message.getFrom());
+		String roomName = TChatApplication.getGroupsModel().getGroupName(
+				StringUtils.parseName(message.getFrom()));
+		String senderJid = StringUtils.parseResource(message.getFrom()) + "@"
+				+ Constants.CURRENT_SERVER;
+		String senderName = TChatApplication.getRosterModel().getBuddyName(
+				senderJid);
+
 		Bundle b = new Bundle();
 		b.putString("roomJid", roomJid);
 		b.putString("roomName", roomName);
@@ -119,11 +120,18 @@ public class XMPPGroupChatMessageListener implements PacketListener {
 		/*
 		 * Insert received message to db
 		 */
+
+		String roomJid = StringUtils.parseBareAddress(message.getFrom());
+		String roomName = TChatApplication.getGroupsModel().getGroupName(
+				StringUtils.parseName(message.getFrom()));
+
+		Log.d("saveMessageToDb", "Sender: " + packet.getFrom() + ", Receiver: "
+				+ packet.getTo() + " Message: " + message.getBody());
+
 		ChatMessagesModel mChatMessageModel = new ChatMessagesModel();
 		mChatMessageModel.saveMessageToDB(TChatApplication.getCurrentJid(),
-				StringUtils.parseBareAddress(packet.getFrom()),
-				StringUtils.parseName(packet.getFrom()), message.getBody(),
-				1, "GROUP_CHAT", System.currentTimeMillis(), 1);
+				roomJid, roomName, message.getBody(), 1, "GROUP_CHAT",
+				System.currentTimeMillis(), 0);
 	}
 
 }

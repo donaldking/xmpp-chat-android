@@ -27,7 +27,6 @@ public class XMPPChatMessageManager {
 		msg.setBody(message);
 		if (TChatApplication.connection != null) {
 			try {
-
 				mChatMessageModel.saveMessageToDB(to,
 						TChatApplication.getCurrentJid(), buddyName, message,
 						isGroupMessage, messageType,
