@@ -99,7 +99,7 @@ public class APIPostFile {
 
 			if (result) {
 				XMPPChatMessageManager.sendMessage(receiver, buddyName,
-						Html.fromHtml(link).toString(), 0, "text");
+						link, 0, "text");
 
 			} else {
 

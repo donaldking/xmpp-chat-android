@@ -102,8 +102,7 @@ public class GroupFriendsSelectionAdapter extends BaseAdapter implements
 
 		GroupFriendsSelectionViewHolder mHolder = (GroupFriendsSelectionViewHolder) row
 				.getTag();
-		mHolder.checkMark.setChecked(rosterModelCollection.get(position)
-				.isSelected());
+		mHolder.checkMark.setChecked(rosterModelCollection.get(position).isSelected());
 
 		String[] username = rosterModel.user.split("@");
 		try {

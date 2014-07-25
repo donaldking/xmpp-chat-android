@@ -5,13 +5,20 @@ import java.util.ArrayList;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.text.Html;
+import android.text.Html.ImageGetter;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import co.uk.tusksolutions.extensions.TimeAgo;
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
@@ -109,29 +116,36 @@ public class ChatMessagesAdapter extends BaseAdapter {
 			} else {
 				chatFromViewHolder = (ChatFromViewHolder) row.getTag();
 			}
-			
-			if(chatMessagesModel.message.contains("src="))
-			{
-				URLImageParser p = new URLImageParser(chatFromViewHolder.chatMessageTextView, TChatApplication.getContext());
-		
-				Document doc = Jsoup.parse(chatMessagesModel.message);
-				
-				Element element2 = doc.select("img").first(); // Get the
-																// anchor
-																// tag
-																// element
-			
 
-				String path = Constants.HTTP_SCHEME
-						+ element2.attr("src").substring(3).toString();
-				Drawable d=p.getDrawable(path);
-				chatFromViewHolder.chatMessageTextView.setBackgroundDrawable(d);
+			if (chatMessagesModel.message.startsWith("&lt")) {
+				chatFromViewHolder.imagesent.setVisibility(View.VISIBLE);
+				chatFromViewHolder.chatMessageTextView.setVisibility(View.GONE);
+
+				String path = getFirstImage(Html.fromHtml(
+						chatMessagesModel.message).toString());
+				Log.e("path ",
+						" path is "
+								+ path
+								+ "  "
+								+ Html.fromHtml(chatMessagesModel.message)
+										.toString());
+
+				try {
+					UrlImageViewHelper.setUrlDrawable(
+							chatFromViewHolder.imagesent, path,
+							R.drawable.mondobar_jewel_friends_on);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				// chatFromViewHolder.chatMessageTextView.setText(Html.fromHtml(chatMessagesModel.message));
 			}
-			
-			else
-			{
-			chatFromViewHolder.chatMessageTextView
-					.setText(chatMessagesModel.message);
+
+			else {
+				chatFromViewHolder.imagesent.setVisibility(View.GONE);
+				chatFromViewHolder.chatMessageTextView
+						.setVisibility(View.VISIBLE);
+				chatFromViewHolder.chatMessageTextView
+						.setText(chatMessagesModel.message);
 			}
 			chatFromViewHolder.chatMessageTimestampTextView.setText(TimeAgo
 					.getTimeAgo(Long.parseLong(chatMessagesModel.timeStamp),
@@ -152,27 +166,32 @@ public class ChatMessagesAdapter extends BaseAdapter {
 			} else {
 				chatToViewHolder = (ChatToViewHolder) row.getTag();
 			}
-			if(chatMessagesModel.message.contains("src="))
-			{
-				URLImageParser p = new URLImageParser(chatToViewHolder.chatMessageTextView, TChatApplication.getContext());
-		
-				Document doc = Jsoup.parse(chatMessagesModel.message);
-				
-				Element element2 = doc.select("img").first(); // Get the
-																// anchor
-																// tag
-																// element
-			
+			if (chatMessagesModel.message.contains("src=")) {
+				chatToViewHolder.recivedImage.setVisibility(View.VISIBLE);
+				chatToViewHolder.chatMessageTextView.setVisibility(View.GONE);
+                  Log.e("last date ",chatMessagesModel.message);
+				String path = getFirstImage(chatMessagesModel.message);
+				Log.e(" chat to view holder path ",
+						" path is "
+								+ path
+								+ "  "
+								+ Html.fromHtml(chatMessagesModel.message)
+										.toString());
 
-				String path = Constants.HTTP_SCHEME
-						+ element2.attr("src").substring(3).toString();
-				Drawable d=p.getDrawable(path);
-				chatToViewHolder.chatMessageTextView.setBackgroundDrawable(d);
-			}
-			else
-			{
-			chatToViewHolder.chatMessageTextView
-					.setText(chatMessagesModel.message);
+				try {
+					UrlImageViewHelper.setUrlDrawable(
+							chatToViewHolder.recivedImage, path,
+							R.drawable.mondobar_jewel_friends_on);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				// chatFromViewHolder.chatMessageTextView.setText(Html.fromHtml(chatMessagesModel.message));
+			} else {
+				chatToViewHolder.recivedImage.setVisibility(View.GONE);
+				chatToViewHolder.chatMessageTextView
+						.setVisibility(View.VISIBLE);
+				chatToViewHolder.chatMessageTextView
+						.setText(chatMessagesModel.message);
 			}
 			chatToViewHolder.chatMessageTimestampTextView.setText(TimeAgo
 					.getTimeAgo(Long.parseLong(chatMessagesModel.timeStamp),
@@ -182,5 +201,26 @@ public class ChatMessagesAdapter extends BaseAdapter {
 		}
 
 		return row;
+	}
+
+	private String getFirstImage(String htmlString) {
+
+		if (htmlString == null)
+			return null;
+
+		String img = "";
+		Document doc = Jsoup.parse(htmlString);
+		Elements imgs = doc.getElementsByTag("img");
+
+		for (Element imageElement : imgs) {
+			if (imageElement != null) {
+				// for each element get the srs url
+				img = Constants.HTTP_SCHEME
+						+ imageElement.attr("src").substring(3);
+				return img;
+			}
+		}
+
+		return null;
 	}
 }

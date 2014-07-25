@@ -25,8 +25,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.adapters.GroupFriendsSelectionAdapter;
@@ -60,6 +63,7 @@ public class GroupFriendsSelectionActivity extends ActionBarActivity implements
 		listView = (ListView) findViewById(R.id.list_view);
 		listView.setItemsCanFocus(false);
 		listView.setFastScrollEnabled(true);
+		
 		actionBar.setTitle("New Message");
 
 		searchInput = (EditText) findViewById(R.id.friend_add_edittext);
@@ -311,5 +315,7 @@ public class GroupFriendsSelectionActivity extends ActionBarActivity implements
 
 		}
 	}
+
+	
 
 }

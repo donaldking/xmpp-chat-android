@@ -13,6 +13,18 @@
         android:layout_alignParentLeft="true"
         android:gravity="left"
         android:orientation="vertical" >
+        
+        <ImageView
+            android:id="@+id/chatListItemSentTransferIcon"
+            android:layout_width="140dp"
+            android:layout_height="140dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="5dp"
+           
+            android:padding="5dp"
+        >
+        </ImageView>
 
         <co.uk.tusksolutions.extensions.RobotoRegularTextView
             android:id="@+id/chat_from_text_view"
@@ -20,7 +32,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/chat_from_background_image"
             android:padding="7dp"
-            android:text="Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod."
+           
             android:textColor="@color/black"
             android:textSize="16dp" />
 

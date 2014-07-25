@@ -5,6 +5,10 @@ import java.util.Arrays;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -46,8 +50,18 @@ public class SearchActivity extends ActionBarActivity implements TextWatcher {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.search_messages_activity);
 		
-		
-		
+		String message="<img src=&quot;//@dev.yookoschat.com/mobileservices/v1/uploads/1406272094&quot; style=&quot;max-width:160px;width:auto;&quot;&gt;&lt;/img>";
+  String imag=getFirstImage(message);
+	Log.e("TAG","img "+imag);	
+  //Document doc = Jsoup.parse(message);
+		// Element element = doc.select("img").first();
+		// System.out.println(element.attr("src"));
+		//Element element2 = doc.select("src").first(); // Get the
+													// anchor
+													// tag
+													// element
+		//Log.e("TAG", "path is "+element2.attr("img").substring(3)
+			//	.toString());
 		
 		mModel = new RosterModel();
 		rosterModelCollection = new ArrayList<RosterModel>();
@@ -83,6 +97,26 @@ public class SearchActivity extends ActionBarActivity implements TextWatcher {
 
 	}
 
+	private String getFirstImage(String htmlString){
+
+	    if(htmlString==null) return null;
+
+	    String img ="";
+	    Document doc = Jsoup.parse(htmlString);
+	    Elements imgs = doc.getElementsByTag("img");
+
+
+
+	     for (Element imageElement : imgs) {
+	         if(imageElement!=null){
+	         //for each element get the srs url
+	         img = imageElement.attr("src").substring(4);
+	                   return img;
+	         }
+	     }
+
+	     return null;
+	}
 	/**
 	 * Shows the progress UI and hides the login form.
 	 */
