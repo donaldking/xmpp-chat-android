@@ -11,6 +11,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
@@ -27,6 +30,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,6 +45,8 @@ import co.uk.tusksolutions.tchat.android.api.APIPostFile;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
 import co.uk.tusksolutions.tchat.android.listeners.XMPPChatMessageListener;
 import co.uk.tusksolutions.tchat.android.models.RosterModel;
+import co.uk.tusksolutions.tchat.android.viewHolders.ChatFromViewHolder;
+import co.uk.tusksolutions.tchat.android.viewHolders.ChatToViewHolder;
 import co.uk.tusksolutions.tchat.android.xmpp.XMPPChatMessageManager;
 
 public class ChatActivity extends ActionBarActivity {
@@ -83,7 +89,7 @@ public class ChatActivity extends ActionBarActivity {
 		chatSendButton = (Button) findViewById(R.id.chat_send_button);
 		chatSendButton.setOnClickListener(new ChatSendOnClickListener());
 
-		chatMessageEditText = (TextView) findViewById(R.id.chat_message_edit_text);
+		chatMessageEditText = (EditText) findViewById(R.id.chat_message_edit_text);
 		chatMessageEditText.setFocusableInTouchMode(true);
 		chatMessageEditText.addTextChangedListener(new ChatTextListener());
 
@@ -280,6 +286,10 @@ public class ChatActivity extends ActionBarActivity {
 						Toast.LENGTH_SHORT).show();
 
 				String selectedFile = getRealPathFromURI(data.getData());
+				/*Bitmap bmp = BitmapFactory.decodeFile(selectedFile);
+				ChatToViewHolder chatToViewHolder=new ChatToViewHolder(listView);
+				chatToViewHolder.recivedImage.setVisibility(View.VISIBLE);
+				chatToViewHolder.recivedImage.setImageBitmap(bmp);*/
 				APIPostFile apiPostFile = new APIPostFile();
 				apiPostFile.doPostFile(currentJid, buddyJid, selectedFile,
 						buddyName);
@@ -301,8 +311,7 @@ public class ChatActivity extends ActionBarActivity {
 					.query(contentUri, proj, null, null, null);
 
 			cursor.moveToFirst();
-			int column_index = cursor
-					.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+			int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
 			return cursor.getString(column_index);
 		} catch (Exception ex) {
 			return "";

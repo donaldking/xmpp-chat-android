@@ -22,7 +22,12 @@ import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 
 import co.uk.tusksolutions.tchat.android.adapters.GroupsContentAdapter;
+<<<<<<< HEAD
 import co.uk.tusksolutions.tchat.android.api.APIGetGroups.OnGetGroupsCompleted;
+=======
+import co.uk.tusksolutions.tchat.android.api.APIGetGroups;
+import co.uk.tusksolutions.tchat.android.constants.Constants;
+>>>>>>> b3abb09e3a35c7e3a4fbd364339363acc849e305
 
 public class GroupsFragment extends Fragment implements OnGetGroupsCompleted {
 
@@ -170,6 +175,16 @@ public class GroupsFragment extends Fragment implements OnGetGroupsCompleted {
 	}
 	
 	private class NewGroupreceiver extends BroadcastReceiver {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			if (intent.getAction().equalsIgnoreCase(Constants.GROUPS_UPDATED)) {
+				groupsApi = new APIGetGroups();
+				groupsApi.getGroups();
+			prepareListView();
+		}
+		}
+	}
 
 	@Override
 	public void OnGetGroupsSuccess() {

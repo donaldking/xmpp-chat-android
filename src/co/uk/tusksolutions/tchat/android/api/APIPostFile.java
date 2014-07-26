@@ -17,6 +17,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.params.HttpParams;
+import org.jivesoftware.smack.util.StringUtils;
 
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
@@ -86,6 +87,11 @@ public class APIPostFile {
 				
 				XMPPChatMessageManager.sendMessage(receiver, buddyName,
 						link, 0, "text");
+				// Save to cloud
+				APICloudStorage cloudStorage = new APICloudStorage();
+				cloudStorage.saveToCloud(TChatApplication.getUserModel()
+						.getUsername(), receiver,
+						link, "none", 0, "CHAT");
 
 			} else {
 

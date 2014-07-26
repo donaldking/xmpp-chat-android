@@ -14,15 +14,14 @@ public class ChatToViewHolder {
 	public RobotoRegularTextView chatMessageTextView;
 	public RobotoLightTextView chatMessageTimestampTextView;
 
-	public ImageView recivedImage;
+
 
 	public ChatToViewHolder(View v) {
 		chatMessageTextView = (RobotoRegularTextView) v
 				.findViewById(R.id.chat_to_text_view);
 		chatMessageTimestampTextView = (RobotoLightTextView) v
 				.findViewById(R.id.chat_to_timestamp);
-		recivedImage = (ImageView) v
-				.findViewById(R.id.chatListItemReceivedTransferIcon);
+	
 
 	}
 }
