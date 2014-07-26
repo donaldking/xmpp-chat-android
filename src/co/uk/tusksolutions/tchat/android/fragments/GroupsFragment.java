@@ -5,10 +5,6 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -20,7 +16,6 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
-
 import co.uk.tusksolutions.tchat.android.adapters.GroupsContentAdapter;
 import co.uk.tusksolutions.tchat.android.api.APIGetGroups.OnGetGroupsCompleted;
 
@@ -36,7 +31,7 @@ public class GroupsFragment extends Fragment implements OnGetGroupsCompleted {
 	private Bundle instanceState;
 	private static int lastViewedPosition;
 	private static int topOffset;
-  private NewGroupreceiver groupreceiver;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -86,14 +81,6 @@ public class GroupsFragment extends Fragment implements OnGetGroupsCompleted {
 	public void onResume() {
 		super.onResume();
 
-		
-		groupreceiver = new NewGroupreceiver();
-		IntentFilter filter = new IntentFilter();
-		filter.addAction(Constants.GROUPS_UPDATED); // For Update group
-		
-		getActivity().registerReceiver(groupreceiver, filter);
-
-		
 	}
 
 	@Override
@@ -169,8 +156,6 @@ public class GroupsFragment extends Fragment implements OnGetGroupsCompleted {
 		filter1.setVisible(false);
 	}
 	
-	private class NewGroupreceiver extends BroadcastReceiver {
-
 	@Override
 	public void OnGetGroupsSuccess() {
 		// TODO Auto-generated method stub
