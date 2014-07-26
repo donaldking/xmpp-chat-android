@@ -137,6 +137,10 @@ public class GroupChatActivity extends ActionBarActivity {
 		TChatApplication.chatSessionBuddy = roomJid;
 
 		prepareListView(roomJid, currentJid, 1, -1);
+		
+		mGetMessagesApi = new APIGetMessages();
+		mGetMessagesApi.getMessages(StringUtils.parseName(roomJid),
+				mAdapter.getCount(), 25);
 	}
 
 	private static void prepareListView(String buddyJid, String currentJid,
@@ -146,9 +150,6 @@ public class GroupChatActivity extends ActionBarActivity {
 		 * Load Chat from DB
 		 */
 		mAdapter = new ChatMessagesAdapter(buddyJid, currentJid, action, id);
-		mGetMessagesApi = new APIGetMessages();
-		mGetMessagesApi.getMessages(StringUtils.parseName(buddyJid),
-				mAdapter.getCount(), 25);
 		listView.setAdapter(mAdapter);
 		scrollToBottom();
 	}

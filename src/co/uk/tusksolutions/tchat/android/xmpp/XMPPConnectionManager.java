@@ -58,6 +58,8 @@ import android.os.Looper;
 import android.provider.Settings.Secure;
 import android.widget.Toast;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
+import co.uk.tusksolutions.tchat.android.api.APIGetGroups;
+import co.uk.tusksolutions.tchat.android.api.APIGetGroups.OnGetGroupsCompleted;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
 import co.uk.tusksolutions.tchat.android.listeners.XMPPChatMessageListener;
 import co.uk.tusksolutions.tchat.android.listeners.XMPPConnectionListener;
@@ -170,6 +172,24 @@ public class XMPPConnectionManager {
 							}
 
 							configureProviderManager(TChatApplication.connection);
+							
+							// Get groups and login
+							APIGetGroups groupsApi = new APIGetGroups();
+							groupsApi.getGroups(new OnGetGroupsCompleted() {
+								
+								@Override
+								public void OnGetGroupsSuccess() {
+									// TODO Auto-generated method stub
+									TChatApplication.joinAllGroups();
+								}
+								
+								@Override
+								public void OnGetGroupsFailed() {
+									// TODO Auto-generated method stub
+									
+								}
+							});
+
 
 						} catch (Exception e) {
 							/**

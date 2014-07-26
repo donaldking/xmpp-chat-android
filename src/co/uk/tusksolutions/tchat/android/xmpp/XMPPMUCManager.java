@@ -11,9 +11,7 @@ import org.jivesoftware.smackx.muc.MultiUserChat;
 
 import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
-import co.uk.tusksolutions.tchat.android.listeners.XMPPMucInvitationListener;
 
 public class XMPPMUCManager {
 	private static String TAG = "XMPPMUCManager";
@@ -40,10 +38,6 @@ public class XMPPMUCManager {
 			// This is not fatal, just log a warning
 			Log.v("TAG", "Could not discover local MUC component: ");
 		}
-
-		Log.d("XmppMUC", "Register a listener for Room invitations!");
-		MultiUserChat.addInvitationListener(TChatApplication.connection,
-				new XMPPMucInvitationListener(context));
 	}
 
 	public static XMPPMUCManager getInstance(Context ctx) {
@@ -90,20 +84,17 @@ public class XMPPMUCManager {
 					+ ": " + e.getLocalizedMessage(), e);
 
 		}
-		try {
-			// We send an empty configuration to the server. For some reason the
-			// server doesn't accept or process our
-			// completed form, so we just send an empty one. The server defaults
-			// will be used which are fine.
-			// multiUserChat.sendConfigurationForm(new Form(Form.TYPE_SUBMIT));
-			multiUserChat.changeSubject(roomName);
-
-		} catch (XMPPException e1) {
-			Log.d(e1.toString(),
-					"Unable to send conference room configuration form.");
-			// then we also should not send an invite as the room will be locked
-			throw e1;
-		}
+		/*
+		 * try { // We send an empty configuration to the server. For some
+		 * reason the // server doesn't accept or process our // completed form,
+		 * so we just send an empty one. The server defaults // will be used
+		 * which are fine. // multiUserChat.sendConfigurationForm(new
+		 * Form(Form.TYPE_SUBMIT)); //multiUserChat.changeSubject(roomName);
+		 * 
+		 * } catch (XMPPException e1) { Log.d(e1.toString(),
+		 * "Unable to send conference room configuration form."); // then we
+		 * also should not send an invite as the room will be locked throw e1; }
+		 */
 
 		// Sleep few seconds between creation and invite new user
 		try {
@@ -127,8 +118,8 @@ public class XMPPMUCManager {
 	}
 
 	public MultiUserChat inviteToRoom(String roomName, String nickname,
-			String buddyJID, String password, String roomJID,
-			String group_name) throws XMPPException {
+			String buddyJID, String password, String roomJID, String group_name)
+			throws XMPPException {
 		MultiUserChat muc;
 
 		if (!mRooms.containsKey(roomJID)) {
@@ -139,7 +130,7 @@ public class XMPPMUCManager {
 		}
 
 		if (muc != null) {
-			
+
 			muc.changeSubject(group_name);
 			muc.invite(buddyJID, group_name);
 
@@ -174,40 +165,29 @@ public class XMPPMUCManager {
 			 * the UIThread that can create the toast This is just not
 			 * working...... - jeroen
 			 */
-			switch (e.getXMPPError().getCode()) {
-			case 401:
-				Toast.makeText(context, "Password is required!",
-						Toast.LENGTH_SHORT).show();
-
-				break;
-			case 403:
-				Toast.makeText(context, "You are banned from this room!",
-						Toast.LENGTH_SHORT).show();
-
-				break;
-			case 404:
-				Toast.makeText(context, "Room does not exist or is locked!",
-						Toast.LENGTH_SHORT).show();
-
-				break;
-			case 406:
-				Toast.makeText(context, "Room does not accept this user!",
-						Toast.LENGTH_SHORT).show();
-
-				break;
-			case 407:
-				Toast.makeText(context, "You are not on the members list!",
-						Toast.LENGTH_SHORT).show();
-
-				break;
-			case 409:
-				Toast.makeText(
-						context,
-						"You must change your nickname in order to join this room!",
-						Toast.LENGTH_SHORT).show();
-
-				break;
-			}
+			/*
+			 * switch (e.getXMPPError().getCode()) { case 401:
+			 * Toast.makeText(context, "Password is required!",
+			 * Toast.LENGTH_SHORT).show();
+			 * 
+			 * break; case 403: Toast.makeText(context,
+			 * "You are banned from this room!", Toast.LENGTH_SHORT).show();
+			 * 
+			 * break; case 404: Toast.makeText(context,
+			 * "Room does not exist or is locked!", Toast.LENGTH_SHORT).show();
+			 * 
+			 * break; case 406: Toast.makeText(context,
+			 * "Room does not accept this user!", Toast.LENGTH_SHORT).show();
+			 * 
+			 * break; case 407: Toast.makeText(context,
+			 * "You are not on the members list!", Toast.LENGTH_SHORT).show();
+			 * 
+			 * break; case 409: Toast.makeText( context,
+			 * "You must change your nickname in order to join this room!",
+			 * Toast.LENGTH_SHORT).show();
+			 * 
+			 * break; }
+			 */
 			Log.e(TAG, e.getLocalizedMessage());
 		}
 	}

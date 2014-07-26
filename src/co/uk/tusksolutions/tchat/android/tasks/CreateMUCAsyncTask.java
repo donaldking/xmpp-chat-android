@@ -107,7 +107,6 @@ public class CreateMUCAsyncTask extends AsyncTask<Void, Void, Boolean> {
 	public interface OnCreateMUCListener {
 		void onCreateMUCSuccess(String room, String roomjid,
 				ArrayList<RosterModel> friendArrayList);
-
 		void onCreateMUCFailed(boolean alreadyExists, String message);
 	}
 }

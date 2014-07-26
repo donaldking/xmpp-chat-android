@@ -86,6 +86,8 @@ public class RecentsContentAdapter extends BaseAdapter {
 		 */
 		final RecentsModel model = recentsModelCollection.get(position);
 
+		Log.d(TAG, "Recents model: " + model.toString());
+		
 		try {
 			String[] username = model.chatWithUser.split("@");
 			UrlImageViewHelper.setUrlDrawable(holder.rosterAvatar,

@@ -117,9 +117,10 @@ public class XMPPChatMessageListener implements PacketListener {
 
 	private void sendNotification(Packet packet, Message message) {
 		Bundle b = new Bundle();
+		String buddyJid = StringUtils.parseBareAddress(message.getFrom());
 		b.putString("roomJid", packet.getFrom());
-		b.putString("fromName", StringUtils.parseName(StringUtils
-				.parseBareAddress(message.getFrom())));
+		b.putString("fromName",
+				TChatApplication.getRosterModel().getBuddyName(buddyJid));
 		b.putString("message", message.getBody());
 
 		Intent intent = new Intent();
@@ -140,7 +141,7 @@ public class XMPPChatMessageListener implements PacketListener {
 		ChatMessagesModel mChatMessageModel = new ChatMessagesModel();
 		mChatMessageModel.saveMessageToDB(TChatApplication.getCurrentJid(),
 				StringUtils.parseBareAddress(packet.getFrom()),
-				StringUtils.parseName(packet.getFrom()), message.getBody(),
-				1, "CHAT", System.currentTimeMillis(), 1);
+				StringUtils.parseName(packet.getFrom()), message.getBody(), 1,
+				"CHAT", System.currentTimeMillis(), 1);
 	}
 }

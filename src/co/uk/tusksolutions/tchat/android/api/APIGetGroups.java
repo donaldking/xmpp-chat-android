@@ -9,7 +9,6 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
@@ -20,13 +19,15 @@ public class APIGetGroups {
 	JSONArray jsonArray;
 	private GroupsModel mGroupUserModel;
 	private AsyncApiGetGroups mTask = null;
+	OnGetGroupsCompleted callbackObject;
 
-	public void getGroups() {
+	public void getGroups(OnGetGroupsCompleted callbackObject) {
 
 		if (mTask != null) {
 			return;
 		}
 
+		this.callbackObject = callbackObject;
 		mTask = new AsyncApiGetGroups();
 		mTask.execute((Void) null);
 	}
@@ -48,7 +49,7 @@ public class APIGetGroups {
 
 			HttpClient httpclient = new DefaultHttpClient();
 			HttpResponse response;
-  
+
 			try {
 				response = httpclient.execute(request);
 				HttpEntity entity = response.getEntity();
@@ -62,8 +63,7 @@ public class APIGetGroups {
 
 					if (jsonArray.length() >= 0) {
 						mGroupUserModel = new GroupsModel();
-						if (mGroupUserModel
-								.saveGroupsToDB(jsonArray)) {
+						if (mGroupUserModel.saveGroupsToDB(jsonArray)) {
 							apiResult = true;
 						}
 
@@ -82,11 +82,9 @@ public class APIGetGroups {
 			mTask = null;
 
 			if (result) {
-				TChatApplication.getContext().sendBroadcast(
-						new Intent(Constants.GROUPS_UPDATED));
+				callbackObject.OnGetGroupsSuccess();
 			} else {
-				TChatApplication.getContext().sendBroadcast(
-						new Intent(Constants.GROUPS_NOT_UPDATED));
+				callbackObject.OnGetGroupsFailed();
 			}
 		}
 
@@ -95,5 +93,11 @@ public class APIGetGroups {
 			mTask = null;
 			return;
 		}
+	}
+
+	public interface OnGetGroupsCompleted {
+		void OnGetGroupsSuccess();
+
+		void OnGetGroupsFailed();
 	}
 }

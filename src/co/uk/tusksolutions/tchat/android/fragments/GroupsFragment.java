@@ -17,9 +17,9 @@ import android.widget.ListView;
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.adapters.GroupsContentAdapter;
-import co.uk.tusksolutions.tchat.android.api.APIGetGroups;
+import co.uk.tusksolutions.tchat.android.api.APIGetGroups.OnGetGroupsCompleted;
 
-public class GroupsFragment extends Fragment {
+public class GroupsFragment extends Fragment implements OnGetGroupsCompleted {
 
 	public static ListView listView;
 	public String TAG = "GroupsFragments";
@@ -28,8 +28,6 @@ public class GroupsFragment extends Fragment {
 
 	private static int shortAnimTime;
 	private static View mLodingStatusView;
-
-	private APIGetGroups groupsApi;
 	private Bundle instanceState;
 	private static int lastViewedPosition;
 	private static int topOffset;
@@ -68,15 +66,6 @@ public class GroupsFragment extends Fragment {
 		listView.setHorizontalScrollBarEnabled(false);
 
 		showProgress(true);
-
-		/*
-		 * Load recents from API recentsApi = new APIRecents();
-		 * recentsApi.getRecents();
-		 */
-
-		// Load groups from API
-		groupsApi = new APIGetGroups();
-		groupsApi.getGroups();
 
 		if (instanceState != null && mAdapter != null) {
 
@@ -166,6 +155,20 @@ public class GroupsFragment extends Fragment {
 		MenuItem filter1 = menu.findItem(R.id.action_chat_one);
 		filter.setVisible(false);
 		filter1.setVisible(false);
+	}
+
+	@Override
+	public void OnGetGroupsSuccess() {
+		// TODO Auto-generated method stub
+
+		prepareListView();
+		TChatApplication.joinAllGroups();
+	}
+
+	@Override
+	public void OnGetGroupsFailed() {
+		// TODO Auto-generated method stub
+
 	}
 
 }

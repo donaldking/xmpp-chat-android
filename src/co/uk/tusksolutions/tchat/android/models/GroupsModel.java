@@ -27,10 +27,9 @@ public class GroupsModel implements Parcelable {
 	public GroupsModel() {
 
 	}
-
+	
 	public String getGroupName(String groupId) {
 		db = TChatApplication.getTChatDBReadable();
-
 		String groupName = null;
 
 		String[] columns = { TChatDBHelper.G_GROUP_NAME };
@@ -66,6 +65,7 @@ public class GroupsModel implements Parcelable {
 						groupsObject.getString("group_name"));
 				contentValues.put(TChatDBHelper.G_PARTICIPANTS,
 						groupsObject.getString("participants"));
+
 				// Insert
 				db.insertWithOnConflict(TChatDBHelper.GROUPS_TABLE, null,
 						contentValues, SQLiteDatabase.CONFLICT_REPLACE);

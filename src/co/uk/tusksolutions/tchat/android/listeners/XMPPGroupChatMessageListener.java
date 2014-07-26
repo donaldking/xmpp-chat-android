@@ -41,21 +41,29 @@ public class XMPPGroupChatMessageListener implements PacketListener {
 				&& !StringUtils.parseResource(message.getFrom())
 						.equalsIgnoreCase(
 								TChatApplication.getUserModel().getUsername())) {
-			if (message.getBody().length() > 0) {
 
+			if (message.getBody().length() > 0
+					&& StringUtils.parseResource(message.getFrom()).length() > 0) {
+
+				Log.d("TAG",
+						"Resource sender: "
+								+ StringUtils.parseResource(message.getFrom()));
 				String roomJid = StringUtils
 						.parseBareAddress(message.getFrom());
-				String roomName = new GroupsModel().getGroupName(StringUtils
-						.parseName(message.getFrom()));
+				GroupsModel gm = new GroupsModel();
+				String roomName = gm.getGroupName(StringUtils
+						.parseBareAddress(message.getFrom()));
 				String senderJid = StringUtils.parseResource(message.getFrom())
 						+ "@" + Constants.CURRENT_SERVER;
 				String senderName = TChatApplication.getRosterModel()
 						.getBuddyName(senderJid);
 
-				Log.i(TAG, "New group message From Room Jid: " + roomJid
-						+ ", Room Name: " + roomName + ", and sender: "
-						+ senderJid + ", and Sender Name: " + senderName
-						+ " Message: " + message.getBody());
+				Log.i(TAG,
+						"New group message From Room Jid PKT: "
+								+ packet.getFrom() + ", Room Name: " + roomName
+								+ ", and sender: " + senderJid
+								+ ", and Sender Name: " + senderName
+								+ " Message: " + message.getBody());
 
 				if (TChatApplication.getChatActivityStatus() == CHAT_STATUS_ENUM.VISIBLE
 						&& TChatApplication.chatSessionBuddy
@@ -93,7 +101,7 @@ public class XMPPGroupChatMessageListener implements PacketListener {
 
 		String roomJid = StringUtils.parseBareAddress(message.getFrom());
 		String roomName = TChatApplication.getGroupsModel().getGroupName(
-				StringUtils.parseName(message.getFrom()));
+				StringUtils.parseBareAddress(message.getFrom()));
 		String senderJid = StringUtils.parseResource(message.getFrom()) + "@"
 				+ Constants.CURRENT_SERVER;
 		String senderName = TChatApplication.getRosterModel().getBuddyName(
@@ -123,7 +131,7 @@ public class XMPPGroupChatMessageListener implements PacketListener {
 
 		String roomJid = StringUtils.parseBareAddress(message.getFrom());
 		String roomName = TChatApplication.getGroupsModel().getGroupName(
-				StringUtils.parseName(message.getFrom()));
+				StringUtils.parseBareAddress(message.getFrom()));
 
 		Log.d("saveMessageToDb", "Sender: " + packet.getFrom() + ", Receiver: "
 				+ packet.getTo() + " Message: " + message.getBody());
