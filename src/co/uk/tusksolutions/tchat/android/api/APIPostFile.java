@@ -20,6 +20,7 @@ import org.apache.http.params.HttpParams;
 import org.jivesoftware.smack.util.StringUtils;
 
 import co.uk.tusksolutions.tchat.android.TChatApplication;
+import co.uk.tusksolutions.tchat.android.activities.ChatActivity;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
 import co.uk.tusksolutions.tchat.android.xmpp.XMPPChatMessageManager;
 import co.uk.tusksolutions.utility.Utility;
@@ -55,6 +56,7 @@ public class APIPostFile {
 
 		
 		String link;
+		
 		@Override
 		protected Boolean doInBackground(Void... params) {
 

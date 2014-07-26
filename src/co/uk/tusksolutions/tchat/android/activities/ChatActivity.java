@@ -44,6 +44,7 @@ import co.uk.tusksolutions.tchat.android.api.APIGetMessages;
 import co.uk.tusksolutions.tchat.android.api.APIPostFile;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
 import co.uk.tusksolutions.tchat.android.listeners.XMPPChatMessageListener;
+import co.uk.tusksolutions.tchat.android.models.ChatMessagesModel;
 import co.uk.tusksolutions.tchat.android.models.RosterModel;
 import co.uk.tusksolutions.tchat.android.viewHolders.ChatFromViewHolder;
 import co.uk.tusksolutions.tchat.android.viewHolders.ChatToViewHolder;
@@ -57,6 +58,7 @@ public class ChatActivity extends ActionBarActivity {
 	static String buddyJid;
 	private static ChatMessagesAdapter mAdapter;
 	private static View mLodingStatusView;
+	private static View mFileUploadStatusView;
 	private static int shortAnimTime;
 	private static ListView listView;
 	private ChatMessageReceiver mChatMessageReceiver;
@@ -76,6 +78,7 @@ public class ChatActivity extends ActionBarActivity {
 		shortAnimTime = getResources().getInteger(
 				android.R.integer.config_shortAnimTime);
 		mLodingStatusView = this.findViewById(R.id.chat_loading_view);
+		mFileUploadStatusView=this.findViewById(R.id.chat_file_upload_progress);
 
 		listView = (ListView) findViewById(R.id.chat_messages_list_view);
 		listView.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
@@ -284,12 +287,10 @@ public class ChatActivity extends ActionBarActivity {
 			if (resultCode == Activity.RESULT_OK) {
 				Toast.makeText(ChatActivity.this, "Sending Image please wait",
 						Toast.LENGTH_SHORT).show();
-
+                 
 				String selectedFile = getRealPathFromURI(data.getData());
-				/*Bitmap bmp = BitmapFactory.decodeFile(selectedFile);
-				ChatToViewHolder chatToViewHolder=new ChatToViewHolder(listView);
-				chatToViewHolder.recivedImage.setVisibility(View.VISIBLE);
-				chatToViewHolder.recivedImage.setImageBitmap(bmp);*/
+				showProgressUpload(true);
+				saveFile(buddyJid, selectedFile, 0, "FileTransfer");
 				APIPostFile apiPostFile = new APIPostFile();
 				apiPostFile.doPostFile(currentJid, buddyJid, selectedFile,
 						buddyName);
@@ -420,7 +421,12 @@ public class ChatActivity extends ActionBarActivity {
 			if (chatMessageEditText.getText().toString().length() >= 1) {
 				String message = chatMessageEditText.getText().toString();
 
-				PlaySound(true);
+				try {
+					PlaySound(true);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 
 				XMPPChatMessageManager.sendMessage(buddyJid, buddyName,
 						message, 0, "CHAT");
@@ -435,6 +441,20 @@ public class ChatActivity extends ActionBarActivity {
 			}
 		}
 
+	}
+	
+	public void saveFile(String to,String message,int isGroupMessage,String messageType)
+	{
+		try {
+			ChatMessagesModel mChatMessageModel=new ChatMessagesModel();
+			mChatMessageModel.saveMessageToDB(to,
+					TChatApplication.getCurrentJid(), buddyName, message,
+					isGroupMessage, messageType,
+					System.currentTimeMillis(), 1);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/*
@@ -452,17 +472,27 @@ public class ChatActivity extends ActionBarActivity {
 
 	}
 
-	public void PlaySound(Boolean sent) {
+	public void PlaySound(Boolean sent) throws Exception {
 		if (sent) {
-			mp = MediaPlayer.create(TChatApplication.getContext(),
-					R.raw.send_message);
-			mp.setVolume(1, 1);
-			mp.start();
+			try {
+				mp = MediaPlayer.create(TChatApplication.getContext(),
+						R.raw.send_message);
+				mp.setVolume(1, 1);
+				mp.start();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		} else {
-			mp = MediaPlayer.create(TChatApplication.getContext(),
-					R.raw.received_message);
-			mp.setVolume(1, 1);
-			mp.start();
+			try {
+				mp = MediaPlayer.create(TChatApplication.getContext(),
+						R.raw.received_message);
+				mp.setVolume(1, 1);
+				mp.start();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -506,7 +536,7 @@ public class ChatActivity extends ActionBarActivity {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			if (intent.getAction().equalsIgnoreCase(Constants.MESSAGE_READY)) {
-
+				showProgressUpload(false);
 				prepareListView(buddyJid, currentJid, 1,
 						intent.getLongExtra("id", -1));
 			} else if (intent.getAction().equalsIgnoreCase(
@@ -535,4 +565,34 @@ public class ChatActivity extends ActionBarActivity {
 		}
 
 	}
+	/**
+	 * Shows the progress UI and hides the login form.
+	 */
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+	private static void showProgressUpload(final boolean show) {
+
+		// On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
+		// for very easy animations. If available, use these APIs TO_USER
+		// fade-in
+		// the progress spinner.
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+
+			// mLodingStatusView.setVisibility(View.VISIBLE);
+			mFileUploadStatusView.animate().setDuration(shortAnimTime)
+					.alpha(show ? 1 : 0)
+					.setListener(new AnimatorListenerAdapter() {
+						@Override
+						public void onAnimationEnd(Animator animation) {
+							mFileUploadStatusView.setVisibility(show ? View.VISIBLE
+									: View.GONE);
+						}
+					});
+		} else {
+			// The ViewPropertyAnimator APIs are not available, so simply show
+			// and hide the relevant UI components.*/
+			mFileUploadStatusView.setVisibility(show ? View.VISIBLE : View.GONE);
+		}
+	}
+
+	
 }

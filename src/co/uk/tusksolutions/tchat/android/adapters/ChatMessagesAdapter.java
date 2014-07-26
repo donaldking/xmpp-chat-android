@@ -1,5 +1,6 @@
 package co.uk.tusksolutions.tchat.android.adapters;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import org.jsoup.Jsoup;
@@ -10,7 +11,10 @@ import org.jsoup.select.Elements;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
 import android.text.Html;
 import android.text.Html.ImageGetter;
 import android.util.Log;
@@ -76,24 +80,28 @@ public class ChatMessagesAdapter extends BaseAdapter {
 		 * Determine the type of row to create based on the "to" field value
 		 */
 		int rowType;
+
 		if (chatMessagesModelCollection.get(position).receiver
 				.equalsIgnoreCase(TChatApplication.getCurrentJid())) {
-			 if (chatMessagesModelCollection.get(position).message
-						.contains("src"))
-			 {
-				 rowType=3;
-			 }
-			 else
-			 {
-			rowType = 0;
-			 }
+			if (chatMessagesModelCollection.get(position).message
+					.contains("src")) {
+				rowType = 3;
+			} else {
+				rowType = 0;
+			}
 		} else if (chatMessagesModelCollection.get(position).message
 				.contains("src")
 				&& !(chatMessagesModelCollection.get(position).receiver
 						.equalsIgnoreCase(TChatApplication.getCurrentJid()))) {
-			rowType =2;
-		}  else {
-			rowType = 1;
+			rowType = 2;
+		} else {
+			if ((chatMessagesModelCollection.get(position).messageType != null)
+					&& chatMessagesModelCollection.get(position).messageType
+							.toString().equalsIgnoreCase("FileTransfer")) {
+				rowType = 2;
+			} else {
+				rowType = 1;
+			}
 		}
 		return rowType;
 	}
@@ -109,7 +117,7 @@ public class ChatMessagesAdapter extends BaseAdapter {
 		ChatToViewHolder chatToViewHolder = null;
 		ChatFromViewHolder chatFromViewHolder = null;
 		ChatToImageViewHolder chatToImageViewHolder = null;
-		ChatFromImageViewHolder chatFromImageViewHolder=null;
+		ChatFromImageViewHolder chatFromImageViewHolder = null;
 
 		/**
 		 * Get result from Model Query
@@ -119,7 +127,7 @@ public class ChatMessagesAdapter extends BaseAdapter {
 				.get(position);
 
 		int type = getItemViewType(position);
-		Log.e("Type", "Type " + type);
+	
 		switch (type) {
 		case 0:
 			// I am the sender!
@@ -157,10 +165,10 @@ public class ChatMessagesAdapter extends BaseAdapter {
 			} else {
 				chatToViewHolder = (ChatToViewHolder) row.getTag();
 			}
-			
+
 			chatToViewHolder.chatMessageTextView
 					.setText(chatMessagesModel.message);
-			
+
 			chatToViewHolder.chatMessageTimestampTextView.setText(TimeAgo
 					.getTimeAgo(Long.parseLong(chatMessagesModel.timeStamp),
 							context));
@@ -173,7 +181,8 @@ public class ChatMessagesAdapter extends BaseAdapter {
 			if (row == null) {
 				LayoutInflater inflater = (LayoutInflater) context
 						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				row = inflater.inflate(R.layout.chat_to_image_row, parent, false);
+				row = inflater.inflate(R.layout.chat_to_image_row, parent,
+						false);
 
 				chatToImageViewHolder = new ChatToImageViewHolder(row);
 				row.setTag(chatToImageViewHolder);
@@ -182,14 +191,23 @@ public class ChatMessagesAdapter extends BaseAdapter {
 				chatToImageViewHolder = (ChatToImageViewHolder) row.getTag();
 
 			}
-			String path = getFirstImage(chatMessagesModel.message);
+			chatToImageViewHolder.imagesent.setVisibility(View.VISIBLE);
+			String ImagePath = chatMessagesModel.message;
+			File imgFile = new File(ImagePath);
+			if (imgFile.exists()) {
+			  
+				try {
+					Bitmap myBitmap = decodeScaledBitmapFromSdCard(ImagePath, 200, 200);
 
-			try {
-				UrlImageViewHelper.setUrlDrawable(
-						chatToImageViewHolder.imagesent, path,
-						R.drawable.mondobar_jewel_friends_on);
-			} catch (Exception e) {
-				e.printStackTrace();
+					chatToImageViewHolder.imagesent.setImageBitmap(myBitmap);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			} else {
+				
+				chatToImageViewHolder.imagesent.setVisibility(View.GONE);
 			}
 
 			break;
@@ -197,13 +215,15 @@ public class ChatMessagesAdapter extends BaseAdapter {
 			if (row == null) {
 				LayoutInflater inflater = (LayoutInflater) context
 						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				row = inflater.inflate(R.layout.chet_from_image_row, parent, false);
+				row = inflater.inflate(R.layout.chat_from_image_row, parent,
+						false);
 
 				chatFromImageViewHolder = new ChatFromImageViewHolder(row);
 				row.setTag(chatFromImageViewHolder);
 
 			} else {
-				chatFromImageViewHolder = (ChatFromImageViewHolder) row.getTag();
+				chatFromImageViewHolder = (ChatFromImageViewHolder) row
+						.getTag();
 
 			}
 			String path1 = getFirstImage(chatMessagesModel.message);
@@ -211,7 +231,7 @@ public class ChatMessagesAdapter extends BaseAdapter {
 			try {
 				UrlImageViewHelper.setUrlDrawable(
 						chatFromImageViewHolder.imageReceived, path1,
-						R.drawable.mondobar_jewel_friends_on);
+						R.drawable.camera_focus_box);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -226,9 +246,8 @@ public class ChatMessagesAdapter extends BaseAdapter {
 
 		if (htmlString == null)
 			return null;
-		if(htmlString.startsWith("&lt"))
-		{
-			htmlString=Html.fromHtml(htmlString).toString();
+		if (htmlString.startsWith("&lt")) {
+			htmlString = Html.fromHtml(htmlString).toString();
 		}
 
 		String img = "";
@@ -245,5 +264,43 @@ public class ChatMessagesAdapter extends BaseAdapter {
 		}
 
 		return null;
+	}
+	
+	public static Bitmap decodeScaledBitmapFromSdCard(String filePath,
+	        int reqWidth, int reqHeight) {
+
+	    // First decode with inJustDecodeBounds=true to check dimensions
+	    final BitmapFactory.Options options = new BitmapFactory.Options();
+	    options.inJustDecodeBounds = true;
+	    BitmapFactory.decodeFile(filePath, options);
+
+	    // Calculate inSampleSize
+	    options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+
+	    // Decode bitmap with inSampleSize set
+	    options.inJustDecodeBounds = false;
+	    return BitmapFactory.decodeFile(filePath, options);
+	}
+
+	public static int calculateInSampleSize(
+	        BitmapFactory.Options options, int reqWidth, int reqHeight) {
+	    // Raw height and width of image
+	    final int height = options.outHeight;
+	    final int width = options.outWidth;
+	    int inSampleSize = 1;
+
+	    if (height > reqHeight || width > reqWidth) {
+
+	        // Calculate ratios of height and width to requested height and width
+	        final int heightRatio = Math.round((float) height / (float) reqHeight);
+	        final int widthRatio = Math.round((float) width / (float) reqWidth);
+
+	        // Choose the smallest ratio as inSampleSize value, this will guarantee
+	        // a final image with both dimensions larger than or equal to the
+	        // requested height and width.
+	        inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
+	    }
+
+	    return inSampleSize;
 	}
 }
