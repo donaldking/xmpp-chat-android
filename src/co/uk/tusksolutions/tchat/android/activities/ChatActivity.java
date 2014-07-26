@@ -11,9 +11,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
@@ -45,8 +42,6 @@ import co.uk.tusksolutions.tchat.android.api.APIPostFile;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
 import co.uk.tusksolutions.tchat.android.listeners.XMPPChatMessageListener;
 import co.uk.tusksolutions.tchat.android.models.RosterModel;
-import co.uk.tusksolutions.tchat.android.viewHolders.ChatFromViewHolder;
-import co.uk.tusksolutions.tchat.android.viewHolders.ChatToViewHolder;
 import co.uk.tusksolutions.tchat.android.xmpp.XMPPChatMessageManager;
 
 public class ChatActivity extends ActionBarActivity {

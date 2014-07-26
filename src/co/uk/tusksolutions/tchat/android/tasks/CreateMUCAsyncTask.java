@@ -3,7 +3,6 @@ package co.uk.tusksolutions.tchat.android.tasks;
 import java.util.ArrayList;
 
 import org.jivesoftware.smack.XMPPException;
-import org.json.JSONObject;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -107,6 +106,7 @@ public class CreateMUCAsyncTask extends AsyncTask<Void, Void, Boolean> {
 	public interface OnCreateMUCListener {
 		void onCreateMUCSuccess(String room, String roomjid,
 				ArrayList<RosterModel> friendArrayList);
+
 		void onCreateMUCFailed(boolean alreadyExists, String message);
 	}
 }

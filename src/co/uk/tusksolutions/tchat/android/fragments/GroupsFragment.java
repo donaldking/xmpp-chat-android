@@ -17,9 +17,8 @@ import android.widget.ListView;
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.adapters.GroupsContentAdapter;
-import co.uk.tusksolutions.tchat.android.api.APIGetGroups.OnGetGroupsCompleted;
 
-public class GroupsFragment extends Fragment implements OnGetGroupsCompleted {
+public class GroupsFragment extends Fragment {
 
 	public static ListView listView;
 	public String TAG = "GroupsFragments";
@@ -81,6 +80,7 @@ public class GroupsFragment extends Fragment implements OnGetGroupsCompleted {
 	public void onResume() {
 		super.onResume();
 
+		prepareListView();
 	}
 
 	@Override
@@ -155,19 +155,4 @@ public class GroupsFragment extends Fragment implements OnGetGroupsCompleted {
 		filter.setVisible(false);
 		filter1.setVisible(false);
 	}
-	
-	@Override
-	public void OnGetGroupsSuccess() {
-		// TODO Auto-generated method stub
-
-		prepareListView();
-		TChatApplication.joinAllGroups();
-	}
-
-	@Override
-	public void OnGetGroupsFailed() {
-		// TODO Auto-generated method stub
-
-	}
-
 }
