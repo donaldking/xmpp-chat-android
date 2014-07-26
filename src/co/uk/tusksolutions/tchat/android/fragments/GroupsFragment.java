@@ -149,7 +149,7 @@ public class GroupsFragment extends Fragment {
 	@Override
 	public void onPrepareOptionsMenu(Menu menu) {
 		// TODO Auto-generated method stub
-		getActivity().invalidateOptionsMenu();
+		
 		MenuItem filter = menu.findItem(R.id.action_settings);
 		MenuItem filter1 = menu.findItem(R.id.action_chat_one);
 		filter.setVisible(false);

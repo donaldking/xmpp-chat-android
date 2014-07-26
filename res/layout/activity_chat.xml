@@ -108,4 +108,24 @@
     </LinearLayout>
 
     <!-- Loading progress end -->
+      <!-- Loading progress start -->
+
+    <LinearLayout
+        android:id="@+id/chat_file_upload_progress"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_gravity="right"
+        android:gravity="bottom|right"
+        android:orientation="vertical"
+       android:visibility="gone"
+        >
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="100dp"
+            android:layout_marginBottom="120dp" />
+    </LinearLayout>
+
+    <!-- Loading progress end -->
 </RelativeLayout>

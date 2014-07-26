@@ -107,6 +107,7 @@ public class ChatMessagesModel implements Parcelable {
 			contentValues.put(TChatDBHelper.CM_MESSAGE, message);
 			contentValues.put(TChatDBHelper.CM_MESSAGE_ID, mid);
 			contentValues.put(TChatDBHelper.CM_TIMESTAMP, timeStamp);
+			contentValues.put(TChatDBHelper.CM_MESSAGE_TYPE, messageType);
 			contentValues.put(TChatDBHelper.CM_IS_READ, isRead);
 
 			// Insert

@@ -268,7 +268,7 @@ public class RosterFragment extends Fragment {
 	@Override
 	public void onPrepareOptionsMenu(Menu menu) {
 		// TODO Auto-generated method stub
-		getActivity().invalidateOptionsMenu();
+
 		MenuItem filter = menu.findItem(R.id.action_chat);
 
 		filter.setVisible(false);
