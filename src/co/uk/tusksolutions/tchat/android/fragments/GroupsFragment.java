@@ -5,6 +5,10 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -16,8 +20,10 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
+
 import co.uk.tusksolutions.tchat.android.adapters.GroupsContentAdapter;
 import co.uk.tusksolutions.tchat.android.api.APIGetGroups;
+import co.uk.tusksolutions.tchat.android.constants.Constants;
 
 public class GroupsFragment extends Fragment {
 
@@ -33,7 +39,7 @@ public class GroupsFragment extends Fragment {
 	private Bundle instanceState;
 	private static int lastViewedPosition;
 	private static int topOffset;
-
+  private NewGroupreceiver groupreceiver;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -92,7 +98,14 @@ public class GroupsFragment extends Fragment {
 	public void onResume() {
 		super.onResume();
 
-		prepareListView();
+		
+		groupreceiver = new NewGroupreceiver();
+		IntentFilter filter = new IntentFilter();
+		filter.addAction(Constants.GROUPS_UPDATED); // For Update group
+		
+		getActivity().registerReceiver(groupreceiver, filter);
+
+		
 	}
 
 	@Override
@@ -166,6 +179,18 @@ public class GroupsFragment extends Fragment {
 		MenuItem filter1 = menu.findItem(R.id.action_chat_one);
 		filter.setVisible(false);
 		filter1.setVisible(false);
+	}
+	
+	private class NewGroupreceiver extends BroadcastReceiver {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			if (intent.getAction().equalsIgnoreCase(Constants.GROUPS_UPDATED)) {
+				groupsApi = new APIGetGroups();
+				groupsApi.getGroups();
+			prepareListView();
+		}
+		}
 	}
 
 }

@@ -24,7 +24,9 @@ import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
 import co.uk.tusksolutions.tchat.android.models.ChatMessagesModel;
+import co.uk.tusksolutions.tchat.android.viewHolders.ChatFromImageViewHolder;
 import co.uk.tusksolutions.tchat.android.viewHolders.ChatFromViewHolder;
+import co.uk.tusksolutions.tchat.android.viewHolders.ChatToImageViewHolder;
 import co.uk.tusksolutions.tchat.android.viewHolders.ChatToViewHolder;
 import co.uk.tusksolutions.utility.URLImageParser;
 
@@ -65,7 +67,7 @@ public class ChatMessagesAdapter extends BaseAdapter {
 
 	@Override
 	public int getViewTypeCount() {
-		return 2;
+		return 4;
 	}
 
 	@Override
@@ -76,8 +78,21 @@ public class ChatMessagesAdapter extends BaseAdapter {
 		int rowType;
 		if (chatMessagesModelCollection.get(position).receiver
 				.equalsIgnoreCase(TChatApplication.getCurrentJid())) {
+			 if (chatMessagesModelCollection.get(position).message
+						.contains("src"))
+			 {
+				 rowType=3;
+			 }
+			 else
+			 {
 			rowType = 0;
-		} else {
+			 }
+		} else if (chatMessagesModelCollection.get(position).message
+				.contains("src")
+				&& !(chatMessagesModelCollection.get(position).receiver
+						.equalsIgnoreCase(TChatApplication.getCurrentJid()))) {
+			rowType =2;
+		}  else {
 			rowType = 1;
 		}
 		return rowType;
@@ -93,6 +108,8 @@ public class ChatMessagesAdapter extends BaseAdapter {
 		View row = convertView;
 		ChatToViewHolder chatToViewHolder = null;
 		ChatFromViewHolder chatFromViewHolder = null;
+		ChatToImageViewHolder chatToImageViewHolder = null;
+		ChatFromImageViewHolder chatFromImageViewHolder=null;
 
 		/**
 		 * Get result from Model Query
@@ -102,6 +119,7 @@ public class ChatMessagesAdapter extends BaseAdapter {
 				.get(position);
 
 		int type = getItemViewType(position);
+		Log.e("Type", "Type " + type);
 		switch (type) {
 		case 0:
 			// I am the sender!
@@ -117,36 +135,9 @@ public class ChatMessagesAdapter extends BaseAdapter {
 				chatFromViewHolder = (ChatFromViewHolder) row.getTag();
 			}
 
-			if (chatMessagesModel.message.startsWith("&lt")) {
-				/*
-				 * Show ImageView in ChatRow @DEEPAK
-				 */
-				chatFromViewHolder.imagesent.setVisibility(View.VISIBLE);
-				chatFromViewHolder.chatMessageTextView.setVisibility(View.GONE);
-
-				/*
-                 * Extract image src from uploaded Link @DEEPAK
-                 */
-				String path = getFirstImage(Html.fromHtml(
-						chatMessagesModel.message).toString());
-
-				try {
-					UrlImageViewHelper.setUrlDrawable(
-							chatFromViewHolder.imagesent, path,
-							R.drawable.mondobar_jewel_friends_on);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				// chatFromViewHolder.chatMessageTextView.setText(Html.fromHtml(chatMessagesModel.message));
-			}
-
-			else {
-				chatFromViewHolder.imagesent.setVisibility(View.GONE);
-				chatFromViewHolder.chatMessageTextView
-						.setVisibility(View.VISIBLE);
-				chatFromViewHolder.chatMessageTextView
-						.setText(chatMessagesModel.message);
-			}
+			chatFromViewHolder.chatMessageTextView
+					.setText(chatMessagesModel.message);
+			// }
 			chatFromViewHolder.chatMessageTimestampTextView.setText(TimeAgo
 					.getTimeAgo(Long.parseLong(chatMessagesModel.timeStamp),
 							context));
@@ -166,40 +157,66 @@ public class ChatMessagesAdapter extends BaseAdapter {
 			} else {
 				chatToViewHolder = (ChatToViewHolder) row.getTag();
 			}
-			if (chatMessagesModel.message.contains("src=")) {
-				/*
-				 * Show ImageView in ChatRow @DEEPAK
-				 */
-				chatToViewHolder.recivedImage.setVisibility(View.VISIBLE);
-				
-				chatToViewHolder.chatMessageTextView.setVisibility(View.GONE);//Hide TextView Field
-                 
-				/*
-                  * Extract image src from uploaded Link @DEEPAK
-                  */
-                 
-				String path = getFirstImage(chatMessagesModel.message);
-
-				try {
-					UrlImageViewHelper.setUrlDrawable(
-							chatToViewHolder.recivedImage, path,
-							R.drawable.mondobar_jewel_friends_on);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				
-			} else {
-				chatToViewHolder.recivedImage.setVisibility(View.GONE);
-				chatToViewHolder.chatMessageTextView
-						.setVisibility(View.VISIBLE);
-				chatToViewHolder.chatMessageTextView
-						.setText(chatMessagesModel.message);
-			}
+			
+			chatToViewHolder.chatMessageTextView
+					.setText(chatMessagesModel.message);
+			
 			chatToViewHolder.chatMessageTimestampTextView.setText(TimeAgo
 					.getTimeAgo(Long.parseLong(chatMessagesModel.timeStamp),
 							context));
 
 			break;
+
+		case 2:
+			// Images sent to server
+
+			if (row == null) {
+				LayoutInflater inflater = (LayoutInflater) context
+						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				row = inflater.inflate(R.layout.chat_to_image_row, parent, false);
+
+				chatToImageViewHolder = new ChatToImageViewHolder(row);
+				row.setTag(chatToImageViewHolder);
+
+			} else {
+				chatToImageViewHolder = (ChatToImageViewHolder) row.getTag();
+
+			}
+			String path = getFirstImage(chatMessagesModel.message);
+
+			try {
+				UrlImageViewHelper.setUrlDrawable(
+						chatToImageViewHolder.imagesent, path,
+						R.drawable.mondobar_jewel_friends_on);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			break;
+		case 3:
+			if (row == null) {
+				LayoutInflater inflater = (LayoutInflater) context
+						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				row = inflater.inflate(R.layout.chet_from_image_row, parent, false);
+
+				chatFromImageViewHolder = new ChatFromImageViewHolder(row);
+				row.setTag(chatFromImageViewHolder);
+
+			} else {
+				chatFromImageViewHolder = (ChatFromImageViewHolder) row.getTag();
+
+			}
+			String path1 = getFirstImage(chatMessagesModel.message);
+
+			try {
+				UrlImageViewHelper.setUrlDrawable(
+						chatFromImageViewHolder.imageReceived, path1,
+						R.drawable.mondobar_jewel_friends_on);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			break;
+
 		}
 
 		return row;
@@ -209,6 +226,10 @@ public class ChatMessagesAdapter extends BaseAdapter {
 
 		if (htmlString == null)
 			return null;
+		if(htmlString.startsWith("&lt"))
+		{
+			htmlString=Html.fromHtml(htmlString).toString();
+		}
 
 		String img = "";
 		Document doc = Jsoup.parse(htmlString);
