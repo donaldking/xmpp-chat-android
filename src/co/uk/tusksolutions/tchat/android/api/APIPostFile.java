@@ -18,12 +18,11 @@ import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.impl.client.DefaultHttpClient;
-
-import android.os.AsyncTask;
-import android.util.Log;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
 import co.uk.tusksolutions.tchat.android.xmpp.XMPPChatMessageManager;
+import android.os.AsyncTask;
+import android.util.Log;
 
 public class APIPostFile {
 	String sender;
@@ -33,8 +32,7 @@ public class APIPostFile {
 
 	private APIPostFileTask mTask = null;
 
-	public void doPostFile(String sender, String receiver, String selectedFile,
-			String buddyName) {
+	public void doPostFile(String sender, String receiver, String selectedFile,String buddyName) {
 
 		if (mTask != null) {
 			return;
@@ -42,7 +40,7 @@ public class APIPostFile {
 		this.sender = sender;
 		this.receiver = receiver;
 		this.selectedFile = selectedFile;
-		this.buddyName = buddyName;
+		this.buddyName=buddyName;
 
 		mTask = new APIPostFileTask();
 		mTask.execute((Void) null);
@@ -50,20 +48,19 @@ public class APIPostFile {
 
 	private class APIPostFileTask extends AsyncTask<Void, Void, Boolean> {
 
+		
 		String link;
-
+		
 		@Override
 		protected Boolean doInBackground(Void... params) {
 
 			boolean apiResult = false;
 
 			try {
-				// File file = new File(selectedFile);
+				//File file = new File(selectedFile);
 
 				try {
-					link = postFile(sender.replace("@"
-							+ Constants.CURRENT_SERVER, ""), receiver.replace(
-							"@" + Constants.CURRENT_SERVER, ""), selectedFile);
+					link = postFile(sender.replace("@"+Constants.CURRENT_SERVER,""), receiver.replace("@"+Constants.CURRENT_SERVER,""), selectedFile);
 					Log.e("upload file link ", link);
 				} catch (UnsupportedEncodingException e) {
 					// TODO Auto-generated catch block
@@ -83,13 +80,14 @@ public class APIPostFile {
 			mTask = null;
 
 			if (result) {
-
-				XMPPChatMessageManager.sendMessage(receiver, buddyName, link,
-						0, "text");
+				
+				XMPPChatMessageManager.sendMessage(receiver, buddyName,
+						link, 0, "text");
 				// Save to cloud
 				APICloudStorage cloudStorage = new APICloudStorage();
 				cloudStorage.saveToCloud(TChatApplication.getUserModel()
-						.getUsername(), receiver, link, "none", 0, "CHAT");
+						.getUsername(), receiver,
+						link, "none", 0, "CHAT");
 
 			} else {
 
@@ -103,135 +101,124 @@ public class APIPostFile {
 		}
 	}
 
-	public static String postFile(String sender, String receiver,
-			String fileName) throws Exception {
-		Log.e("File send", fileName);
-		HttpClient client = new DefaultHttpClient();
-		HttpPost post = new HttpPost(Constants.HTTP_SCHEME
+
+	
+	public static String postFile(String sender, String receiver, String fileName) throws Exception {
+       Log.e("File send",fileName);
+	    HttpClient client = new DefaultHttpClient();
+	    HttpPost post = new HttpPost(Constants.HTTP_SCHEME
 				+ Constants.CURRENT_SERVER + Constants.UPLOAD_FILE_ENDPOINT);
-		MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-		builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+	    MultipartEntityBuilder builder = MultipartEntityBuilder.create();        
+	    builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
 
-		final File file = new File(fileName);
-		FileBody fb = new FileBody(file);
+	    final File file = new File(fileName);
+	    FileBody fb = new FileBody(file);
 
-		builder.addPart("upfile", fb);
-		builder.addTextBody("sender", sender);
-		builder.addTextBody("receiver", receiver);
+	    builder.addPart("upfile", fb);  
+	    builder.addTextBody("sender", sender);
+	    builder.addTextBody("receiver", receiver);
+	  
+	    final HttpEntity yourEntity = builder.build();
 
-		final HttpEntity yourEntity = builder.build();
+	    class ProgressiveEntity implements HttpEntity {
+	        @Override
+	        public void consumeContent() throws IOException {
+	            yourEntity.consumeContent();                
+	        }
+	        @Override
+	        public InputStream getContent() throws IOException,
+	                IllegalStateException {
+	            return yourEntity.getContent();
+	        }
+	        @Override
+	        public Header getContentEncoding() {             
+	            return yourEntity.getContentEncoding();
+	        }
+	        @Override
+	        public long getContentLength() {
+	            return yourEntity.getContentLength();
+	        }
+	        @Override
+	        public Header getContentType() {
+	            return yourEntity.getContentType();
+	        }
+	        @Override
+	        public boolean isChunked() {             
+	            return yourEntity.isChunked();
+	        }
+	        @Override
+	        public boolean isRepeatable() {
+	            return yourEntity.isRepeatable();
+	        }
+	        @Override
+	        public boolean isStreaming() {             
+	            return yourEntity.isStreaming();
+	        } // CONSIDER put a _real_ delegator into here!
 
-		class ProgressiveEntity implements HttpEntity {
-			@Override
-			public void consumeContent() throws IOException {
-				yourEntity.consumeContent();
-			}
+	        @Override
+	        public void writeTo(OutputStream outstream) throws IOException {
 
-			@Override
-			public InputStream getContent() throws IOException,
-					IllegalStateException {
-				return yourEntity.getContent();
-			}
+	            class ProxyOutputStream extends FilterOutputStream {
+	                /**
+	                 * @author Stephen Colebourne
+	                 */
 
-			@Override
-			public Header getContentEncoding() {
-				return yourEntity.getContentEncoding();
-			}
+	                public ProxyOutputStream(OutputStream proxy) {
+	                    super(proxy);    
+	                }
+	                public void write(int idx) throws IOException {
+	                    out.write(idx);
+	                }
+	                public void write(byte[] bts) throws IOException {
+	                    out.write(bts);
+	                }
+	                public void write(byte[] bts, int st, int end) throws IOException {
+	                    out.write(bts, st, end);
+	                }
+	                public void flush() throws IOException {
+	                    out.flush();
+	                }
+	                public void close() throws IOException {
+	                    out.close();
+	                }
+	            } // CONSIDER import this class (and risk more Jar File Hell)
 
-			@Override
-			public long getContentLength() {
-				return yourEntity.getContentLength();
-			}
+	            class ProgressiveOutputStream extends ProxyOutputStream {
+	                public ProgressiveOutputStream(OutputStream proxy) {
+	                    super(proxy);
+	                }
+	                public void write(byte[] bts, int st, int end) throws IOException {
 
-			@Override
-			public Header getContentType() {
-				return yourEntity.getContentType();
-			}
+	                    // FIXME  Put your progress bar stuff here!
 
-			@Override
-			public boolean isChunked() {
-				return yourEntity.isChunked();
-			}
+	                    out.write(bts, st, end);
+	                }
+	            }
 
-			@Override
-			public boolean isRepeatable() {
-				return yourEntity.isRepeatable();
-			}
+	            yourEntity.writeTo(new ProgressiveOutputStream(outstream));
+	        }
 
-			@Override
-			public boolean isStreaming() {
-				return yourEntity.isStreaming();
-			} // CONSIDER put a _real_ delegator into here!
+	    };
+	    ProgressiveEntity myEntity = new ProgressiveEntity();
 
-			@Override
-			public void writeTo(OutputStream outstream) throws IOException {
+	    post.setEntity(myEntity);
+	    HttpResponse response = client.execute(post);        
 
-				class ProxyOutputStream extends FilterOutputStream {
+	    return getContent(response);
 
-					public ProxyOutputStream(OutputStream proxy) {
-						super(proxy);
-					}
-
-					public void write(int idx) throws IOException {
-						out.write(idx);
-					}
-
-					public void write(byte[] bts) throws IOException {
-						out.write(bts);
-					}
-
-					public void write(byte[] bts, int st, int end)
-							throws IOException {
-						out.write(bts, st, end);
-					}
-
-					public void flush() throws IOException {
-						out.flush();
-					}
-
-					public void close() throws IOException {
-						out.close();
-					}
-				} // CONSIDER import this class (and risk more Jar File Hell)
-
-				class ProgressiveOutputStream extends ProxyOutputStream {
-					public ProgressiveOutputStream(OutputStream proxy) {
-						super(proxy);
-					}
-
-					public void write(byte[] bts, int st, int end)
-							throws IOException {
-
-						// FIXME Put your progress bar stuff here!
-
-						out.write(bts, st, end);
-					}
-				}
-
-				yourEntity.writeTo(new ProgressiveOutputStream(outstream));
-			}
-
-		}
-
-		ProgressiveEntity myEntity = new ProgressiveEntity();
-
-		post.setEntity(myEntity);
-		HttpResponse response = client.execute(post);
-
-		return getContent(response);
-
-	}
+	} 
 
 	public static String getContent(HttpResponse response) throws IOException {
-		BufferedReader rd = new BufferedReader(new InputStreamReader(response
-				.getEntity().getContent()));
-		String body = "";
-		String content = "";
+	    BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+	    String body = "";
+	    String content = "";
 
-		while ((body = rd.readLine()) != null) {
-			content += body + "\n";
-		}
-		return content.trim();
+	    while ((body = rd.readLine()) != null) 
+	    {
+	        content += body + "\n";
+	    }
+	    return content.trim();
 	}
+
 
 }
