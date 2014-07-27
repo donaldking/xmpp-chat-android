@@ -12,6 +12,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,7 +43,8 @@ public class GroupChatMessagesAdapter extends BaseAdapter {
 
 		switch (action) {
 		case 1:
-			groupChatMessagesModelCollection = mModel.getAllMessagesFromDB(to, from);
+			groupChatMessagesModelCollection = mModel.getAllMessagesFromDB(to,
+					from);
 			notifyDataSetChanged();
 			break;
 		}
@@ -121,37 +123,54 @@ public class GroupChatMessagesAdapter extends BaseAdapter {
 				.get(position);
 
 		int type = getItemViewType(position);
-	
+
 		switch (type) {
 		case 0:
-			// I am the sender!
+			// From buddy!
 			if (row == null) {
 				LayoutInflater inflater = (LayoutInflater) context
 						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				row = inflater.inflate(R.layout.group_chat_from_row, parent, false);
+				row = inflater.inflate(R.layout.group_chat_from_row, parent,
+						false);
 
 				groupChatFromViewHolder = new GroupChatFromViewHolder(row);
 				row.setTag(groupChatFromViewHolder);
 
 			} else {
-				groupChatFromViewHolder = (GroupChatFromViewHolder) row.getTag();
+				groupChatFromViewHolder = (GroupChatFromViewHolder) row
+						.getTag();
 			}
 
+			String nameFrom = TChatApplication.getRosterModel()
+					.getBuddyName(
+							chatMessagesModel.resource + "@"
+									+ Constants.CURRENT_SERVER);
+
+			if (nameFrom == null) {
+				nameFrom = chatMessagesModel.resource;
+			}
+
+			Log.d("TAG", "senderJID: " + chatMessagesModel.resource + "@"
+					+ Constants.CURRENT_SERVER + " Full name: " + nameFrom);
+
+			groupChatFromViewHolder.chatMessageFromUser.setText(nameFrom);
 			groupChatFromViewHolder.chatMessageTextView
 					.setText(chatMessagesModel.message);
 			// }
-			groupChatFromViewHolder.chatMessageTimestampTextView.setText(TimeAgo
-					.getTimeAgo(Long.parseLong(chatMessagesModel.timeStamp),
+			groupChatFromViewHolder.chatMessageTimestampTextView
+					.setText(TimeAgo.getTimeAgo(
+							Long.parseLong(chatMessagesModel.timeStamp),
 							context));
 
 			break;
 		case 1:
-			// Buddy is the sender!
+			// From me!
 
 			if (row == null) {
 				LayoutInflater inflater = (LayoutInflater) context
 						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				row = inflater.inflate(R.layout.group_chat_to_row, parent, false);
+				row = inflater.inflate(R.layout.group_chat_to_row, parent,
+						false);
 
 				groupChatToViewHolder = new GroupChatToViewHolder(row);
 				row.setTag(groupChatToViewHolder);
@@ -160,6 +179,9 @@ public class GroupChatMessagesAdapter extends BaseAdapter {
 				groupChatToViewHolder = (GroupChatToViewHolder) row.getTag();
 			}
 
+			String nameTo = TChatApplication.getUserModel().getProfileName();
+
+			groupChatToViewHolder.chatMessageToUser.setText(nameTo);
 			groupChatToViewHolder.chatMessageTextView
 					.setText(chatMessagesModel.message);
 
@@ -175,32 +197,35 @@ public class GroupChatMessagesAdapter extends BaseAdapter {
 			if (row == null) {
 				LayoutInflater inflater = (LayoutInflater) context
 						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				row = inflater.inflate(R.layout.group_chat_to_image_row, parent,
-						false);
+				row = inflater.inflate(R.layout.group_chat_to_image_row,
+						parent, false);
 
 				groupChatToImageViewHolder = new GroupChatToImageViewHolder(row);
 				row.setTag(groupChatToImageViewHolder);
 
 			} else {
-				groupChatToImageViewHolder = (GroupChatToImageViewHolder) row.getTag();
+				groupChatToImageViewHolder = (GroupChatToImageViewHolder) row
+						.getTag();
 
 			}
 			groupChatToImageViewHolder.imagesent.setVisibility(View.VISIBLE);
 			String ImagePath = chatMessagesModel.message;
 			File imgFile = new File(ImagePath);
 			if (imgFile.exists()) {
-			  
-				try {
-					Bitmap myBitmap = decodeScaledBitmapFromSdCard(ImagePath, 200, 200);
 
-					groupChatToImageViewHolder.imagesent.setImageBitmap(myBitmap);
+				try {
+					Bitmap myBitmap = decodeScaledBitmapFromSdCard(ImagePath,
+							200, 200);
+
+					groupChatToImageViewHolder.imagesent
+							.setImageBitmap(myBitmap);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 
 			} else {
-				
+
 				groupChatToImageViewHolder.imagesent.setVisibility(View.GONE);
 			}
 
@@ -209,10 +234,11 @@ public class GroupChatMessagesAdapter extends BaseAdapter {
 			if (row == null) {
 				LayoutInflater inflater = (LayoutInflater) context
 						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				row = inflater.inflate(R.layout.group_chat_from_image_row, parent,
-						false);
+				row = inflater.inflate(R.layout.group_chat_from_image_row,
+						parent, false);
 
-				groupChatFromImageViewHolder = new GroupChatFromImageViewHolder(row);
+				groupChatFromImageViewHolder = new GroupChatFromImageViewHolder(
+						row);
 				row.setTag(groupChatFromImageViewHolder);
 
 			} else {
@@ -259,42 +285,46 @@ public class GroupChatMessagesAdapter extends BaseAdapter {
 
 		return null;
 	}
-	
+
 	public static Bitmap decodeScaledBitmapFromSdCard(String filePath,
-	        int reqWidth, int reqHeight) {
+			int reqWidth, int reqHeight) {
 
-	    // First decode with inJustDecodeBounds=true to check dimensions
-	    final BitmapFactory.Options options = new BitmapFactory.Options();
-	    options.inJustDecodeBounds = true;
-	    BitmapFactory.decodeFile(filePath, options);
+		// First decode with inJustDecodeBounds=true to check dimensions
+		final BitmapFactory.Options options = new BitmapFactory.Options();
+		options.inJustDecodeBounds = true;
+		BitmapFactory.decodeFile(filePath, options);
 
-	    // Calculate inSampleSize
-	    options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+		// Calculate inSampleSize
+		options.inSampleSize = calculateInSampleSize(options, reqWidth,
+				reqHeight);
 
-	    // Decode bitmap with inSampleSize set
-	    options.inJustDecodeBounds = false;
-	    return BitmapFactory.decodeFile(filePath, options);
+		// Decode bitmap with inSampleSize set
+		options.inJustDecodeBounds = false;
+		return BitmapFactory.decodeFile(filePath, options);
 	}
 
-	public static int calculateInSampleSize(
-	        BitmapFactory.Options options, int reqWidth, int reqHeight) {
-	    // Raw height and width of image
-	    final int height = options.outHeight;
-	    final int width = options.outWidth;
-	    int inSampleSize = 1;
+	public static int calculateInSampleSize(BitmapFactory.Options options,
+			int reqWidth, int reqHeight) {
+		// Raw height and width of image
+		final int height = options.outHeight;
+		final int width = options.outWidth;
+		int inSampleSize = 1;
 
-	    if (height > reqHeight || width > reqWidth) {
+		if (height > reqHeight || width > reqWidth) {
 
-	        // Calculate ratios of height and width to requested height and width
-	        final int heightRatio = Math.round((float) height / (float) reqHeight);
-	        final int widthRatio = Math.round((float) width / (float) reqWidth);
+			// Calculate ratios of height and width to requested height and
+			// width
+			final int heightRatio = Math.round((float) height
+					/ (float) reqHeight);
+			final int widthRatio = Math.round((float) width / (float) reqWidth);
 
-	        // Choose the smallest ratio as inSampleSize value, this will guarantee
-	        // a final image with both dimensions larger than or equal to the
-	        // requested height and width.
-	        inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
-	    }
+			// Choose the smallest ratio as inSampleSize value, this will
+			// guarantee
+			// a final image with both dimensions larger than or equal to the
+			// requested height and width.
+			inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
+		}
 
-	    return inSampleSize;
+		return inSampleSize;
 	}
 }

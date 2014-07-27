@@ -447,7 +447,7 @@ public class ChatActivity extends ActionBarActivity {
 			ChatMessagesModel mChatMessageModel = new ChatMessagesModel();
 			mChatMessageModel.saveMessageToDB(to,
 					TChatApplication.getCurrentJid(), buddyName, message,
-					isGroupMessage, messageType, System.currentTimeMillis(), 1);
+					Constants.XMPP_RESOURCE, isGroupMessage, messageType, System.currentTimeMillis(), 1);
 
 		} catch (Exception e) {
 			e.printStackTrace();

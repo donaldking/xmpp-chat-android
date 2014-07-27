@@ -5,6 +5,7 @@ import org.jivesoftware.smackx.ChatState;
 import org.jivesoftware.smackx.packet.ChatStateExtension;
 
 import co.uk.tusksolutions.tchat.android.TChatApplication;
+import co.uk.tusksolutions.tchat.android.constants.Constants;
 import co.uk.tusksolutions.tchat.android.models.ChatMessagesModel;
 
 public class XMPPChatMessageManager {
@@ -28,7 +29,8 @@ public class XMPPChatMessageManager {
 		if (TChatApplication.connection != null) {
 			try {
 				mChatMessageModel.saveMessageToDB(to,
-						TChatApplication.getCurrentJid(), buddyName, message,
+						TChatApplication.getCurrentJid(),
+						Constants.XMPP_RESOURCE, buddyName, message,
 						isGroupMessage, messageType,
 						System.currentTimeMillis(), 1);
 				TChatApplication.connection.sendPacket(msg);
@@ -38,8 +40,9 @@ public class XMPPChatMessageManager {
 		} else {
 			// online offline message
 			mChatMessageModel.saveMessageToDB(to,
-					TChatApplication.getCurrentJid(), buddyName, message,
-					isGroupMessage, messageType, System.currentTimeMillis(), 2);
+					TChatApplication.getCurrentJid(), Constants.XMPP_RESOURCE,
+					buddyName, message, isGroupMessage, messageType,
+					System.currentTimeMillis(), 2);
 		}
 	}
 

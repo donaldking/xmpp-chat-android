@@ -8,21 +8,14 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
-import android.os.Handler;
 import android.text.Html;
-import android.text.Html.ImageGetter;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import co.uk.tusksolutions.extensions.TimeAgo;
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
@@ -32,7 +25,8 @@ import co.uk.tusksolutions.tchat.android.viewHolders.ChatFromImageViewHolder;
 import co.uk.tusksolutions.tchat.android.viewHolders.ChatFromViewHolder;
 import co.uk.tusksolutions.tchat.android.viewHolders.ChatToImageViewHolder;
 import co.uk.tusksolutions.tchat.android.viewHolders.ChatToViewHolder;
-import co.uk.tusksolutions.utility.URLImageParser;
+
+import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
 
 /**
  * Created by donaldking on 27/06/2014.
@@ -80,7 +74,7 @@ public class ChatMessagesAdapter extends BaseAdapter {
 		 * Determine the type of row to create based on the "to" field value
 		 */
 		int rowType;
-		String message=chatMessagesModelCollection.get(position).message.toString();
+		String message=chatMessagesModelCollection.get(position).message;
 
 		if ((message!=null)&&chatMessagesModelCollection.get(position).receiver
 				.equalsIgnoreCase(TChatApplication.getCurrentJid())) {

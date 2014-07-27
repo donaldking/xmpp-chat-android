@@ -1,5 +1,8 @@
 package co.uk.tusksolutions.tchat.android.constants;
 
+import android.provider.Settings.Secure;
+import co.uk.tusksolutions.tchat.android.TChatApplication;
+
 public class Constants {
 
 	/**
@@ -7,6 +10,7 @@ public class Constants {
 	 */
 	public static String CURRENT_SERVER = null;
 	public static String PROXY_SERVER = null;
+	public static String XMPP_RESOURCE = "TChat-Android"; //"TChat-Android-"+ Secure.getString(TChatApplication.getContext().getContentResolver(), Secure.ANDROID_ID);
 	public static final String DEVELOPMENT_SERVER = "dev.yookoschat.com";
 	public static final String STAGING_SERVER = "uat.yookoschat.com";
 	public static final String PRODUCTION_SERVER = "yookoschat.com";
@@ -21,7 +25,7 @@ public class Constants {
 	public static final String UPDATE_LAST_ONLINE_PRIVACY_ENDPOINT = "/mobileservices/v1/update_last_online_privacy.php";
 	public static final String CREATE_GROUP_ENDPOINT = "/mobileservices/v1/create_group.php";
 	public static final String ADD_USER_TO_GROUP_ENDPOINT = "/mobileservices/v1/add_user_to_group.php";
-	public static final String UPLOAD_FILE_ENDPOINT="/mobileservices/v1/upload.php";
+	public static final String UPLOAD_FILE_ENDPOINT = "/mobileservices/v1/upload.php";
 	/**
 	 * Login Actions
 	 */
@@ -36,7 +40,7 @@ public class Constants {
 	public static String MESSAGE_READY = "co.uk.tusksolutions.tchat.android.action.CHAT_MESSAGE_READY";
 	public static String OPEN_FOR_NEW_CHAT_RECEIVED = "co.uk.tusksolutions.tchat.android.action.OPEN_FOR_NEW_CHAT_RECEIVED";
 	public static String CHAT_MESSAGE_EMPTY = "co.uk.tusksolutions.tchat.android.action.CHAT_MESSAGE_EMPTY";
-	
+
 	public static final String USER_PRESENCE_CHANGED = "co.uk.tusksolutions.tchat.android.action.USER_PRESENCE_CHANGED";
 
 	/**

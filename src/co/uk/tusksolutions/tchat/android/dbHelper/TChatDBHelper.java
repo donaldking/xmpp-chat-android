@@ -56,6 +56,7 @@ public class TChatDBHelper extends SQLiteOpenHelper {
 	public static final String CM_TIMESTAMP = "timeStamp";
 	public static final String CM_SENDER = "sender";
 	public static final String CM_RECEIVER = "receiver";
+	public static final String CM_RESOURCE = "resource";
 	public static final String CM_IS_GROUP_MESSAGE = "isGroupMessage";
 	public static final String CM_MESSAGE_TYPE = "messageType";
 	public static final String CM_IS_READ = "isRead";
@@ -69,6 +70,7 @@ public class TChatDBHelper extends SQLiteOpenHelper {
 	public static final String R_NAME = "name";
 	public static final String R_SENDER = "sender";
 	public static final String R_RECEIVER = "receiver";
+	public static final String R_RESOURCE = "resource";
 	public static final String R_IS_GROUP_MESSAGE = "isGroupMessage";
 	public static final String R_MESSAGE_TYPE = "messageType";
 	public static final String R_MESSAGE = "message";
@@ -128,6 +130,7 @@ public class TChatDBHelper extends SQLiteOpenHelper {
 			+ " varchar(255) DEFAULT NULL," + CM_TIMESTAMP
 			+ " varchar(255) DEFAULT NULL," + CM_SENDER
 			+ " varchar(255) DEFAULT NULL," + CM_RECEIVER
+			+ " varchar(255) DEFAULT NULL," + CM_RESOURCE
 			+ " varchar(255) DEFAULT NULL," + CM_IS_GROUP_MESSAGE
 			+ " INTEGER(1) DEFAULT 0," + CM_MESSAGE_TYPE
 			+ " varchar(255) DEFAULT NULL," + CM_IS_READ
@@ -142,6 +145,7 @@ public class TChatDBHelper extends SQLiteOpenHelper {
 			+ " varchar(255) DEFAULT NULL," + R_CHAT_WITH
 			+ " varchar(255) UNIQUE," + R_NAME + " varchar(255) DEFAULT NULL,"
 			+ R_SENDER + " varchar(255) DEFAULT NULL," + R_RECEIVER
+			+ " varchar(255) DEFAULT NULL," + R_RESOURCE
 			+ " varchar(255) DEFAULT NULL," + R_IS_GROUP_MESSAGE
 			+ " INTEGER(1) DEFAULT 0," + R_MESSAGE_TYPE
 			+ " varchar(255) DEFAULT NULL," + R_MESSAGE + " blob,"

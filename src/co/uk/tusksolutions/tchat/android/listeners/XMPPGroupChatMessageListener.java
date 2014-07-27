@@ -100,6 +100,7 @@ public class XMPPGroupChatMessageListener implements PacketListener {
 	private void sendNotification(Packet packet, Message message) {
 
 		String roomJid = StringUtils.parseBareAddress(message.getFrom());
+		String resource = StringUtils.parseResource(message.getFrom());
 		String roomName = TChatApplication.getGroupsModel().getGroupName(
 				StringUtils.parseBareAddress(message.getFrom()));
 		String senderJid = StringUtils.parseResource(message.getFrom()) + "@"
@@ -109,6 +110,7 @@ public class XMPPGroupChatMessageListener implements PacketListener {
 
 		Bundle b = new Bundle();
 		b.putString("roomJid", roomJid);
+		b.putString("resource", resource);
 		b.putString("roomName", roomName);
 		b.putString("senderJid", senderJid);
 		b.putString("senderName", senderName);
@@ -130,16 +132,19 @@ public class XMPPGroupChatMessageListener implements PacketListener {
 		 */
 
 		String roomJid = StringUtils.parseBareAddress(message.getFrom());
+		String resource = StringUtils.parseResource(message.getFrom());
 		String roomName = TChatApplication.getGroupsModel().getGroupName(
 				StringUtils.parseBareAddress(message.getFrom()));
 
-		Log.d("saveMessageToDb", "Sender: " + packet.getFrom() + ", Receiver: "
-				+ packet.getTo() + " Message: " + message.getBody());
+		Log.d("saveMessageToDb", "Sender: " + packet.getFrom() + " Resource: "
+				+ resource + ", Receiver: " + packet.getTo() + " Message: "
+				+ message.getBody());
 
 		ChatMessagesModel mChatMessageModel = new ChatMessagesModel();
+
 		mChatMessageModel.saveMessageToDB(TChatApplication.getCurrentJid(),
-				roomJid, roomName, message.getBody(), 1, "GROUP_CHAT",
-				System.currentTimeMillis(), 0);
+				roomJid, resource, roomName, message.getBody(), 1,
+				"GROUP_CHAT", System.currentTimeMillis(), 0);
 	}
 
 }

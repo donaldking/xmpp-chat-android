@@ -138,9 +138,11 @@ public class XMPPChatMessageListener implements PacketListener {
 		/*
 		 * Insert received message to db
 		 */
+
+		String resource = StringUtils.parseResource(packet.getFrom());
 		ChatMessagesModel mChatMessageModel = new ChatMessagesModel();
 		mChatMessageModel.saveMessageToDB(TChatApplication.getCurrentJid(),
-				StringUtils.parseBareAddress(packet.getFrom()),
+				StringUtils.parseBareAddress(packet.getFrom()), resource,
 				StringUtils.parseName(packet.getFrom()), message.getBody(), 0,
 				"CHAT", System.currentTimeMillis(), 1);
 	}
