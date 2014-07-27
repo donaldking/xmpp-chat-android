@@ -4,7 +4,12 @@ import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smackx.ChatState;
 import org.jivesoftware.smackx.packet.ChatStateExtension;
 
+
+
+
+import android.util.Log;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
+import co.uk.tusksolutions.tchat.android.activities.ChatActivity;
 import co.uk.tusksolutions.tchat.android.models.ChatMessagesModel;
 
 public class XMPPChatMessageManager {
@@ -24,13 +29,19 @@ public class XMPPChatMessageManager {
 			msg = new Message(to, Message.Type.chat);
 		}
 
+		Log.e("mid in sendMessage","mid "+ChatActivity.mid);
 		msg.setBody(message);
+		msg.setPacketID(ChatActivity.mid);
+		/*
+		DeliveryReceiptManager
+		.addDeliveryReceiptRequest(msg);*/
 		if (TChatApplication.connection != null) {
 			try {
 				mChatMessageModel.saveMessageToDB(to,
 						TChatApplication.getCurrentJid(), buddyName, message,
 						isGroupMessage, messageType,
 						System.currentTimeMillis(), 1);
+				DeliveryReceiptManager.addDeliveryReceiptRequest(msg);
 				TChatApplication.connection.sendPacket(msg);
 			} catch (Exception e) {
 				e.printStackTrace();

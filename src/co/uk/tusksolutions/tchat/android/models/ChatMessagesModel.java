@@ -13,6 +13,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
+import co.uk.tusksolutions.tchat.android.activities.ChatActivity;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
 import co.uk.tusksolutions.tchat.android.dbHelper.TChatDBHelper;
 
@@ -94,7 +95,7 @@ public class ChatMessagesModel implements Parcelable {
 	}
 
 	public boolean saveMessageToDB(String to, String from, String buddyName,
-			String message, int isGroupMessage, String messageType,
+			String message,int isGroupMessage, String messageType,
 			long timeStamp, int isRead) {
 
 		db = TChatApplication.getTChatDBWritable();
@@ -106,14 +107,14 @@ public class ChatMessagesModel implements Parcelable {
 			contentValues.put(TChatDBHelper.CM_SENDER, from);
 			contentValues.put(TChatDBHelper.CM_RECEIVER, to);
 			contentValues.put(TChatDBHelper.CM_MESSAGE, message);
-			contentValues.put(TChatDBHelper.CM_MESSAGE_ID, mid);
+			contentValues.put(TChatDBHelper.CM_MESSAGE_ID, ChatActivity.mid);
 			contentValues.put(TChatDBHelper.CM_TIMESTAMP, timeStamp);
 			contentValues.put(TChatDBHelper.CM_MESSAGE_TYPE, messageType);
 			contentValues.put(TChatDBHelper.CM_IS_READ, isRead);
 
 			// Insert
 			long id = db.insert(TABLE, null, contentValues);
-			Log.e("Insert in chat Table", "inserted "+id);
+			Log.e("Insert in chat Table", "inserted "+id+" "+ChatActivity.mid);
 
 			/**
 			 * Check message type

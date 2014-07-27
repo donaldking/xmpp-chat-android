@@ -1,5 +1,7 @@
 package co.uk.tusksolutions.tchat.android.activities;
 
+import java.util.UUID;
+
 import org.jivesoftware.smack.util.StringUtils;
 
 import android.animation.Animator;
@@ -43,6 +45,8 @@ import co.uk.tusksolutions.tchat.android.constants.Constants;
 import co.uk.tusksolutions.tchat.android.listeners.XMPPChatMessageListener;
 import co.uk.tusksolutions.tchat.android.models.ChatMessagesModel;
 import co.uk.tusksolutions.tchat.android.models.RosterModel;
+import co.uk.tusksolutions.tchat.android.xmpp.DeliveryReceiptManager;
+import co.uk.tusksolutions.tchat.android.xmpp.ReceiptReceivedListener;
 import co.uk.tusksolutions.tchat.android.xmpp.XMPPChatMessageManager;
 
 public class ChatActivity extends ActionBarActivity {
@@ -63,6 +67,8 @@ public class ChatActivity extends ActionBarActivity {
 	public String lastSeen;
 	public static String CHATSTATE = "ACTION_CHAT_STATE";
 	private static final int SELECT_FILE = 1000;
+	
+	public static String mid;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -119,6 +125,32 @@ public class ChatActivity extends ActionBarActivity {
 
 			getSupportActionBar().setTitle(buddyName);
 		}
+		
+
+		try {
+					
+			DeliveryReceiptManager.getInstanceFor(TChatApplication.connection)
+					.enableAutoReceipts();
+			DeliveryReceiptManager.getInstanceFor(TChatApplication.connection)
+					.addReceiptReceivedListener(new ReceiptReceivedListener() {
+						@Override
+						public void onReceiptReceived(final String from,
+								final String to, final String id) {
+							
+							Log.e("mid","id sent "+mid);
+							Log.e("mid","id get "+id);
+                                 
+						}
+
+					});
+
+		} catch (NullPointerException npe) {
+			;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	
 	}
 
 	@Override
@@ -283,6 +315,7 @@ public class ChatActivity extends ActionBarActivity {
 			if (resultCode == Activity.RESULT_OK) {
 				Toast.makeText(ChatActivity.this, "Sending Image please wait",
 						Toast.LENGTH_SHORT).show();
+				mid= UUID.randomUUID().toString();
 
 				String selectedFile = getRealPathFromURI(data.getData());
 
@@ -444,6 +477,7 @@ public class ChatActivity extends ActionBarActivity {
 	public void saveFile(String to, String message, int isGroupMessage,
 			String messageType) {
 		try {
+			
 			ChatMessagesModel mChatMessageModel = new ChatMessagesModel();
 			mChatMessageModel.saveMessageToDB(to,
 					TChatApplication.getCurrentJid(), buddyName, message,
@@ -596,4 +630,5 @@ public class ChatActivity extends ActionBarActivity {
 		}
 	}
 
+	
 }

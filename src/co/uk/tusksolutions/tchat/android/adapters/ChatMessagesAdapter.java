@@ -80,7 +80,14 @@ public class ChatMessagesAdapter extends BaseAdapter {
 		 * Determine the type of row to create based on the "to" field value
 		 */
 		int rowType;
-		String message=chatMessagesModelCollection.get(position).message.toString();
+		String message = null;
+		try {
+			message = chatMessagesModelCollection.get(position).message;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 
 		if ((message!=null)&&chatMessagesModelCollection.get(position).receiver
 				.equalsIgnoreCase(TChatApplication.getCurrentJid())) {
@@ -167,7 +174,7 @@ public class ChatMessagesAdapter extends BaseAdapter {
 			}
           
 			
-			if(chatMessagesModel.message.contains("src="))
+			if((chatMessagesModel.message!=null)&&chatMessagesModel.message.contains("src="))
 			{
 				chatToViewHolder.uploadimage.setVisibility(View.GONE);
 				String path1 = getFirstImage(chatMessagesModel.message);
