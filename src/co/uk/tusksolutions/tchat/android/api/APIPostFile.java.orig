@@ -22,10 +22,16 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
 import co.uk.tusksolutions.tchat.android.xmpp.XMPPChatMessageManager;
-import android.app.Activity;
-import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.util.Log;
+
+
+import android.os.AsyncTask;
+import android.util.Log;
+import co.uk.tusksolutions.tchat.android.TChatApplication;
+import co.uk.tusksolutions.tchat.android.constants.Constants;
+import co.uk.tusksolutions.tchat.android.xmpp.XMPPChatMessageManager;
+
 
 public class APIPostFile {
 	String sender;
@@ -34,10 +40,9 @@ public class APIPostFile {
 	String buddyName;
 
 	private APIPostFileTask mTask = null;
-	ProgressDialog pd;
-	Activity act;
 
-	public void doPostFile(String sender, String receiver, String selectedFile,String buddyName,Activity act) {
+	public void doPostFile(String sender, String receiver, String selectedFile,
+			String buddyName) {
 
 		if (mTask != null) {
 			return;
@@ -45,41 +50,28 @@ public class APIPostFile {
 		this.sender = sender;
 		this.receiver = receiver;
 		this.selectedFile = selectedFile;
-		this.buddyName=buddyName;
-  this.act=act;
+		this.buddyName = buddyName;
+
 		mTask = new APIPostFileTask();
 		mTask.execute((Void) null);
 	}
 
 	private class APIPostFileTask extends AsyncTask<Void, Void, Boolean> {
 
-		ProgressDialog pd;
-		long totalSize;
- 
-		@Override
-		protected void onPreExecute()
-		{
-			pd = new ProgressDialog(act);
-			pd.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-			pd.setMessage("Uploading Picture...");
-			pd.setCancelable(false);
-			pd.show();
-		}
-		
 		String link;
-		
+
 		@Override
 		protected Boolean doInBackground(Void... params) {
 
 			boolean apiResult = false;
 
 			try {
-				//File file = new File(selectedFile);
 
 				try {
-					
-					link = postFile(sender.replace("@"+Constants.CURRENT_SERVER,""), receiver.replace("@"+Constants.CURRENT_SERVER,""), selectedFile);
-				   
+					link = postFile(sender.replace("@"
+							+ Constants.CURRENT_SERVER, ""), receiver.replace(
+							"@" + Constants.CURRENT_SERVER, ""), selectedFile);
+
 					Log.e("upload file link ", link);
 				} catch (UnsupportedEncodingException e) {
 					// TODO Auto-generated catch block
@@ -95,32 +87,22 @@ public class APIPostFile {
 		}
 
 		@Override
-		protected void onProgressUpdate(Void... values) {
-			// TODO Auto-generated method stub
-			super.onProgressUpdate(values);
-			
-		}
-
-		@Override
 		protected void onPostExecute(Boolean result) {
 			mTask = null;
 
 			if (result) {
-				pd.dismiss();
-				XMPPChatMessageManager.sendMessage(receiver, buddyName,
-						link, 0, "text");
+
+				XMPPChatMessageManager.sendMessage(receiver, buddyName, link,
+						0, "text");
 				// Save to cloud
 				APICloudStorage cloudStorage = new APICloudStorage();
 				cloudStorage.saveToCloud(TChatApplication.getUserModel()
-						.getUsername(), receiver,
-						link, "none", 0, "CHAT");
+						.getUsername(), receiver, link, "none", 0, "CHAT");
 
 			} else {
 
 			}
 		}
-		
-		
 
 		@Override
 		protected void onCancelled() {
@@ -128,6 +110,7 @@ public class APIPostFile {
 			return;
 		}
 	}
+
 
 
 	
@@ -218,13 +201,8 @@ public class APIPostFile {
 	                public void write(byte[] bts, int st, int end) throws IOException {
 
 	                    // FIXME  Put your progress bar stuff here!
-                        
-	                	
+
 	                    out.write(bts, st, end);
-	                    
-	                    Log.e("upload","st and end "+st +"  "+end);
-	                    
-	                    
 	                }
 	            }
 
@@ -252,6 +230,7 @@ public class APIPostFile {
 	    }
 	    return content.trim();
 	}
+	
 
 
 }

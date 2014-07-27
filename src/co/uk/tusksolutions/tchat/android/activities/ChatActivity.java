@@ -284,11 +284,11 @@ public class ChatActivity extends ActionBarActivity {
 						Toast.LENGTH_SHORT).show();
                  
 				String selectedFile = getRealPathFromURI(data.getData());
-				showProgressUpload(true);
+				//showProgressUpload(true);
 				saveFile(buddyJid, selectedFile, 0, "FileTransfer");
 				APIPostFile apiPostFile = new APIPostFile();
 				apiPostFile.doPostFile(currentJid, buddyJid, selectedFile,
-						buddyName);
+						buddyName,ChatActivity.this);
 
 			}
 
@@ -531,7 +531,7 @@ public class ChatActivity extends ActionBarActivity {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			if (intent.getAction().equalsIgnoreCase(Constants.MESSAGE_READY)) {
-				showProgressUpload(false);
+				//showProgressUpload(false);
 				prepareListView(buddyJid, currentJid, 1,
 						intent.getLongExtra("id", -1));
 			} else if (intent.getAction().equalsIgnoreCase(
