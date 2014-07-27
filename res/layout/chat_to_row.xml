@@ -1,39 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentRight="true"
+    android:gravity="right"
+    android:orientation="vertical"
     android:paddingBottom="3dp"
     android:paddingLeft="20dp"
     android:paddingRight="20dp"
     android:paddingTop="3dp" >
 
-    <LinearLayout
+    <co.uk.tusksolutions.extensions.RobotoRegularTextView
+        android:id="@+id/chat_to_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:gravity="right"
-        android:orientation="vertical" >
-   
+        android:background="@drawable/chat_to_background_image"
+        android:padding="7dp"
+        android:text="Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod."
+        android:textColor="@color/white"
+        android:textSize="16dp" />
 
-        <co.uk.tusksolutions.extensions.RobotoRegularTextView
-            android:id="@+id/chat_to_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/chat_to_background_image"
-            android:padding="7dp"
-            android:text="Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod."
-            android:textColor="@color/white"
-            android:textSize="16dp" />
+    <co.uk.tusksolutions.extensions.RobotoLightTextView
+        android:id="@+id/chat_to_timestamp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="left"
+        android:padding="3dp"
+        android:text="25 mins ago"
+        android:textColor="@color/silver"
+        android:textSize="12dp" />
 
-        <co.uk.tusksolutions.extensions.RobotoLightTextView
-            android:id="@+id/chat_to_timestamp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="left"
-            android:padding="3dp"
-            android:text="25 mins ago"
-            android:textColor="@color/silver"
-            android:textSize="12dp" />
-    </LinearLayout>
-
-</RelativeLayout>
+</LinearLayout>
