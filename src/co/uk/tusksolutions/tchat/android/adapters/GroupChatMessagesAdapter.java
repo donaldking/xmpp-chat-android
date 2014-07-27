@@ -12,7 +12,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +21,7 @@ import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
 import co.uk.tusksolutions.tchat.android.models.ChatMessagesModel;
+import co.uk.tusksolutions.tchat.android.models.UserModel;
 import co.uk.tusksolutions.tchat.android.viewHolders.GroupChatFromImageViewHolder;
 import co.uk.tusksolutions.tchat.android.viewHolders.GroupChatFromViewHolder;
 import co.uk.tusksolutions.tchat.android.viewHolders.GroupChatToImageViewHolder;
@@ -150,9 +150,6 @@ public class GroupChatMessagesAdapter extends BaseAdapter {
 				nameFrom = chatMessagesModel.resource;
 			}
 
-			Log.d("TAG", "senderJID: " + chatMessagesModel.resource + "@"
-					+ Constants.CURRENT_SERVER + " Full name: " + nameFrom);
-
 			groupChatFromViewHolder.chatMessageFromUser.setText(nameFrom);
 			groupChatFromViewHolder.chatMessageTextView
 					.setText(chatMessagesModel.message);
@@ -179,9 +176,13 @@ public class GroupChatMessagesAdapter extends BaseAdapter {
 				groupChatToViewHolder = (GroupChatToViewHolder) row.getTag();
 			}
 
-			String nameTo = TChatApplication.getUserModel().getProfileName();
+			UserModel um = new UserModel();
+			String myName = um.getProfileName();
 
-			groupChatToViewHolder.chatMessageToUser.setText(nameTo);
+			if (myName == null) {
+				myName = um.getUsername();
+			}
+			groupChatToViewHolder.chatMessageToUser.setText(myName);
 			groupChatToViewHolder.chatMessageTextView
 					.setText(chatMessagesModel.message);
 
