@@ -87,7 +87,7 @@ public class ChatMessagesAdapter extends BaseAdapter {
 					.contains("src")) {
 				rowType = 3;
 			} else {
-				rowType = 1;
+				rowType = 0;
 			}
 		} else if (chatMessagesModelCollection.get(position).message
 				.contains("src")
