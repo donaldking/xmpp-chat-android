@@ -1,40 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentLeft="true"
+    android:gravity="left"
+    android:orientation="vertical"
     android:paddingBottom="3dp"
     android:paddingLeft="20dp"
     android:paddingRight="20dp"
     android:paddingTop="3dp" >
 
-    <LinearLayout
+    <co.uk.tusksolutions.extensions.RobotoLightTextView
+        android:id="@+id/chat_from_user"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
         android:gravity="left"
-        android:orientation="vertical" >
-        
-      
+        android:padding="3dp"
+        android:text="Donald King"
+        android:textColor="@color/red"
+        android:textSize="12dp" />
 
-        <co.uk.tusksolutions.extensions.RobotoRegularTextView
-            android:id="@+id/chat_from_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/chat_from_background_image"
-            android:padding="7dp"
-           
-            android:textColor="@color/black"
-            android:textSize="16dp" />
+    <co.uk.tusksolutions.extensions.RobotoRegularTextView
+        android:id="@+id/chat_from_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/chat_from_background_image"
+        android:padding="7dp"
+        android:text="Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod."
+        android:textColor="@color/black"
+        android:textSize="16dp" />
 
-        <co.uk.tusksolutions.extensions.RobotoLightTextView
-            android:id="@+id/chat_from_timestamp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="left"
-            android:padding="3dp"
-            android:text="10 mins ago"
-            android:textColor="@color/silver"
-            android:textSize="12dp" />
-    </LinearLayout>
+    <co.uk.tusksolutions.extensions.RobotoLightTextView
+        android:id="@+id/chat_from_timestamp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="left"
+        android:padding="3dp"
+        android:text="10 mins ago"
+        android:textColor="@color/silver"
+        android:textSize="12dp" />
 
-</RelativeLayout>
+</LinearLayout>
