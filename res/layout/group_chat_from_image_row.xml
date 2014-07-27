@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentLeft="true"
+    android:gravity="left"
+    android:orientation="vertical"
+    android:paddingBottom="3dp"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp" >
+
+    <co.uk.tusksolutions.extensions.RobotoLightTextView
+        android:id="@+id/chat_from_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="left"
+        android:padding="3dp"
+        android:text="Donald King"
+        android:textColor="@color/red"
+        android:textSize="12dp" />
+
+    <ImageView
+        android:id="@+id/imageReceived"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginLeft="3dp"
+        android:layout_marginRight="5dp"
+        android:background="@drawable/chat_from_background_image"
+        android:padding="7dp"
+        android:scaleType="centerCrop" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <co.uk.tusksolutions.extensions.RobotoLightTextView
+            android:id="@+id/chat_from_timestamp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:padding="3dp"
+            android:text="10 mins ago"
+            android:textColor="@color/silver"
+            android:textSize="12dp" />
+    </LinearLayout>
+
+</LinearLayout>

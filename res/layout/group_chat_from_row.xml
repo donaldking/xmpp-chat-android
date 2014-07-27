@@ -13,6 +13,8 @@
         android:layout_alignParentLeft="true"
         android:gravity="left"
         android:orientation="vertical" >
+        
+      
 
         <co.uk.tusksolutions.extensions.RobotoRegularTextView
             android:id="@+id/chat_from_text_view"
@@ -20,6 +22,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/chat_from_background_image"
             android:padding="7dp"
+           
             android:textColor="@color/black"
             android:textSize="16dp" />
 
