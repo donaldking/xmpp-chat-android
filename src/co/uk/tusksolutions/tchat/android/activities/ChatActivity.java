@@ -73,7 +73,8 @@ public class ChatActivity extends ActionBarActivity {
 		shortAnimTime = getResources().getInteger(
 				android.R.integer.config_shortAnimTime);
 		mLodingStatusView = this.findViewById(R.id.chat_loading_view);
-		mFileUploadStatusView=this.findViewById(R.id.chat_file_upload_progress);
+		mFileUploadStatusView = this
+				.findViewById(R.id.chat_file_upload_progress);
 
 		listView = (ListView) findViewById(R.id.chat_messages_list_view);
 		listView.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
@@ -282,14 +283,14 @@ public class ChatActivity extends ActionBarActivity {
 			if (resultCode == Activity.RESULT_OK) {
 				Toast.makeText(ChatActivity.this, "Sending Image please wait",
 						Toast.LENGTH_SHORT).show();
-                 
+
 				String selectedFile = getRealPathFromURI(data.getData());
-			
-			showProgressUpload(true);
+
+				showProgressUpload(true);
 				saveFile(buddyJid, selectedFile, 0, "FileTransfer");
 				APIPostFile apiPostFile = new APIPostFile();
 				apiPostFile.doPostFile(currentJid, buddyJid, selectedFile,
-						buddyName,ChatActivity.this);
+						buddyName, ChatActivity.this);
 
 			}
 
@@ -308,7 +309,8 @@ public class ChatActivity extends ActionBarActivity {
 					.query(contentUri, proj, null, null, null);
 
 			cursor.moveToFirst();
-			int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+			int column_index = cursor
+					.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
 			return cursor.getString(column_index);
 		} catch (Exception ex) {
 			return "";
@@ -438,16 +440,15 @@ public class ChatActivity extends ActionBarActivity {
 		}
 
 	}
-	
-	public void saveFile(String to,String message,int isGroupMessage,String messageType)
-	{
+
+	public void saveFile(String to, String message, int isGroupMessage,
+			String messageType) {
 		try {
-			ChatMessagesModel mChatMessageModel=new ChatMessagesModel();
+			ChatMessagesModel mChatMessageModel = new ChatMessagesModel();
 			mChatMessageModel.saveMessageToDB(to,
 					TChatApplication.getCurrentJid(), buddyName, message,
-					isGroupMessage, messageType,
-					System.currentTimeMillis(), 1);
-			
+					isGroupMessage, messageType, System.currentTimeMillis(), 1);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -533,12 +534,10 @@ public class ChatActivity extends ActionBarActivity {
 		public void onReceive(Context context, Intent intent) {
 			if (intent.getAction().equalsIgnoreCase(Constants.MESSAGE_READY)) {
 				showProgressUpload(false);
-				String type=getIntent().getStringExtra("type");
-							if((type!=null)&&!(type.equalsIgnoreCase("FileTransfer")))
-				{
+
 				prepareListView(buddyJid, currentJid, 1,
 						intent.getLongExtra("id", -1));
-				}
+
 			} else if (intent.getAction().equalsIgnoreCase(
 					Constants.CHAT_MESSAGE_EMPTY)) {
 				showProgress(false);
@@ -565,6 +564,7 @@ public class ChatActivity extends ActionBarActivity {
 		}
 
 	}
+
 	/**
 	 * Shows the progress UI and hides the login form.
 	 */
@@ -583,16 +583,17 @@ public class ChatActivity extends ActionBarActivity {
 					.setListener(new AnimatorListenerAdapter() {
 						@Override
 						public void onAnimationEnd(Animator animation) {
-							mFileUploadStatusView.setVisibility(show ? View.VISIBLE
-									: View.GONE);
+							mFileUploadStatusView
+									.setVisibility(show ? View.VISIBLE
+											: View.GONE);
 						}
 					});
 		} else {
 			// The ViewPropertyAnimator APIs are not available, so simply show
 			// and hide the relevant UI components.*/
-			mFileUploadStatusView.setVisibility(show ? View.VISIBLE : View.GONE);
+			mFileUploadStatusView
+					.setVisibility(show ? View.VISIBLE : View.GONE);
 		}
 	}
 
-	
 }

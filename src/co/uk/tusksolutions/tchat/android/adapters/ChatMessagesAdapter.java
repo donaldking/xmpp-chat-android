@@ -80,8 +80,9 @@ public class ChatMessagesAdapter extends BaseAdapter {
 		 * Determine the type of row to create based on the "to" field value
 		 */
 		int rowType;
+		String message=chatMessagesModelCollection.get(position).message.toString();
 
-		if (chatMessagesModelCollection.get(position).receiver
+		if ((message!=null)&&chatMessagesModelCollection.get(position).receiver
 				.equalsIgnoreCase(TChatApplication.getCurrentJid())) {
 			if (chatMessagesModelCollection.get(position).message
 					.contains("src")) {
@@ -89,13 +90,12 @@ public class ChatMessagesAdapter extends BaseAdapter {
 			} else {
 				rowType = 0;
 			}
-		} else if (chatMessagesModelCollection.get(position).message
-				.contains("src")
+		} else if ((message!=null)&&(message.contains("src="))
 				&& !(chatMessagesModelCollection.get(position).receiver
 						.equalsIgnoreCase(TChatApplication.getCurrentJid()))) {
 			rowType = 2;
 		} else {
-			if ((chatMessagesModelCollection.get(position).messageType != null)
+			if ((message!=null)&&(chatMessagesModelCollection.get(position).messageType != null)
 					&& chatMessagesModelCollection.get(position).messageType
 							.toString().equalsIgnoreCase("FileTransfer")) {
 				rowType = 2;
