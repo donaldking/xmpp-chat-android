@@ -9,6 +9,16 @@
     android:paddingLeft="20dp"
     android:paddingRight="20dp"
     android:paddingTop="3dp" >
+    
+     <ImageView
+        android:id="@+id/imagetagapi"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="5dp"
+        android:background="@drawable/chat_to_background_image"
+        android:padding="3dp"
+        android:scaleType="centerCrop" />
 
     <co.uk.tusksolutions.extensions.RobotoRegularTextView
         android:id="@+id/chat_to_text_view"

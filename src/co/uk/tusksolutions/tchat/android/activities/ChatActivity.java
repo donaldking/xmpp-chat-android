@@ -284,8 +284,9 @@ public class ChatActivity extends ActionBarActivity {
 						Toast.LENGTH_SHORT).show();
                  
 				String selectedFile = getRealPathFromURI(data.getData());
+			mAdapter.notifyDataSetChanged();
 				//showProgressUpload(true);
-				saveFile(buddyJid, selectedFile, 0, "FileTransfer");
+				//saveFile(buddyJid, selectedFile, 0, "FileTransfer");
 				APIPostFile apiPostFile = new APIPostFile();
 				apiPostFile.doPostFile(currentJid, buddyJid, selectedFile,
 						buddyName,ChatActivity.this);

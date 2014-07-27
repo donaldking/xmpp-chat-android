@@ -112,6 +112,7 @@ public class ChatMessagesModel implements Parcelable {
 
 			// Insert
 			long id = db.insert(TABLE, null, contentValues);
+			Log.e("Insert in chat Table", "inserted "+id);
 
 			/**
 			 * Check message type

@@ -12,6 +12,7 @@ import org.json.JSONArray;
 
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.util.Log;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
 
@@ -55,6 +56,10 @@ public class APICloudStorage {
 			HttpClient httpclient = new DefaultHttpClient();
 
 			try {
+				Log.e("receiver ", "receiver "+receiver);
+				Log.e("sender","sender "+sender);
+				
+				
 
 				List<BasicNameValuePair> postParams = new ArrayList<BasicNameValuePair>();
 				postParams.add(new BasicNameValuePair("sender", sender));
@@ -80,8 +85,9 @@ public class APICloudStorage {
 		@Override
 		protected void onPostExecute(Boolean result) {
 			mTask = null;
-
+			Log.e("Cloud Save","save to api "+result);
 			if (result) {
+				
 				TChatApplication.getContext().sendBroadcast(
 						new Intent(Constants.CLOUD_SAVE_SUCCESS));
 			} else {

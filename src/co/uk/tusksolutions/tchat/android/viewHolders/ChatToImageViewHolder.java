@@ -10,6 +10,7 @@ public class ChatToImageViewHolder {
 	public ImageView imagesent;
 	// public ProgressBar bar;
 	public RobotoLightTextView chatMessageTimestampTextView;
+	
 
 	public ChatToImageViewHolder(View v) {
 

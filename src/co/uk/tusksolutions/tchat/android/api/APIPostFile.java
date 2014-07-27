@@ -21,6 +21,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
+import co.uk.tusksolutions.tchat.android.models.ChatMessagesModel;
 import co.uk.tusksolutions.tchat.android.xmpp.XMPPChatMessageManager;
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -107,12 +108,14 @@ public class APIPostFile {
 
 			if (result) {
 				pd.dismiss();
+				
+				
 				XMPPChatMessageManager.sendMessage(receiver, buddyName,
 						link, 0, "text");
-				// Save to cloud
+				
 				APICloudStorage cloudStorage = new APICloudStorage();
 				cloudStorage.saveToCloud(TChatApplication.getUserModel()
-						.getUsername(), receiver,
+						.getUsername(), receiver.replace("@"+Constants.CURRENT_SERVER, ""),
 						link, "none", 0, "CHAT");
 
 			} else {
@@ -252,6 +255,18 @@ public class APIPostFile {
 	    }
 	    return content.trim();
 	}
-
+	public void saveFile(String to,String message,int isGroupMessage,String messageType)
+	{
+		try {
+			ChatMessagesModel mChatMessageModel=new ChatMessagesModel();
+			mChatMessageModel.saveMessageToDB(to,
+					TChatApplication.getCurrentJid(), buddyName, message,
+					isGroupMessage, messageType,
+					System.currentTimeMillis(), 1);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 }

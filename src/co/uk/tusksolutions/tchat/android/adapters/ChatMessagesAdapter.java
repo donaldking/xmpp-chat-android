@@ -87,7 +87,7 @@ public class ChatMessagesAdapter extends BaseAdapter {
 					.contains("src")) {
 				rowType = 3;
 			} else {
-				rowType = 0;
+				rowType = 1;
 			}
 		} else if (chatMessagesModelCollection.get(position).message
 				.contains("src")
@@ -165,10 +165,27 @@ public class ChatMessagesAdapter extends BaseAdapter {
 			} else {
 				chatToViewHolder = (ChatToViewHolder) row.getTag();
 			}
+          
+			
+			if(chatMessagesModel.message.contains("src="))
+			{
+				chatToViewHolder.uploadimage.setVisibility(View.GONE);
+				String path1 = getFirstImage(chatMessagesModel.message);
 
+				try {
+					UrlImageViewHelper.setUrlDrawable(
+							chatToViewHolder.uploadimage, path1,
+							R.drawable.camera_focus_box);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			
 			chatToViewHolder.chatMessageTextView
+			
 					.setText(chatMessagesModel.message);
-
+			
+			
 			chatToViewHolder.chatMessageTimestampTextView.setText(TimeAgo
 					.getTimeAgo(Long.parseLong(chatMessagesModel.timeStamp),
 							context));
@@ -206,8 +223,18 @@ public class ChatMessagesAdapter extends BaseAdapter {
 				}
 
 			} else {
+				String path1 = getFirstImage(chatMessagesModel.message);
+
+				try {
+					UrlImageViewHelper.setUrlDrawable(
+							chatToImageViewHolder.imagesent, path1,
+							R.drawable.camera_focus_box);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 				
-				chatToImageViewHolder.imagesent.setVisibility(View.GONE);
+				//chatToImageViewHolder.imagesent.setVisibility(View.GONE);
+				
 			}
 
 			break;
