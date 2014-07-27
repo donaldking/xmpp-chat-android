@@ -138,7 +138,7 @@ public class ChatActivity extends ActionBarActivity {
 		filter.addAction(Constants.MESSAGE_RECEIVED); // From Receiver
 														// (buddy)
 
-		filter.addAction(Constants.CHAT_MESSAGE_EMPTY); // No recent
+		filter.addAction(Constants.CHAT_MESSAGE_EMPTY); // No recents
 														// conversation
 		filter.addAction(XMPPChatMessageListener.ACTION_XMPP_CHAT_STATE_CHANGED); // For
 																					// composing
@@ -284,9 +284,9 @@ public class ChatActivity extends ActionBarActivity {
 						Toast.LENGTH_SHORT).show();
                  
 				String selectedFile = getRealPathFromURI(data.getData());
-			mAdapter.notifyDataSetChanged();
-				//showProgressUpload(true);
-				//saveFile(buddyJid, selectedFile, 0, "FileTransfer");
+			
+			showProgressUpload(true);
+				saveFile(buddyJid, selectedFile, 0, "FileTransfer");
 				APIPostFile apiPostFile = new APIPostFile();
 				apiPostFile.doPostFile(currentJid, buddyJid, selectedFile,
 						buddyName,ChatActivity.this);
@@ -532,9 +532,13 @@ public class ChatActivity extends ActionBarActivity {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			if (intent.getAction().equalsIgnoreCase(Constants.MESSAGE_READY)) {
-				//showProgressUpload(false);
+				showProgressUpload(false);
+				String type=getIntent().getStringExtra("type");
+							if((type!=null)&&!(type.equalsIgnoreCase("FileTransfer")))
+				{
 				prepareListView(buddyJid, currentJid, 1,
 						intent.getLongExtra("id", -1));
+				}
 			} else if (intent.getAction().equalsIgnoreCase(
 					Constants.CHAT_MESSAGE_EMPTY)) {
 				showProgress(false);

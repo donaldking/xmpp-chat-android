@@ -37,10 +37,11 @@ public class ChatMessagesModel implements Parcelable {
 
 	}
 
-	private void sendBroadcast(long id) {
+	private void sendBroadcast(long id,String messageType) {
 		Log.i(TAG, "Chat Message insert complete! send BroadCast!");
 		Intent i = new Intent();
 		i.putExtra("id", id);
+		i.putExtra("type", messageType);
 		i.setAction(Constants.MESSAGE_READY);
 		TChatApplication.getContext().sendBroadcast(i);
 	}
@@ -121,13 +122,18 @@ public class ChatMessagesModel implements Parcelable {
 			if (updateRecentsTable(to.equalsIgnoreCase(TChatApplication
 					.getCurrentJid()) ? from : to, message, timeStamp, isRead) == true) {
 
-				sendBroadcast(id);
+				 
+					 sendBroadcast(id,messageType);
+				 
 
 			} else {
 				if (saveToRecentsTable(to, from, buddyName, message,
 						isGroupMessage, messageType, timeStamp, isRead) == true) {
 
-					sendBroadcast(id);
+					
+						 sendBroadcast(id,messageType);
+					 
+					
 				} else {
 					Log.d("SOME", "AN ERROR");
 				}

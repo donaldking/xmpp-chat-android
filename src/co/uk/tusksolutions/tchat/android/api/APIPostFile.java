@@ -35,7 +35,7 @@ public class APIPostFile {
 	String buddyName;
 
 	private APIPostFileTask mTask = null;
-	ProgressDialog pd;
+	
 	Activity act;
 
 	public void doPostFile(String sender, String receiver, String selectedFile,String buddyName,Activity act) {
@@ -54,19 +54,9 @@ public class APIPostFile {
 
 	private class APIPostFileTask extends AsyncTask<Void, Void, Boolean> {
 
-		ProgressDialog pd;
-		long totalSize;
- 
-		@Override
-		protected void onPreExecute()
-		{
-			pd = new ProgressDialog(act);
-			pd.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-			pd.setMessage("Uploading Picture...");
-			pd.setCancelable(false);
-			pd.show();
-		}
 		
+ 
+	
 		String link;
 		
 		@Override
@@ -107,16 +97,14 @@ public class APIPostFile {
 			mTask = null;
 
 			if (result) {
-				pd.dismiss();
-				
-				
+			
 				XMPPChatMessageManager.sendMessage(receiver, buddyName,
-						link, 0, "text");
+						link, 0, "FileTransfer");
 				
 				APICloudStorage cloudStorage = new APICloudStorage();
 				cloudStorage.saveToCloud(TChatApplication.getUserModel()
 						.getUsername(), receiver.replace("@"+Constants.CURRENT_SERVER, ""),
-						link, "none", 0, "CHAT");
+						link, "none", 0, "FileTransfer");
 
 			} else {
 
