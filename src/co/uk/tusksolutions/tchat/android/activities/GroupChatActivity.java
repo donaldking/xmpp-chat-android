@@ -27,7 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
-import co.uk.tusksolutions.tchat.android.adapters.ChatMessagesAdapter;
+import co.uk.tusksolutions.tchat.android.adapters.GroupChatMessagesAdapter;
 import co.uk.tusksolutions.tchat.android.api.APICloudStorage;
 import co.uk.tusksolutions.tchat.android.api.APIGetMessages;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
@@ -39,7 +39,7 @@ public class GroupChatActivity extends ActionBarActivity {
 	private Button chatSendButton, emojiButton;
 	private String roomName;
 	static String roomJid;
-	private static ChatMessagesAdapter mAdapter;
+	private static GroupChatMessagesAdapter mAdapter;
 	private static View mLodingStatusView;
 	private static int shortAnimTime;
 	private static ListView listView;
@@ -149,7 +149,7 @@ public class GroupChatActivity extends ActionBarActivity {
 		/**
 		 * Load Chat from DB
 		 */
-		mAdapter = new ChatMessagesAdapter(buddyJid, currentJid, action, id);
+		mAdapter = new GroupChatMessagesAdapter(buddyJid, currentJid, action, id);
 		listView.setAdapter(mAdapter);
 		scrollToBottom();
 	}

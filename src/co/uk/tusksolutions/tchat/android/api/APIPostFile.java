@@ -24,7 +24,6 @@ import co.uk.tusksolutions.tchat.android.xmpp.XMPPChatMessageManager;
 import android.os.AsyncTask;
 import android.util.Log;
 
-@SuppressWarnings("deprecation")
 public class APIPostFile {
 	String sender;
 	String receiver;
