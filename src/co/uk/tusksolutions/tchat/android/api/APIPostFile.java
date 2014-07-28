@@ -103,12 +103,19 @@ public class APIPostFile {
 
 				XMPPChatMessageManager.sendMessage(receiver, buddyName, link,
 						0, "FileTransfer", mid);
-				
-
+				 
+				if(receiver.contains("@conference"))
+				{
+					receiver=receiver.replace("@conference."+Constants.CURRENT_SERVER, "");
+				}
+				else
+				{
+					receiver=receiver.replace("@"+Constants.CURRENT_SERVER, "");
+				}
+                
 				APICloudStorage cloudStorage = new APICloudStorage();
 				cloudStorage.saveToCloud(TChatApplication.getUserModel()
-						.getUsername(), receiver.replace("@"
-						+ Constants.CURRENT_SERVER, ""), link,
+						.getUsername(), receiver, link,
 						mid, 0, "FileTransfer");
 
 			} else {

@@ -318,13 +318,10 @@ public class ChatActivity extends ActionBarActivity {
 									.getFilesDir() + "/" + name);
 							saveImageToAppDir(imagepath, f.getAbsolutePath());
 							if (f.exists()) {
-
-								Toast.makeText(this, "File exists",
-										Toast.LENGTH_SHORT).show();
 								String selectedFile = f.getAbsolutePath();
 
 								showProgressUpload(true);
-								saveFile(buddyJid, selectedFile, 0,
+								saveToDB(buddyJid, selectedFile, 0,
 										"FileTransfer");
 								APIPostFile apiPostFile = new APIPostFile();
 								apiPostFile.doPostFile(currentJid, buddyJid,
@@ -338,7 +335,7 @@ public class ChatActivity extends ActionBarActivity {
 					} else {
 						String selectedFile = getRealPathFromURI(data.getData());
 						showProgressUpload(true);
-						saveFile(buddyJid, selectedFile, 0, "FileTransfer");
+						saveToDB(buddyJid, selectedFile, 0, "FileTransfer");
 						APIPostFile apiPostFile = new APIPostFile();
 						apiPostFile
 								.doPostFile(currentJid, buddyJid, selectedFile,
@@ -495,7 +492,7 @@ public class ChatActivity extends ActionBarActivity {
 
 	}
 
-	public void saveFile(String to, String message, int isGroupMessage,
+	public void saveToDB(String to, String message, int isGroupMessage,
 			String messageType) {
 		try {
 

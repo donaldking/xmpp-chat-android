@@ -1,17 +1,28 @@
 package co.uk.tusksolutions.tchat.android.activities;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
 import org.jivesoftware.smack.util.StringUtils;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.StrictMode;
+import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -30,7 +41,9 @@ import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.adapters.GroupChatMessagesAdapter;
 import co.uk.tusksolutions.tchat.android.api.APICloudStorage;
 import co.uk.tusksolutions.tchat.android.api.APIGetMessages;
+import co.uk.tusksolutions.tchat.android.api.APIPostFile;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
+import co.uk.tusksolutions.tchat.android.models.ChatMessagesModel;
 import co.uk.tusksolutions.tchat.android.xmpp.XMPPChatMessageManager;
 
 public class GroupChatActivity extends ActionBarActivity {
@@ -46,20 +59,31 @@ public class GroupChatActivity extends ActionBarActivity {
 	private GroupChatMessageReceiver mGroupChatMessageReceiver;
 	private String currentJid;
 	private static APIGetMessages mGetMessagesApi;
-
+	private static final int SELECT_FILE = 1000;
 	public String lastSeen;
 	public static String CHATSTATE = "ACTION_CHAT_STATE";
 	public static String mid;
-
+	private static View mFileUploadStatusView;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_chat);
+		
+		if (Build.VERSION.SDK_INT >= 9) {
+			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+					.permitAll().build();
+
+			StrictMode.setThreadPolicy(policy);
+		}
+
 
 		currentJid = TChatApplication.getCurrentJid();
 		shortAnimTime = getResources().getInteger(
 				android.R.integer.config_shortAnimTime);
 		mLodingStatusView = this.findViewById(R.id.chat_loading_view);
+
+		mFileUploadStatusView = this
+				.findViewById(R.id.chat_file_upload_progress);
 
 		listView = (ListView) findViewById(R.id.chat_messages_list_view);
 		listView.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
@@ -222,15 +246,83 @@ public class GroupChatActivity extends ActionBarActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem menuItem) {
+		Intent intent = new Intent(Intent.ACTION_PICK);
 		switch (menuItem.getItemId()) {
 		case android.R.id.home:
 			doGoBack();
 			break;
+		case R.id.photo_menu:
 
+			intent.setType("image/*");
+			startActivityForResult(
+					Intent.createChooser(intent, "Pick a picture"), SELECT_FILE);
+			break;
+		case R.id.video_menu:
+			intent.setType("video/*");
+			startActivityForResult(
+					Intent.createChooser(intent, "Pick a Video"), SELECT_FILE);
+			break;
+		case R.id.location_menu:
+			break;
 		default:
 			break;
 		}
 		return true;
+	}
+	
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		mid = TChatApplication.getMid();
+
+		if (requestCode == SELECT_FILE) {
+			if (resultCode == Activity.RESULT_OK) {
+				Toast.makeText(GroupChatActivity.this, "Sending Image please wait",
+						Toast.LENGTH_SHORT).show();
+				if (data != null) {
+
+					Uri imagepath = data.getData();
+
+					Log.e("TAG", "scheme " + imagepath.getScheme());
+					if (imagepath.getScheme().contains("content")) {
+
+						try {
+							String name = "Temp_" + System.currentTimeMillis()
+									+ ".jpg";
+							File f = new File(TChatApplication.getContext()
+									.getFilesDir() + "/" + name);
+							saveImageToAppDir(imagepath, f.getAbsolutePath());
+							if (f.exists()) {
+
+								
+								String selectedFile = f.getAbsolutePath();
+
+								//showProgressUpload(true);
+								saveToDB(roomJid, selectedFile, 0,
+										"FileTransfer");
+								APIPostFile apiPostFile = new APIPostFile();
+								apiPostFile.doPostFile(currentJid, roomJid,
+										selectedFile, roomName,
+										GroupChatActivity.this, mid);
+							}
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+
+					} else {
+						String selectedFile = getRealPathFromURI(data.getData());
+						//showProgressUpload(true);
+						saveToDB(roomJid, selectedFile, 0, "FileTransfer");
+						APIPostFile apiPostFile = new APIPostFile();
+						apiPostFile
+								.doPostFile(currentJid, roomJid, selectedFile,
+										roomName, GroupChatActivity.this, mid);
+					}
+				}
+
+			}
+
+			super.onActivityResult(requestCode, resultCode, data);
+		}
 	}
 
 	@Override
@@ -364,4 +456,95 @@ public class GroupChatActivity extends ActionBarActivity {
 		}
 
 	}
+	private String getRealPathFromURI(Uri contentUri) {
+		// can post image
+		String[] proj = { MediaStore.Images.Media.DATA };
+		Cursor cursor = null;
+
+		try {
+			cursor = TChatApplication.getContext().getContentResolver()
+					.query(contentUri, proj, null, null, null);
+
+			cursor.moveToFirst();
+			int column_index = cursor
+					.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+			return cursor.getString(column_index);
+		} catch (Exception ex) {
+			return "";
+		} finally {
+			if (cursor != null) {
+				cursor.close();
+			}
+		}
+	}
+	
+	public void saveImageToAppDir(Uri imageUri, String imagepath)
+			throws IOException {
+		OutputStream output;
+
+		InputStream input = getContentResolver().openInputStream(imageUri);
+		try {
+
+			output = new FileOutputStream(imagepath);
+			try {
+				byte[] buffer = new byte[2048];
+				int bytesRead = 0;
+				while ((bytesRead = input.read(buffer, 0, buffer.length)) >= 0) {
+					output.write(buffer, 0, bytesRead);
+				}
+			} finally {
+				output.close();
+			}
+
+		} finally {
+			input.close();
+		}
+
+	}
+	public void saveToDB(String to, String message, int isGroupMessage,
+			String messageType) {
+		try {
+
+			ChatMessagesModel mChatMessageModel = new ChatMessagesModel();
+			mChatMessageModel.saveMessageToDB(to,
+					TChatApplication.getCurrentJid(), roomJid, message,
+					Constants.XMPP_RESOURCE, isGroupMessage, messageType,
+					System.currentTimeMillis(), 1, mid);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Shows the progress UI and hides the login form.
+	 */
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+	private static void showProgressUpload(final boolean show) {
+
+		// On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
+		// for very easy animations. If available, use these APIs TO_USER
+		// fade-in
+		// the progress spinner.
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+
+			// mLodingStatusView.setVisibility(View.VISIBLE);
+			mFileUploadStatusView.animate().setDuration(shortAnimTime)
+					.alpha(show ? 1 : 0)
+					.setListener(new AnimatorListenerAdapter() {
+						@Override
+						public void onAnimationEnd(Animator animation) {
+							mFileUploadStatusView
+									.setVisibility(show ? View.VISIBLE
+											: View.GONE);
+						}
+					});
+		} else {
+			// The ViewPropertyAnimator APIs are not available, so simply show
+			// and hide the relevant UI components.*/
+			mFileUploadStatusView
+					.setVisibility(show ? View.VISIBLE : View.GONE);
+		}
+	}
+
 }

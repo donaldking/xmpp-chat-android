@@ -76,8 +76,16 @@ public class GroupChatMessagesAdapter extends BaseAdapter {
 		 * Determine the type of row to create based on the "to" field value
 		 */
 		int rowType;
+		String message = null;
+		try {
+			message = groupChatMessagesModelCollection.get(position).message;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 
-		if (groupChatMessagesModelCollection.get(position).receiver
+		if ((message!=null)&&groupChatMessagesModelCollection.get(position).receiver
 				.equalsIgnoreCase(TChatApplication.getCurrentJid())) {
 			if (groupChatMessagesModelCollection.get(position).message
 					.contains("src")) {
@@ -85,13 +93,13 @@ public class GroupChatMessagesAdapter extends BaseAdapter {
 			} else {
 				rowType = 0;
 			}
-		} else if (groupChatMessagesModelCollection.get(position).message
+		} else if ((message!=null)&&groupChatMessagesModelCollection.get(position).message
 				.contains("src")
 				&& !(groupChatMessagesModelCollection.get(position).receiver
 						.equalsIgnoreCase(TChatApplication.getCurrentJid()))) {
 			rowType = 2;
 		} else {
-			if ((groupChatMessagesModelCollection.get(position).messageType != null)
+			if ((message!=null)&&(groupChatMessagesModelCollection.get(position).messageType != null)
 					&& groupChatMessagesModelCollection.get(position).messageType
 							.toString().equalsIgnoreCase("FileTransfer")) {
 				rowType = 2;
@@ -226,8 +234,18 @@ public class GroupChatMessagesAdapter extends BaseAdapter {
 				}
 
 			} else {
+				String path1 = getFirstImage(chatMessagesModel.message);
 
-				groupChatToImageViewHolder.imagesent.setVisibility(View.GONE);
+				try {
+					UrlImageViewHelper.setUrlDrawable(
+							groupChatToImageViewHolder.imagesent, path1,
+							R.drawable.camera_focus_box);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
+				// chatToImageViewHolder.imagesent.setVisibility(View.GONE);
+
 			}
 
 			break;
