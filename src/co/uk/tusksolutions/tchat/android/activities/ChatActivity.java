@@ -1,5 +1,15 @@
 package co.uk.tusksolutions.tchat.android.activities;
 
+import java.io.File;
+import java.io.FileDescriptor;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URL;
 import java.util.UUID;
 
 import org.jivesoftware.smack.util.StringUtils;
@@ -17,6 +27,8 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
@@ -68,12 +80,19 @@ public class ChatActivity extends ActionBarActivity {
 	public static String CHATSTATE = "ACTION_CHAT_STATE";
 	private static final int SELECT_FILE = 1000;
 	
-	public static String mid;
+	public static String mid=null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_chat);
+		
+		if (Build.VERSION.SDK_INT >= 9) {
+			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+					.permitAll().build();
+
+			StrictMode.setThreadPolicy(policy);
+		}
 
 		currentJid = TChatApplication.getCurrentJid();
 		shortAnimTime = getResources().getInteger(
@@ -124,31 +143,6 @@ public class ChatActivity extends ActionBarActivity {
 			}
 
 			getSupportActionBar().setTitle(buddyName);
-		}
-		
-
-		try {
-					
-			DeliveryReceiptManager.getInstanceFor(TChatApplication.connection)
-					.enableAutoReceipts();
-			DeliveryReceiptManager.getInstanceFor(TChatApplication.connection)
-					.addReceiptReceivedListener(new ReceiptReceivedListener() {
-						@Override
-						public void onReceiptReceived(final String from,
-								final String to, final String id) {
-							
-							Log.e("mid","id sent "+mid);
-							Log.e("mid","id get "+id);
-                                 
-						}
-
-					});
-
-		} catch (NullPointerException npe) {
-			;
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 	
 	}
@@ -316,7 +310,42 @@ public class ChatActivity extends ActionBarActivity {
 				Toast.makeText(ChatActivity.this, "Sending Image please wait",
 						Toast.LENGTH_SHORT).show();
 				mid= UUID.randomUUID().toString();
+                if(data!=null)
+                {
+                  Uri imagepath=data.getData();
+                  if(imagepath!=null)
+                  {
+                	  try {
+                			String result = java.net.URLDecoder.decode(imagepath.getPath(), "UTF-8").substring(3);
+                			try {
+                				String name="Temp_"+System.currentTimeMillis()+".jpg";
+                				File f=new File(TChatApplication.getContext().getFilesDir()+"/"+name); 
+								saveImageToAppDir(result,f.getAbsolutePath());
+								if(f.exists())
+								{
+									
+									Toast.makeText(this, "File exists",Toast.LENGTH_SHORT).show();
+									String selectedFile =f.getAbsolutePath();
 
+									showProgressUpload(true);
+									saveFile(buddyJid, selectedFile, 0, "FileTransfer");
+									APIPostFile apiPostFile = new APIPostFile();
+									apiPostFile.doPostFile(currentJid, buddyJid, selectedFile,
+											buddyName, ChatActivity.this);
+								}
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+                			Log.e("result path is ","Decoded result is "+result);
+                		} catch (UnsupportedEncodingException e) {
+                			// TODO Auto-generated catch block
+                			e.printStackTrace();
+                		}
+                	  
+                  }
+                  else
+                  {
 				String selectedFile = getRealPathFromURI(data.getData());
 
 				showProgressUpload(true);
@@ -324,7 +353,8 @@ public class ChatActivity extends ActionBarActivity {
 				APIPostFile apiPostFile = new APIPostFile();
 				apiPostFile.doPostFile(currentJid, buddyJid, selectedFile,
 						buddyName, ChatActivity.this);
-
+                  }
+                  }
 			}
 
 		}
@@ -630,6 +660,32 @@ public class ChatActivity extends ActionBarActivity {
 					.setVisibility(show ? View.VISIBLE : View.GONE);
 		}
 	}
-
+  public void saveImageToAppDir(String imageUrl,String imagepath) throws IOException
+  {
+	  OutputStream output;
+	  URL url = new URL (imageUrl);
+	  InputStream input = url.openStream();
+	  try {
+	 
+	   output = new FileOutputStream (imagepath);
+	  try {
+	      byte[] buffer = new byte[1024];
+	      int bytesRead = 0;
+	      while ((bytesRead = input.read(buffer, 0, buffer.length)) >= 0) {
+	          output.write(buffer, 0, bytesRead);
+	      }
+	  } finally {
+	      output.close();
+	  }
+	  
+	  } finally {
+	  input.close();
+	  }
+	 
+	  
+	
+	 
+	  
+  }
 	
 }
