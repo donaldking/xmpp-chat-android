@@ -13,7 +13,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
-import co.uk.tusksolutions.tchat.android.activities.ChatActivity;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
 import co.uk.tusksolutions.tchat.android.dbHelper.TChatDBHelper;
 
@@ -97,10 +96,10 @@ public class ChatMessagesModel implements Parcelable {
 
 	public boolean saveMessageToDB(String to, String from, String resource,
 			String buddyName, String message, int isGroupMessage,
-			String messageType, long timeStamp, int isRead) {
+			String messageType, long timeStamp, int isRead, String mid) {
 
 		db = TChatApplication.getTChatDBWritable();
-
+		
 		try {
 
 			ContentValues contentValues = new ContentValues();
@@ -109,7 +108,7 @@ public class ChatMessagesModel implements Parcelable {
 			contentValues.put(TChatDBHelper.CM_RECEIVER, to);
 			contentValues.put(TChatDBHelper.CM_RESOURCE, resource);
 			contentValues.put(TChatDBHelper.CM_MESSAGE, message);
-			contentValues.put(TChatDBHelper.CM_MESSAGE_ID, ChatActivity.mid);
+			contentValues.put(TChatDBHelper.CM_MESSAGE_ID, mid);
 			contentValues.put(TChatDBHelper.CM_TIMESTAMP, timeStamp);
 			contentValues.put(TChatDBHelper.CM_MESSAGE_TYPE, messageType);
 			contentValues.put(TChatDBHelper.CM_IS_READ, isRead);
@@ -117,7 +116,7 @@ public class ChatMessagesModel implements Parcelable {
 			// Insert
 		
 			long id = db.insertWithOnConflict(TABLE, null, contentValues,SQLiteDatabase.CONFLICT_REPLACE);
-			Log.e("Insert in chat Table", "inserted "+id+" "+ChatActivity.mid);
+			Log.e("Insert in chat Table", "inserted "+id+" "+mid);
 
 			/**
 			 * Check message type
@@ -131,7 +130,7 @@ public class ChatMessagesModel implements Parcelable {
 
 			} else {
 				if (saveToRecentsTable(to, from, buddyName, message, resource,
-						isGroupMessage, messageType, timeStamp, isRead) == true) {
+						isGroupMessage, messageType, timeStamp, isRead, mid) == true) {
 
 					sendBroadcast(id, messageType);
 
@@ -180,7 +179,7 @@ public class ChatMessagesModel implements Parcelable {
 
 	private boolean saveToRecentsTable(String to, String from,
 			String buddyName, String resource, String message,
-			int isGroupMessage, String messageType, long timeStamp, int isRead) {
+			int isGroupMessage, String messageType, long timeStamp, int isRead, String mid) {
 		try {
 
 			ContentValues contentValues = new ContentValues();
@@ -201,7 +200,7 @@ public class ChatMessagesModel implements Parcelable {
 
 			// Insert
 			long id = db.insertWithOnConflict(TChatDBHelper.RECENTS_TABLE,
-					null, contentValues, SQLiteDatabase.CONFLICT_IGNORE);
+					null, contentValues, SQLiteDatabase.CONFLICT_REPLACE);
 
 			if (id > 0) {
 				return true;

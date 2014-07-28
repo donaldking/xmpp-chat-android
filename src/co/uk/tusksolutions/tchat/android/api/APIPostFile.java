@@ -33,13 +33,14 @@ public class APIPostFile {
 	String receiver;
 	String selectedFile;
 	String buddyName;
+	String mid;
 
 	private APIPostFileTask mTask = null;
 
 	Activity act;
 
 	public void doPostFile(String sender, String receiver, String selectedFile,
-			String buddyName, Activity act) {
+			String buddyName, Activity act, String mid) {
 
 		if (mTask != null) {
 			return;
@@ -49,6 +50,8 @@ public class APIPostFile {
 		this.selectedFile = selectedFile;
 		this.buddyName = buddyName;
 		this.act = act;
+		this.mid = mid;
+		
 		mTask = new APIPostFileTask();
 		mTask.execute((Void) null);
 	}
@@ -99,7 +102,7 @@ public class APIPostFile {
 			if (result) {
 
 				XMPPChatMessageManager.sendMessage(receiver, buddyName, link,
-						0, "FileTransfer");
+						0, "FileTransfer", mid);
 				Log.e("APIPostFile ", "mid " + ChatActivity.mid);
 
 				APICloudStorage cloudStorage = new APICloudStorage();
@@ -136,48 +139,48 @@ public class APIPostFile {
 		builder.addTextBody("sender", sender);
 		builder.addTextBody("receiver", receiver);
 
-		final HttpEntity yourEntity = builder.build();
+		final HttpEntity httpEntity = builder.build();
 
 		class ProgressiveEntity implements HttpEntity {
 			@Override
 			public void consumeContent() throws IOException {
-				yourEntity.consumeContent();
+				httpEntity.consumeContent();
 			}
 
 			@Override
 			public InputStream getContent() throws IOException,
 					IllegalStateException {
-				return yourEntity.getContent();
+				return httpEntity.getContent();
 			}
 
 			@Override
 			public Header getContentEncoding() {
-				return yourEntity.getContentEncoding();
+				return httpEntity.getContentEncoding();
 			}
 
 			@Override
 			public long getContentLength() {
-				return yourEntity.getContentLength();
+				return httpEntity.getContentLength();
 			}
 
 			@Override
 			public Header getContentType() {
-				return yourEntity.getContentType();
+				return httpEntity.getContentType();
 			}
 
 			@Override
 			public boolean isChunked() {
-				return yourEntity.isChunked();
+				return httpEntity.isChunked();
 			}
 
 			@Override
 			public boolean isRepeatable() {
-				return yourEntity.isRepeatable();
+				return httpEntity.isRepeatable();
 			}
 
 			@Override
 			public boolean isStreaming() {
-				return yourEntity.isStreaming();
+				return httpEntity.isStreaming();
 			} // CONSIDER put a _real_ delegator into here!
 
 			@Override
@@ -229,14 +232,14 @@ public class APIPostFile {
 					}
 				}
 
-				yourEntity.writeTo(new ProgressiveOutputStream(outstream));
+				httpEntity.writeTo(new ProgressiveOutputStream(outstream));
 			}
 
 		}
-		;
-		ProgressiveEntity myEntity = new ProgressiveEntity();
+		
+		ProgressiveEntity progressiveEntity = new ProgressiveEntity();
 
-		post.setEntity(myEntity);
+		post.setEntity(progressiveEntity);
 		HttpResponse response = client.execute(post);
 
 		return getContent(response);
@@ -263,7 +266,7 @@ public class APIPostFile {
 			mChatMessageModel.saveMessageToDB(to,
 					TChatApplication.getCurrentJid(), Constants.XMPP_RESOURCE,
 					buddyName, message, isGroupMessage, messageType,
-					System.currentTimeMillis(), 1);
+					System.currentTimeMillis(), 1, TChatApplication.getMid());
 
 		} catch (Exception e) {
 			e.printStackTrace();

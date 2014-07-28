@@ -4,13 +4,9 @@ import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smackx.ChatState;
 import org.jivesoftware.smackx.packet.ChatStateExtension;
 
-
-
-
 import android.util.Log;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
-import co.uk.tusksolutions.tchat.android.activities.ChatActivity;
 import co.uk.tusksolutions.tchat.android.models.ChatMessagesModel;
 
 public class XMPPChatMessageManager {
@@ -19,7 +15,7 @@ public class XMPPChatMessageManager {
 	private static ChatStateExtension cm;
 
 	public static void sendMessage(final String to, String buddyName,
-			final String message, int isGroupMessage, String messageType) {
+			final String message, int isGroupMessage, String messageType, String mid) {
 		if (mChatMessageModel == null) {
 			mChatMessageModel = new ChatMessagesModel();
 		}
@@ -30,9 +26,9 @@ public class XMPPChatMessageManager {
 			msg = new Message(to, Message.Type.chat);
 		}
 
-		Log.e("mid in sendMessage","mid "+ChatActivity.mid);
+		Log.e("mid in sendMessage","mid "+mid);
 		msg.setBody(message);
-		msg.setPacketID(ChatActivity.mid);
+		msg.setPacketID(mid);
 		/*
 		DeliveryReceiptManager
 		.addDeliveryReceiptRequest(msg);*/
@@ -42,7 +38,7 @@ public class XMPPChatMessageManager {
 						TChatApplication.getCurrentJid(),
 						Constants.XMPP_RESOURCE, buddyName, message,
 						isGroupMessage, messageType,
-						System.currentTimeMillis(), 1);
+						System.currentTimeMillis(), 1, mid);
 				DeliveryReceiptManager.addDeliveryReceiptRequest(msg);
 				TChatApplication.connection.sendPacket(msg);
 			} catch (Exception e) {
@@ -53,7 +49,7 @@ public class XMPPChatMessageManager {
 			mChatMessageModel.saveMessageToDB(to,
 					TChatApplication.getCurrentJid(),
 					Constants.XMPP_RESOURCE, buddyName, message,
-					isGroupMessage, messageType, System.currentTimeMillis(), 2);
+					isGroupMessage, messageType, System.currentTimeMillis(), 2, mid);
 		}
 	}
 

@@ -28,6 +28,7 @@ public class XMPPChatMessageListener implements PacketListener {
 	public void processPacket(Packet packet) {
 
 		Message message = (Message) packet;
+		
 		if (message.getType() == Message.Type.chat) {
 			if (message.getBody() == null) {
 
@@ -141,9 +142,11 @@ public class XMPPChatMessageListener implements PacketListener {
 
 		String resource = StringUtils.parseResource(packet.getFrom());
 		ChatMessagesModel mChatMessageModel = new ChatMessagesModel();
+		String mid = packet.getPacketID();
+		
 		mChatMessageModel.saveMessageToDB(TChatApplication.getCurrentJid(),
 				StringUtils.parseBareAddress(packet.getFrom()), resource,
 				StringUtils.parseName(packet.getFrom()), message.getBody(), 0,
-				"CHAT", System.currentTimeMillis(), 1);
+				"CHAT", System.currentTimeMillis(), 1,mid);
 	}
 }

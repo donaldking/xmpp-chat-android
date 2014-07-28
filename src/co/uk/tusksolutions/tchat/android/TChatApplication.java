@@ -4,6 +4,7 @@
 package co.uk.tusksolutions.tchat.android;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 import org.jivesoftware.smack.XMPPConnection;
 
@@ -46,7 +47,7 @@ public class TChatApplication extends Application {
 	public static String chatSessionBuddy;
 	public static int CHAT_SECTION_QUERY_ACTION;
 	public static Handler presenceDialogHandler;
-
+	
 	@Override
 	public void onCreate() {
 		super.onCreate();
@@ -87,6 +88,9 @@ public class TChatApplication extends Application {
 		return isConnected;
 	}
 
+	public static String getMid(){
+		return UUID.randomUUID().toString();
+	}
 	public static String getCurrentJid() {
 		return getUserModel().getUsername() + "@" + Constants.CURRENT_SERVER;
 	}

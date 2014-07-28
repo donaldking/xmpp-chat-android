@@ -131,6 +131,7 @@ public class XMPPGroupChatMessageListener implements PacketListener {
 		 * Insert received message to db
 		 */
 
+		String mid = packet.getPacketID();
 		String roomJid = StringUtils.parseBareAddress(message.getFrom());
 		String resource = StringUtils.parseResource(message.getFrom());
 		String roomName = TChatApplication.getGroupsModel().getGroupName(
@@ -144,7 +145,7 @@ public class XMPPGroupChatMessageListener implements PacketListener {
 
 		mChatMessageModel.saveMessageToDB(TChatApplication.getCurrentJid(),
 				roomJid, resource, roomName, message.getBody(), 1,
-				"GROUP_CHAT", System.currentTimeMillis(), 0);
+				"GROUP_CHAT", System.currentTimeMillis(), 0, mid);
 	}
 
 }

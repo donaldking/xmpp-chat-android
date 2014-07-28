@@ -1,7 +1,5 @@
 package co.uk.tusksolutions.tchat.android.activities;
 
-import java.util.UUID;
-
 import org.jivesoftware.smack.util.StringUtils;
 
 import android.animation.Animator;
@@ -67,7 +65,6 @@ public class ChatActivity extends ActionBarActivity {
 	public String lastSeen;
 	public static String CHATSTATE = "ACTION_CHAT_STATE";
 	private static final int SELECT_FILE = 1000;
-	
 	public static String mid;
 
 	@Override
@@ -136,16 +133,13 @@ public class ChatActivity extends ActionBarActivity {
 						@Override
 						public void onReceiptReceived(final String from,
 								final String to, final String id) {
-							
-							Log.e("mid","id sent "+mid);
-							Log.e("mid","id get "+id);
                                  
 						}
 
 					});
 
 		} catch (NullPointerException npe) {
-			;
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -310,20 +304,17 @@ public class ChatActivity extends ActionBarActivity {
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
+		mid = TChatApplication.getMid();
+		
 		if (requestCode == SELECT_FILE) {
 			if (resultCode == Activity.RESULT_OK) {
-				Toast.makeText(ChatActivity.this, "Sending Image please wait",
-						Toast.LENGTH_SHORT).show();
-				mid= UUID.randomUUID().toString();
-
+				
 				String selectedFile = getRealPathFromURI(data.getData());
-
 				showProgressUpload(true);
 				saveFile(buddyJid, selectedFile, 0, "FileTransfer");
 				APIPostFile apiPostFile = new APIPostFile();
 				apiPostFile.doPostFile(currentJid, buddyJid, selectedFile,
-						buddyName, ChatActivity.this);
+						buddyName, ChatActivity.this, mid);
 
 			}
 
@@ -450,6 +441,7 @@ public class ChatActivity extends ActionBarActivity {
 		@Override
 		public void onClick(View v) {
 			if (chatMessageEditText.getText().toString().length() >= 1) {
+				mid = TChatApplication.getMid();
 				String message = chatMessageEditText.getText().toString();
 
 				try {
@@ -460,7 +452,7 @@ public class ChatActivity extends ActionBarActivity {
 				}
 
 				XMPPChatMessageManager.sendMessage(buddyJid, buddyName,
-						message, 0, "CHAT");
+						message, 0, "CHAT", mid);
 				chatMessageEditText.setText("");
 				chatSendButton.setEnabled(false);
 
@@ -468,7 +460,7 @@ public class ChatActivity extends ActionBarActivity {
 				APICloudStorage cloudStorage = new APICloudStorage();
 				cloudStorage.saveToCloud(TChatApplication.getUserModel()
 						.getUsername(), StringUtils.parseName(buddyJid),
-						message, "none", 0, "CHAT");
+						message, mid, 0, "CHAT");
 			}
 		}
 
@@ -482,7 +474,7 @@ public class ChatActivity extends ActionBarActivity {
 			mChatMessageModel.saveMessageToDB(to,
 					TChatApplication.getCurrentJid(), buddyName, message,
 					Constants.XMPP_RESOURCE, isGroupMessage,
-					messageType, System.currentTimeMillis(), 1);
+					messageType, System.currentTimeMillis(), 1, mid);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -499,7 +491,7 @@ public class ChatActivity extends ActionBarActivity {
 			// TODO change inputview for chatMessageEditText TO_USER emoji
 			// fragment
 			Toast.makeText(TChatApplication.getContext(),
-					"Emoji coming soon...", Toast.LENGTH_SHORT).show();
+					"Use emoji on your keyboard", Toast.LENGTH_SHORT).show();
 		}
 
 	}

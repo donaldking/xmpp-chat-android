@@ -49,6 +49,7 @@ public class GroupChatActivity extends ActionBarActivity {
 
 	public String lastSeen;
 	public static String CHATSTATE = "ACTION_CHAT_STATE";
+	public static String mid;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -300,14 +301,15 @@ public class GroupChatActivity extends ActionBarActivity {
 		@Override
 		public void onClick(View v) {
 			if (chatMessageEditText.getText().toString().length() >= 1) {
+				mid = TChatApplication.getMid();
 				String message = chatMessageEditText.getText().toString();
 
-				mp = MediaPlayer.create(v.getContext(), R.raw.received_message);
+				mp = MediaPlayer.create(v.getContext(), R.raw.send_message);
 				mp.setVolume(1, 1);
 				mp.start();
 
 				XMPPChatMessageManager.sendMessage(roomJid, roomName, message,
-						1, "GROUP_CHAT");
+						1, "GROUP_CHAT", mid);
 				chatMessageEditText.setText("");
 				chatSendButton.setEnabled(false);
 
@@ -320,7 +322,7 @@ public class GroupChatActivity extends ActionBarActivity {
 				APICloudStorage cloudStorage = new APICloudStorage();
 				cloudStorage.saveToCloud(TChatApplication.getUserModel()
 						.getUsername(), StringUtils.parseName(roomJid),
-						message, "none", 1, "GROUP_CHAT");
+						message, mid, 1, "GROUP_CHAT");
 			}
 		}
 
@@ -336,7 +338,7 @@ public class GroupChatActivity extends ActionBarActivity {
 			// TODO change inputview for chatMessageEditText TO_USER emoji
 			// fragment
 			Toast.makeText(TChatApplication.getContext(),
-					"Emoji coming soon...", Toast.LENGTH_SHORT).show();
+					"Use emoji on your keyboard", Toast.LENGTH_SHORT).show();
 		}
 
 	}
