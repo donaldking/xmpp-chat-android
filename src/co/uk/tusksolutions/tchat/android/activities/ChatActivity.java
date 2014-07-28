@@ -7,7 +7,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
-import java.util.UUID;
 
 import org.jivesoftware.smack.util.StringUtils;
 
@@ -303,7 +302,6 @@ public class ChatActivity extends ActionBarActivity {
 			if (resultCode == Activity.RESULT_OK) {
 				Toast.makeText(ChatActivity.this, "Sending Image please wait",
 						Toast.LENGTH_SHORT).show();
-				mid = UUID.randomUUID().toString();
 				if (data != null) {
 					Uri imagepath = data.getData();
 					String result = null;
