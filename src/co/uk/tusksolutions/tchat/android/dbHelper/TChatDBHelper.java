@@ -125,7 +125,7 @@ public class TChatDBHelper extends SQLiteOpenHelper {
 			+ CHAT_MESSAGES_TABLE + " ( " + CM_UID
 			+ " INTEGER PRIMARY KEY AUTOINCREMENT," + CM_OBJECT_ID
 			+ " varchar(255) UNIQUE," + CM_MESSAGE + " blob," + CM_MESSAGE_ID
-			+ " varchar(255) DEFAULT NULL," + CM_TIMESTAMP
+			+ " varchar(255) UNIQUE DEFAULT NULL," + CM_TIMESTAMP
 			+ " varchar(255) DEFAULT NULL," + CM_SENDER
 			+ " varchar(255) DEFAULT NULL," + CM_RECEIVER
 			+ " varchar(255) DEFAULT NULL," + CM_IS_GROUP_MESSAGE

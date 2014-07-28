@@ -81,7 +81,7 @@ public class ChatMessagesModel implements Parcelable {
 
 				// Insert
 				db.insertWithOnConflict(TABLE, null, contentValues,
-						SQLiteDatabase.CONFLICT_IGNORE);
+						SQLiteDatabase.CONFLICT_REPLACE);
 
 				counter++;
 
@@ -113,7 +113,8 @@ public class ChatMessagesModel implements Parcelable {
 			contentValues.put(TChatDBHelper.CM_IS_READ, isRead);
 
 			// Insert
-			long id = db.insert(TABLE, null, contentValues);
+		
+			long id = db.insertWithOnConflict(TABLE, null, contentValues,SQLiteDatabase.CONFLICT_REPLACE);
 			Log.e("Insert in chat Table", "inserted "+id+" "+ChatActivity.mid);
 
 			/**

@@ -21,6 +21,7 @@ import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import co.uk.tusksolutions.tchat.android.TChatApplication;
+import co.uk.tusksolutions.tchat.android.activities.ChatActivity;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
 import co.uk.tusksolutions.tchat.android.models.ChatMessagesModel;
 import co.uk.tusksolutions.tchat.android.xmpp.XMPPChatMessageManager;
@@ -101,11 +102,12 @@ public class APIPostFile {
 			
 				XMPPChatMessageManager.sendMessage(receiver, buddyName,
 						link, 0, "FileTransfer");
+				Log.e("APIPostFile ","mid "+ChatActivity.mid);
 				
 				APICloudStorage cloudStorage = new APICloudStorage();
 				cloudStorage.saveToCloud(TChatApplication.getUserModel()
 						.getUsername(), receiver.replace("@"+Constants.CURRENT_SERVER, ""),
-						link, "none", 0, "FileTransfer");
+						link, ChatActivity.mid, 0, "FileTransfer");
 
 			} else {
 
