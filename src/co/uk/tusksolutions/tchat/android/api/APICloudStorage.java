@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
+import co.uk.tusksolutions.tchat.android.activities.ChatActivity;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
 
 public class APICloudStorage {
@@ -28,7 +29,7 @@ public class APICloudStorage {
 		this.sender = sender;
 		this.receiver = receiver;
 		this.message = message;
-		this.mid = mid;
+		this.mid = ChatActivity.mid;
 		this.isGroupMessage = Integer.toString(isGroupMessage);
 		this.messageType = messageType;
 

@@ -9,8 +9,11 @@ import org.jivesoftware.smackx.packet.ChatStateExtension;
 
 import android.util.Log;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
+<<<<<<< HEAD
 import co.uk.tusksolutions.tchat.android.constants.Constants;
+=======
 import co.uk.tusksolutions.tchat.android.activities.ChatActivity;
+>>>>>>> aec22704fb760ff60b515a7ddccf5778343810dc
 import co.uk.tusksolutions.tchat.android.models.ChatMessagesModel;
 
 public class XMPPChatMessageManager {

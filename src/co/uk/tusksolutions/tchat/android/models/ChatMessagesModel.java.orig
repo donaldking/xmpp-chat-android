@@ -95,9 +95,15 @@ public class ChatMessagesModel implements Parcelable {
 		return true;
 	}
 
+<<<<<<< HEAD
 	public boolean saveMessageToDB(String to, String from, String resource,
 			String buddyName, String message, int isGroupMessage,
 			String messageType, long timeStamp, int isRead) {
+=======
+	public boolean saveMessageToDB(String to, String from, String buddyName,
+			String message,int isGroupMessage, String messageType,
+			long timeStamp, int isRead) {
+>>>>>>> aec22704fb760ff60b515a7ddccf5778343810dc
 
 		db = TChatApplication.getTChatDBWritable();
 
@@ -115,9 +121,14 @@ public class ChatMessagesModel implements Parcelable {
 			contentValues.put(TChatDBHelper.CM_IS_READ, isRead);
 
 			// Insert
+<<<<<<< HEAD
+			long id = db.insert(TABLE, null, contentValues);
+			Log.e("Insert in chat Table", "inserted " + id);
+=======
 		
 			long id = db.insertWithOnConflict(TABLE, null, contentValues,SQLiteDatabase.CONFLICT_REPLACE);
 			Log.e("Insert in chat Table", "inserted "+id+" "+ChatActivity.mid);
+>>>>>>> aec22704fb760ff60b515a7ddccf5778343810dc
 
 			/**
 			 * Check message type
