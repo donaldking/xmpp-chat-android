@@ -1,6 +1,7 @@
 package co.uk.tusksolutions.tchat.android.activities;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,6 +25,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
@@ -303,45 +305,36 @@ public class ChatActivity extends ActionBarActivity {
 			if (resultCode == Activity.RESULT_OK) {
 				Toast.makeText(ChatActivity.this, "Sending Image please wait",
 						Toast.LENGTH_SHORT).show();
-				mid = UUID.randomUUID().toString();
 				if (data != null) {
+
 					Uri imagepath = data.getData();
-					String result = null;
-					try {
-						result = java.net.URLDecoder.decode(
-								imagepath.getPath(), "UTF-8").substring(3);
-					} catch (UnsupportedEncodingException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-					if (result != null&&result.contains("http")) {
-						
-							
-							try {
-								String name = "Temp_"
-										+ System.currentTimeMillis() + ".jpg";
-								File f = new File(TChatApplication.getContext()
-										.getFilesDir() + "/" + name);
-								saveImageToAppDir(result, f.getAbsolutePath());
-								if (f.exists()) {
 
-									Toast.makeText(this, "File exists",
-											Toast.LENGTH_SHORT).show();
-									String selectedFile = f.getAbsolutePath();
+					Log.e("TAG", "scheme " + imagepath.getScheme());
+					if (imagepath.getScheme().contains("content")) {
 
-									showProgressUpload(true);
-									saveFile(buddyJid, selectedFile, 0,
-											"FileTransfer");
-									APIPostFile apiPostFile = new APIPostFile();
-									apiPostFile.doPostFile(currentJid,
-											buddyJid, selectedFile, buddyName,
-											ChatActivity.this, mid);
-								}
-							} catch (IOException e) {
-								e.printStackTrace();
+						try {
+							String name = "Temp_" + System.currentTimeMillis()
+									+ ".jpg";
+							File f = new File(TChatApplication.getContext()
+									.getFilesDir() + "/" + name);
+							saveImageToAppDir(imagepath, f.getAbsolutePath());
+							if (f.exists()) {
+
+								Toast.makeText(this, "File exists",
+										Toast.LENGTH_SHORT).show();
+								String selectedFile = f.getAbsolutePath();
+
+								showProgressUpload(true);
+								saveFile(buddyJid, selectedFile, 0,
+										"FileTransfer");
+								APIPostFile apiPostFile = new APIPostFile();
+								apiPostFile.doPostFile(currentJid, buddyJid,
+										selectedFile, buddyName,
+										ChatActivity.this, mid);
 							}
-							Log.e("result path is ", "Decoded result is "
-									+ result);
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
 
 					} else {
 						String selectedFile = getRealPathFromURI(data.getData());
@@ -660,16 +653,16 @@ public class ChatActivity extends ActionBarActivity {
 		}
 	}
 
-	public void saveImageToAppDir(String imageUrl, String imagepath)
+	public void saveImageToAppDir(Uri imageUri, String imagepath)
 			throws IOException {
 		OutputStream output;
-		URL url = new URL(imageUrl);
-		InputStream input = url.openStream();
+
+		InputStream input = getContentResolver().openInputStream(imageUri);
 		try {
 
 			output = new FileOutputStream(imagepath);
 			try {
-				byte[] buffer = new byte[1024];
+				byte[] buffer = new byte[2048];
 				int bytesRead = 0;
 				while ((bytesRead = input.read(buffer, 0, buffer.length)) >= 0) {
 					output.write(buffer, 0, bytesRead);
