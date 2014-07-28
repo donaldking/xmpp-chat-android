@@ -331,13 +331,11 @@ public class ChatActivity extends ActionBarActivity {
 											ChatActivity.this, mid);
 								}
 							} catch (IOException e) {
-								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
 							Log.e("result path is ", "Decoded result is "
 									+ result);
 						} catch (UnsupportedEncodingException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 
