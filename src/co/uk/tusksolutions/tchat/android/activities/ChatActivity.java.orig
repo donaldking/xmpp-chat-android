@@ -1,5 +1,7 @@
 package co.uk.tusksolutions.tchat.android.activities;
 
+<<<<<<< HEAD
+=======
 import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileNotFoundException;
@@ -12,6 +14,7 @@ import java.net.URI;
 import java.net.URL;
 import java.util.UUID;
 
+>>>>>>> c2f67d38719e5a2ec4e952380f2ee0ca639f4eeb
 import org.jivesoftware.smack.util.StringUtils;
 
 import android.animation.Animator;
@@ -79,7 +82,12 @@ public class ChatActivity extends ActionBarActivity {
 	public String lastSeen;
 	public static String CHATSTATE = "ACTION_CHAT_STATE";
 	private static final int SELECT_FILE = 1000;
+<<<<<<< HEAD
 	public static String mid;
+=======
+	
+	public static String mid=null;
+>>>>>>> c2f67d38719e5a2ec4e952380f2ee0ca639f4eeb
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -143,6 +151,31 @@ public class ChatActivity extends ActionBarActivity {
 
 			getSupportActionBar().setTitle(buddyName);
 		}
+<<<<<<< HEAD
+		
+
+		try {
+					
+			DeliveryReceiptManager.getInstanceFor(TChatApplication.connection)
+					.enableAutoReceipts();
+			DeliveryReceiptManager.getInstanceFor(TChatApplication.connection)
+					.addReceiptReceivedListener(new ReceiptReceivedListener() {
+						@Override
+						public void onReceiptReceived(final String from,
+								final String to, final String id) {
+                                 
+						}
+
+					});
+
+		} catch (NullPointerException npe) {
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+=======
+>>>>>>> c2f67d38719e5a2ec4e952380f2ee0ca639f4eeb
 	
 	}
 
@@ -307,6 +340,9 @@ public class ChatActivity extends ActionBarActivity {
 		
 		if (requestCode == SELECT_FILE) {
 			if (resultCode == Activity.RESULT_OK) {
+<<<<<<< HEAD
+				
+=======
 				Toast.makeText(ChatActivity.this, "Sending Image please wait",
 						Toast.LENGTH_SHORT).show();
 				mid= UUID.randomUUID().toString();
@@ -346,13 +382,20 @@ public class ChatActivity extends ActionBarActivity {
                   }
                   else
                   {
+>>>>>>> c2f67d38719e5a2ec4e952380f2ee0ca639f4eeb
 				String selectedFile = getRealPathFromURI(data.getData());
 				showProgressUpload(true);
 				saveFile(buddyJid, selectedFile, 0, "FileTransfer");
 				APIPostFile apiPostFile = new APIPostFile();
 				apiPostFile.doPostFile(currentJid, buddyJid, selectedFile,
+<<<<<<< HEAD
 						buddyName, ChatActivity.this, mid);
 
+=======
+						buddyName, ChatActivity.this);
+                  }
+                  }
+>>>>>>> c2f67d38719e5a2ec4e952380f2ee0ca639f4eeb
 			}
 
 		}
