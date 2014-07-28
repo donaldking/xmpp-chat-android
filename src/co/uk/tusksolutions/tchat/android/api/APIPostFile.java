@@ -8,7 +8,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-import java.util.UUID;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -98,15 +97,16 @@ public class APIPostFile {
 			mTask = null;
 
 			if (result) {
-			
-				XMPPChatMessageManager.sendMessage(receiver, buddyName,
-						link, 0, "FileTransfer");
-				Log.e("APIPostFile ","mid "+ChatActivity.mid);
-				
+
+				XMPPChatMessageManager.sendMessage(receiver, buddyName, link,
+						0, "FileTransfer");
+				Log.e("APIPostFile ", "mid " + ChatActivity.mid);
+
 				APICloudStorage cloudStorage = new APICloudStorage();
 				cloudStorage.saveToCloud(TChatApplication.getUserModel()
-						.getUsername(), receiver.replace("@"+Constants.CURRENT_SERVER, ""),
-						link, ChatActivity.mid, 0, "FileTransfer");
+						.getUsername(), receiver.replace("@"
+						+ Constants.CURRENT_SERVER, ""), link,
+						ChatActivity.mid, 0, "FileTransfer");
 
 			} else {
 
@@ -160,15 +160,10 @@ public class APIPostFile {
 				return yourEntity.getContentLength();
 			}
 
-	                    // FIXME  Put your progress bar stuff here!
-                        
-	                	
-	                    out.write(bts, st, end);
-	                    
-	                    
-	                    
-	                }
-	            }
+			@Override
+			public Header getContentType() {
+				return yourEntity.getContentType();
+			}
 
 			@Override
 			public boolean isChunked() {
@@ -231,8 +226,6 @@ public class APIPostFile {
 
 						out.write(bts, st, end);
 
-						Log.e("upload", "st and end " + st + "  " + end);
-
 					}
 				}
 
@@ -265,8 +258,8 @@ public class APIPostFile {
 	public void saveFile(String to, String message, int isGroupMessage,
 			String messageType) {
 		try {
-			
-			ChatMessagesModel mChatMessageModel=new ChatMessagesModel();
+
+			ChatMessagesModel mChatMessageModel = new ChatMessagesModel();
 			mChatMessageModel.saveMessageToDB(to,
 					TChatApplication.getCurrentJid(), Constants.XMPP_RESOURCE,
 					buddyName, message, isGroupMessage, messageType,
