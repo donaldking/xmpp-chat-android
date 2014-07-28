@@ -47,6 +47,7 @@ public class TChatApplication extends Application {
 	public static String chatSessionBuddy;
 	public static int CHAT_SECTION_QUERY_ACTION;
 	public static Handler presenceDialogHandler;
+
 	
 	@Override
 	public void onCreate() {

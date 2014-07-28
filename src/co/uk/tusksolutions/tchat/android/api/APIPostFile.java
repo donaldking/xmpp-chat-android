@@ -103,13 +103,13 @@ public class APIPostFile {
 
 				XMPPChatMessageManager.sendMessage(receiver, buddyName, link,
 						0, "FileTransfer", mid);
-				Log.e("APIPostFile ", "mid " + ChatActivity.mid);
+				
 
 				APICloudStorage cloudStorage = new APICloudStorage();
 				cloudStorage.saveToCloud(TChatApplication.getUserModel()
 						.getUsername(), receiver.replace("@"
 						+ Constants.CURRENT_SERVER, ""), link,
-						ChatActivity.mid, 0, "FileTransfer");
+						mid, 0, "FileTransfer");
 
 			} else {
 

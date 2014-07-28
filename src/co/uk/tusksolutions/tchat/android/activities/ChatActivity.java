@@ -306,10 +306,17 @@ public class ChatActivity extends ActionBarActivity {
 				mid = UUID.randomUUID().toString();
 				if (data != null) {
 					Uri imagepath = data.getData();
-					if (imagepath != null) {
-						try {
-							String result = java.net.URLDecoder.decode(
-									imagepath.getPath(), "UTF-8").substring(3);
+					String result = null;
+					try {
+						result = java.net.URLDecoder.decode(
+								imagepath.getPath(), "UTF-8").substring(3);
+					} catch (UnsupportedEncodingException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					if (result != null&&result.contains("http")) {
+						
+							
 							try {
 								String name = "Temp_"
 										+ System.currentTimeMillis() + ".jpg";
@@ -335,9 +342,6 @@ public class ChatActivity extends ActionBarActivity {
 							}
 							Log.e("result path is ", "Decoded result is "
 									+ result);
-						} catch (UnsupportedEncodingException e) {
-							e.printStackTrace();
-						}
 
 					} else {
 						String selectedFile = getRealPathFromURI(data.getData());
