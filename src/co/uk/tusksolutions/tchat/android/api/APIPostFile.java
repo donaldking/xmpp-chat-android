@@ -101,15 +101,18 @@ public class APIPostFile {
 
 			if (result) {
 
-				XMPPChatMessageManager.sendMessage(receiver, buddyName, link,
-						0, "FileTransfer", mid);
+				
 				 
 				if(receiver.contains("@conference"))
 				{
+					XMPPChatMessageManager.sendMessage(receiver, buddyName, link,
+							1, "FileTransfer", mid);
 					receiver=receiver.replace("@conference."+Constants.CURRENT_SERVER, "");
 				}
 				else
 				{
+					XMPPChatMessageManager.sendMessage(receiver, buddyName, link,
+							0, "FileTransfer", mid);
 					receiver=receiver.replace("@"+Constants.CURRENT_SERVER, "");
 				}
                 
