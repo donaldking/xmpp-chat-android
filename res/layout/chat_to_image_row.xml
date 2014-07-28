@@ -13,11 +13,11 @@
         android:id="@+id/imageSent"
         android:layout_width="200dp"
         android:layout_height="200dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="5dp"
+        android:layout_marginLeft="3dp"
+        android:layout_marginRight="3dp"
         android:background="@drawable/chat_to_background_image"
         android:padding="3dp"
-        android:scaleType="centerCrop" />
+        android:scaleType="fitCenter" />
 
     <co.uk.tusksolutions.extensions.RobotoLightTextView
         android:id="@+id/chat_to_timestamp"
