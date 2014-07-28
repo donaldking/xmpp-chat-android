@@ -1,7 +1,5 @@
 package co.uk.tusksolutions.tchat.android.constants;
 
-import android.provider.Settings.Secure;
-import co.uk.tusksolutions.tchat.android.TChatApplication;
 
 public class Constants {
 
@@ -10,7 +8,7 @@ public class Constants {
 	 */
 	public static String CURRENT_SERVER = null;
 	public static String PROXY_SERVER = null;
-	public static String XMPP_RESOURCE = "TChat-Android"; //"TChat-Android-"+ Secure.getString(TChatApplication.getContext().getContentResolver(), Secure.ANDROID_ID);
+	public static String XMPP_RESOURCE = null;
 	public static final String DEVELOPMENT_SERVER = "dev.yookoschat.com";
 	public static final String STAGING_SERVER = "uat.yookoschat.com";
 	public static final String PRODUCTION_SERVER = "yookoschat.com";

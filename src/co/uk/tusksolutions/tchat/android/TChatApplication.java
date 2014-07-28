@@ -55,7 +55,7 @@ public class TChatApplication extends Application {
 		// Constants.CURRENT_SERVER = Constants.PRODUCTION_SERVER;
 		Constants.PROXY_SERVER = Constants.HTTP_SCHEME
 				+ Constants.CURRENT_SERVER + Constants.PROXY_PATH;
-
+		
 		TChatApplication.mContext = getBaseContext();
 		tChatDBHelper = new TChatDBHelper(TChatApplication.getContext());
 		TChatApplication.getTChatDBWritable();
@@ -154,8 +154,8 @@ public class TChatApplication extends Application {
 				// Rejoin all rooms so we can receive notifications
 				// when new messages come in.
 
-				ArrayList<GroupsModel> groupsCollection = getGroupsModel()
-						.queryGroups();
+				GroupsModel gm = new GroupsModel();
+				ArrayList<GroupsModel> groupsCollection = gm.queryGroups();
 				for (GroupsModel groupsModel : groupsCollection) {
 					// Join all rooms
 					try {

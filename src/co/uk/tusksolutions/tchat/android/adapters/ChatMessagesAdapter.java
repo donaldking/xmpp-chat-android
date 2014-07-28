@@ -74,22 +74,25 @@ public class ChatMessagesAdapter extends BaseAdapter {
 		 * Determine the type of row to create based on the "to" field value
 		 */
 		int rowType;
-		String message=chatMessagesModelCollection.get(position).message;
+		String message = chatMessagesModelCollection.get(position).message;
 
-		if ((message!=null)&&chatMessagesModelCollection.get(position).receiver
-				.equalsIgnoreCase(TChatApplication.getCurrentJid())) {
+		if ((message != null)
+				&& chatMessagesModelCollection.get(position).receiver
+						.equalsIgnoreCase(TChatApplication.getCurrentJid())) {
 			if (chatMessagesModelCollection.get(position).message
 					.contains("src")) {
 				rowType = 3;
 			} else {
 				rowType = 0;
 			}
-		} else if ((message!=null)&&(message.contains("src="))
+		} else if ((message != null)
+				&& (message.contains("src="))
 				&& !(chatMessagesModelCollection.get(position).receiver
 						.equalsIgnoreCase(TChatApplication.getCurrentJid()))) {
 			rowType = 2;
 		} else {
-			if ((message!=null)&&(chatMessagesModelCollection.get(position).messageType != null)
+			if ((message != null)
+					&& (chatMessagesModelCollection.get(position).messageType != null)
 					&& chatMessagesModelCollection.get(position).messageType
 							.toString().equalsIgnoreCase("FileTransfer")) {
 				rowType = 2;
@@ -121,7 +124,7 @@ public class ChatMessagesAdapter extends BaseAdapter {
 				.get(position);
 
 		int type = getItemViewType(position);
-	
+
 		switch (type) {
 		case 0:
 			// I am the sender!
@@ -159,10 +162,8 @@ public class ChatMessagesAdapter extends BaseAdapter {
 			} else {
 				chatToViewHolder = (ChatToViewHolder) row.getTag();
 			}
-          
-			
-			if(chatMessagesModel.message.contains("src="))
-			{
+
+			if (chatMessagesModel.message.contains("src=")) {
 				chatToViewHolder.uploadimage.setVisibility(View.GONE);
 				String path1 = getFirstImage(chatMessagesModel.message);
 
@@ -174,12 +175,11 @@ public class ChatMessagesAdapter extends BaseAdapter {
 					e.printStackTrace();
 				}
 			}
-			
+
 			chatToViewHolder.chatMessageTextView
-			
-					.setText(chatMessagesModel.message);
-			
-			
+
+			.setText(chatMessagesModel.message);
+
 			chatToViewHolder.chatMessageTimestampTextView.setText(TimeAgo
 					.getTimeAgo(Long.parseLong(chatMessagesModel.timeStamp),
 							context));
@@ -206,9 +206,10 @@ public class ChatMessagesAdapter extends BaseAdapter {
 			String ImagePath = chatMessagesModel.message;
 			File imgFile = new File(ImagePath);
 			if (imgFile.exists()) {
-			  
+
 				try {
-					Bitmap myBitmap = decodeScaledBitmapFromSdCard(ImagePath, 200, 200);
+					Bitmap myBitmap = decodeScaledBitmapFromSdCard(ImagePath,
+							200, 200);
 
 					chatToImageViewHolder.imagesent.setImageBitmap(myBitmap);
 				} catch (Exception e) {
@@ -226,11 +227,14 @@ public class ChatMessagesAdapter extends BaseAdapter {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				
-				//chatToImageViewHolder.imagesent.setVisibility(View.GONE);
-				
+
+				// chatToImageViewHolder.imagesent.setVisibility(View.GONE);
+
 			}
 
+			chatToImageViewHolder.chatMessageTimestampTextView.setText(TimeAgo
+					.getTimeAgo(Long.parseLong(chatMessagesModel.timeStamp),
+							context));
 			break;
 		case 3:
 			if (row == null) {
@@ -256,6 +260,12 @@ public class ChatMessagesAdapter extends BaseAdapter {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+
+			chatFromImageViewHolder.chatMessageTimestampTextView
+					.setText(TimeAgo.getTimeAgo(
+							Long.parseLong(chatMessagesModel.timeStamp),
+							context));
+
 			break;
 
 		}
@@ -286,42 +296,46 @@ public class ChatMessagesAdapter extends BaseAdapter {
 
 		return null;
 	}
-	
+
 	public static Bitmap decodeScaledBitmapFromSdCard(String filePath,
-	        int reqWidth, int reqHeight) {
+			int reqWidth, int reqHeight) {
 
-	    // First decode with inJustDecodeBounds=true to check dimensions
-	    final BitmapFactory.Options options = new BitmapFactory.Options();
-	    options.inJustDecodeBounds = true;
-	    BitmapFactory.decodeFile(filePath, options);
+		// First decode with inJustDecodeBounds=true to check dimensions
+		final BitmapFactory.Options options = new BitmapFactory.Options();
+		options.inJustDecodeBounds = true;
+		BitmapFactory.decodeFile(filePath, options);
 
-	    // Calculate inSampleSize
-	    options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+		// Calculate inSampleSize
+		options.inSampleSize = calculateInSampleSize(options, reqWidth,
+				reqHeight);
 
-	    // Decode bitmap with inSampleSize set
-	    options.inJustDecodeBounds = false;
-	    return BitmapFactory.decodeFile(filePath, options);
+		// Decode bitmap with inSampleSize set
+		options.inJustDecodeBounds = false;
+		return BitmapFactory.decodeFile(filePath, options);
 	}
 
-	public static int calculateInSampleSize(
-	        BitmapFactory.Options options, int reqWidth, int reqHeight) {
-	    // Raw height and width of image
-	    final int height = options.outHeight;
-	    final int width = options.outWidth;
-	    int inSampleSize = 1;
+	public static int calculateInSampleSize(BitmapFactory.Options options,
+			int reqWidth, int reqHeight) {
+		// Raw height and width of image
+		final int height = options.outHeight;
+		final int width = options.outWidth;
+		int inSampleSize = 1;
 
-	    if (height > reqHeight || width > reqWidth) {
+		if (height > reqHeight || width > reqWidth) {
 
-	        // Calculate ratios of height and width to requested height and width
-	        final int heightRatio = Math.round((float) height / (float) reqHeight);
-	        final int widthRatio = Math.round((float) width / (float) reqWidth);
+			// Calculate ratios of height and width to requested height and
+			// width
+			final int heightRatio = Math.round((float) height
+					/ (float) reqHeight);
+			final int widthRatio = Math.round((float) width / (float) reqWidth);
 
-	        // Choose the smallest ratio as inSampleSize value, this will guarantee
-	        // a final image with both dimensions larger than or equal to the
-	        // requested height and width.
-	        inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
-	    }
+			// Choose the smallest ratio as inSampleSize value, this will
+			// guarantee
+			// a final image with both dimensions larger than or equal to the
+			// requested height and width.
+			inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
+		}
 
-	    return inSampleSize;
+		return inSampleSize;
 	}
 }

@@ -87,14 +87,13 @@ public class XMPPConnectionManager {
 						}
 
 						try {
-							TChatApplication.connection.login(
-									username,
-									password,
-									"TChat-Android-"
-											+ Secure.getString(TChatApplication
-													.getContext()
-													.getContentResolver(),
-													Secure.ANDROID_ID));
+							Constants.XMPP_RESOURCE = "TChat-Android-"
+									+ Secure.getString(TChatApplication
+											.getContext().getContentResolver(),
+											Secure.ANDROID_ID);
+
+							TChatApplication.connection.login(username,
+									password, Constants.XMPP_RESOURCE);
 
 							/**
 							 * 1) Add Connection Listener
@@ -172,24 +171,23 @@ public class XMPPConnectionManager {
 							}
 
 							configureProviderManager(TChatApplication.connection);
-							
+
 							// Get groups and login
 							APIGetGroups groupsApi = new APIGetGroups();
 							groupsApi.getGroups(new OnGetGroupsCompleted() {
-								
+
 								@Override
 								public void OnGetGroupsSuccess() {
 									// TODO Auto-generated method stub
 									TChatApplication.joinAllGroups();
 								}
-								
+
 								@Override
 								public void OnGetGroupsFailed() {
 									// TODO Auto-generated method stub
-									
+
 								}
 							});
-
 
 						} catch (Exception e) {
 							/**
@@ -227,15 +225,12 @@ public class XMPPConnectionManager {
 		}
 
 	}
-	
+
 	public static void configureProviderManager(XMPPConnection connection) {
 		ProviderManager pm = ProviderManager.getInstance();
-		ProviderManager
-				.getInstance()
-				.addIQProvider(
-						"query",
-						"http://jabber.org/protocol/bytestreams",
-						new BytestreamsProvider());
+		ProviderManager.getInstance().addIQProvider("query",
+				"http://jabber.org/protocol/bytestreams",
+				new BytestreamsProvider());
 		ProviderManager.getInstance().addIQProvider("query",
 				"http://jabber.org/protocol/disco#items",
 				new DiscoverItemsProvider());
@@ -261,8 +256,6 @@ public class XMPPConnectionManager {
 		sdm.addFeature("http://jabber.org/protocol/disco#info");
 		sdm.addFeature("http://jabber.org/protocol/disco#item");
 		sdm.addFeature("jabber:iq:privacy");
-
-		
 
 		// The order is the same as in the smack.providers file
 
@@ -364,9 +357,7 @@ public class XMPPConnectionManager {
 		// FileTransfer
 		pm.addIQProvider("si", "http://jabber.org/protocol/si",
 				new StreamInitiationProvider());
-		pm.addIQProvider(
-				"query",
-				"http://jabber.org/protocol/bytestreams",
+		pm.addIQProvider("query", "http://jabber.org/protocol/bytestreams",
 				new BytestreamsProvider());
 		pm.addIQProvider("open", "http://jabber.org/protocol/ibb",
 				new OpenIQProvider());
@@ -449,9 +440,7 @@ public class XMPPConnectionManager {
 		// input
 		pm.addIQProvider("si", "http://jabber.org/protocol/si",
 				new StreamInitiationProvider());
-		pm.addIQProvider(
-				"query",
-				"http://jabber.org/protocol/bytestreams",
+		pm.addIQProvider("query", "http://jabber.org/protocol/bytestreams",
 				new BytestreamsProvider());
 		pm.addIQProvider("open", "http://jabber.org/protocol/ibb",
 				new OpenIQProvider());

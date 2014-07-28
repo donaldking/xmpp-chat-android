@@ -3,6 +3,8 @@ package co.uk.tusksolutions.tchat.android.adapters;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -12,6 +14,7 @@ import android.view.animation.Animation;
 import android.widget.BaseAdapter;
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
+import co.uk.tusksolutions.tchat.android.activities.GroupChatActivity;
 import co.uk.tusksolutions.tchat.android.models.GroupsModel;
 import co.uk.tusksolutions.tchat.android.viewHolders.GroupsViewHolder;
 
@@ -75,7 +78,7 @@ public class GroupsContentAdapter extends BaseAdapter {
 		 * 
 		 */
 		final GroupsModel model = groupsModelCollection.get(position);
-		
+
 		holder.groupName.setText(model.group_name);
 
 		row.setOnClickListener(new OnClickListener() {
@@ -85,6 +88,11 @@ public class GroupsContentAdapter extends BaseAdapter {
 
 				doSelectionAnimationForView(v);
 				
+				Bundle b = new Bundle();
+				b.putString("roomJid", model.group_id);
+				b.putString("roomName", model.group_name);
+				launchGroupChatActivity(b);
+
 			}
 		});
 
@@ -96,5 +104,15 @@ public class GroupsContentAdapter extends BaseAdapter {
 				SELECTED_ALPHA);
 		fadeAnimation.setDuration(50);
 		v.startAnimation(fadeAnimation);
+	}
+
+	private void launchGroupChatActivity(Bundle b) {
+
+		Intent intent = new Intent(TChatApplication.getContext(),
+				GroupChatActivity.class);
+		intent.putExtra("groupChatToRoomBundle", b);
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+		TChatApplication.getContext().startActivity(intent);
 	}
 }

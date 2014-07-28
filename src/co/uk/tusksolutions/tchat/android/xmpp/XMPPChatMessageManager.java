@@ -40,9 +40,9 @@ public class XMPPChatMessageManager {
 		} else {
 			// online offline message
 			mChatMessageModel.saveMessageToDB(to,
-					TChatApplication.getCurrentJid(), Constants.XMPP_RESOURCE,
-					buddyName, message, isGroupMessage, messageType,
-					System.currentTimeMillis(), 2);
+					TChatApplication.getCurrentJid(),
+					Constants.XMPP_RESOURCE, buddyName, message,
+					isGroupMessage, messageType, System.currentTimeMillis(), 2);
 		}
 	}
 
