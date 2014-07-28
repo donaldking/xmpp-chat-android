@@ -1,14 +1,11 @@
 package co.uk.tusksolutions.tchat.android.activities;
 
 import java.io.File;
-import java.io.FileDescriptor;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-import java.net.URI;
 import java.net.URL;
 import java.util.UUID;
 
@@ -27,7 +24,6 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
@@ -57,8 +53,6 @@ import co.uk.tusksolutions.tchat.android.constants.Constants;
 import co.uk.tusksolutions.tchat.android.listeners.XMPPChatMessageListener;
 import co.uk.tusksolutions.tchat.android.models.ChatMessagesModel;
 import co.uk.tusksolutions.tchat.android.models.RosterModel;
-import co.uk.tusksolutions.tchat.android.xmpp.DeliveryReceiptManager;
-import co.uk.tusksolutions.tchat.android.xmpp.ReceiptReceivedListener;
 import co.uk.tusksolutions.tchat.android.xmpp.XMPPChatMessageManager;
 
 public class ChatActivity extends ActionBarActivity {
@@ -85,7 +79,7 @@ public class ChatActivity extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_chat);
-		
+
 		if (Build.VERSION.SDK_INT >= 9) {
 			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
 					.permitAll().build();
@@ -143,7 +137,7 @@ public class ChatActivity extends ActionBarActivity {
 
 			getSupportActionBar().setTitle(buddyName);
 		}
-	
+
 	}
 
 	@Override
@@ -304,60 +298,64 @@ public class ChatActivity extends ActionBarActivity {
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		mid = TChatApplication.getMid();
-		
+
 		if (requestCode == SELECT_FILE) {
 			if (resultCode == Activity.RESULT_OK) {
 				Toast.makeText(ChatActivity.this, "Sending Image please wait",
 						Toast.LENGTH_SHORT).show();
-				mid= UUID.randomUUID().toString();
-                if(data!=null)
-                {
-                  Uri imagepath=data.getData();
-                  if(imagepath!=null)
-                  {
-                	  try {
-                			String result = java.net.URLDecoder.decode(imagepath.getPath(), "UTF-8").substring(3);
-                			try {
-                				String name="Temp_"+System.currentTimeMillis()+".jpg";
-                				File f=new File(TChatApplication.getContext().getFilesDir()+"/"+name); 
-								saveImageToAppDir(result,f.getAbsolutePath());
-								if(f.exists())
-								{
-									
-									Toast.makeText(this, "File exists",Toast.LENGTH_SHORT).show();
-									String selectedFile =f.getAbsolutePath();
+				mid = UUID.randomUUID().toString();
+				if (data != null) {
+					Uri imagepath = data.getData();
+					if (imagepath != null) {
+						try {
+							String result = java.net.URLDecoder.decode(
+									imagepath.getPath(), "UTF-8").substring(3);
+							try {
+								String name = "Temp_"
+										+ System.currentTimeMillis() + ".jpg";
+								File f = new File(TChatApplication.getContext()
+										.getFilesDir() + "/" + name);
+								saveImageToAppDir(result, f.getAbsolutePath());
+								if (f.exists()) {
+
+									Toast.makeText(this, "File exists",
+											Toast.LENGTH_SHORT).show();
+									String selectedFile = f.getAbsolutePath();
 
 									showProgressUpload(true);
-									saveFile(buddyJid, selectedFile, 0, "FileTransfer");
+									saveFile(buddyJid, selectedFile, 0,
+											"FileTransfer");
 									APIPostFile apiPostFile = new APIPostFile();
-									apiPostFile.doPostFile(currentJid, buddyJid, selectedFile,
-											buddyName, ChatActivity.this);
+									apiPostFile.doPostFile(currentJid,
+											buddyJid, selectedFile, buddyName,
+											ChatActivity.this, mid);
 								}
 							} catch (IOException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
-                			Log.e("result path is ","Decoded result is "+result);
-                		} catch (UnsupportedEncodingException e) {
-                			// TODO Auto-generated catch block
-                			e.printStackTrace();
-                		}
-                	  
-                  }
-                  else
-                  {
-				String selectedFile = getRealPathFromURI(data.getData());
-				showProgressUpload(true);
-				saveFile(buddyJid, selectedFile, 0, "FileTransfer");
-				APIPostFile apiPostFile = new APIPostFile();
-				apiPostFile.doPostFile(currentJid, buddyJid, selectedFile,
-						buddyName, ChatActivity.this, mid);
+							Log.e("result path is ", "Decoded result is "
+									+ result);
+						} catch (UnsupportedEncodingException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+
+					} else {
+						String selectedFile = getRealPathFromURI(data.getData());
+						showProgressUpload(true);
+						saveFile(buddyJid, selectedFile, 0, "FileTransfer");
+						APIPostFile apiPostFile = new APIPostFile();
+						apiPostFile
+								.doPostFile(currentJid, buddyJid, selectedFile,
+										buddyName, ChatActivity.this, mid);
+					}
+				}
 
 			}
 
+			super.onActivityResult(requestCode, resultCode, data);
 		}
-
-		super.onActivityResult(requestCode, resultCode, data);
 	}
 
 	private String getRealPathFromURI(Uri contentUri) {
@@ -506,12 +504,12 @@ public class ChatActivity extends ActionBarActivity {
 	public void saveFile(String to, String message, int isGroupMessage,
 			String messageType) {
 		try {
-			
+
 			ChatMessagesModel mChatMessageModel = new ChatMessagesModel();
 			mChatMessageModel.saveMessageToDB(to,
 					TChatApplication.getCurrentJid(), buddyName, message,
-					Constants.XMPP_RESOURCE, isGroupMessage,
-					messageType, System.currentTimeMillis(), 1, mid);
+					Constants.XMPP_RESOURCE, isGroupMessage, messageType,
+					System.currentTimeMillis(), 1, mid);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -659,32 +657,29 @@ public class ChatActivity extends ActionBarActivity {
 					.setVisibility(show ? View.VISIBLE : View.GONE);
 		}
 	}
-  public void saveImageToAppDir(String imageUrl,String imagepath) throws IOException
-  {
-	  OutputStream output;
-	  URL url = new URL (imageUrl);
-	  InputStream input = url.openStream();
-	  try {
-	 
-	   output = new FileOutputStream (imagepath);
-	  try {
-	      byte[] buffer = new byte[1024];
-	      int bytesRead = 0;
-	      while ((bytesRead = input.read(buffer, 0, buffer.length)) >= 0) {
-	          output.write(buffer, 0, bytesRead);
-	      }
-	  } finally {
-	      output.close();
-	  }
-	  
-	  } finally {
-	  input.close();
-	  }
-	 
-	  
-	
-	 
-	  
-  }
-	
+
+	public void saveImageToAppDir(String imageUrl, String imagepath)
+			throws IOException {
+		OutputStream output;
+		URL url = new URL(imageUrl);
+		InputStream input = url.openStream();
+		try {
+
+			output = new FileOutputStream(imagepath);
+			try {
+				byte[] buffer = new byte[1024];
+				int bytesRead = 0;
+				while ((bytesRead = input.read(buffer, 0, buffer.length)) >= 0) {
+					output.write(buffer, 0, bytesRead);
+				}
+			} finally {
+				output.close();
+			}
+
+		} finally {
+			input.close();
+		}
+
+	}
+
 }
