@@ -271,8 +271,7 @@ public class GroupChatMessagesAdapter extends BaseAdapter {
 
 				groupChatToImageViewHolder.chatMessageToUser
 						.setText(imageFromName);
-				
-				
+
 			}
 
 			break;

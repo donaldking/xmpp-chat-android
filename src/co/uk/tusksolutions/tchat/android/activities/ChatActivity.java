@@ -287,8 +287,6 @@ public class ChatActivity extends ActionBarActivity {
 			startActivityForResult(
 					Intent.createChooser(intent, "Pick a Video"), SELECT_FILE);
 			break;
-		case R.id.location_menu:
-			break;
 		default:
 			break;
 		}

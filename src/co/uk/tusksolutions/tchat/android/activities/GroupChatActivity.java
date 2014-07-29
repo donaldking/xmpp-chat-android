@@ -263,9 +263,6 @@ public class GroupChatActivity extends ActionBarActivity {
 			startActivityForResult(
 					Intent.createChooser(intent, "Pick a Video"), SELECT_FILE);
 			break;
-		case R.id.group_location_menu:
-			break;
-			
 		case R.id.group_add_user:
 			break;
 		case R.id.group_kick_user:
