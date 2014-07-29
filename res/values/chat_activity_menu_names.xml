@@ -6,4 +6,5 @@
     <string name="share_location">Share Location</string>
     <string name="add_users_group">Add Users in Group</string>
     <string name="kick_user_group">Kick User From Group</string>
+    <string name="clear_history">Clear Chat History</string>
 </resources>

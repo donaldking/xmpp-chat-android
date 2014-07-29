@@ -24,6 +24,8 @@ public class Constants {
 	public static final String CREATE_GROUP_ENDPOINT = "/mobileservices/v1/create_group.php";
 	public static final String ADD_USER_TO_GROUP_ENDPOINT = "/mobileservices/v1/add_user_to_group.php";
 	public static final String UPLOAD_FILE_ENDPOINT = "/mobileservices/v1/upload.php";
+    public static final String CLEAR_CHAT_ENDPOINT="/mobileservices/v1/delete_chat.php";
+	
 	/**
 	 * Login Actions
 	 */

@@ -101,6 +101,8 @@ public class ChatMessagesModel implements Parcelable {
 		db = TChatApplication.getTChatDBWritable();
 		
 		try {
+			Log.e("sender", "sender "+to);
+			Log.e("receiver", "receiver "+from);
 
 			ContentValues contentValues = new ContentValues();
 
@@ -299,6 +301,24 @@ public class ChatMessagesModel implements Parcelable {
 		return true;
 	}
 
+	public boolean deleteChatHistoryLocal(String to,String from)
+	{
+		db=TChatApplication.getTChatDBWritable();
+		/*
+		 * Clear chat History of specific USER
+		 */
+		String whereClause = TChatDBHelper.CM_RECEIVER + " LIKE ? AND "
+				+ TChatDBHelper.CM_SENDER + " LIKE ? OR "
+				+ TChatDBHelper.CM_RECEIVER + " LIKE ? AND "
+				+ TChatDBHelper.CM_SENDER + " LIKE ?";
+
+		String[] whereArgs = new String[] { to, from, from, to };
+		
+		int i=db.delete(TChatDBHelper.CHAT_MESSAGES_TABLE, whereClause, whereArgs);
+		db.close();
+	Log.e("delete chat", "i "+i);
+		return true;
+	}
 	/*
 	 * Parcelable stuff non-Javadoc)
 	 * 
