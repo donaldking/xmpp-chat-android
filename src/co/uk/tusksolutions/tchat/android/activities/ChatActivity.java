@@ -42,6 +42,7 @@ import co.uk.tusksolutions.extensions.TimeAgo;
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.adapters.ChatMessagesAdapter;
+import co.uk.tusksolutions.tchat.android.api.APIClearChatHistory;
 import co.uk.tusksolutions.tchat.android.api.APICloudStorage;
 import co.uk.tusksolutions.tchat.android.api.APIGetLastOnlineTime;
 import co.uk.tusksolutions.tchat.android.api.APIGetMessages;
@@ -287,6 +288,10 @@ public class ChatActivity extends ActionBarActivity {
 			startActivityForResult(
 					Intent.createChooser(intent, "Pick a Video"), SELECT_FILE);
 			break;
+			
+		case R.id.clear_chat_History:
+			doClearChatHistory();
+			break;
 		default:
 			break;
 		}
@@ -496,7 +501,23 @@ public class ChatActivity extends ActionBarActivity {
 		}
 
 	}
-
+	
+	/*
+	 * Clear Chat History
+	 */
+	public void doClearChatHistory()
+	{
+		APIClearChatHistory chatHistory=new APIClearChatHistory();
+		chatHistory.doClearChatHistory(ChatActivity.this,TChatApplication.getCurrentJid().replace("@"+Constants.CURRENT_SERVER,""),buddyJid.replace("@"+Constants.CURRENT_SERVER,""));
+		ChatMessagesModel mChatMessageModel = new ChatMessagesModel();
+		mChatMessageModel.deleteChatHistoryLocal(TChatApplication.getCurrentJid(),buddyJid);
+		
+		
+	}
+	
+	/*
+	 * Save message to Local DB
+	 */
 	public void saveToDB(String to, String message, int isGroupMessage,
 			String messageType) {
 		try {
