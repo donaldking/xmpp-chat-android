@@ -15,14 +15,14 @@
         android:title="@string/send_video"
         app:showAsAction="never">
     </item>
-    <!--
     <item
         android:id="@+id/clear_chat_History"
-        android:orderInCategory="10"
         android:icon="@drawable/ic_action_delete"
-        app:showAsAction="never"
-        android:title="@string/clear_history">
+        android:orderInCategory="10"
+        android:title="@string/clear_history"
+        app:showAsAction="never">
     </item>
+    <!--
     <item
         android:id="@+id/location_menu"
         android:orderInCategory="10"
