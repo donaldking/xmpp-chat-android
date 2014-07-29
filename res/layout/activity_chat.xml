@@ -23,8 +23,11 @@
                 android:id="@+id/chat_messages_list_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:divider="@null" >
-            </ListView>
+                android:cacheColorHint="@null"
+                android:divider="@null" />
+            
+            
+            
         </LinearLayout>
 
         <LinearLayout

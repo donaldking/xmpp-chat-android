@@ -1,13 +1,10 @@
 package co.uk.tusksolutions.tchat.android.activities;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URL;
 
 import org.jivesoftware.smack.util.StringUtils;
 
@@ -24,7 +21,6 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
@@ -138,6 +134,9 @@ public class ChatActivity extends ActionBarActivity {
 
 			getSupportActionBar().setTitle(buddyName);
 		}
+		
+		
+	
 
 	}
 
@@ -305,11 +304,25 @@ public class ChatActivity extends ActionBarActivity {
 				Toast.makeText(ChatActivity.this, "Sending Image please wait",
 						Toast.LENGTH_SHORT).show();
 				if (data != null) {
-
+					String selectedFile1 = getRealPathFromURI(data.getData());
+			        Log.e("selected file ","file "+selectedFile1);
 					Uri imagepath = data.getData();
 
 					Log.e("TAG", "scheme " + imagepath.getScheme());
-					if (imagepath.getScheme().contains("content")) {
+					if(selectedFile1!=null)
+					{
+						 Log.e("selected file local send","file "+selectedFile1);
+						String selectedFile = getRealPathFromURI(data.getData());
+						
+						saveToDB(buddyJid, selectedFile, 0, "FileTransfer");
+						
+						APIPostFile apiPostFile = new APIPostFile();
+						apiPostFile
+								.doPostFile(currentJid, buddyJid, selectedFile,
+										buddyName, ChatActivity.this, mid);
+						showProgressUpload(true);
+					}
+					else if(imagepath.getScheme().contains("content")) {
 
 						try {
 							String name = "Temp_" + System.currentTimeMillis()
@@ -333,13 +346,7 @@ public class ChatActivity extends ActionBarActivity {
 						}
 
 					} else {
-						String selectedFile = getRealPathFromURI(data.getData());
-						showProgressUpload(true);
-						saveToDB(buddyJid, selectedFile, 0, "FileTransfer");
-						APIPostFile apiPostFile = new APIPostFile();
-						apiPostFile
-								.doPostFile(currentJid, buddyJid, selectedFile,
-										buddyName, ChatActivity.this, mid);
+						Toast.makeText(this, "Picture Not available",Toast.LENGTH_SHORT).show();
 					}
 				}
 
@@ -501,7 +508,7 @@ public class ChatActivity extends ActionBarActivity {
 					TChatApplication.getCurrentJid(), buddyName, message,
 					Constants.XMPP_RESOURCE, isGroupMessage, messageType,
 					System.currentTimeMillis(), 1, mid);
-
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -586,6 +593,7 @@ public class ChatActivity extends ActionBarActivity {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			if (intent.getAction().equalsIgnoreCase(Constants.MESSAGE_READY)) {
+				
 				showProgressUpload(false);
 
 				prepareListView(buddyJid, currentJid, 1,

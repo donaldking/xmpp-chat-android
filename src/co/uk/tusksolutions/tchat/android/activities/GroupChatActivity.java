@@ -7,7 +7,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import org.jivesoftware.smack.util.StringUtils;
-
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
@@ -127,6 +126,8 @@ public class GroupChatActivity extends ActionBarActivity {
 			}
 			getSupportActionBar().setTitle(roomName);
 		}
+		
+	
 	}
 
 	@Override
@@ -263,6 +264,11 @@ public class GroupChatActivity extends ActionBarActivity {
 					Intent.createChooser(intent, "Pick a Video"), SELECT_FILE);
 			break;
 		case R.id.group_location_menu:
+			break;
+			
+		case R.id.group_add_user:
+			break;
+		case R.id.group_kick_user:
 			break;
 		default:
 			break;

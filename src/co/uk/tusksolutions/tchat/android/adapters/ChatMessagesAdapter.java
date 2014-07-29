@@ -12,10 +12,12 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Toast;
 import co.uk.tusksolutions.extensions.TimeAgo;
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
@@ -215,7 +217,9 @@ public class ChatMessagesAdapter extends BaseAdapter {
 			String ImagePath = chatMessagesModel.message;
 			File imgFile = new File(ImagePath);
 			if (imgFile.exists()) {
-
+                       Toast.makeText(TChatApplication.getContext(), "File Exists "+ImagePath, Toast.LENGTH_SHORT).show();
+                      Log.v("Image ","Image exist "+ImagePath); 
+                       
 				try {
 					Bitmap myBitmap = decodeScaledBitmapFromSdCard(ImagePath,
 							200, 200);
