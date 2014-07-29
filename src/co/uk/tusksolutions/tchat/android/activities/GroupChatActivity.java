@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import org.jivesoftware.smack.util.StringUtils;
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
@@ -63,18 +64,18 @@ public class GroupChatActivity extends ActionBarActivity {
 	public static String CHATSTATE = "ACTION_CHAT_STATE";
 	public static String mid;
 	private static View mFileUploadStatusView;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_chat);
-		
+
 		if (Build.VERSION.SDK_INT >= 9) {
 			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
 					.permitAll().build();
 
 			StrictMode.setThreadPolicy(policy);
 		}
-
 
 		currentJid = TChatApplication.getCurrentJid();
 		shortAnimTime = getResources().getInteger(
@@ -126,8 +127,7 @@ public class GroupChatActivity extends ActionBarActivity {
 			}
 			getSupportActionBar().setTitle(roomName);
 		}
-		
-	
+
 	}
 
 	@Override
@@ -163,7 +163,7 @@ public class GroupChatActivity extends ActionBarActivity {
 		TChatApplication.chatSessionBuddy = roomJid;
 
 		prepareListView(roomJid, currentJid, 1, -1);
-		
+
 		mGetMessagesApi = new APIGetMessages();
 		mGetMessagesApi.getMessages(StringUtils.parseName(roomJid),
 				mAdapter.getCount(), 25);
@@ -175,7 +175,8 @@ public class GroupChatActivity extends ActionBarActivity {
 		/**
 		 * Load Chat from DB
 		 */
-		mAdapter = new GroupChatMessagesAdapter(buddyJid, currentJid, action, id);
+		mAdapter = new GroupChatMessagesAdapter(buddyJid, currentJid, action,
+				id);
 		listView.setAdapter(mAdapter);
 		scrollToBottom();
 	}
@@ -263,24 +264,26 @@ public class GroupChatActivity extends ActionBarActivity {
 			startActivityForResult(
 					Intent.createChooser(intent, "Pick a Video"), SELECT_FILE);
 			break;
-		case R.id.group_add_user:
+		case R.id.group_add_people:
 			break;
-		case R.id.group_kick_user:
+		case R.id.group_remove_people:
+			startActivity(new Intent(this, GroupParticipantsActivity.class));
+
 			break;
 		default:
 			break;
 		}
 		return true;
 	}
-	
+
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		mid = TChatApplication.getMid();
 
 		if (requestCode == SELECT_FILE) {
 			if (resultCode == Activity.RESULT_OK) {
-				Toast.makeText(GroupChatActivity.this, "Sending Image please wait",
-						Toast.LENGTH_SHORT).show();
+				Toast.makeText(GroupChatActivity.this,
+						"Sending Image please wait", Toast.LENGTH_SHORT).show();
 				if (data != null) {
 
 					Uri imagepath = data.getData();
@@ -296,10 +299,9 @@ public class GroupChatActivity extends ActionBarActivity {
 							saveImageToAppDir(imagepath, f.getAbsolutePath());
 							if (f.exists()) {
 
-								
 								String selectedFile = f.getAbsolutePath();
 
-								//showProgressUpload(true);
+								// showProgressUpload(true);
 								saveToDB(roomJid, selectedFile, 0,
 										"FileTransfer");
 								APIPostFile apiPostFile = new APIPostFile();
@@ -313,12 +315,12 @@ public class GroupChatActivity extends ActionBarActivity {
 
 					} else {
 						String selectedFile = getRealPathFromURI(data.getData());
-						//showProgressUpload(true);
+						// showProgressUpload(true);
 						saveToDB(roomJid, selectedFile, 0, "FileTransfer");
 						APIPostFile apiPostFile = new APIPostFile();
-						apiPostFile
-								.doPostFile(currentJid, roomJid, selectedFile,
-										roomName, GroupChatActivity.this, mid);
+						apiPostFile.doPostFile(currentJid, roomJid,
+								selectedFile, roomName, GroupChatActivity.this,
+								mid);
 					}
 				}
 
@@ -399,12 +401,12 @@ public class GroupChatActivity extends ActionBarActivity {
 				mid = TChatApplication.getMid();
 				String message = chatMessageEditText.getText().toString();
 
-			try {
-				PlaySound(true);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+				try {
+					PlaySound(true);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				XMPPChatMessageManager.sendMessage(roomJid, roomName, message,
 						1, "GROUP_CHAT", mid);
 				chatMessageEditText.setText("");
@@ -467,6 +469,7 @@ public class GroupChatActivity extends ActionBarActivity {
 		}
 
 	}
+
 	private String getRealPathFromURI(Uri contentUri) {
 		// can post image
 		String[] proj = { MediaStore.Images.Media.DATA };
@@ -488,7 +491,7 @@ public class GroupChatActivity extends ActionBarActivity {
 			}
 		}
 	}
-	
+
 	public void saveImageToAppDir(Uri imageUri, String imagepath)
 			throws IOException {
 		OutputStream output;
@@ -512,6 +515,7 @@ public class GroupChatActivity extends ActionBarActivity {
 		}
 
 	}
+
 	public void saveToDB(String to, String message, int isGroupMessage,
 			String messageType) {
 		try {
@@ -526,7 +530,7 @@ public class GroupChatActivity extends ActionBarActivity {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Shows the progress UI and hides the login form.
 	 */
@@ -557,6 +561,7 @@ public class GroupChatActivity extends ActionBarActivity {
 					.setVisibility(show ? View.VISIBLE : View.GONE);
 		}
 	}
+
 	public void PlaySound(Boolean sent) throws Exception {
 		if (sent) {
 			try {

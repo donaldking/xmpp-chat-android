@@ -16,14 +16,14 @@
         app:showAsAction="never">
     </item>
     <item
-        android:id="@+id/group_add_user"
+        android:id="@+id/group_add_people"
         android:icon="@drawable/ic_action_user_add"
         android:orderInCategory="10"
         android:title="@string/add_people"
         app:showAsAction="never">
     </item>
     <item
-        android:id="@+id/group_kick_user"
+        android:id="@+id/group_remove_people"
         android:icon="@drawable/ic_action_delete"
         android:orderInCategory="10"
         android:title="@string/remove_people"

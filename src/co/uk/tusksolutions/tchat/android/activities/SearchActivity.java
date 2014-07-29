@@ -1,14 +1,6 @@
 package co.uk.tusksolutions.tchat.android.activities;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -49,20 +41,7 @@ public class SearchActivity extends ActionBarActivity implements TextWatcher {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.search_messages_activity);
-		
-		String message="<img src=&quot;//@dev.yookoschat.com/mobileservices/v1/uploads/1406272094&quot; style=&quot;max-width:160px;width:auto;&quot;&gt;&lt;/img>";
-  String imag=getFirstImage(message);
-	Log.e("TAG","img "+imag);	
-  //Document doc = Jsoup.parse(message);
-		// Element element = doc.select("img").first();
-		// System.out.println(element.attr("src"));
-		//Element element2 = doc.select("src").first(); // Get the
-													// anchor
-													// tag
-													// element
-		//Log.e("TAG", "path is "+element2.attr("img").substring(3)
-			//	.toString());
-		
+
 		mModel = new RosterModel();
 		rosterModelCollection = new ArrayList<RosterModel>();
 		searchView = (EditText) findViewById(R.id.editTextSearch);
@@ -78,7 +57,7 @@ public class SearchActivity extends ActionBarActivity implements TextWatcher {
 
 		listView.setVerticalScrollBarEnabled(false);
 		listView.setHorizontalScrollBarEnabled(false);
-		rosterModelCollection=mModel.queryAll();
+		rosterModelCollection = mModel.queryAll();
 		mAdapter = new RosterContentAdapter(TChatApplication.getContext(),
 				SEARCH_ACTION);
 		listView.setAdapter(mAdapter);
@@ -97,26 +76,26 @@ public class SearchActivity extends ActionBarActivity implements TextWatcher {
 
 	}
 
-	private String getFirstImage(String htmlString){
+	/*private String getFirstImage(String htmlString) {
 
-	    if(htmlString==null) return null;
+		if (htmlString == null)
+			return null;
 
-	    String img ="";
-	    Document doc = Jsoup.parse(htmlString);
-	    Elements imgs = doc.getElementsByTag("img");
+		String img = "";
+		Document doc = Jsoup.parse(htmlString);
+		Elements imgs = doc.getElementsByTag("img");
 
+		for (Element imageElement : imgs) {
+			if (imageElement != null) {
+				// for each element get the srs url
+				img = imageElement.attr("src").substring(4);
+				return img;
+			}
+		}
 
+		return null;
+	}*/
 
-	     for (Element imageElement : imgs) {
-	         if(imageElement!=null){
-	         //for each element get the srs url
-	         img = imageElement.attr("src").substring(4);
-	                   return img;
-	         }
-	     }
-
-	     return null;
-	}
 	/**
 	 * Shows the progress UI and hides the login form.
 	 */
@@ -162,28 +141,23 @@ public class SearchActivity extends ActionBarActivity implements TextWatcher {
 	@Override
 	public void onTextChanged(CharSequence s, int start, int before, int count) {
 		// TODO Auto-generated method stub
-	/*	if (s.length() > 0) {
-			clear_text_search.setVisibility(View.VISIBLE);
-			performSearch(s);
+		/*
+		 * if (s.length() > 0) { clear_text_search.setVisibility(View.VISIBLE);
+		 * performSearch(s); } else {
+		 * clear_text_search.setVisibility(View.GONE);
+		 * listView.setVisibility(View.GONE); }
+		 */
+		Log.e("OntextChange", "Ontextchange called " + s);
+		if (s.length() > 0) {
+			mAdapter.getFilter().filter(s);
 		} else {
-			clear_text_search.setVisibility(View.GONE);
-			listView.setVisibility(View.GONE);
-		}
-		*/
-		Log.e("OntextChange","Ontextchange called "+s);
-		if(s.length()>0)
-		{
-		mAdapter.getFilter().filter(s);	
-		}
-		else
-		{
-			rosterModelCollection=mModel.queryAll();
-		
-		mAdapter = new RosterContentAdapter(TChatApplication.getContext(),
-				SEARCH_ACTION);
+			rosterModelCollection = mModel.queryAll();
+
+			mAdapter = new RosterContentAdapter(TChatApplication.getContext(),
+					SEARCH_ACTION);
 			listView.setAdapter(mAdapter);
 		}
-		}
+	}
 
 	public void performSearch(CharSequence s) {
 		rosterModelCollection = mModel.querySearch(s.toString());

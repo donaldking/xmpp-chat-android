@@ -2,12 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="co.uk.tusksolutions.tchat.android"
     android:versionCode="1"
-    
     android:versionName="1.0" >
 
     <uses-sdk
         android:minSdkVersion="9"
-        android:targetSdkVersion="19" />
+        android:targetSdkVersion="20" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
@@ -44,14 +43,11 @@
             android:name="co.uk.tusksolutions.tchat.android.fragments.GroupsFragment"
             android:label="@string/title_activity_groups_fragment" >
         </activity>
-        <activity
-            android:name="co.uk.tusksolutions.tchat.android.activities.ChatActivity"
-            >
+        <activity android:name="co.uk.tusksolutions.tchat.android.activities.ChatActivity" >
         </activity>
-        <activity
-            android:name="co.uk.tusksolutions.tchat.android.activities.GroupChatActivity"
-            >
+        <activity android:name="co.uk.tusksolutions.tchat.android.activities.GroupChatActivity" >
         </activity>
+        <activity android:name="co.uk.tusksolutions.tchat.android.activities.GroupParticipantsActivity" />
         <activity
             android:name="co.uk.tusksolutions.tchat.android.activities.SettingsActivity"
             android:launchMode="singleTop"

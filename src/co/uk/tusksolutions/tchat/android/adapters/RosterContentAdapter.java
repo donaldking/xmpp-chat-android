@@ -67,6 +67,12 @@ public class RosterContentAdapter extends BaseAdapter implements Filterable {
 		}
 	}
 
+	public RosterContentAdapter(Context context,
+			ArrayList<RosterModel> collection) {
+		this.context = TChatApplication.getContext();
+		rosterModelCollection = collection;
+	}
+
 	@Override
 	public void notifyDataSetChanged() {
 		super.notifyDataSetChanged();
