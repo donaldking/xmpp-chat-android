@@ -35,7 +35,6 @@ public class TChatApplication extends Application {
 	private static CHAT_STATUS_ENUM chatActivityStatus = CHAT_STATUS_ENUM.NOT_VISIBLE;
 	private static Context mContext;
 	public static XMPPConnection connection;
-
 	private static TChatDBHelper tChatDBHelper;
 	public SQLiteDatabase tChatDBWritable;
 	public SQLiteDatabase tChatDBReadable;

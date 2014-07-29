@@ -83,23 +83,25 @@ public class GroupChatMessagesAdapter extends BaseAdapter {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 
-		if ((message!=null)&&groupChatMessagesModelCollection.get(position).receiver
-				.equalsIgnoreCase(TChatApplication.getCurrentJid())) {
+		if ((message != null)
+				&& groupChatMessagesModelCollection.get(position).receiver
+						.equalsIgnoreCase(TChatApplication.getCurrentJid())) {
 			if (groupChatMessagesModelCollection.get(position).message
 					.contains("src")) {
 				rowType = 3;
 			} else {
 				rowType = 0;
 			}
-		} else if ((message!=null)&&groupChatMessagesModelCollection.get(position).message
-				.contains("src")
+		} else if ((message != null)
+				&& groupChatMessagesModelCollection.get(position).message
+						.contains("src")
 				&& !(groupChatMessagesModelCollection.get(position).receiver
 						.equalsIgnoreCase(TChatApplication.getCurrentJid()))) {
 			rowType = 2;
 		} else {
-			if ((message!=null)&&(groupChatMessagesModelCollection.get(position).messageType != null)
+			if ((message != null)
+					&& (groupChatMessagesModelCollection.get(position).messageType != null)
 					&& groupChatMessagesModelCollection.get(position).messageType
 							.toString().equalsIgnoreCase("FileTransfer")) {
 				rowType = 2;
@@ -134,7 +136,9 @@ public class GroupChatMessagesAdapter extends BaseAdapter {
 
 		switch (type) {
 		case 0:
-			// From buddy!
+
+			// Buddy is the sender!
+
 			if (row == null) {
 				LayoutInflater inflater = (LayoutInflater) context
 						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -169,7 +173,8 @@ public class GroupChatMessagesAdapter extends BaseAdapter {
 
 			break;
 		case 1:
-			// From me!
+
+			// I am the sender!
 
 			if (row == null) {
 				LayoutInflater inflater = (LayoutInflater) context
@@ -244,8 +249,18 @@ public class GroupChatMessagesAdapter extends BaseAdapter {
 					e.printStackTrace();
 				}
 
-				// chatToImageViewHolder.imagesent.setVisibility(View.GONE);
+				// Add name of sender (me)
+				UserModel ium = new UserModel();
+				String imageFromName = ium.getProfileName();
 
+				if (imageFromName == null) {
+					imageFromName = ium.getUsername();
+				}
+
+				groupChatToImageViewHolder.chatMessageToUser
+						.setText(imageFromName);
+				
+				
 			}
 
 			break;
@@ -274,6 +289,19 @@ public class GroupChatMessagesAdapter extends BaseAdapter {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+
+			// Add name of sender (buddy)
+			String imageToName = TChatApplication.getRosterModel()
+					.getBuddyName(
+							chatMessagesModel.resource + "@"
+									+ Constants.CURRENT_SERVER);
+
+			if (imageToName == null) {
+				imageToName = chatMessagesModel.resource;
+			}
+			groupChatFromImageViewHolder.chatMessageFromUser
+					.setText(imageToName);
+
 			break;
 
 		}

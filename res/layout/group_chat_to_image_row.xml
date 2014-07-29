@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:gravity="right"
         android:padding="3dp"
-        android:text="Donald King"
+        android:text="To Receiver"
         android:textColor="@color/yookos_blue"
         android:textSize="12dp" />
 
