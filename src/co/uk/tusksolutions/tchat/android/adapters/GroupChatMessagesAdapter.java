@@ -83,23 +83,25 @@ public class GroupChatMessagesAdapter extends BaseAdapter {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 
-		if ((message!=null)&&groupChatMessagesModelCollection.get(position).receiver
-				.equalsIgnoreCase(TChatApplication.getCurrentJid())) {
+		if ((message != null)
+				&& groupChatMessagesModelCollection.get(position).receiver
+						.equalsIgnoreCase(TChatApplication.getCurrentJid())) {
 			if (groupChatMessagesModelCollection.get(position).message
 					.contains("src")) {
 				rowType = 3;
 			} else {
 				rowType = 0;
 			}
-		} else if ((message!=null)&&groupChatMessagesModelCollection.get(position).message
-				.contains("src")
+		} else if ((message != null)
+				&& groupChatMessagesModelCollection.get(position).message
+						.contains("src")
 				&& !(groupChatMessagesModelCollection.get(position).receiver
 						.equalsIgnoreCase(TChatApplication.getCurrentJid()))) {
 			rowType = 2;
 		} else {
-			if ((message!=null)&&(groupChatMessagesModelCollection.get(position).messageType != null)
+			if ((message != null)
+					&& (groupChatMessagesModelCollection.get(position).messageType != null)
 					&& groupChatMessagesModelCollection.get(position).messageType
 							.toString().equalsIgnoreCase("FileTransfer")) {
 				rowType = 2;
@@ -218,6 +220,18 @@ public class GroupChatMessagesAdapter extends BaseAdapter {
 
 			}
 			groupChatToImageViewHolder.imagesent.setVisibility(View.VISIBLE);
+			UserModel um1 = new UserModel();
+			String myName1 = um1.getProfileName();
+
+			if (myName1 == null) {
+				myName1 = um1.getUsername();
+			}
+			groupChatToImageViewHolder.chatMessageToUser.setText(myName1);
+
+			groupChatToImageViewHolder.chatMessageTimestampTextView
+					.setText(TimeAgo.getTimeAgo(
+							Long.parseLong(chatMessagesModel.timeStamp),
+							context));
 			String ImagePath = chatMessagesModel.message;
 			File imgFile = new File(ImagePath);
 			if (imgFile.exists()) {
@@ -265,6 +279,22 @@ public class GroupChatMessagesAdapter extends BaseAdapter {
 						.getTag();
 
 			}
+
+			String nameFrom_image = TChatApplication.getRosterModel()
+					.getBuddyName(
+							chatMessagesModel.resource + "@"
+									+ Constants.CURRENT_SERVER);
+
+			if (nameFrom_image == null) {
+				nameFrom_image = chatMessagesModel.resource;
+			}
+
+			groupChatFromImageViewHolder.chatMessageFromUser
+					.setText(nameFrom_image);
+			groupChatFromImageViewHolder.chatMessageTimestampTextView
+					.setText(TimeAgo.getTimeAgo(
+							Long.parseLong(chatMessagesModel.timeStamp),
+							context));
 			String path1 = getFirstImage(chatMessagesModel.message);
 
 			try {

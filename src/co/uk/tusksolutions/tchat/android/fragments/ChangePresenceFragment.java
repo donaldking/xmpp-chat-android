@@ -136,7 +136,12 @@ public class ChangePresenceFragment extends DialogFragment implements
 			new Timer().schedule(new TimerTask() {
 				@Override
 				public void run() {
-					getDialog().dismiss();
+					try {
+						getDialog().dismiss();
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 			}, 100);
 		}

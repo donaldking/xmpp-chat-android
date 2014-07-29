@@ -132,7 +132,7 @@ public class GroupChatActivity extends ActionBarActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.chat_activity_menu, menu);
+		inflater.inflate(R.menu.group_chat_activity_menu, menu);
 		return true;
 	}
 
@@ -251,18 +251,18 @@ public class GroupChatActivity extends ActionBarActivity {
 		case android.R.id.home:
 			doGoBack();
 			break;
-		case R.id.photo_menu:
+		case R.id.group_photo_menu:
 
 			intent.setType("image/*");
 			startActivityForResult(
 					Intent.createChooser(intent, "Pick a picture"), SELECT_FILE);
 			break;
-		case R.id.video_menu:
+		case R.id.group_video_menu:
 			intent.setType("video/*");
 			startActivityForResult(
 					Intent.createChooser(intent, "Pick a Video"), SELECT_FILE);
 			break;
-		case R.id.location_menu:
+		case R.id.group_location_menu:
 			break;
 		default:
 			break;
@@ -396,10 +396,12 @@ public class GroupChatActivity extends ActionBarActivity {
 				mid = TChatApplication.getMid();
 				String message = chatMessageEditText.getText().toString();
 
-				mp = MediaPlayer.create(v.getContext(), R.raw.send_message);
-				mp.setVolume(1, 1);
-				mp.start();
-
+			try {
+				PlaySound(true);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 				XMPPChatMessageManager.sendMessage(roomJid, roomName, message,
 						1, "GROUP_CHAT", mid);
 				chatMessageEditText.setText("");
@@ -450,6 +452,12 @@ public class GroupChatActivity extends ActionBarActivity {
 						intent.getLongExtra("id", -1));
 			} else if (intent.getAction().equalsIgnoreCase(
 					Constants.MESSAGE_RECEIVED)) {
+				try {
+					PlaySound(false);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				prepareListView(roomJid, currentJid, 1,
 						intent.getLongExtra("id", -1));
 			}
@@ -544,6 +552,29 @@ public class GroupChatActivity extends ActionBarActivity {
 			// and hide the relevant UI components.*/
 			mFileUploadStatusView
 					.setVisibility(show ? View.VISIBLE : View.GONE);
+		}
+	}
+	public void PlaySound(Boolean sent) throws Exception {
+		if (sent) {
+			try {
+				mp = MediaPlayer.create(TChatApplication.getContext(),
+						R.raw.send_message);
+				mp.setVolume(1, 1);
+				mp.start();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} else {
+			try {
+				mp = MediaPlayer.create(TChatApplication.getContext(),
+						R.raw.received_message);
+				mp.setVolume(1, 1);
+				mp.start();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
