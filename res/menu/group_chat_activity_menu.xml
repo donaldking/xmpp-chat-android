@@ -19,16 +19,17 @@
         android:id="@+id/group_add_user"
         android:icon="@drawable/ic_action_user_add"
         android:orderInCategory="10"
-        android:title="@string/add_users_group"
+        android:title="@string/add_people"
         app:showAsAction="never">
     </item>
     <item
         android:id="@+id/group_kick_user"
         android:icon="@drawable/ic_action_delete"
         android:orderInCategory="10"
-        android:title="@string/kick_user_group"
+        android:title="@string/remove_people"
         app:showAsAction="never">
     </item>
+    <!--
     <item
         android:id="@+id/group_location_menu"
         android:icon="@drawable/ic_action_locate"
@@ -36,5 +37,6 @@
         android:title="@string/share_location"
         app:showAsAction="never">
     </item>
+    -->
 
 </menu>
