@@ -223,6 +223,18 @@ public class GroupChatMessagesAdapter extends BaseAdapter {
 
 			}
 			groupChatToImageViewHolder.imagesent.setVisibility(View.VISIBLE);
+			UserModel um1 = new UserModel();
+			String myName1 = um1.getProfileName();
+
+			if (myName1 == null) {
+				myName1 = um1.getUsername();
+			}
+			groupChatToImageViewHolder.chatMessageToUser.setText(myName1);
+
+			groupChatToImageViewHolder.chatMessageTimestampTextView
+					.setText(TimeAgo.getTimeAgo(
+							Long.parseLong(chatMessagesModel.timeStamp),
+							context));
 			String ImagePath = chatMessagesModel.message;
 			File imgFile = new File(ImagePath);
 			if (imgFile.exists()) {
@@ -280,6 +292,22 @@ public class GroupChatMessagesAdapter extends BaseAdapter {
 						.getTag();
 
 			}
+
+			String nameFrom_image = TChatApplication.getRosterModel()
+					.getBuddyName(
+							chatMessagesModel.resource + "@"
+									+ Constants.CURRENT_SERVER);
+
+			if (nameFrom_image == null) {
+				nameFrom_image = chatMessagesModel.resource;
+			}
+
+			groupChatFromImageViewHolder.chatMessageFromUser
+					.setText(nameFrom_image);
+			groupChatFromImageViewHolder.chatMessageTimestampTextView
+					.setText(TimeAgo.getTimeAgo(
+							Long.parseLong(chatMessagesModel.timeStamp),
+							context));
 			String path1 = getFirstImage(chatMessagesModel.message);
 
 			try {

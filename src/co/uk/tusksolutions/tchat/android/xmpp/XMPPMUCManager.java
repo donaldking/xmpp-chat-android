@@ -77,6 +77,7 @@ public class XMPPMUCManager {
 		try {
 			// multiUserChat.create(nickname);
 			multiUserChat.join(nickname);
+		
 		} catch (Exception e) {
 			Log.e(TAG, "MUC creation failed: ");
 			e.printStackTrace();

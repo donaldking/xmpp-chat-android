@@ -19,7 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="true"
-            android:padding="10dp"
+            android:padding="20dp"
             android:text="@string/radio_online" />
         <!-- Divider line layout -->
 
@@ -69,7 +69,7 @@
             android:id="@+id/radio_offline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="10dp"
+            android:padding="20dp"
             android:text="@string/radio_offline" />
     </RadioGroup>
 
