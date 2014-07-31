@@ -9,28 +9,37 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.widget.Toast;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
 
 public class APIClearChatHistory {
 
-	String sender, receiver;
-	Activity mContext;
+	public String sender, receiver;
+	public Context mContext;
 
 	private AsyncApiClearChat mTask = null;
+	private ProgressDialog progressDialog;
+	int type = 0;
 
-	public void doClearChatHistory(Activity act, String sender, String receiver) {
+	public void doClearChatHistory(final Context context, String sender,
+			String receiver) {
 		this.sender = sender;
 		this.receiver = receiver;
-		this.mContext = act;
+		this.mContext = context;
 		if (mTask != null) {
 			return;
 		}
+		// Check to see if receiver is group so we can attach the type
+		// parameter = 1
+
+		if (receiver.contains("@conference.")) {
+			type = 1;
+		}
+
 		mTask = new AsyncApiClearChat();
 		mTask.execute((Void) null);
 
@@ -40,15 +49,18 @@ public class APIClearChatHistory {
 	 * Performing Network request
 	 */
 	private class AsyncApiClearChat extends AsyncTask<Void, Void, Boolean> {
-		ProgressDialog dialog;
 
 		@Override
 		protected void onPreExecute() {
-			// TODO Auto-generated method stub
+
 			super.onPreExecute();
-			dialog = new ProgressDialog(mContext);
-			dialog.setMessage("Clearing Chat History");
-			dialog.show();
+
+			if (type == 0) {
+				progressDialog = new ProgressDialog(mContext);
+				progressDialog.setMessage("Clearing Chat History");
+				progressDialog.show();
+				progressDialog.setCancelable(false);
+			}
 		}
 
 		@Override
@@ -63,8 +75,11 @@ public class APIClearChatHistory {
 			try {
 
 				List<BasicNameValuePair> postParams = new ArrayList<BasicNameValuePair>();
+
 				postParams.add(new BasicNameValuePair("sender", sender));
 				postParams.add(new BasicNameValuePair("receiver", receiver));
+				postParams.add(new BasicNameValuePair("type", Integer
+						.toString(type)));
 				httpPost.setEntity(new UrlEncodedFormEntity(postParams));
 
 				httpclient.execute(httpPost);
@@ -80,11 +95,17 @@ public class APIClearChatHistory {
 		@Override
 		protected void onPostExecute(Boolean result) {
 			mTask = null;
-			dialog.dismiss();
+
+			if (type == 0) {
+				if (progressDialog != null) {
+					progressDialog.dismiss();
+				}
+
+			}
 			if (result) {
 
-				Toast.makeText(TChatApplication.getContext(),
-						"Chat History Cleared", Toast.LENGTH_SHORT).show();
+				// Toast.makeText(TChatApplication.getContext(),
+				// "Chat History Cleared", Toast.LENGTH_SHORT).show();
 
 				TChatApplication.getContext().sendBroadcast(
 						new Intent(Constants.MESSAGE_READY));

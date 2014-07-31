@@ -67,5 +67,6 @@ public class Constants {
 	public static final String PROFILE_UPDATED = "co.uk.tusksolutions.tchat.android.action.PROFILE_UPDATED";
 	public static final String PROFILE_NOT_UPDATED = "co.uk.tusksolutions.tchat.android.action.PROFILE_NOT_UPDATED";
 	public static final String LAST_ONLINE_TIME_STATE_CHANGED = "co.uk.tusksolutions.tchat.android.action.LAST_ONLINE_TIME_STATE_CHANGED";
+	public static final String BANNED_FROM_ROOM = "co.uk.tusksolutions.tchat.android.action.BANNED_FROM_ROOM";
 
 }

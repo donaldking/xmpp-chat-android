@@ -12,11 +12,15 @@ import org.jivesoftware.smack.util.StringUtils;
 import org.jivesoftware.smackx.muc.MultiUserChat;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
+import co.uk.tusksolutions.tchat.android.api.APIClearChatHistory;
+import co.uk.tusksolutions.tchat.android.constants.Constants;
 import co.uk.tusksolutions.tchat.android.listeners.XMPPMucParticipantsListener;
 import co.uk.tusksolutions.tchat.android.listeners.XMPPMucSubjectUpdatedListener;
 import co.uk.tusksolutions.tchat.android.listeners.XMPPMucUserStatusListener;
+import co.uk.tusksolutions.tchat.android.models.GroupsModel;
 import co.uk.tusksolutions.tchat.android.models.RosterModel;
 
 public class XMPPMUCManager {
@@ -207,7 +211,7 @@ public class XMPPMUCManager {
 			 * background thread. This should be refactored to use a handler to
 			 * the UIThread or fire an event / broadcast intent to something on
 			 * the UIThread that can create the toast This is just not
-			 * working...... - jeroen
+			 * working......
 			 */
 			/*
 			 * switch (e.getXMPPError().getCode()) { case 401:
@@ -235,7 +239,28 @@ public class XMPPMUCManager {
 			switch (e.getXMPPError().getCode()) {
 			case 403:
 				Log.i(TAG, "User banned from room with ID: " + roomJID);
+				// Delete all conversation with this group
+				APIClearChatHistory apiClearChatHisoryObject = new APIClearChatHistory();
+				apiClearChatHisoryObject.doClearChatHistory(TChatApplication
+						.getContext(), TChatApplication.getUserModel()
+						.getUsername(), roomJID);
+				
 				// Delete group from local db
+				if(GroupsModel.deleteGroup(roomJID)){
+					// Send broadcast to GroupChatActivity
+					try {
+						Intent i = new Intent();
+						i.putExtra("bannedRoomJid", roomJID);
+						i.setAction(Constants.BANNED_FROM_ROOM);
+						TChatApplication.getContext().sendBroadcast(i);
+					} catch (Exception exp) {
+
+						exp.printStackTrace();
+					}
+					
+				}
+
+
 				break;
 
 			default:

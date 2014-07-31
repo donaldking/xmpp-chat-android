@@ -151,6 +151,8 @@ public class GroupChatActivity extends ActionBarActivity {
 													// (me)
 		filter.addAction(Constants.MESSAGE_RECEIVED); // From
 														// Receiver
+		filter.addAction(Constants.BANNED_FROM_ROOM); // In case we are banned from this room
+		
 		// (buddy)
 		registerReceiver(mGroupChatMessageReceiver, filter);
 
@@ -507,6 +509,16 @@ public class GroupChatActivity extends ActionBarActivity {
 				}
 				prepareListView(roomJid, currentJid, 1,
 						intent.getLongExtra("id", -1));
+			} else if (intent.getAction().equalsIgnoreCase(
+					Constants.BANNED_FROM_ROOM)) {
+				if (roomJid.equalsIgnoreCase(intent
+						.getStringExtra("bannedRoomJid"))) {
+					Log.d("BANNED", "You are banned from this room");
+					Toast.makeText(context,
+							"You have been kicked from this room",
+							Toast.LENGTH_LONG).show();
+				finish();
+				}
 			}
 		}
 
