@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.util.Log;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.TChatApplication.CHAT_STATUS_ENUM;
+import co.uk.tusksolutions.tchat.android.constants.Constants;
 import co.uk.tusksolutions.tchat.android.models.ChatMessagesModel;
 import co.uk.tusksolutions.tchat.android.xmpp.notifications.XMPPNotificationManager;
 
@@ -28,7 +29,7 @@ public class XMPPChatMessageListener implements PacketListener {
 	public void processPacket(Packet packet) {
 
 		Message message = (Message) packet;
-		
+
 		if (message.getType() == Message.Type.chat) {
 			if (message.getBody() == null) {
 
@@ -74,6 +75,7 @@ public class XMPPChatMessageListener implements PacketListener {
 					// 1. Visible and chatting with buddy
 
 					// Save to DB
+
 					saveMessageToDb(packet, message);
 
 				} else if (TChatApplication.getChatActivityStatus() == CHAT_STATUS_ENUM.VISIBLE
@@ -117,36 +119,73 @@ public class XMPPChatMessageListener implements PacketListener {
 	}
 
 	private void sendNotification(Packet packet, Message message) {
-		Bundle b = new Bundle();
-		String buddyJid = StringUtils.parseBareAddress(message.getFrom());
-		b.putString("roomJid", packet.getFrom());
-		b.putString("fromName",
-				TChatApplication.getRosterModel().getBuddyName(buddyJid));
-		b.putString("message", message.getBody());
 
-		Intent intent = new Intent();
-		intent.putExtra("chatFromFriendBundle", b);
+		if (message.getBody().contains("|s|")) {
+			
+			String MessageParse[] = message.getBody().split("\\|s\\|");
+			String buddyJID = MessageParse[0].replace("@"+Constants.CURRENT_SERVER,"");
+			String last_message = MessageParse[1];
+			Bundle b = new Bundle();
 
-		// Send TO_USER notification manager
-		new XMPPNotificationManager().sendNormalChatNotification(intent);
+			b.putString("roomJid", packet.getFrom());
+			b.putString("fromName",buddyJID);
+			b.putString("message", last_message);
 
-		// Save to DB
-		saveMessageToDb(packet, message);
+			Intent intent = new Intent();
+			intent.putExtra("chatFromFriendBundle", b);
 
+			// Send TO_USER notification manager
+			new XMPPNotificationManager().sendNormalChatNotification(intent);
+
+			// Save to DB
+			saveMessageToDb(packet, message);
+
+		} else {
+
+			Bundle b = new Bundle();
+			String buddyJid = StringUtils.parseBareAddress(message.getFrom());
+			b.putString("roomJid", packet.getFrom());
+			b.putString("fromName", TChatApplication.getRosterModel()
+					.getBuddyName(buddyJid));
+			b.putString("message", message.getBody());
+
+			Intent intent = new Intent();
+			intent.putExtra("chatFromFriendBundle", b);
+
+			// Send TO_USER notification manager
+			new XMPPNotificationManager().sendNormalChatNotification(intent);
+
+			// Save to DB
+			saveMessageToDb(packet, message);
+		}
 	}
 
 	private void saveMessageToDb(Packet packet, Message message) {
 		/*
 		 * Insert received message to db
 		 */
-
 		String resource = StringUtils.parseResource(packet.getFrom());
 		ChatMessagesModel mChatMessageModel = new ChatMessagesModel();
 		String mid = packet.getPacketID();
-		
-		mChatMessageModel.saveMessageToDB(TChatApplication.getCurrentJid(),
-				StringUtils.parseBareAddress(packet.getFrom()), resource,
-				StringUtils.parseName(packet.getFrom()), message.getBody(), 0,
-				"CHAT", System.currentTimeMillis(), 1,mid);
+		/*
+		 * If Message from Other Resource and get the carbon message
+		 */
+		if (message.getBody().contains("|s|")) {
+			
+			String MessageParse[] = message.getBody().split("\\|s\\|");
+			String buddyJID = MessageParse[0];
+			String last_message = MessageParse[1];
+			mChatMessageModel.saveMessageToDB(TChatApplication.getCurrentJid(),
+					buddyJID, resource,
+					StringUtils.parseName(packet.getFrom()), last_message, 0,
+					"CHAT", System.currentTimeMillis(), 1, mid);
+
+		} else {
+
+			mChatMessageModel.saveMessageToDB(TChatApplication.getCurrentJid(),
+					StringUtils.parseBareAddress(packet.getFrom()), resource,
+					StringUtils.parseName(packet.getFrom()), message.getBody(),
+					0, "CHAT", System.currentTimeMillis(), 1, mid);
+		}
 	}
 }
