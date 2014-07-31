@@ -28,7 +28,7 @@ public class RecentsModel implements Parcelable {
 	public String isRead;
 	public String timestamp;
 
-	private SQLiteDatabase db;
+	private static SQLiteDatabase db;
 	private String TABLE = TChatDBHelper.RECENTS_TABLE;
 
 	public static final String TAG = "RecentsModel";
@@ -136,6 +136,40 @@ public class RecentsModel implements Parcelable {
 
 		return recentsModel;
 
+	}
+
+	public static boolean deleteRecentsHistoryLocal(String to, String from) {
+		db = TChatApplication.getTChatDBWritable();
+		/*
+		 * Clear chat History of specific USER
+		 */
+		String whereClause = TChatDBHelper.R_RECEIVER + " LIKE ? AND "
+				+ TChatDBHelper.R_SENDER + " LIKE ? OR "
+				+ TChatDBHelper.R_RECEIVER + " LIKE ? AND "
+				+ TChatDBHelper.R_SENDER + " LIKE ?";
+
+		String[] whereArgs = new String[] { to, from, from, to };
+
+		int i = db.delete(TChatDBHelper.RECENTS_TABLE, whereClause, whereArgs);
+		db.close();
+		Log.e("delete chat", "i " + i);
+		return true;
+	}
+
+	public static boolean deleteGroupRecentsHistoryLocal(String receiver) {
+		db = TChatApplication.getTChatDBWritable();
+		/*
+		 * Clear chat History of specific USER
+		 */
+
+		String whereClause = TChatDBHelper.R_RECEIVER + " LIKE ? ";
+
+		String[] whereArgs = new String[] { receiver };
+
+		int i = db.delete(TChatDBHelper.RECENTS_TABLE, whereClause, whereArgs);
+		db.close();
+		Log.e("delete chat", "i " + i);
+		return true;
 	}
 
 	public boolean deleteRecents() {

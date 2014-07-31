@@ -260,20 +260,12 @@ public class GroupFriendsSelectionActivity extends ActionBarActivity implements
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-
-		JSONObject Obj = new JSONObject();
-		try {
-			Obj.put("participants", jsonArray);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-
+		
 		try {
 			APICreateGroup apiCreateGroup = new APICreateGroup();
 			apiCreateGroup.doPostGroup(room, group_name.toString(),
 					group_admin, password);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -283,6 +275,7 @@ public class GroupFriendsSelectionActivity extends ActionBarActivity implements
 				TChatApplication.getUserModel().getUsername());
 
 		int counter = 0;
+		
 		// Add participating users to group api
 		for (RosterModel rosterModel : participantsList) {
 			APIAddUserToGroup addUserToGroupObject = new APIAddUserToGroup();
@@ -294,8 +287,9 @@ public class GroupFriendsSelectionActivity extends ActionBarActivity implements
 
 		// Add participants to local db
 		if (counter == participantsList.size()) {
-			String jsonStr = Obj.toString();
-			if (TChatApplication.getGroupsModel().saveCreatedRoomInDB(room,
+			String jsonStr = jsonArray.toString();
+			Log.d(TAG, "Saving JSONArray of partic: " + jsonStr);
+			if (TChatApplication.getGroupsModel().saveCreatedRoomInDB(roomJid,
 					group_name.toString(), group_admin, jsonStr)) {
 
 				Bundle b = new Bundle();

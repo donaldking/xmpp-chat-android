@@ -7,6 +7,7 @@ import java.util.Locale;
 import org.jivesoftware.smack.Roster;
 import org.jivesoftware.smack.RosterEntry;
 import org.jivesoftware.smack.packet.Presence;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -42,15 +43,14 @@ public class RosterModel implements Parcelable {
 		selected = false;
 	}
 
-	public boolean isSelected(){
+	public boolean isSelected() {
 		return selected;
 	}
-	
-	public void setSelected(boolean selected){
+
+	public void setSelected(boolean selected) {
 		this.selected = selected;
 	}
-	
-	
+
 	public String getBuddyName(String buddyJid) {
 		db = TChatApplication.getTChatDBReadable();
 
@@ -71,7 +71,7 @@ public class RosterModel implements Parcelable {
 
 		return buddyName;
 	}
-	
+
 	public boolean saveRosterToDB(Roster roster) {
 		int counter = 0;
 		db = TChatApplication.getTChatDBWritable();
@@ -356,6 +356,35 @@ public class RosterModel implements Parcelable {
 			/*
 			 * No one online
 			 */
+			TChatApplication.getContext().sendBroadcast(
+					new Intent(Constants.ROSTER_EMPTY));
+		}
+		return rosterModelCollection;
+	}
+
+	public ArrayList<RosterModel> getUsers(JSONArray users)
+			throws JSONException {
+
+		ArrayList<RosterModel> rosterModelCollection = new ArrayList<RosterModel>();
+
+		for (int i = 0; i < users.length(); i++) {
+			JSONObject user = (JSONObject) users.get(i);
+			String userJid = user.getString("user_id");
+
+			String whereClause = TChatDBHelper.USER + " = ? ";
+
+			String[] whereArgs = new String[] { userJid };
+			String orderBy = TChatDBHelper.NAME + " ASC";
+
+			Cursor cursor = TChatApplication.getTChatDBReadable().query(TABLE,
+					null, whereClause, whereArgs, null, null, orderBy);
+
+			while (cursor.moveToNext()) {
+				rosterModelCollection.add(fromCursor(cursor));
+			}
+		}
+
+		if (rosterModelCollection.size() == 0) {
 			TChatApplication.getContext().sendBroadcast(
 					new Intent(Constants.ROSTER_EMPTY));
 		}

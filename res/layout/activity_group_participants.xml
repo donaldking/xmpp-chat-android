@@ -4,10 +4,26 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <ListView
-        android:id="@+id/listView"
+    <FrameLayout
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
+        android:layout_height="wrap_content" >
+
+        <co.uk.tusksolutions.extensions.RobotoLightTextView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@color/light_grey"
+            android:gravity="center"
+            android:padding="15dp"
+            android:text="Select the people you want to remove from this Group and click Next when done"
+            android:textColor="@color/dark_grey"
+            android:textSize="15sp" />
+    </FrameLayout>
+
+    <ListView
+        android:id="@+id/list_view"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@color/white" >
     </ListView>
 
 </LinearLayout>

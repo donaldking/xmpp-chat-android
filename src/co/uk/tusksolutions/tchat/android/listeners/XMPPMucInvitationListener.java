@@ -9,6 +9,7 @@ import android.content.Context;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.api.APIGetGroups;
 import co.uk.tusksolutions.tchat.android.api.APIGetGroups.OnGetGroupsCompleted;
+import co.uk.tusksolutions.tchat.android.models.GroupsModel;
 import co.uk.tusksolutions.tchat.android.xmpp.XMPPMUCManager;
 
 public class XMPPMucInvitationListener implements InvitationListener,
@@ -37,9 +38,8 @@ public class XMPPMucInvitationListener implements InvitationListener,
 
 	@Override
 	public void OnGetGroupsSuccess() {
-		// TODO Auto-generated method stub
-
-		TChatApplication.joinAllGroups();
+		
+		GroupsModel.joinAllGroups();
 	}
 
 	@Override

@@ -3,7 +3,6 @@
  */
 package co.uk.tusksolutions.tchat.android;
 
-import java.util.ArrayList;
 import java.util.UUID;
 
 import org.jivesoftware.smack.XMPPConnection;
@@ -15,7 +14,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Handler;
-import android.util.Log;
 import android.widget.Toast;
 import co.uk.tusksolutions.tchat.android.activities.LoginActivity;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
@@ -26,7 +24,6 @@ import co.uk.tusksolutions.tchat.android.models.RecentsModel;
 import co.uk.tusksolutions.tchat.android.models.RosterModel;
 import co.uk.tusksolutions.tchat.android.models.UserModel;
 import co.uk.tusksolutions.tchat.android.xmpp.XMPPConnectionManager;
-import co.uk.tusksolutions.tchat.android.xmpp.XMPPMUCManager;
 
 public class TChatApplication extends Application {
 
@@ -47,7 +44,6 @@ public class TChatApplication extends Application {
 	public static int CHAT_SECTION_QUERY_ACTION;
 	public static Handler presenceDialogHandler;
 
-	
 	@Override
 	public void onCreate() {
 		super.onCreate();
@@ -56,7 +52,7 @@ public class TChatApplication extends Application {
 		// Constants.CURRENT_SERVER = Constants.PRODUCTION_SERVER;
 		Constants.PROXY_SERVER = Constants.HTTP_SCHEME
 				+ Constants.CURRENT_SERVER + Constants.PROXY_PATH;
-		
+
 		TChatApplication.mContext = getBaseContext();
 		tChatDBHelper = new TChatDBHelper(TChatApplication.getContext());
 		TChatApplication.getTChatDBWritable();
@@ -88,9 +84,10 @@ public class TChatApplication extends Application {
 		return isConnected;
 	}
 
-	public static String getMid(){
+	public static String getMid() {
 		return UUID.randomUUID().toString();
 	}
+
 	public static String getCurrentJid() {
 		return getUserModel().getUsername() + "@" + Constants.CURRENT_SERVER;
 	}
@@ -149,41 +146,7 @@ public class TChatApplication extends Application {
 				.getUsername(), TChatApplication.getUserModel().getPassword());
 	}
 
-	public static void joinAllGroups() {
-
-		Runnable runnable = new Runnable() {
-
-			@Override
-			public void run() {
-				// Rejoin all rooms so we can receive notifications
-				// when new messages come in.
-
-				GroupsModel gm = new GroupsModel();
-				ArrayList<GroupsModel> groupsCollection = gm.queryGroups();
-				for (GroupsModel groupsModel : groupsCollection) {
-					// Join all rooms
-					try {
-						Log.d(TAG, "Connection: " + TChatApplication.connection);
-						XMPPMUCManager.getInstance(
-								TChatApplication.getContext())
-								.mucServiceDiscovery();
-
-						XMPPMUCManager.getInstance(
-								TChatApplication.getContext()).joinRoom(
-								TChatApplication.connection,
-								groupsModel.group_id, "",
-								TChatApplication.getUserModel().getUsername());
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-			}
-
-		};
-		new Thread(runnable).start();
-	}
-
+	
 	public static void tearDownAndLogout() {
 		TChatApplication.getRosterModel().deleteRosterRecords();
 		TChatApplication.getRecentsModel().deleteRecents();
