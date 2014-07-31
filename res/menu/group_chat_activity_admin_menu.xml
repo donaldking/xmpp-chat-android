@@ -8,7 +8,7 @@
         android:title="@string/send_photo"
         app:showAsAction="never">
     </item>
-    <!-- 
+    <!--  
     <item
         android:id="@+id/group_video_menu"
         android:icon="@drawable/ic_action_video"
@@ -16,7 +16,7 @@
         android:title="@string/send_video"
         app:showAsAction="never">
     </item>
-    
+    -->
     <item
         android:id="@+id/group_add_people"
         android:icon="@drawable/ic_action_user_add"
@@ -46,5 +46,5 @@
         app:showAsAction="never"
         android:title="@string/share_chat">
     </item>
-    -->
+
 </menu>

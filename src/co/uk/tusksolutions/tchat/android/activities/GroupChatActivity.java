@@ -40,12 +40,12 @@ import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.adapters.GroupChatMessagesAdapter;
 import co.uk.tusksolutions.tchat.android.api.APIChatDownloadAndShare;
-import co.uk.tusksolutions.tchat.android.api.APIClearChatHistory;
 import co.uk.tusksolutions.tchat.android.api.APICloudStorage;
 import co.uk.tusksolutions.tchat.android.api.APIGetMessages;
 import co.uk.tusksolutions.tchat.android.api.APIPostFile;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
 import co.uk.tusksolutions.tchat.android.models.ChatMessagesModel;
+import co.uk.tusksolutions.tchat.android.models.GroupsModel;
 import co.uk.tusksolutions.tchat.android.xmpp.XMPPChatMessageManager;
 
 public class GroupChatActivity extends ActionBarActivity {
@@ -139,13 +139,6 @@ public class GroupChatActivity extends ActionBarActivity {
 			getSupportActionBar().setTitle(roomName);
 		}
 
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.group_chat_activity_menu, menu);
-		return true;
 	}
 
 	@Override
@@ -258,6 +251,18 @@ public class GroupChatActivity extends ActionBarActivity {
 	}
 
 	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+
+		if (GroupsModel.isAdmin(group_id, TChatApplication.getCurrentJid())) {
+			inflater.inflate(R.menu.group_chat_activity_admin_menu, menu);
+		} else {
+			inflater.inflate(R.menu.group_chat_activity_menu, menu);
+		}
+		return true;
+	}
+
+	@Override
 	public boolean onOptionsItemSelected(MenuItem menuItem) {
 		Intent intent = new Intent(Intent.ACTION_PICK);
 		switch (menuItem.getItemId()) {
@@ -270,11 +275,11 @@ public class GroupChatActivity extends ActionBarActivity {
 			startActivityForResult(
 					Intent.createChooser(intent, "Pick a picture"), SELECT_FILE);
 			break;
-		case R.id.group_video_menu:
-			intent.setType("video/*");
-			startActivityForResult(
-					Intent.createChooser(intent, "Pick a Video"), SELECT_FILE);
-			break;
+		/*
+		 * case R.id.group_video_menu: intent.setType("video/*");
+		 * startActivityForResult( Intent.createChooser(intent, "Pick a Video"),
+		 * SELECT_FILE); break;
+		 */
 		case R.id.group_add_people:
 			break;
 		case R.id.group_remove_people:
@@ -287,22 +292,25 @@ public class GroupChatActivity extends ActionBarActivity {
 
 			break;
 		case R.id.group_download_chat_history:
-			
+
 			APIChatDownloadAndShare chatDownload = new APIChatDownloadAndShare();
-			chatDownload.doChatDownloadAndShare(GroupChatActivity.this, TChatApplication
-					.getCurrentJid()
-					.replace("@" + Constants.CURRENT_SERVER, ""), roomJid
-					.replace("@conference." + Constants.CURRENT_SERVER, ""),false);
+			chatDownload.doChatDownloadAndShare(
+					GroupChatActivity.this,
+					TChatApplication.getCurrentJid().replace(
+							"@" + Constants.CURRENT_SERVER, ""), roomJid
+							.replace("@conference." + Constants.CURRENT_SERVER,
+									""), false);
 
 			break;
 		case R.id.group_share_chat_history:
 			APIChatDownloadAndShare chatShare = new APIChatDownloadAndShare();
-			chatShare.doChatDownloadAndShare(GroupChatActivity.this, TChatApplication
-					.getCurrentJid()
-					.replace("@" + Constants.CURRENT_SERVER, ""), roomJid
-					.replace("@conference." + Constants.CURRENT_SERVER, ""),true);
+			chatShare.doChatDownloadAndShare(
+					GroupChatActivity.this,
+					TChatApplication.getCurrentJid().replace(
+							"@" + Constants.CURRENT_SERVER, ""), roomJid
+							.replace("@conference." + Constants.CURRENT_SERVER,
+									""), true);
 
-			
 			break;
 		default:
 			break;
@@ -386,8 +394,6 @@ public class GroupChatActivity extends ActionBarActivity {
 		}
 	}
 
-	
-	
 	/*
 	 * TextChange watcher
 	 */

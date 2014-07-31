@@ -252,6 +252,27 @@ public class GroupsModel implements Parcelable {
 		new Thread(runnable).start();
 	}
 
+	public static boolean isAdmin(String group_id, String group_admin) {
+
+		db = TChatApplication.getTChatDBReadable();
+
+		String[] columns = { TChatDBHelper.G_ADMIN };
+		String whereClause = TChatDBHelper.G_GROUP_ID + " = ? AND "
+				+ TChatDBHelper.G_ADMIN + " = ?";
+
+		String[] whereArgs = new String[] { group_id, group_admin};
+
+		Cursor cursor = TChatApplication.getTChatDBReadable().query(
+				TChatDBHelper.GROUPS_TABLE, columns, whereClause, whereArgs,
+				null, null, null);
+
+		while (cursor.moveToNext()) {
+			return true;
+		}
+
+		return false;
+	}
+
 	@Override
 	public int describeContents() {
 		return 0;
