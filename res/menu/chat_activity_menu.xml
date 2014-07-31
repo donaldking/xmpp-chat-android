@@ -11,25 +11,34 @@
     <item
         android:id="@+id/video_menu"
         android:icon="@drawable/ic_action_video"
-        android:orderInCategory="10"
+        android:orderInCategory="11"
         android:title="@string/send_video"
         app:showAsAction="never">
     </item>
     <item
         android:id="@+id/clear_chat_History"
         android:icon="@drawable/ic_action_delete"
-        android:orderInCategory="10"
+        android:orderInCategory="12"
         android:title="@string/clear_history"
         app:showAsAction="never">
     </item>
-    <!--
+   
+    
     <item
-        android:id="@+id/location_menu"
-        android:orderInCategory="10"
-        android:icon="@drawable/ic_action_locate"
+        android:id="@+id/download_chat_history"
+        
+         android:orderInCategory="13"
+        android:icon="@drawable/ic_action_edit"
         app:showAsAction="never"
-        android:title="@string/share_location">
+        android:title="@string/download_history">
     </item>
-    -->
+    <item
+        android:id="@+id/share_chat_history"
+         android:orderInCategory="14"
+        android:icon="@drawable/ic_action_share"
+        app:showAsAction="never"
+        android:title="@string/share_chat">
+    </item>
+   
 
 </menu>
