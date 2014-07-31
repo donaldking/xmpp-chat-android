@@ -6,6 +6,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBar;
@@ -18,6 +20,7 @@ import android.widget.ListView;
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.adapters.GroupFriendsSelectionAdapter;
+import co.uk.tusksolutions.tchat.android.api.APIDeleteGroup;
 import co.uk.tusksolutions.tchat.android.models.GroupsModel;
 import co.uk.tusksolutions.tchat.android.models.RosterModel;
 import co.uk.tusksolutions.tchat.android.tasks.RemovePeopleFromGroup;
@@ -126,7 +129,7 @@ public class GroupParticipantsActivity extends ActionBarActivity implements
 		}
 	}
 
-	@Override
+	@SuppressLint("InlinedApi") @Override
 	public void onRemoveMUCSuccess(ArrayList<RosterModel> removedFriendsList) {
 
 		for (RosterModel rosterModel : removedFriendsList) {
@@ -157,15 +160,18 @@ public class GroupParticipantsActivity extends ActionBarActivity implements
 					e.printStackTrace();
 				}
 			}
-		}else{
+		} else {
 			if (GroupsModel.deleteGroup(groupId)) {
-				Log.d(TAG, "Group " + groupId +" Deleted!");
-				// Remove all stack and go to home
-				try {
-					prepareListView();
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
+				APIDeleteGroup deleteGroupApiObj = new APIDeleteGroup();
+				deleteGroupApiObj.doDeleteGroup(groupId,
+						TChatApplication.getCurrentJid());
+
+				Intent i = new Intent(GroupParticipantsActivity.this,
+						MainActivity.class);
+				// set the new task and clear flags
+				i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+						| Intent.FLAG_ACTIVITY_CLEAR_TASK);
+				startActivity(i);
 			}
 		}
 	}
