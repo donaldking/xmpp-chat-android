@@ -30,7 +30,7 @@ public class ChatMessagesModel implements Parcelable {
 	public String timeStamp;
 
 	private String TABLE = TChatDBHelper.CHAT_MESSAGES_TABLE;
-	private SQLiteDatabase db;
+	private static SQLiteDatabase db;
 
 	static final String TAG = "ChatMessagesModel";
 
@@ -99,10 +99,10 @@ public class ChatMessagesModel implements Parcelable {
 			String messageType, long timeStamp, int isRead, String mid) {
 
 		db = TChatApplication.getTChatDBWritable();
-		
+
 		try {
-			Log.e("sender", "sender "+to);
-			Log.e("receiver", "receiver "+from);
+			Log.e("sender", "sender " + to);
+			Log.e("receiver", "receiver " + from);
 
 			ContentValues contentValues = new ContentValues();
 
@@ -116,9 +116,10 @@ public class ChatMessagesModel implements Parcelable {
 			contentValues.put(TChatDBHelper.CM_IS_READ, isRead);
 
 			// Insert
-		
-			long id = db.insertWithOnConflict(TABLE, null, contentValues,SQLiteDatabase.CONFLICT_REPLACE);
-			Log.e("Insert in chat Table", "inserted "+id+" "+mid);
+
+			long id = db.insertWithOnConflict(TABLE, null, contentValues,
+					SQLiteDatabase.CONFLICT_REPLACE);
+			Log.e("Insert in chat Table", "inserted " + id + " " + mid);
 
 			/**
 			 * Check message type
@@ -181,7 +182,8 @@ public class ChatMessagesModel implements Parcelable {
 
 	private boolean saveToRecentsTable(String to, String from,
 			String buddyName, String resource, String message,
-			int isGroupMessage, String messageType, long timeStamp, int isRead, String mid) {
+			int isGroupMessage, String messageType, long timeStamp, int isRead,
+			String mid) {
 		try {
 
 			ContentValues contentValues = new ContentValues();
@@ -301,9 +303,8 @@ public class ChatMessagesModel implements Parcelable {
 		return true;
 	}
 
-	public boolean deleteChatHistoryLocal(String to,String from)
-	{
-		db=TChatApplication.getTChatDBWritable();
+	public static boolean deleteChatHistoryLocal(String to, String from) {
+		db = TChatApplication.getTChatDBWritable();
 		/*
 		 * Clear chat History of specific USER
 		 */
@@ -313,12 +314,31 @@ public class ChatMessagesModel implements Parcelable {
 				+ TChatDBHelper.CM_SENDER + " LIKE ?";
 
 		String[] whereArgs = new String[] { to, from, from, to };
-		
-		int i=db.delete(TChatDBHelper.CHAT_MESSAGES_TABLE, whereClause, whereArgs);
+
+		int i = db.delete(TChatDBHelper.CHAT_MESSAGES_TABLE, whereClause,
+				whereArgs);
 		db.close();
-	Log.e("delete chat", "i "+i);
+		Log.e("delete chat", "i " + i);
 		return true;
 	}
+	
+	public static boolean deleteGroupChatHistoryLocal(String receiver) {
+		db = TChatApplication.getTChatDBWritable();
+		/*
+		 * Clear chat History of specific USER
+		 */
+
+		String whereClause = TChatDBHelper.CM_RECEIVER + " LIKE ? ";
+
+		String[] whereArgs = new String[] { receiver };
+
+		int i = db.delete(TChatDBHelper.CHAT_MESSAGES_TABLE, whereClause,
+				whereArgs);
+		db.close();
+		Log.e("delete chat", "i " + i);
+		return true;
+	}
+
 	/*
 	 * Parcelable stuff non-Javadoc)
 	 * 

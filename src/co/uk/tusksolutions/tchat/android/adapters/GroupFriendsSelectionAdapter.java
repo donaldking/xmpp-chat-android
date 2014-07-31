@@ -3,6 +3,9 @@ package co.uk.tusksolutions.tchat.android.adapters;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -39,6 +42,14 @@ public class GroupFriendsSelectionAdapter extends BaseAdapter implements
 		getFilter();
 	}
 
+	public GroupFriendsSelectionAdapter(Context context, JSONArray participants)
+			throws JSONException {
+
+		this.context = TChatApplication.getContext();
+		mModel = new RosterModel();
+		rosterModelCollection = mModel.getUsers(participants);
+	}
+	
 	@Override
 	public void notifyDataSetChanged() {
 		super.notifyDataSetChanged();

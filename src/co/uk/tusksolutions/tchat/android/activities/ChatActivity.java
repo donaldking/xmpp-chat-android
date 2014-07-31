@@ -135,9 +135,6 @@ public class ChatActivity extends ActionBarActivity {
 
 			getSupportActionBar().setTitle(buddyName);
 		}
-		
-		
-	
 
 	}
 
@@ -288,7 +285,7 @@ public class ChatActivity extends ActionBarActivity {
 			startActivityForResult(
 					Intent.createChooser(intent, "Pick a Video"), SELECT_FILE);
 			break;
-			
+
 		case R.id.clear_chat_History:
 			doClearChatHistory();
 			break;
@@ -308,24 +305,23 @@ public class ChatActivity extends ActionBarActivity {
 						Toast.LENGTH_SHORT).show();
 				if (data != null) {
 					String selectedFile1 = getRealPathFromURI(data.getData());
-			        Log.e("selected file ","file "+selectedFile1);
+					Log.e("selected file ", "file " + selectedFile1);
 					Uri imagepath = data.getData();
 
 					Log.e("TAG", "scheme " + imagepath.getScheme());
-					if(selectedFile1!=null)
-					{
-						 Log.e("selected file local send","file "+selectedFile1);
+					if (selectedFile1 != null) {
+						Log.e("selected file local send", "file "
+								+ selectedFile1);
 						String selectedFile = getRealPathFromURI(data.getData());
-						
+
 						saveToDB(buddyJid, selectedFile, 0, "FileTransfer");
-						
+
 						APIPostFile apiPostFile = new APIPostFile();
 						apiPostFile
 								.doPostFile(currentJid, buddyJid, selectedFile,
 										buddyName, ChatActivity.this, mid);
 						showProgressUpload(true);
-					}
-					else if(imagepath.getScheme().contains("content")) {
+					} else if (imagepath.getScheme().contains("content")) {
 
 						try {
 							String name = "Temp_" + System.currentTimeMillis()
@@ -349,7 +345,8 @@ public class ChatActivity extends ActionBarActivity {
 						}
 
 					} else {
-						Toast.makeText(this, "Picture Not available",Toast.LENGTH_SHORT).show();
+						Toast.makeText(this, "Picture Not available",
+								Toast.LENGTH_SHORT).show();
 					}
 				}
 
@@ -501,20 +498,21 @@ public class ChatActivity extends ActionBarActivity {
 		}
 
 	}
-	
+
 	/*
 	 * Clear Chat History
 	 */
-	public void doClearChatHistory()
-	{
-		APIClearChatHistory chatHistory=new APIClearChatHistory();
-		chatHistory.doClearChatHistory(ChatActivity.this,TChatApplication.getCurrentJid().replace("@"+Constants.CURRENT_SERVER,""),buddyJid.replace("@"+Constants.CURRENT_SERVER,""));
+	public void doClearChatHistory() {
+		APIClearChatHistory chatHistory = new APIClearChatHistory();
+		chatHistory.doClearChatHistory(ChatActivity.this, TChatApplication
+				.getCurrentJid().replace("@" + Constants.CURRENT_SERVER, ""),
+				buddyJid.replace("@" + Constants.CURRENT_SERVER, ""));
 		ChatMessagesModel mChatMessageModel = new ChatMessagesModel();
-		mChatMessageModel.deleteChatHistoryLocal(TChatApplication.getCurrentJid(),buddyJid);
-		
-		
+		mChatMessageModel.deleteChatHistoryLocal(
+				TChatApplication.getCurrentJid(), buddyJid);
+
 	}
-	
+
 	/*
 	 * Save message to Local DB
 	 */
@@ -527,7 +525,7 @@ public class ChatActivity extends ActionBarActivity {
 					TChatApplication.getCurrentJid(), buddyName, message,
 					Constants.XMPP_RESOURCE, isGroupMessage, messageType,
 					System.currentTimeMillis(), 1, mid);
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -612,7 +610,7 @@ public class ChatActivity extends ActionBarActivity {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			if (intent.getAction().equalsIgnoreCase(Constants.MESSAGE_READY)) {
-				
+
 				showProgressUpload(false);
 
 				prepareListView(buddyJid, currentJid, 1,

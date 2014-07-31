@@ -1,5 +1,6 @@
 package co.uk.tusksolutions.tchat.android.xmpp;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -7,11 +8,16 @@ import java.util.Map;
 
 import org.jivesoftware.smack.Connection;
 import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smack.util.StringUtils;
 import org.jivesoftware.smackx.muc.MultiUserChat;
 
 import android.content.Context;
 import android.util.Log;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
+import co.uk.tusksolutions.tchat.android.listeners.XMPPMucParticipantsListener;
+import co.uk.tusksolutions.tchat.android.listeners.XMPPMucSubjectUpdatedListener;
+import co.uk.tusksolutions.tchat.android.listeners.XMPPMucUserStatusListener;
+import co.uk.tusksolutions.tchat.android.models.RosterModel;
 
 public class XMPPMUCManager {
 	private static String TAG = "XMPPMUCManager";
@@ -77,7 +83,7 @@ public class XMPPMUCManager {
 		try {
 			// multiUserChat.create(nickname);
 			multiUserChat.join(nickname);
-		
+
 		} catch (Exception e) {
 			Log.e(TAG, "MUC creation failed: ");
 			e.printStackTrace();
@@ -140,6 +146,40 @@ public class XMPPMUCManager {
 		return muc;
 	}
 
+	public boolean kickFromRoom(Connection conn,
+			ArrayList<RosterModel> friendArrayList, String roomJID) {
+		/**
+		 * Kicks the participants from the room and also bans the user to
+		 * prevent them from joining
+		 */
+
+		MultiUserChat muc = new MultiUserChat(conn, roomJID);
+
+		for (RosterModel rosterModel : friendArrayList) {
+			try {
+				try {
+					/*
+					 * Try to kick the user if they are online
+					 */
+					muc.kickParticipant(
+							StringUtils.parseName(rosterModel.user), "");
+					muc.revokeMembership(rosterModel.user);
+				} catch (Exception e) {
+
+					e.printStackTrace();
+				}
+				/*
+				 * Ban the user from joining the room again
+				 */
+				muc.banUser(rosterModel.user, "");
+			} catch (XMPPException e) {
+				e.printStackTrace();
+			}
+		}
+		return true;
+
+	}
+
 	public void joinRoom(Connection conn, String roomJID,
 			final String password, final String nickname) {
 
@@ -154,6 +194,9 @@ public class XMPPMUCManager {
 			// Use DiscussionHistory here and specify how many messages you want
 			// to receive.
 			muc.join(nickname, password, null, JOIN_TIMEOUT);
+			muc.addParticipantStatusListener(new XMPPMucParticipantsListener());
+			muc.addSubjectUpdatedListener(new XMPPMucSubjectUpdatedListener());
+			muc.addUserStatusListener(new XMPPMucUserStatusListener());
 
 			// registerRoom(muc, roomJID,
 			// MyRoom.getRoomNameFromRoomJID(roomJID), password);
@@ -189,6 +232,15 @@ public class XMPPMUCManager {
 			 * 
 			 * break; }
 			 */
+			switch (e.getXMPPError().getCode()) {
+			case 403:
+				Log.i(TAG, "User banned from room with ID: " + roomJID);
+				// Delete group from local db
+				break;
+
+			default:
+				break;
+			}
 			Log.e(TAG, e.getLocalizedMessage());
 		}
 	}

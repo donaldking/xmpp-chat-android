@@ -1,6 +1,5 @@
 package co.uk.tusksolutions.tchat.android.constants;
 
-
 public class Constants {
 
 	/**
@@ -24,8 +23,10 @@ public class Constants {
 	public static final String CREATE_GROUP_ENDPOINT = "/mobileservices/v1/create_group.php";
 	public static final String ADD_USER_TO_GROUP_ENDPOINT = "/mobileservices/v1/add_user_to_group.php";
 	public static final String UPLOAD_FILE_ENDPOINT = "/mobileservices/v1/upload.php";
-    public static final String CLEAR_CHAT_ENDPOINT="/mobileservices/v1/delete_chat.php";
-	
+	public static final String CLEAR_CHAT_ENDPOINT = "/mobileservices/v1/delete_chat.php";
+	public static String KICK_USER_FROM_GROUP_ENDPOINT = "/mobileservices/v1/kick_user_out_of_group.php";
+	public static String KICK_USER_FROM_CHAT_ROOM_ENDPOINT = "/mobileservices/v1/kick_user_out_of_chat_room.php";
+
 	/**
 	 * Login Actions
 	 */

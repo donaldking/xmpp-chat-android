@@ -3,6 +3,9 @@ package co.uk.tusksolutions.tchat.android.adapters;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -65,12 +68,6 @@ public class RosterContentAdapter extends BaseAdapter implements Filterable {
 			notifyDataSetChanged();
 			break;
 		}
-	}
-
-	public RosterContentAdapter(Context context,
-			ArrayList<RosterModel> collection) {
-		this.context = TChatApplication.getContext();
-		rosterModelCollection = collection;
 	}
 
 	@Override

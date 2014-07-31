@@ -64,6 +64,7 @@ public class GroupChatActivity extends ActionBarActivity {
 	public static String CHATSTATE = "ACTION_CHAT_STATE";
 	public static String mid;
 	private static View mFileUploadStatusView;
+	public String group_id;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -113,6 +114,10 @@ public class GroupChatActivity extends ActionBarActivity {
 						.getBundle("groupChatFromRoomBundle")
 						.getString("roomJid"));
 
+				group_id = getIntent().getExtras()
+						.getBundle("groupChatFromRoomBundle")
+						.getString("roomJid");
+
 			} else if (getIntent().getExtras().containsKey(
 					"groupChatToRoomBundle")) {
 				/*
@@ -122,6 +127,10 @@ public class GroupChatActivity extends ActionBarActivity {
 						.getBundle("groupChatToRoomBundle")
 						.getString("roomName");
 				roomJid = getIntent().getExtras()
+						.getBundle("groupChatToRoomBundle")
+						.getString("roomJid");
+
+				group_id = getIntent().getExtras()
 						.getBundle("groupChatToRoomBundle")
 						.getString("roomJid");
 			}
@@ -267,7 +276,12 @@ public class GroupChatActivity extends ActionBarActivity {
 		case R.id.group_add_people:
 			break;
 		case R.id.group_remove_people:
-			startActivity(new Intent(this, GroupParticipantsActivity.class));
+			Intent i = new Intent(TChatApplication.getContext(),
+					GroupParticipantsActivity.class);
+			Bundle b = new Bundle();
+			b.putString("group_id", group_id);
+			i.putExtras(b);
+			startActivity(i);
 
 			break;
 		default:

@@ -65,6 +65,7 @@ import co.uk.tusksolutions.tchat.android.listeners.XMPPChatMessageListener;
 import co.uk.tusksolutions.tchat.android.listeners.XMPPConnectionListener;
 import co.uk.tusksolutions.tchat.android.listeners.XMPPGroupChatMessageListener;
 import co.uk.tusksolutions.tchat.android.listeners.XMPPPresenceListener;
+import co.uk.tusksolutions.tchat.android.models.GroupsModel;
 
 public class XMPPConnectionManager {
 
@@ -179,7 +180,7 @@ public class XMPPConnectionManager {
 								@Override
 								public void OnGetGroupsSuccess() {
 									// TODO Auto-generated method stub
-									TChatApplication.joinAllGroups();
+									GroupsModel.joinAllGroups();
 								}
 
 								@Override
