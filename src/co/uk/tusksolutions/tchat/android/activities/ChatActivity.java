@@ -519,6 +519,7 @@ public class ChatActivity extends ActionBarActivity {
 	/*
 	 * Clear Chat History
 	 */
+	@SuppressWarnings("static-access")
 	public void doClearChatHistory() {
 		APIClearChatHistory chatHistory = new APIClearChatHistory();
 		chatHistory.doClearChatHistory(ChatActivity.this, TChatApplication

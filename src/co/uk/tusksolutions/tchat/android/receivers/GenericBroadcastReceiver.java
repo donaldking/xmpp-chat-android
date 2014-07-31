@@ -73,9 +73,14 @@ public class GenericBroadcastReceiver extends BroadcastReceiver {
 			if (TChatApplication.isNetworkAvailable()) {
 				if (TChatApplication.connection == null
 						&& TChatApplication.getUserModel().getUsername() != null) {
-					XMPPConnectionManager.connect(TChatApplication
-							.getUserModel().getUsername(), TChatApplication
-							.getUserModel().getPassword());
+					try {
+						XMPPConnectionManager.connect(TChatApplication
+								.getUserModel().getUsername(), TChatApplication
+								.getUserModel().getPassword());
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 
 					Toast.makeText(
 							TChatApplication.getContext(),

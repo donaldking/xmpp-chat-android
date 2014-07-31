@@ -37,6 +37,7 @@ public class APIChatDownloadAndShare {
 		if (mTask != null) {
 			return;
 		}
+		Log.e("sneder and receiver ","sender "+sender+" receiver "+receiver);
 		mTask = new AsyncApiChatDownload();
 		mTask.execute((Void) null);
 
@@ -70,11 +71,11 @@ public class APIChatDownloadAndShare {
 			int count;
 			String TextFileDownloadURL = Constants.HTTP_SCHEME
 					+ Constants.CURRENT_SERVER
-					+ Constants.DOWNLOAD_CHAT_HISTORY_TEXT + "?";
+					+ Constants.DOWNLOAD_CHAT_HISTORY_TEXT_ENDPOINT+"?";
 
 			try {
 				URL url = new URL(TextFileDownloadURL + "sender=" + sender
-						+ "&receiver=" + receiver);
+						+ "&receiver="+receiver);
 				URLConnection conection = url.openConnection();
 				conection.connect();
 				// download the file
@@ -93,7 +94,7 @@ public class APIChatDownloadAndShare {
 				}
 				// Output stream
 				OutputStream output = new FileOutputStream(dir.toString() + "/"
-						+ receiver + ".txt");
+						+ receiver+ ".txt");
 
 				byte data[] = new byte[1024];
 
@@ -136,9 +137,6 @@ public class APIChatDownloadAndShare {
 					mContext.startActivity(Intent.createChooser(share,
 							"Share Chat"));
 				}
-
-				Toast.makeText(mContext, "Chat History Cleared",
-						Toast.LENGTH_SHORT).show();
 
 				TChatApplication.getContext().sendBroadcast(
 						new Intent(Constants.MESSAGE_READY));

@@ -39,6 +39,8 @@ import android.widget.Toast;
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.adapters.GroupChatMessagesAdapter;
+import co.uk.tusksolutions.tchat.android.api.APIChatDownloadAndShare;
+import co.uk.tusksolutions.tchat.android.api.APIClearChatHistory;
 import co.uk.tusksolutions.tchat.android.api.APICloudStorage;
 import co.uk.tusksolutions.tchat.android.api.APIGetMessages;
 import co.uk.tusksolutions.tchat.android.api.APIPostFile;
@@ -284,6 +286,24 @@ public class GroupChatActivity extends ActionBarActivity {
 			startActivity(i);
 
 			break;
+		case R.id.group_download_chat_history:
+			
+			APIChatDownloadAndShare chatDownload = new APIChatDownloadAndShare();
+			chatDownload.doChatDownloadAndShare(GroupChatActivity.this, TChatApplication
+					.getCurrentJid()
+					.replace("@" + Constants.CURRENT_SERVER, ""), roomJid
+					.replace("@conference." + Constants.CURRENT_SERVER, ""),false);
+
+			break;
+		case R.id.group_share_chat_history:
+			APIChatDownloadAndShare chatShare = new APIChatDownloadAndShare();
+			chatShare.doChatDownloadAndShare(GroupChatActivity.this, TChatApplication
+					.getCurrentJid()
+					.replace("@" + Constants.CURRENT_SERVER, ""), roomJid
+					.replace("@conference." + Constants.CURRENT_SERVER, ""),true);
+
+			
+			break;
 		default:
 			break;
 		}
@@ -366,6 +386,8 @@ public class GroupChatActivity extends ActionBarActivity {
 		}
 	}
 
+	
+	
 	/*
 	 * TextChange watcher
 	 */

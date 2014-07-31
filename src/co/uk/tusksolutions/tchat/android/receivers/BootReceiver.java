@@ -21,12 +21,16 @@ public class BootReceiver extends BroadcastReceiver {
 			 */
 			if (TChatApplication.getUserModel().getUsername() != null
 					&& TChatApplication.getUserModel().getPassword() != null) {
+				if(TChatApplication.isNetworkAvailable())
+				{
 
 				XMPPConnectionManager.connect(TChatApplication.getUserModel()
 						.getUsername(), TChatApplication.getUserModel()
 						.getPassword());
 
-			}
+				}
+			
+				}
 			Toast.makeText(context, (String) TAG + " onReceive",
 					Toast.LENGTH_LONG).show();
 		}

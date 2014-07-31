@@ -29,14 +29,20 @@
         android:title="@string/remove_people"
         app:showAsAction="never">
     </item>
-    <!--
-    <item
-        android:id="@+id/group_location_menu"
-        android:icon="@drawable/ic_action_locate"
-        android:orderInCategory="10"
-        android:title="@string/share_location"
-        app:showAsAction="never">
+   <item
+        android:id="@+id/group_download_chat_history"
+        
+         android:orderInCategory="13"
+        android:icon="@drawable/ic_action_edit"
+        app:showAsAction="never"
+        android:title="@string/download_history">
     </item>
-    -->
+    <item
+        android:id="@+id/group_share_chat_history"
+         android:orderInCategory="14"
+        android:icon="@drawable/ic_action_share"
+        app:showAsAction="never"
+        android:title="@string/share_chat">
+    </item>
 
 </menu>
