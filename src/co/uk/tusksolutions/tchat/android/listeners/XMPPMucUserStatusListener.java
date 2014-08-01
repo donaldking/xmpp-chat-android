@@ -4,6 +4,7 @@ import org.jivesoftware.smackx.muc.UserStatusListener;
 
 import android.util.Log;
 import co.uk.tusksolutions.tchat.android.models.GroupsModel;
+import co.uk.tusksolutions.tchat.android.xmpp.XMPPMUCManager;
 
 public class XMPPMucUserStatusListener implements UserStatusListener {
 
@@ -39,6 +40,7 @@ public class XMPPMucUserStatusListener implements UserStatusListener {
 		 * Called when we are booted from a room
 		 */
 		Log.d("kicked", "Kicked from room " + owner + " - " + reason + " Room ID: " + roomId);
+		XMPPMUCManager.iAmKickedFromThisRoom(roomId);
 		GroupsModel.joinAllGroups();
 	}
 

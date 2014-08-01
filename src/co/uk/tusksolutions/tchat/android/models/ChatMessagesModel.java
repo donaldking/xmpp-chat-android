@@ -321,16 +321,17 @@ public class ChatMessagesModel implements Parcelable {
 		Log.e("delete chat", "i " + i);
 		return true;
 	}
-	
+
 	public static boolean deleteGroupChatHistoryLocal(String receiver) {
 		db = TChatApplication.getTChatDBWritable();
 		/*
 		 * Clear chat History of specific USER
 		 */
 
-		String whereClause = TChatDBHelper.CM_RECEIVER + " LIKE ? ";
+		String whereClause = TChatDBHelper.CM_RECEIVER + " LIKE ? OR "
+				+ TChatDBHelper.CM_SENDER + " LIKE ? ";
 
-		String[] whereArgs = new String[] { receiver };
+		String[] whereArgs = new String[] { receiver, receiver };
 
 		int i = db.delete(TChatDBHelper.CHAT_MESSAGES_TABLE, whereClause,
 				whereArgs);

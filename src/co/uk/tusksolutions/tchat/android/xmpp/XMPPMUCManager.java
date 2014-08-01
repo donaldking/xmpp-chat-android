@@ -174,6 +174,7 @@ public class XMPPMUCManager {
 
 	}
 
+	@SuppressWarnings("static-access")
 	public void joinRoom(Connection conn, String roomJID,
 			final String password, final String nickname) {
 
@@ -226,7 +227,7 @@ public class XMPPMUCManager {
 			 */
 			switch (e.getXMPPError().getCode()) {
 			case 403:
-				this.iAmKickedFromThisRoom(roomJID);
+				XMPPMUCManager.iAmKickedFromThisRoom(roomJID);
 				break;
 
 			default:
@@ -236,13 +237,8 @@ public class XMPPMUCManager {
 		}
 	}
 
-	public void iAmKickedFromThisRoom(String roomJID) {
+	public static void iAmKickedFromThisRoom(final String roomJID) {
 		Log.i(TAG, "User banned from room with ID: " + roomJID);
-		// Delete all conversation with this group
-		APIClearChatHistory apiClearChatHisoryObject = new APIClearChatHistory();
-		apiClearChatHisoryObject.doClearChatHistory(TChatApplication
-				.getContext(), TChatApplication.getUserModel().getUsername(),
-				roomJID);
 
 		// Delete group from local db
 		if (GroupsModel.deleteGroup(roomJID)) {
@@ -258,6 +254,21 @@ public class XMPPMUCManager {
 			}
 
 		}
+
+		Runnable runnable = new Runnable() {
+
+			@Override
+			public void run() {
+				// Delete all conversation with this group
+				APIClearChatHistory apiClearChatHisoryObject = new APIClearChatHistory();
+				apiClearChatHisoryObject.doClearChatHistory(TChatApplication
+						.getContext(), TChatApplication.getUserModel()
+						.getUsername(), roomJID);
+
+			}
+
+		};
+		new Thread(runnable).run();
 	}
 
 }

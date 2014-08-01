@@ -162,7 +162,7 @@ public class RecentsModel implements Parcelable {
 		 * Clear chat History of specific USER
 		 */
 
-		String whereClause = TChatDBHelper.R_RECEIVER + " LIKE ? ";
+		String whereClause = TChatDBHelper.R_CHAT_WITH + " LIKE ? ";
 
 		String[] whereArgs = new String[] { receiver };
 
