@@ -24,6 +24,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.activities.ChatActivity;
+import co.uk.tusksolutions.tchat.android.activities.GroupChatActivity;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
 import co.uk.tusksolutions.tchat.android.models.ChatMessagesModel;
 import co.uk.tusksolutions.tchat.android.xmpp.XMPPChatMessageManager;
@@ -98,7 +99,7 @@ public class APIPostFile {
 		@Override
 		protected void onPostExecute(Boolean result) {
 			mTask = null;
-
+               
 			if (result) {
 
 				
@@ -108,12 +109,15 @@ public class APIPostFile {
 					XMPPChatMessageManager.sendMessage(receiver, buddyName, link,
 							1, "FileTransfer", mid);
 					receiver=receiver.replace("@conference."+Constants.CURRENT_SERVER, "");
+					GroupChatActivity.showProgressUpload(false);
+                    
 				}
 				else
 				{
 					XMPPChatMessageManager.sendMessage(receiver, buddyName, link,
 							0, "FileTransfer", mid);
 					receiver=receiver.replace("@"+Constants.CURRENT_SERVER, "");
+					GroupChatActivity.showProgressUpload(false);
 				}
                 
 				APICloudStorage cloudStorage = new APICloudStorage();

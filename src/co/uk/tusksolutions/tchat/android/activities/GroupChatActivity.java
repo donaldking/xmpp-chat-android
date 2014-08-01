@@ -329,13 +329,14 @@ public class GroupChatActivity extends ActionBarActivity {
 				Toast.makeText(GroupChatActivity.this,
 						"Sending Image please wait", Toast.LENGTH_SHORT).show();
 				if (data != null) {
-
+                   
 					Uri imagepath = data.getData();
 
 					Log.e("TAG", "scheme " + imagepath.getScheme());
 					if (imagepath.getScheme().contains("content")) {
 
 						try {
+							 showProgressUpload(true);
 							String name = "Temp_" + System.currentTimeMillis()
 									+ ".jpg";
 							File f = new File(TChatApplication.getContext()
@@ -358,6 +359,7 @@ public class GroupChatActivity extends ActionBarActivity {
 						}
 
 					} else {
+						 showProgressUpload(true);
 						String selectedFile = getRealPathFromURI(data.getData());
 						// showProgressUpload(true);
 						saveToDB(roomJid, selectedFile, 0, "FileTransfer");
@@ -589,7 +591,7 @@ public class GroupChatActivity extends ActionBarActivity {
 	 * Shows the progress UI and hides the login form.
 	 */
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
-	private static void showProgressUpload(final boolean show) {
+	public static void showProgressUpload(final boolean show) {
 
 		// On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
 		// for very easy animations. If available, use these APIs TO_USER
