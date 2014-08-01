@@ -37,15 +37,17 @@ public class APIChatDownloadAndShare {
 	private AsyncApiChatDownload mTask = null;
 	File dir;
 
-	public void doChatDownloadAndShare(Activity act, String sender, String receiver,Boolean share) {
+	public void doChatDownloadAndShare(Activity act, String sender,
+			String receiver, Boolean share) {
 		this.sender = sender;
 		this.receiver = receiver;
 		this.mContext = act;
-		this.share=share;
+		this.share = share;
 		if (mTask != null) {
 			return;
 		}
-		Log.e("sneder and receiver ","sender "+sender+" receiver "+receiver);
+		Log.e("sneder and receiver ", "sender " + sender + " receiver "
+				+ receiver);
 		mTask = new AsyncApiChatDownload();
 		mTask.execute((Void) null);
 
@@ -62,13 +64,10 @@ public class APIChatDownloadAndShare {
 			// TODO Auto-generated method stub
 			super.onPreExecute();
 			dialog = new ProgressDialog(mContext);
-			if(share)
-			{
+			if (share) {
 				dialog.setMessage("Please wait..");
-			}
-			else
-			{
-			dialog.setMessage("Downloading Chat History");
+			} else {
+				dialog.setMessage("Downloading Chat History");
 			}
 			dialog.show();
 		}
@@ -79,11 +78,11 @@ public class APIChatDownloadAndShare {
 			int count;
 			String TextFileDownloadURL = Constants.HTTP_SCHEME
 					+ Constants.CURRENT_SERVER
-					+ Constants.DOWNLOAD_CHAT_HISTORY_TEXT_ENDPOINT+"?";
+					+ Constants.DOWNLOAD_CHAT_HISTORY_TEXT_ENDPOINT + "?";
 
 			try {
 				URL url = new URL(TextFileDownloadURL + "sender=" + sender
-						+ "&receiver="+receiver);
+						+ "&receiver=" + receiver);
 				URLConnection conection = url.openConnection();
 				conection.connect();
 				// download the file
@@ -102,7 +101,7 @@ public class APIChatDownloadAndShare {
 				}
 				// Output stream
 				OutputStream output = new FileOutputStream(dir.toString() + "/"
-						+ receiver+ ".txt");
+						+ receiver + ".txt");
 
 				byte data[] = new byte[1024];
 
@@ -133,21 +132,23 @@ public class APIChatDownloadAndShare {
 			mTask = null;
 			dialog.dismiss();
 			if (result) {
-				File f = new File(dir.toString()+"/"+receiver+".txt");
-				if (share&&(f.exists())) {
-					/*Intent share = new Intent(Intent.ACTION_SEND);
-					share.setType("text/*");
-
-					share.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(f));
-					
-					share.putExtra(android.content.Intent.EXTRA_SUBJECT, "Subject Here");
-			        share.putExtra(android.content.Intent.EXTRA_TEXT, "Yookos Chat Messanger");
-					mContext.startActivity(Intent.createChooser(share,
-							"Share Chat"));*/
-			      onShareClick(f);
+				File f = new File(dir.toString() + "/" + receiver + ".txt");
+				if (share && (f.exists())) {
+					/*
+					 * Intent share = new Intent(Intent.ACTION_SEND);
+					 * share.setType("text/*");
+					 * 
+					 * share.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(f));
+					 * 
+					 * share.putExtra(android.content.Intent.EXTRA_SUBJECT,
+					 * "Subject Here");
+					 * share.putExtra(android.content.Intent.EXTRA_TEXT,
+					 * "Yookos Chat Messanger");
+					 * mContext.startActivity(Intent.createChooser(share,
+					 * "Share Chat"));
+					 */
+					onShareClick(f);
 				}
-				
-				 
 
 				TChatApplication.getContext().sendBroadcast(
 						new Intent(Constants.MESSAGE_READY));
@@ -163,52 +164,54 @@ public class APIChatDownloadAndShare {
 			return;
 		}
 	}
-	
+
 	public void onShareClick(File f) {
-	    Resources resources = mContext.getResources();
+		Resources resources = mContext.getResources();
 
-	    Intent emailIntent = new Intent();
-	    emailIntent.setAction(Intent.ACTION_SEND);
-	    // Native email client doesn't currently support HTML, but it doesn't hurt to try in case they fix it
-	    emailIntent.putExtra(Intent.EXTRA_TEXT, "Yookos Chat");
-	    emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Enter Subject");
-	    emailIntent.setType("message/rfc822");
+		Intent emailIntent = new Intent();
+		emailIntent.setAction(Intent.ACTION_SEND);
+		// Native email client doesn't currently support HTML, but it doesn't
+		// hurt to try in case they fix it
+		emailIntent.putExtra(Intent.EXTRA_TEXT, "Yookos Chat");
+		emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Enter Subject");
+		emailIntent.setType("message/rfc822");
+		emailIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(f));
+		PackageManager pm = mContext.getPackageManager();
+		Intent sendIntent = new Intent(Intent.ACTION_SEND);
+		sendIntent.setType("text/plain");
 
-	    PackageManager pm = mContext.getPackageManager();
-	    Intent sendIntent = new Intent(Intent.ACTION_SEND);     
-	    sendIntent.setType("text/plain");
+		Intent openInChooser = Intent.createChooser(emailIntent, "Share Chat");
 
-	    sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(f));
-		
-	    Intent openInChooser = Intent.createChooser(emailIntent, "Share Chat");
+		List<ResolveInfo> resInfo = pm.queryIntentActivities(sendIntent, 0);
+		List<LabeledIntent> intentList = new ArrayList<LabeledIntent>();
+		for (int i = 0; i < resInfo.size(); i++) {
+			// Extract the label, append it, and repackage it in a LabeledIntent
+			ResolveInfo ri = resInfo.get(i);
+			String packageName = ri.activityInfo.packageName;
+			if (packageName.contains("android.email")) {
+				emailIntent.setPackage(packageName);
+			} else if (packageName.contains("android.gm")) {
+				Intent intent = new Intent();
+				intent.setComponent(new ComponentName(packageName,
+						ri.activityInfo.name));
+				intent.setAction(Intent.ACTION_SEND);
+				intent.setType("text/plain");
 
-	    List<ResolveInfo> resInfo = pm.queryIntentActivities(sendIntent, 0);
-	    List<LabeledIntent> intentList = new ArrayList<LabeledIntent>();        
-	    for (int i = 0; i < resInfo.size(); i++) {
-	        // Extract the label, append it, and repackage it in a LabeledIntent
-	        ResolveInfo ri = resInfo.get(i);
-	        String packageName = ri.activityInfo.packageName;
-	        if(packageName.contains("android.email")) {
-	            emailIntent.setPackage(packageName);
-	        } else if(packageName.contains("android.gm")) {
-	            Intent intent = new Intent();
-	            intent.setComponent(new ComponentName(packageName, ri.activityInfo.name));
-	            intent.setAction(Intent.ACTION_SEND);
-	            intent.setType("text/plain");
-	            if(packageName.contains("android.gm")) {
-	                intent.putExtra(Intent.EXTRA_TEXT,"Yookos Chat");
-	                intent.putExtra(Intent.EXTRA_SUBJECT,"Enter Subject");               
-	                intent.setType("message/rfc822");
-	            }
+				intent.putExtra(Intent.EXTRA_TEXT, "Yookos Chat");
+				intent.putExtra(Intent.EXTRA_SUBJECT, "Enter Subject");
+				intent.setType("message/rfc822");
+				sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(f));
 
-	            intentList.add(new LabeledIntent(intent, packageName, ri.loadLabel(pm), ri.icon));
-	        }
-	    }
+				intentList.add(new LabeledIntent(intent, packageName, ri
+						.loadLabel(pm), ri.icon));
+			}
+		}
 
-	    // convert intentList to array
-	    LabeledIntent[] extraIntents = intentList.toArray( new LabeledIntent[ intentList.size() ]);
+		// convert intentList to array
+		LabeledIntent[] extraIntents = intentList
+				.toArray(new LabeledIntent[intentList.size()]);
 
-	    openInChooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, extraIntents);
-	    mContext.startActivity(openInChooser);       
+		openInChooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, extraIntents);
+		mContext.startActivity(openInChooser);
 	}
 }
