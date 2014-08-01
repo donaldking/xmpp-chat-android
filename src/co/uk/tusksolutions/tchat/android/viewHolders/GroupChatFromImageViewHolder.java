@@ -17,6 +17,6 @@ public class GroupChatFromImageViewHolder {
 		chatMessageFromUser = (RobotoLightTextView) v
 				.findViewById(R.id.chat_from_user);
 		chatMessageTimestampTextView = (RobotoLightTextView) v
-				.findViewById(R.id.chat_to_timestamp);
+				.findViewById(R.id.chat_from_timestamp);
 	}
 }

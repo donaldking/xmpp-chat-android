@@ -12,6 +12,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -77,6 +78,7 @@ public class GroupChatMessagesAdapter extends BaseAdapter {
 		 */
 		int rowType;
 		String message = null;
+		
 		try {
 			message = groupChatMessagesModelCollection.get(position).message;
 		} catch (Exception e) {
@@ -109,6 +111,7 @@ public class GroupChatMessagesAdapter extends BaseAdapter {
 				rowType = 1;
 			}
 		}
+		Log.e("return row type","rowtype "+rowType);
 		return rowType;
 	}
 
@@ -303,10 +306,16 @@ public class GroupChatMessagesAdapter extends BaseAdapter {
 
 			groupChatFromImageViewHolder.chatMessageFromUser
 					.setText(nameFrom_image);
-			groupChatFromImageViewHolder.chatMessageTimestampTextView
-					.setText(TimeAgo.getTimeAgo(
-							Long.parseLong(chatMessagesModel.timeStamp),
-							context));
+		    Log.e("chat model timestamp ","timestamp "+chatMessagesModel.timeStamp);
+			try {
+				groupChatFromImageViewHolder.chatMessageTimestampTextView
+						.setText(TimeAgo.getTimeAgo(
+								Long.parseLong(chatMessagesModel.timeStamp),
+								context));
+			} catch (NumberFormatException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			String path1 = getFirstImage(chatMessagesModel.message);
 
 			try {

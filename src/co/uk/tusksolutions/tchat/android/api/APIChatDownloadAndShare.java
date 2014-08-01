@@ -131,12 +131,14 @@ public class APIChatDownloadAndShare {
 					share.setType("text/*");
 
 					share.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(f));
-					share.putExtra(Intent.EXTRA_TEXT,
-							"" + mContext.getString(R.string.app_name));
-
+					
+					share.putExtra(android.content.Intent.EXTRA_SUBJECT, "Subject Here");
+			        share.putExtra(android.content.Intent.EXTRA_TEXT, "Yookos Chat Messanger");
 					mContext.startActivity(Intent.createChooser(share,
 							"Share Chat"));
 				}
+				
+				 
 
 				TChatApplication.getContext().sendBroadcast(
 						new Intent(Constants.MESSAGE_READY));
