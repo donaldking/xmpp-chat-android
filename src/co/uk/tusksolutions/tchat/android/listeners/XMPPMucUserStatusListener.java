@@ -7,6 +7,12 @@ import co.uk.tusksolutions.tchat.android.models.GroupsModel;
 
 public class XMPPMucUserStatusListener implements UserStatusListener {
 
+	public String roomId;
+	
+	public XMPPMucUserStatusListener(String roomId){
+		this.roomId = roomId;
+	}
+	
 	@Override
 	public void adminGranted() {
 		// TODO Auto-generated method stub
@@ -32,7 +38,7 @@ public class XMPPMucUserStatusListener implements UserStatusListener {
 		/*
 		 * Called when we are booted from a room
 		 */
-		Log.d("kicked", "Kicked from room " + owner + " - " + reason);
+		Log.d("kicked", "Kicked from room " + owner + " - " + reason + " Room ID: " + roomId);
 		GroupsModel.joinAllGroups();
 	}
 
@@ -44,8 +50,7 @@ public class XMPPMucUserStatusListener implements UserStatusListener {
 
 	@Override
 	public void membershipRevoked() {
-		// TODO Auto-generated method stub
-
+		Log.d("membershipRevoked", "Membership revoked from room ");
 	}
 
 	@Override

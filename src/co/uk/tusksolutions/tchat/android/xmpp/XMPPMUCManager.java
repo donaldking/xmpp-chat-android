@@ -17,7 +17,6 @@ import android.util.Log;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.api.APIClearChatHistory;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
-import co.uk.tusksolutions.tchat.android.listeners.XMPPMucParticipantsListener;
 import co.uk.tusksolutions.tchat.android.listeners.XMPPMucSubjectUpdatedListener;
 import co.uk.tusksolutions.tchat.android.listeners.XMPPMucUserStatusListener;
 import co.uk.tusksolutions.tchat.android.models.GroupsModel;
@@ -87,7 +86,6 @@ public class XMPPMUCManager {
 		try {
 			// multiUserChat.create(nickname);
 			multiUserChat.join(nickname);
-		
 
 		} catch (Exception e) {
 			Log.e(TAG, "MUC creation failed: ");
@@ -162,22 +160,13 @@ public class XMPPMUCManager {
 
 		for (RosterModel rosterModel : friendArrayList) {
 			try {
-				try {
-					/*
-					 * Try to kick the user if they are online
-					 */
-					muc.kickParticipant(
-							StringUtils.parseName(rosterModel.user), "");
-					muc.revokeMembership(rosterModel.user);
-				} catch (Exception e) {
-
-					e.printStackTrace();
-				}
 				/*
-				 * Ban the user from joining the room again
+				 * Try to kick the user if they are online
 				 */
-				muc.banUser(rosterModel.user, "");
-			} catch (XMPPException e) {
+				muc.kickParticipant(StringUtils.parseName(rosterModel.user), "");
+
+			} catch (Exception e) {
+
 				e.printStackTrace();
 			}
 		}
@@ -194,14 +183,12 @@ public class XMPPMUCManager {
 		}
 
 		MultiUserChat muc = mRooms.get(roomJID);
-
 		try {
 			// Use DiscussionHistory here and specify how many messages you want
 			// to receive.
 			muc.join(nickname, password, null, JOIN_TIMEOUT);
-			muc.addParticipantStatusListener(new XMPPMucParticipantsListener());
 			muc.addSubjectUpdatedListener(new XMPPMucSubjectUpdatedListener());
-			muc.addUserStatusListener(new XMPPMucUserStatusListener());
+			muc.addUserStatusListener(new XMPPMucUserStatusListener(roomJID));
 
 			// registerRoom(muc, roomJID,
 			// MyRoom.getRoomNameFromRoomJID(roomJID), password);
@@ -239,35 +226,37 @@ public class XMPPMUCManager {
 			 */
 			switch (e.getXMPPError().getCode()) {
 			case 403:
-				Log.i(TAG, "User banned from room with ID: " + roomJID);
-				// Delete all conversation with this group
-				APIClearChatHistory apiClearChatHisoryObject = new APIClearChatHistory();
-				apiClearChatHisoryObject.doClearChatHistory(TChatApplication
-						.getContext(), TChatApplication.getUserModel()
-						.getUsername(), roomJID);
-				
-				// Delete group from local db
-				if(GroupsModel.deleteGroup(roomJID)){
-					// Send broadcast to GroupChatActivity
-					try {
-						Intent i = new Intent();
-						i.putExtra("bannedRoomJid", roomJID);
-						i.setAction(Constants.BANNED_FROM_ROOM);
-						TChatApplication.getContext().sendBroadcast(i);
-					} catch (Exception exp) {
-
-						exp.printStackTrace();
-					}
-					
-				}
-
-
+				this.iAmKickedFromThisRoom(roomJID);
 				break;
 
 			default:
 				break;
 			}
 			Log.e(TAG, e.getLocalizedMessage());
+		}
+	}
+
+	public void iAmKickedFromThisRoom(String roomJID) {
+		Log.i(TAG, "User banned from room with ID: " + roomJID);
+		// Delete all conversation with this group
+		APIClearChatHistory apiClearChatHisoryObject = new APIClearChatHistory();
+		apiClearChatHisoryObject.doClearChatHistory(TChatApplication
+				.getContext(), TChatApplication.getUserModel().getUsername(),
+				roomJID);
+
+		// Delete group from local db
+		if (GroupsModel.deleteGroup(roomJID)) {
+			// Send broadcast to GroupChatActivity
+			try {
+				Intent i = new Intent();
+				i.putExtra("bannedRoomJid", roomJID);
+				i.setAction(Constants.BANNED_FROM_ROOM);
+				TChatApplication.getContext().sendBroadcast(i);
+			} catch (Exception exp) {
+
+				exp.printStackTrace();
+			}
+
 		}
 	}
 
