@@ -148,9 +148,15 @@ public class ChatMessagesAdapter extends BaseAdapter {
 			} else {
 				chatFromViewHolder = (ChatFromViewHolder) row.getTag();
 			}
-
+			if ((chatMessagesModel.message!=null)&&chatMessagesModel.message.contains("href=")) {
+				chatFromViewHolder.chatMessageTextView
+				.setText(Html.fromHtml(chatMessagesModel.message));
+			}
+			else
+			{
 			chatFromViewHolder.chatMessageTextView
 					.setText(chatMessagesModel.message);
+			}
 			// }
 			chatFromViewHolder.chatMessageTimestampTextView.setText(TimeAgo
 					.getTimeAgo(Long.parseLong(chatMessagesModel.timeStamp),
@@ -173,24 +179,18 @@ public class ChatMessagesAdapter extends BaseAdapter {
 			}
           
 			
-			if((chatMessagesModel.message!=null)&&chatMessagesModel.message.contains("src="))
+		
+			if ((chatMessagesModel.message!=null)&&chatMessagesModel.message.contains("href=")) {
+				// Spanned spanned = Html.fromHtml(a);
+
+				Log.e("In ChatListAdaptter", chatMessagesModel.message);
+
+				chatToViewHolder.chatMessageTextView.setText(Html.fromHtml(chatMessagesModel.message));
+			} 
+			else
 			{
-				chatToViewHolder.uploadimage.setVisibility(View.GONE);
-				String path1 = getFirstImage(chatMessagesModel.message);
-
-				try {
-					UrlImageViewHelper.setUrlDrawable(
-							chatToViewHolder.uploadimage, path1,
-							R.drawable.camera_focus_box);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+			chatToViewHolder.chatMessageTextView.setText(chatMessagesModel.message);
 			}
-
-			chatToViewHolder.chatMessageTextView
-
-			.setText(chatMessagesModel.message);
-
 			chatToViewHolder.chatMessageTimestampTextView.setText(TimeAgo
 					.getTimeAgo(Long.parseLong(chatMessagesModel.timeStamp),
 							context));
