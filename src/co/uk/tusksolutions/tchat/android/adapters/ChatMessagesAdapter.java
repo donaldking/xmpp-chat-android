@@ -12,6 +12,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.text.Html;
+import android.text.util.Linkify;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -150,7 +151,7 @@ public class ChatMessagesAdapter extends BaseAdapter {
 			}
 			if ((chatMessagesModel.message!=null)&&chatMessagesModel.message.contains("href=")) {
 				chatFromViewHolder.chatMessageTextView
-				.setText(Html.fromHtml(chatMessagesModel.message));
+				.setText((Html.fromHtml(chatMessagesModel.message)));
 			}
 			else
 			{

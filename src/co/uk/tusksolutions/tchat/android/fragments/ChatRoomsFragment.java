@@ -1,7 +1,9 @@
 package co.uk.tusksolutions.tchat.android.fragments;
 
 import co.uk.tusksolutions.tchat.android.R;
+import co.uk.tusksolutions.tchat.android.R.id;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
+import co.uk.tusksolutions.tchat.android.activities.CreateChatRoomActivity;
 import co.uk.tusksolutions.tchat.android.adapters.RosterContentAdapter;
 import co.uk.tusksolutions.tchat.android.fragments.RosterFragment.RosterReceiver;
 import co.uk.tusksolutions.tchat.android.listeners.XMPPPresenceListener;
@@ -9,6 +11,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
@@ -35,7 +38,7 @@ public class ChatRoomsFragment extends Fragment {
 	private static int ALL_CHATROOM_QUERY_ACTION = 1; // See adapter for notes
 	private int ACTIVE_CHATROOM_QUERY_ACTION = 2; // See adapter for notes
 	private RadioButton allchatroomButton, activechatroomButton,
-			scheduledchatroomButton;
+			scheduledchatroomButton,createchatroomButton;
 	private Bundle instanceState;
 
 	@Override
@@ -78,6 +81,8 @@ public class ChatRoomsFragment extends Fragment {
 				.setOnClickListener(new SegmentButtonOnClickListener());
 		scheduledchatroomButton = (RadioButton) rootView
 				.findViewById(R.id.scheduled_chatroom_button);
+		createchatroomButton=(RadioButton)rootView.findViewById(R.id.create_chatroom_button);
+		createchatroomButton.setOnClickListener(new SegmentButtonOnClickListener());
 
 	}
 
@@ -118,6 +123,10 @@ public class ChatRoomsFragment extends Fragment {
 				break;
 			case R.id.create_chatroom_button:
 				//To create a chat room
+				
+				Intent intent=new Intent(TChatApplication.getContext(),CreateChatRoomActivity.class);
+				startActivity(intent);
+			
 				break;
 
 			default:

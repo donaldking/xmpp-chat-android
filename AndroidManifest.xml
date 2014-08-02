@@ -74,6 +74,11 @@
             android:launchMode="singleTop"
             android:noHistory="true" >
         </activity>
+        <activity
+            android:name="co.uk.tusksolutions.tchat.android.activities.CreateChatRoomActivity"
+            android:launchMode="singleTop"
+            android:noHistory="true" >
+        </activity>
 
         <!-- Receivers -->
         <receiver
