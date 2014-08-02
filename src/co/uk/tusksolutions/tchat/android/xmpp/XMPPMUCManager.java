@@ -188,7 +188,6 @@ public class XMPPMUCManager {
 			// Use DiscussionHistory here and specify how many messages you want
 			// to receive.
 			muc.join(nickname, password, null, JOIN_TIMEOUT);
-			muc.addSubjectUpdatedListener(new XMPPMucSubjectUpdatedListener());
 			muc.addUserStatusListener(new XMPPMucUserStatusListener(roomJID));
 
 			// registerRoom(muc, roomJID,
