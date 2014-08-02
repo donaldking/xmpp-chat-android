@@ -283,6 +283,13 @@ public class GroupChatActivity extends ActionBarActivity {
 		 * SELECT_FILE); break;
 		 */
 		case R.id.group_add_people:
+			Intent addPeopleIntent = new Intent(TChatApplication.getContext(),
+					GroupParticipantsActivity.class); // Change to people selction
+			Bundle addPeopleBundle = new Bundle();
+			addPeopleBundle.putString("group_id", group_id);
+			addPeopleIntent.putExtras(addPeopleBundle);
+			startActivity(addPeopleIntent);
+			
 			break;
 		case R.id.group_remove_people:
 			Intent i = new Intent(TChatApplication.getContext(),

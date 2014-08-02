@@ -149,6 +149,21 @@ public class XMPPMUCManager {
 		return muc;
 	}
 
+	/**
+	 * Invites buddy to group
+	 * @param buddyJID
+	 * @param group_name
+	 * @param roomJID
+	 */
+	public void inviteBuddyToGroup(String buddyJID, String group_name,
+			String roomJID) {
+		MultiUserChat muc;
+		muc = mRooms.get(roomJID);
+		if (muc != null) {
+			muc.invite(buddyJID, group_name);
+		}
+	}
+
 	public boolean kickFromRoom(Connection conn,
 			ArrayList<RosterModel> friendArrayList, String roomJID) {
 		/**
