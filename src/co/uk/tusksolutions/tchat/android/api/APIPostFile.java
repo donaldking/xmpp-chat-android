@@ -117,7 +117,12 @@ public class APIPostFile {
 					XMPPChatMessageManager.sendMessage(receiver, buddyName, link,
 							0, "FileTransfer", mid);
 					receiver=receiver.replace("@"+Constants.CURRENT_SERVER, "");
-					GroupChatActivity.showProgressUpload(false);
+					try {
+						GroupChatActivity.showProgressUpload(false);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
                 
 				APICloudStorage cloudStorage = new APICloudStorage();

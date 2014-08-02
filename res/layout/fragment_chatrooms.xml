@@ -2,13 +2,132 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white" >
+    android:background="@color/white"
+    tools:context="${packageName}.${activityClass}" >
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:text="@string/fragment_chatrooms" />
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical" >
+
+        <!-- Segment Buttons Layout start -->
+
+        <LinearLayout
+            android:id="@+id/chatrooms_segment_view_frame"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/very_light_grey"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="15dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp" >
+
+            <info.hoang8f.android.segmented.SegmentedGroup
+                android:id="@+id/chatrooms_segment_button_group"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="10dp" >
+
+                <RadioButton
+                    android:id="@+id/all_chatroom_button"
+                    style="@style/RadioButton"
+                    android:layout_width="fill_parent"
+                    android:layout_height="33dp"
+                    android:layout_weight="1"
+                    android:checked="true"
+                    android:text="All" />
+
+                <RadioButton
+                    android:id="@+id/active_chatroom_button"
+                    style="@style/RadioButton"
+                    android:layout_width="fill_parent"
+                    android:layout_height="33dp"
+                    android:layout_weight="1"
+                    android:text="Active" />
+
+                <RadioButton
+                    android:id="@+id/scheduled_chatroom_button"
+                    style="@style/RadioButton"
+                    android:layout_width="fill_parent"
+                    android:layout_height="33dp"
+                    android:layout_weight="1"
+                    android:text="Scheduled" />
+            </info.hoang8f.android.segmented.SegmentedGroup>
+        </LinearLayout>
+
+        <!-- Segment Buttons Layout end -->
+
+        <LinearLayout
+            android:id="@+id/chatroom_list_view_frame"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@color/white"
+            android:orientation="vertical" >
+
+            <ListView
+                android:id="@+id/list_view"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:cacheColorHint="@color/white"
+                android:divider="@null"
+                android:dividerHeight="0dp"
+                android:fastScrollAlwaysVisible="true"
+                android:fastScrollEnabled="true"
+                android:scrollingCache="true"
+                android:visibility="visible" />
+        </LinearLayout>
+
+       
+    </LinearLayout>
+
+    <!-- Loading progress start -->
+
+    <LinearLayout
+        android:id="@+id/chatroom_loading_view"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp" />
+    </LinearLayout>
+
+     <LinearLayout
+            android:id="@+id/create_chatrooms"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/very_light_grey"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="15dp"
+            android:layout_alignParentBottom="true"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp" >
+        
+          <info.hoang8f.android.segmented.SegmentedGroup
+                android:id="@+id/chatrooms_segment_button_group"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="10dp" >
+
+                <RadioButton
+                    android:id="@+id/create_chatroom_button"
+                    style="@style/RadioButton"
+                    android:layout_width="fill_parent"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:checked="true"
+                    android:text="Create New" />
+                </info.hoang8f.android.segmented.SegmentedGroup>
+        </LinearLayout>
+    <!-- Loading progress end -->
 
 </RelativeLayout>

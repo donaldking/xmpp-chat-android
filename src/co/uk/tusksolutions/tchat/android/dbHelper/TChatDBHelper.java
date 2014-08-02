@@ -23,6 +23,7 @@ public class TChatDBHelper extends SQLiteOpenHelper {
 	public static final String CHAT_MESSAGES_TABLE = "CHAT_MESSAGES_TABLE";
 	public static final String GROUP_CHAT_MESSAGES_TABLE = "GROUP_CHAT_MESSAGES_TABLE";
 	public static final String RECENTS_TABLE = "RECENTS_TABLE";
+	public static final String CHATROOMS_TABLE="CHATROOMS_TABLE";
 
 	/*
 	 * Profile table definition
@@ -89,6 +90,19 @@ public class TChatDBHelper extends SQLiteOpenHelper {
 	public static final String G_PARTICIPANTS = "participants";
 	public static final String G_TIMESTAMP = "time_stamp";
 
+	/*
+	 * Chat Room table definition
+	 */
+   public static final String CR_UID="_id";
+   public static final String CR_CHATROOM_ID="chatroom_id";
+   public static final String CR_ADMIN="chatroom_admin";
+   public static final String CR_CHATROOM_NAME="chatroom_name";
+   public static final String CR_PARTICIPANTS="participants";
+   public static final String CR_START_TIMESTAMP="start_timestamp";
+   public static final String CR_END_TIMESTAMP="end_timestamp";
+   public static final String CR_CREATED_AT="created_at";
+   public static final String CR_STATUS="staus";
+	
 	public TChatDBHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 
@@ -163,6 +177,15 @@ public class TChatDBHelper extends SQLiteOpenHelper {
 			+ " varchar(255) UNIQUE," + G_ADMIN + " varchar(255) DEFAULT NULL,"
 			+ G_GROUP_NAME + " varchar(255) DEFAULT NULL," + G_PARTICIPANTS
 			+ " blob," + G_TIMESTAMP + " varchar(255) DEFAULT NULL);";
+	/*
+	 * Chat room table schema definition
+	 */
+	private static final String CREATE_CHATROOMS_TABLE = "CREATE TABLE "
+			+ CHATROOMS_TABLE + " ( " + CR_UID
+			+ " INTEGER PRIMARY KEY AUTOINCREMENT," + CR_CHATROOM_ID
+			+ " varchar(255) UNIQUE," + CR_CHATROOM_NAME + " varchar(255) DEFAULT NULL,"
+			+ CR_CHATROOM_NAME + " varchar(255) DEFAULT NULL," + CR_PARTICIPANTS
+			+ " blob," + CR_START_TIMESTAMP + " varchar(255) DEFAULT NULL," + CR_END_TIMESTAMP + " varchar(255) DEFAULT NULL," +CR_CREATED_AT + " varchar(255) DEFAULT NULL," + CR_STATUS + "varchar(255) DEFAULT NULL);";
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
@@ -172,6 +195,7 @@ public class TChatDBHelper extends SQLiteOpenHelper {
 			db.execSQL(CREATE_CHAT_MESSAGES_TABLE);
 			db.execSQL(CREATE_RECENTS_MESSAGES_TABLE);
 			db.execSQL(CREATE_GROUPS_TABLE);
+			db.execSQL(CREATE_CHATROOMS_TABLE);
 
 		} catch (SQLException e) {
 
