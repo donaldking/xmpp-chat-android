@@ -183,9 +183,9 @@ public class TChatDBHelper extends SQLiteOpenHelper {
 	private static final String CREATE_CHATROOMS_TABLE = "CREATE TABLE "
 			+ CHATROOMS_TABLE + " ( " + CR_UID
 			+ " INTEGER PRIMARY KEY AUTOINCREMENT," + CR_CHATROOM_ID
-			+ " varchar(255) UNIQUE," + CR_CHATROOM_NAME + " varchar(255) DEFAULT NULL,"
+			+ " varchar(255) UNIQUE," + CR_ADMIN + " varchar(255) DEFAULT NULL,"
 			+ CR_CHATROOM_NAME + " varchar(255) DEFAULT NULL," + CR_PARTICIPANTS
-			+ " blob," + CR_START_TIMESTAMP + " varchar(255) DEFAULT NULL," + CR_END_TIMESTAMP + " varchar(255) DEFAULT NULL," +CR_CREATED_AT + " varchar(255) DEFAULT NULL," + CR_STATUS + "varchar(255) DEFAULT NULL);";
+			+ " blob," + CR_START_TIMESTAMP + " varchar(255) DEFAULT NULL," + CR_END_TIMESTAMP + " varchar(255) DEFAULT NULL," + CR_CREATED_AT + " varchar(255) DEFAULT NULL," + CR_STATUS + " varchar(255) DEFAULT NULL);";
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
