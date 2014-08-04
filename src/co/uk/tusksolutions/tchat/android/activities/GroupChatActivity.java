@@ -151,8 +151,9 @@ public class GroupChatActivity extends ActionBarActivity {
 													// (me)
 		filter.addAction(Constants.MESSAGE_RECEIVED); // From
 														// Receiver
-		filter.addAction(Constants.BANNED_FROM_ROOM); // In case we are banned from this room
-		
+		filter.addAction(Constants.BANNED_FROM_ROOM); // In case we are banned
+														// from this room
+
 		// (buddy)
 		registerReceiver(mGroupChatMessageReceiver, filter);
 
@@ -284,20 +285,22 @@ public class GroupChatActivity extends ActionBarActivity {
 		 */
 		case R.id.group_add_people:
 			Intent addPeopleIntent = new Intent(TChatApplication.getContext(),
-					GroupParticipantsActivity.class); // Change to people selction
+					GroupParticipantsAddActivity.class); // Change to people
+														// selction
 			Bundle addPeopleBundle = new Bundle();
 			addPeopleBundle.putString("group_id", group_id);
 			addPeopleIntent.putExtras(addPeopleBundle);
 			startActivity(addPeopleIntent);
-			
+
 			break;
 		case R.id.group_remove_people:
-			Intent i = new Intent(TChatApplication.getContext(),
-					GroupParticipantsActivity.class);
-			Bundle b = new Bundle();
-			b.putString("group_id", group_id);
-			i.putExtras(b);
-			startActivity(i);
+			Intent removePeopleIntent = new Intent(
+					TChatApplication.getContext(),
+					GroupParticipantsRemoveActivity.class);
+			Bundle removePeopleBundle = new Bundle();
+			removePeopleBundle.putString("group_id", group_id);
+			removePeopleIntent.putExtras(removePeopleBundle);
+			startActivity(removePeopleIntent);
 
 			break;
 		case R.id.group_download_chat_history:
@@ -336,14 +339,14 @@ public class GroupChatActivity extends ActionBarActivity {
 				Toast.makeText(GroupChatActivity.this,
 						"Sending Image please wait", Toast.LENGTH_SHORT).show();
 				if (data != null) {
-                   
+
 					Uri imagepath = data.getData();
 
 					Log.e("TAG", "scheme " + imagepath.getScheme());
 					if (imagepath.getScheme().contains("content")) {
 
 						try {
-							 showProgressUpload(true);
+							showProgressUpload(true);
 							String name = "Temp_" + System.currentTimeMillis()
 									+ ".jpg";
 							File f = new File(TChatApplication.getContext()
@@ -366,7 +369,7 @@ public class GroupChatActivity extends ActionBarActivity {
 						}
 
 					} else {
-						 showProgressUpload(true);
+						showProgressUpload(true);
 						String selectedFile = getRealPathFromURI(data.getData());
 						// showProgressUpload(true);
 						saveToDB(roomJid, selectedFile, 0, "FileTransfer");
@@ -526,7 +529,7 @@ public class GroupChatActivity extends ActionBarActivity {
 					Toast.makeText(context,
 							"You have been kicked from this room",
 							Toast.LENGTH_LONG).show();
-				finish();
+					finish();
 				}
 			}
 		}
