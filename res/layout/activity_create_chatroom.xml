@@ -4,99 +4,74 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <co.uk.tusksolutions.extensions.RobotoRegularTextView
-        android:id="@+id/robotoRegularTextView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_margin="10dp"
-        android:text="Chatroom Name" />
+    <FrameLayout
+        android:id="@+id/frame_text"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+        <co.uk.tusksolutions.extensions.RobotoLightTextView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@color/light_grey"
+            android:gravity="center"
+            android:padding="15dp"
+            android:text="Schedule a Chat Room for a future date. Once the Chat Room is started, a maximum of 20 people can Join."
+            android:textColor="@color/dark_grey"
+            android:textSize="15sp" />
+    </FrameLayout>
 
     <EditText
         android:id="@+id/chatroom_name"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/robotoRegularTextView1"
-        android:layout_alignRight="@+id/linearLayout1"
-        android:layout_below="@+id/robotoRegularTextView1"
-        android:ems="10"
-       
+        android:layout_below="@id/frame_text"
+        android:layout_marginTop="20dp"
+        android:hint="Chatroom Name"
         android:inputType="textPersonName" >
     </EditText>
 
-    <co.uk.tusksolutions.extensions.RobotoRegularTextView
-        android:id="@+id/robotoRegularTextView2"
-        android:layout_width="wrap_content"
+    <EditText
+        android:id="@+id/start_date"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/chatroom_name"
-        android:layout_below="@+id/chatroom_name"
-        android:layout_marginTop="16dp"
-        android:text="Scheduled For:" />
+        android:layout_below="@id/chatroom_name"
+        android:layout_marginTop="20dp"
+        android:hint="Date"
+        android:inputType="textPersonName" >
+    </EditText>
 
     <LinearLayout
         android:id="@+id/create_date_time_layout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/robotoRegularTextView2"
-        android:layout_margin="10dp"
+        android:layout_below="@id/start_date"
+        android:layout_marginTop="20dp"
         android:weightSum="2" >
 
         <EditText
-            android:id="@+id/date_chatroom"
+            android:id="@+id/start_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/robotoRegularTextView2"
-            android:layout_toLeftOf="@+id/time_chatroom"
+            android:layout_toLeftOf="@+id/end_time"
             android:layout_weight="1"
             android:ems="10"
-            android:hint="Date"
             android:focusable="false"
+            android:hint="Start Time"
             android:inputType="date" >
         </EditText>
 
         <EditText
-            android:id="@+id/time_chatroom"
+            android:id="@+id/end_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/date_chatroom"
+            android:layout_alignBottom="@+id/start_time"
             android:layout_alignParentRight="true"
             android:layout_weight="1"
             android:ems="10"
-            android:hint="Time"
             android:focusable="false"
+            android:hint="End Time"
             android:inputType="time" />
     </LinearLayout>
-    
-   <!--   <LinearLayout
-            android:id="@+id/create_chatrooms_layout"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/very_light_grey"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:padding="15dp"
-            android:layout_below="@id/create_date_time_layout"
-            android:layout_alignParentBottom="true"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp" >
-        
-          <info.hoang8f.android.segmented.SegmentedGroup
-                android:id="@+id/chatrooms_segment_button_group"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="10dp" >
 
-                <RadioButton
-                    android:id="@+id/create_chatroom_done"
-                    style="@style/RadioButton"
-                    android:layout_width="fill_parent"
-                    android:layout_height="40dp"
-                    android:layout_weight="1"
-                    android:checked="true"
-                    android:text="Create" />
-                </info.hoang8f.android.segmented.SegmentedGroup>
-        </LinearLayout>
- -->
 </RelativeLayout>

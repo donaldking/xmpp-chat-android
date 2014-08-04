@@ -21,7 +21,9 @@ import android.view.View.OnClickListener;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
+import android.widget.Toast;
 import co.uk.tusksolutions.tchat.android.R;
+import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.api.APICreateChatrooms;
 import co.uk.tusksolutions.tchat.android.tasks.CreateChatroomAsyncTask;
 import co.uk.tusksolutions.tchat.android.tasks.CreateChatroomAsyncTask.OnCreateChatroomListener;
@@ -31,7 +33,8 @@ public class CreateChatRoomActivity extends ActionBarActivity implements
 
 	private EditText chatroomName;
 	private EditText inputDate;
-	private EditText inputTime;
+	private EditText inputStartTime;
+	private EditText inputEndTime;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -44,11 +47,12 @@ public class CreateChatRoomActivity extends ActionBarActivity implements
 		getSupportActionBar().setTitle("Schedule Chatroom");
 
 		chatroomName = (EditText) findViewById(R.id.chatroom_name);
-		inputDate = (EditText) findViewById(R.id.date_chatroom);
-		inputTime = (EditText) findViewById(R.id.time_chatroom);
+		inputDate = (EditText) findViewById(R.id.start_date);
+		inputStartTime = (EditText) findViewById(R.id.start_time);
+		inputEndTime = (EditText) findViewById(R.id.end_time);
 		inputDate.setKeyListener(null);
-		inputTime.setKeyListener(null);
-
+		inputStartTime.setKeyListener(null);
+		inputEndTime.setKeyListener(null);
 		inputDate.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -57,12 +61,20 @@ public class CreateChatRoomActivity extends ActionBarActivity implements
 				showStartDateDialog(v);
 			}
 		});
-		inputTime.setOnClickListener(new OnClickListener() {
+		inputStartTime.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				showStartTimeDialog(v);
+			}
+		});
+		inputEndTime.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				showEndTimeDialog(v);
 			}
 		});
 	}
@@ -77,6 +89,12 @@ public class CreateChatRoomActivity extends ActionBarActivity implements
 		FragmentManager fm = getSupportFragmentManager();
 		DialogFragment dialogFragment = new StartTimePicker();
 		dialogFragment.show(fm, "start_time_picker");
+	}
+
+	public void showEndTimeDialog(View v) {
+		FragmentManager fm = getSupportFragmentManager();
+		DialogFragment dialogFragment = new EndTimePicker();
+		dialogFragment.show(fm, "end_time_picker");
 	}
 
 	@Override
@@ -98,7 +116,6 @@ public class CreateChatRoomActivity extends ActionBarActivity implements
 			if ((chatroomName.getText().toString() != null)
 					&& (!chatroomName.getText().toString().equalsIgnoreCase(""))) {
 				String chatroom = chatroomName.getText().toString();
-				
 
 				new CreateChatroomAsyncTask(this, chatroom, this).execute();
 			}
@@ -113,6 +130,8 @@ public class CreateChatRoomActivity extends ActionBarActivity implements
 	int startDay = c.get(Calendar.DAY_OF_MONTH);
 	int hour = c.get(Calendar.HOUR_OF_DAY);
 	int minutes = c.get(Calendar.MINUTE);
+	int endhours = c.get(Calendar.HOUR_OF_DAY);
+	int endminutes = c.get(Calendar.MINUTE);
 
 	class StartDatePicker extends DialogFragment implements
 			DatePickerDialog.OnDateSetListener {
@@ -164,6 +183,31 @@ public class CreateChatRoomActivity extends ActionBarActivity implements
 
 	}
 
+	class EndTimePicker extends DialogFragment implements
+			TimePickerDialog.OnTimeSetListener {
+		@Override
+		public Dialog onCreateDialog(Bundle savedInstanceState) {
+			// TODO Auto-generated method stub
+			// Use the current date as the default date in the picker
+
+			TimePickerDialog dialog = new TimePickerDialog(
+					CreateChatRoomActivity.this, this, endhours, endminutes,
+					false);
+
+			return dialog;
+
+		}
+
+		@Override
+		public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+			// TODO Auto-generated method stub
+			endhours = hourOfDay;
+			endminutes = minute;
+			updateEndTimeDisplay();
+		}
+
+	}
+
 	public void updateStartDateDisplay() {
 		// TODO Auto-generated method stub
 		Calendar c = Calendar.getInstance();
@@ -188,11 +232,28 @@ public class CreateChatRoomActivity extends ActionBarActivity implements
 		c.setTime(date);
 
 		String formattedTate = sdf.format(c.getTime());
-		inputTime.setText(formattedTate);
+		inputStartTime.setText(formattedTate);
 
 	}
 
-	int componentTimeToTimestamp(int year, int month, int day, int hour,
+	public void updateEndTimeDisplay() {
+		// TODO Auto-generated method stub
+
+		SimpleDateFormat sdf = new SimpleDateFormat("hh:ss");
+		Date date = null;
+		try {
+			date = sdf.parse(endhours + ":" + endminutes);
+		} catch (ParseException e) {
+		}
+		Calendar c = Calendar.getInstance();
+		c.setTime(date);
+
+		String formattedTate = sdf.format(c.getTime());
+		inputEndTime.setText(formattedTate);
+
+	}
+
+	long componentTimeToTimestamp(int year, int month, int day, int hour,
 			int minute) {
 
 		Calendar c = Calendar.getInstance();
@@ -204,22 +265,33 @@ public class CreateChatRoomActivity extends ActionBarActivity implements
 		c.set(Calendar.SECOND, 0);
 		c.set(Calendar.MILLISECOND, 0);
 
-		return (int) (c.getTimeInMillis() / 1000L);
+		return (c.getTimeInMillis());
 	}
 
 	@Override
-	public void onCreatechatroomSuccess(String room, String roomjid) {
+	public void onCreatechatroomSuccess(String chatroom_name, String chatroomjid) {
 		// TODO Auto-generated method stub
-		Log.v("CreateChatroom", "Successfully chatroom created " + room
-				+ " JID " + roomjid);
-		
-		//APICreateChatrooms apiCreateChatrooms=new APICreateChatrooms();
-		//apiCreateChatrooms.doPostChatroom(chatroom_id, chatroom_name, chatroom_owner, start_timestamp, end_timestamp, status, max_guest, created_at);
+		Log.v("CreateChatroom", "Successfully chatroom created "
+				+ chatroom_name + " JID " + chatroomjid);
+		long start_timestamp = componentTimeToTimestamp(startYear, startMonth,
+				startDay, hour, minutes);
+		long end_timestamp = componentTimeToTimestamp(startYear, startMonth,
+				startDay, endhours, endminutes);
+		long created_at = System.currentTimeMillis();
+		String status = "future";
+		String max_guest = "50";
+
+		APICreateChatrooms apiCreateChatrooms = new APICreateChatrooms();
+		apiCreateChatrooms.doPostChatroom(chatroomjid, chatroom_name,
+				TChatApplication.getUserModel().getUsername(),
+				String.valueOf(start_timestamp), String.valueOf(end_timestamp),
+				status, max_guest, String.valueOf(created_at));
 	}
 
 	@Override
 	public void onCreateChatroomFailed(boolean alreadyExists, String message) {
 		// TODO Auto-generated method stub
 		Log.v("CreateChatroom", "Failed chatroom " + message);
+		Toast.makeText(CreateChatRoomActivity.this, "Chatroom creation failed",Toast.LENGTH_SHORT).show();
 	}
 }
