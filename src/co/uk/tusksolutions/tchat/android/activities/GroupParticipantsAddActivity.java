@@ -18,6 +18,7 @@ import android.widget.ListView;
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.adapters.GroupFriendsSelectionAdapter;
+import co.uk.tusksolutions.tchat.android.enums.AddOrRemoveEnum;
 import co.uk.tusksolutions.tchat.android.models.RosterModel;
 import co.uk.tusksolutions.tchat.android.tasks.AddPeopleToGroup;
 import co.uk.tusksolutions.tchat.android.tasks.AddPeopleToGroup.OnAddPeopleMUCListener;
@@ -64,9 +65,9 @@ public class GroupParticipantsAddActivity extends ActionBarActivity implements
 			participants = TChatApplication.getGroupsModel().getParticipants(
 					groupId);
 			if (participants != null) {
-				existingUsersModel = mAdapter; // Create a new constructor and pass participants to this adapter for removal
+				//existingUsersModel = mAdapter; // Create a new constructor and pass participants to this adapter for removal
 				mAdapter = new GroupFriendsSelectionAdapter(
-						TChatApplication.getContext(), participants);
+						TChatApplication.getContext(), participants, AddOrRemoveEnum.ADD_PEOPLE);
 				listView.setAdapter(mAdapter);
 			}
 		}

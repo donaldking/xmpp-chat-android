@@ -21,6 +21,7 @@ import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.adapters.GroupFriendsSelectionAdapter;
 import co.uk.tusksolutions.tchat.android.api.APIDeleteGroup;
+import co.uk.tusksolutions.tchat.android.enums.AddOrRemoveEnum;
 import co.uk.tusksolutions.tchat.android.models.GroupsModel;
 import co.uk.tusksolutions.tchat.android.models.RosterModel;
 import co.uk.tusksolutions.tchat.android.tasks.RemovePeopleFromGroup;
@@ -69,7 +70,7 @@ public class GroupParticipantsRemoveActivity extends ActionBarActivity implement
 					groupId);
 			if (participants != null) {
 				mAdapter = new GroupFriendsSelectionAdapter(
-						TChatApplication.getContext(), participants);
+						TChatApplication.getContext(), participants, AddOrRemoveEnum.REMOVE_PEOPLE);
 				listView.setAdapter(mAdapter);
 			}
 		}
