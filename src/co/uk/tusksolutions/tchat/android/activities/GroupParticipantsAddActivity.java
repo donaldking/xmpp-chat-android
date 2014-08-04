@@ -28,7 +28,8 @@ public class GroupParticipantsAddActivity extends ActionBarActivity implements
 	public static ListView listView;
 	public String TAG = "GroupParticipantsAddActivity";
 	private static GroupFriendsSelectionAdapter mAdapter;
-	ArrayList<RosterModel> totalSelectedModel, totalUnSelectedModel, existingUsersModel;
+	ArrayList<RosterModel> totalSelectedModel, totalUnSelectedModel;
+	GroupFriendsSelectionAdapter existingUsersModel;
 	public Bundle bundle;
 	public String groupId;
 	public JSONArray participants;

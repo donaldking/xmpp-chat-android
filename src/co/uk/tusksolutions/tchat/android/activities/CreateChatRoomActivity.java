@@ -8,6 +8,7 @@ import java.util.Date;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
@@ -18,6 +19,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
@@ -25,6 +27,7 @@ import android.widget.Toast;
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.api.APICreateChatrooms;
+import co.uk.tusksolutions.tchat.android.models.ChatroomsModel;
 import co.uk.tusksolutions.tchat.android.tasks.CreateChatroomAsyncTask;
 import co.uk.tusksolutions.tchat.android.tasks.CreateChatroomAsyncTask.OnCreateChatroomListener;
 
@@ -66,6 +69,7 @@ public class CreateChatRoomActivity extends ActionBarActivity implements
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
+				hideKeyboard();
 				showStartTimeDialog(v);
 			}
 		});
@@ -74,6 +78,7 @@ public class CreateChatRoomActivity extends ActionBarActivity implements
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
+				hideKeyboard();
 				showEndTimeDialog(v);
 			}
 		});
@@ -279,13 +284,16 @@ public class CreateChatRoomActivity extends ActionBarActivity implements
 				startDay, endhours, endminutes);
 		long created_at = System.currentTimeMillis();
 		String status = "future";
-		String max_guest = "50";
+		String max_guest = "20";
 
 		APICreateChatrooms apiCreateChatrooms = new APICreateChatrooms();
 		apiCreateChatrooms.doPostChatroom(chatroomjid, chatroom_name,
 				TChatApplication.getUserModel().getUsername(),
 				String.valueOf(start_timestamp), String.valueOf(end_timestamp),
 				status, max_guest, String.valueOf(created_at));
+		ChatroomsModel chatroomsModel=new ChatroomsModel();
+		chatroomsModel.saveCreatedRoomInDB(chatroomjid, chatroom_name, TChatApplication.getUserModel().getUsername(), String.valueOf(start_timestamp), String.valueOf(end_timestamp), status, max_guest, String.valueOf(created_at));
+		finish();
 	}
 
 	@Override
@@ -293,5 +301,9 @@ public class CreateChatRoomActivity extends ActionBarActivity implements
 		// TODO Auto-generated method stub
 		Log.v("CreateChatroom", "Failed chatroom " + message);
 		Toast.makeText(CreateChatRoomActivity.this, "Chatroom creation failed",Toast.LENGTH_SHORT).show();
+	}
+	public void hideKeyboard() {
+		InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.hideSoftInputFromWindow(inputDate.getWindowToken(), 0);
 	}
 }
