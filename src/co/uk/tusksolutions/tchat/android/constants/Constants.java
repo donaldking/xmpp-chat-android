@@ -30,7 +30,7 @@ public class Constants {
     public static final String DOWNLOAD_CHAT_HISTORY_TEXT_ENDPOINT="/mobileservices/v1/chat_download_text.php";
 	public static String KICK_USER_FROM_GROUP_ENDPOINT = "/mobileservices/v1/kick_user_out_of_group.php";
 	public static String KICK_USER_FROM_CHAT_ROOM_ENDPOINT = "/mobileservices/v1/kick_user_out_of_chat_room.php";
-
+    public static String CREATE_CHATROOM_ENDPOINT="/mobileservices/v1/create_chat_room.php";
 	/**
 	 * Login Actions
 	 */
