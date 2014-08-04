@@ -38,7 +38,7 @@ public class CreateChatroomAsyncTask extends AsyncTask<Void, Void, Boolean> {
 		progressDialog = new ProgressDialog(context);
 		super.onPreExecute();
 		
-		progressDialog.setMessage("Creating Group...");
+		progressDialog.setMessage("Creating Chatroom...");
 		progressDialog.show();
 		progressDialog.setCancelable(false);
 
@@ -56,7 +56,7 @@ public class CreateChatroomAsyncTask extends AsyncTask<Void, Void, Boolean> {
 			 */
 			String password="";
 			XMPPMUCManager xmppMucManager = XMPPMUCManager.getInstance(context);
-			chatroomJID = chatroomName + "@conference." + Constants.CURRENT_SERVER;
+			chatroomJID = TChatApplication.getUserModel().getUsername()+"_"+System.currentTimeMillis()+"@conference." + Constants.CURRENT_SERVER;
 			
 			xmppMucManager.CreateRoom(chatroomName, chatroomJID, TChatApplication
 							.getUserModel().getUsername(), password);
