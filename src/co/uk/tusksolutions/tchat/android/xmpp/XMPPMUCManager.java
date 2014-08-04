@@ -56,7 +56,7 @@ public class XMPPMUCManager {
 		return XMPPMUCManager;
 	}
 
-	private MultiUserChat CreateRoom(String roomName, String roomJID,
+	public  MultiUserChat CreateRoom(String roomName, String roomJID,
 			String nickname, String password) throws XMPPException {
 
 		MultiUserChat multiUserChat = null;
