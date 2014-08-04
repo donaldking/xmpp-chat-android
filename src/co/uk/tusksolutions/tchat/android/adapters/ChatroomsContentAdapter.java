@@ -14,7 +14,7 @@ import android.widget.BaseAdapter;
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.activities.GroupChatActivity;
-import co.uk.tusksolutions.tchat.android.models.ChatroomsModel;
+import co.uk.tusksolutions.tchat.android.models.ChatRoomsModel;
 import co.uk.tusksolutions.tchat.android.viewHolders.ChatroomsAllViewHolder;
 
 public class ChatroomsContentAdapter extends BaseAdapter {
@@ -23,13 +23,13 @@ public class ChatroomsContentAdapter extends BaseAdapter {
 	static float DEFAULT_ALPHA = 1.0f;
 	static float SELECTED_ALPHA = 0.5f;
 	private Context context;
-	private ChatroomsModel mModel;
+	private ChatRoomsModel mModel;
 
-	private ArrayList<ChatroomsModel> chatroomsModelCollection;
+	private ArrayList<ChatRoomsModel> chatroomsModelCollection;
 
 	public ChatroomsContentAdapter(Context context) {
 		this.context = TChatApplication.getContext();
-		mModel = new ChatroomsModel();
+		mModel = new ChatRoomsModel();
 		chatroomsModelCollection = mModel.queryChatrooms();
 		notifyDataSetChanged();
 	}
@@ -76,7 +76,7 @@ public class ChatroomsContentAdapter extends BaseAdapter {
 		 * Put values received fromUser model collection TO_USER view holder.
 		 * 
 		 */
-		final ChatroomsModel model = chatroomsModelCollection.get(position);
+		final ChatRoomsModel model = chatroomsModelCollection.get(position);
 
 		holder.chatroomName.setText(model.chatroom_name);
 

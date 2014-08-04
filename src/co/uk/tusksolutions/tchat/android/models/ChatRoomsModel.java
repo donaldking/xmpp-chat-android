@@ -13,9 +13,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class ChatroomsModel implements Parcelable {
+public class ChatRoomsModel implements Parcelable {
 
-	final static String TAG = "ChatroomsModel";
+	final static String TAG = "ChatRoomsModel";
 	private String TABLE = TChatDBHelper.CHATROOMS_TABLE;
 
 	public String chatroom_jid;
@@ -29,7 +29,7 @@ public class ChatroomsModel implements Parcelable {
 
 	static SQLiteDatabase db;
 
-	public ChatroomsModel() {
+	public ChatRoomsModel() {
 
 	}
 
@@ -72,6 +72,15 @@ public class ChatroomsModel implements Parcelable {
 		return true;
 	}
 	
+	public boolean deleteChatRooms() {
+
+		db = TChatApplication.getTChatDBWritable();
+		db.delete(TChatDBHelper.CHATROOMS_TABLE, null, null);
+		db.close();
+
+		return true;
+	}
+	
 	public boolean saveCreatedRoomInDB(String chatroom_jid, String chatroom_name,
 			String chatroom_admin, String start_timestamp,String end_timestamp,String status,String max_guests,String create_at) {
 		try {
@@ -101,9 +110,9 @@ public class ChatroomsModel implements Parcelable {
 		return true;
 	}
 	
-	public ArrayList<ChatroomsModel> queryChatrooms() {
+	public ArrayList<ChatRoomsModel> queryChatrooms() {
 
-		ArrayList<ChatroomsModel> chatroomsModelCollection = new ArrayList<ChatroomsModel>();
+		ArrayList<ChatRoomsModel> chatroomsModelCollection = new ArrayList<ChatRoomsModel>();
 
 		Cursor cursor = TChatApplication.getTChatDBReadable().query(TABLE,
 				null, null, null, null, null, null);
@@ -115,32 +124,32 @@ public class ChatroomsModel implements Parcelable {
 
 		return chatroomsModelCollection;
 	}
-	protected ChatroomsModel fromCursor(Cursor cursor) {
+	protected ChatRoomsModel fromCursor(Cursor cursor) {
 		/*
 		 * Pulls the values fromUser the cursor object and returns it TO_USER
 		 * the caller
 		 */
-		ChatroomsModel chatroomsModel = new ChatroomsModel();
-		chatroomsModel.chatroom_jid = cursor.getString(cursor
+		ChatRoomsModel chatRoomsModel = new ChatRoomsModel();
+		chatRoomsModel.chatroom_jid = cursor.getString(cursor
 				.getColumnIndex(TChatDBHelper.CR_CHATROOM_ID));
-		chatroomsModel.chatroom_name = cursor.getString(cursor
+		chatRoomsModel.chatroom_name = cursor.getString(cursor
 				.getColumnIndex(TChatDBHelper.CR_CHATROOM_NAME));
-		chatroomsModel.chatroom_owner = cursor.getString(cursor
+		chatRoomsModel.chatroom_owner = cursor.getString(cursor
 				.getColumnIndex(TChatDBHelper.CR_ADMIN));
-		chatroomsModel.start_timestamp = cursor.getString(cursor
+		chatRoomsModel.start_timestamp = cursor.getString(cursor
 				.getColumnIndex(TChatDBHelper.CR_START_TIMESTAMP));
 
-		chatroomsModel.end_timestamp = cursor.getString(cursor
+		chatRoomsModel.end_timestamp = cursor.getString(cursor
 				.getColumnIndex(TChatDBHelper.CR_END_TIMESTAMP));
 
-		chatroomsModel.status = cursor.getString(cursor
+		chatRoomsModel.status = cursor.getString(cursor
 				.getColumnIndex(TChatDBHelper.CR_STATUS));
 
-		chatroomsModel.max_guests = cursor.getString(cursor
+		chatRoomsModel.max_guests = cursor.getString(cursor
 				.getColumnIndex(TChatDBHelper.CR_MAX_GUESTS));
-		chatroomsModel.created_at=cursor.getString(cursor.getColumnIndex(TChatDBHelper.CR_CREATED_AT));
+		chatRoomsModel.created_at=cursor.getString(cursor.getColumnIndex(TChatDBHelper.CR_CREATED_AT));
 
-		return chatroomsModel;
+		return chatRoomsModel;
 
 	}
 	@Override
@@ -163,18 +172,18 @@ public class ChatroomsModel implements Parcelable {
 
 	}
 
-	public static final Parcelable.Creator<ChatroomsModel> CREATOR = new Parcelable.Creator<ChatroomsModel>() {
-		public ChatroomsModel createFromParcel(Parcel in) {
-			return new ChatroomsModel(in);
+	public static final Parcelable.Creator<ChatRoomsModel> CREATOR = new Parcelable.Creator<ChatRoomsModel>() {
+		public ChatRoomsModel createFromParcel(Parcel in) {
+			return new ChatRoomsModel(in);
 		}
 
-		public ChatroomsModel[] newArray(int size) {
-			return new ChatroomsModel[size];
+		public ChatRoomsModel[] newArray(int size) {
+			return new ChatRoomsModel[size];
 		}
 	};
 
 	/** recreate object fromUser parcel */
-	protected ChatroomsModel(Parcel in) {
+	protected ChatRoomsModel(Parcel in) {
 
 		this.chatroom_jid = in.readString();
 		this.chatroom_name = in.readString();

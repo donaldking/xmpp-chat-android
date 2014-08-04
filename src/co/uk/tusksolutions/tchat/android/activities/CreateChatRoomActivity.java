@@ -27,7 +27,7 @@ import android.widget.Toast;
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.api.APICreateChatrooms;
-import co.uk.tusksolutions.tchat.android.models.ChatroomsModel;
+import co.uk.tusksolutions.tchat.android.models.ChatRoomsModel;
 import co.uk.tusksolutions.tchat.android.tasks.CreateChatroomAsyncTask;
 import co.uk.tusksolutions.tchat.android.tasks.CreateChatroomAsyncTask.OnCreateChatroomListener;
 
@@ -291,8 +291,8 @@ public class CreateChatRoomActivity extends ActionBarActivity implements
 				TChatApplication.getUserModel().getUsername(),
 				String.valueOf(start_timestamp), String.valueOf(end_timestamp),
 				status, max_guest, String.valueOf(created_at));
-		ChatroomsModel chatroomsModel=new ChatroomsModel();
-		chatroomsModel.saveCreatedRoomInDB(chatroomjid, chatroom_name, TChatApplication.getUserModel().getUsername(), String.valueOf(start_timestamp), String.valueOf(end_timestamp), status, max_guest, String.valueOf(created_at));
+		ChatRoomsModel chatRoomsModel=new ChatRoomsModel();
+		chatRoomsModel.saveCreatedRoomInDB(chatroomjid, chatroom_name, TChatApplication.getUserModel().getUsername(), String.valueOf(start_timestamp), String.valueOf(end_timestamp), status, max_guest, String.valueOf(created_at));
 		finish();
 	}
 

@@ -12,12 +12,12 @@ import org.json.JSONArray;
 import android.os.AsyncTask;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
-import co.uk.tusksolutions.tchat.android.models.ChatroomsModel;
+import co.uk.tusksolutions.tchat.android.models.ChatRoomsModel;
 import co.uk.tusksolutions.utility.Utility;
 
 public class APIGetChatRooms {
 	JSONArray jsonArray;
-	private ChatroomsModel mChatroomsModel;
+	private ChatRoomsModel mChatroomsModel;
 	private AsyncApiGetChatrooms mTask = null;
 	OnGetChatroomsCompleted callbackObject;
 
@@ -62,7 +62,7 @@ public class APIGetChatRooms {
 							.convertStreamToString(instream));
 
 					if (jsonArray.length() >= 0) {
-						mChatroomsModel = new ChatroomsModel();
+						mChatroomsModel = new ChatRoomsModel();
 						if (mChatroomsModel.saveChatroomsToDB(jsonArray)) {
 							apiResult = true;
 						}
