@@ -47,7 +47,8 @@
         </activity>
         <activity android:name="co.uk.tusksolutions.tchat.android.activities.GroupChatActivity" >
         </activity>
-        <activity android:name="co.uk.tusksolutions.tchat.android.activities.GroupParticipantsActivity" />
+        <activity android:name="co.uk.tusksolutions.tchat.android.activities.GroupParticipantsAddActivity" />
+        <activity android:name="co.uk.tusksolutions.tchat.android.activities.GroupParticipantsRemoveActivity" />
         <activity
             android:name="co.uk.tusksolutions.tchat.android.activities.SettingsActivity"
             android:launchMode="singleTop"
