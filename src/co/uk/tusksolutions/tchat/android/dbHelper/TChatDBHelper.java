@@ -102,6 +102,7 @@ public class TChatDBHelper extends SQLiteOpenHelper {
    public static final String CR_END_TIMESTAMP="end_timestamp";
    public static final String CR_CREATED_AT="created_at";
    public static final String CR_STATUS="staus";
+   public static final String CR_MAX_GUESTS="max_guests";
 	
 	public TChatDBHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -185,7 +186,7 @@ public class TChatDBHelper extends SQLiteOpenHelper {
 			+ " INTEGER PRIMARY KEY AUTOINCREMENT," + CR_CHATROOM_ID
 			+ " varchar(255) UNIQUE," + CR_ADMIN + " varchar(255) DEFAULT NULL,"
 			+ CR_CHATROOM_NAME + " varchar(255) DEFAULT NULL," + CR_PARTICIPANTS
-			+ " blob," + CR_START_TIMESTAMP + " varchar(255) DEFAULT NULL," + CR_END_TIMESTAMP + " varchar(255) DEFAULT NULL," + CR_CREATED_AT + " varchar(255) DEFAULT NULL," + CR_STATUS + " varchar(255) DEFAULT NULL);";
+			+ " blob," + CR_START_TIMESTAMP + " varchar(255) DEFAULT NULL," + CR_END_TIMESTAMP + " varchar(255) DEFAULT NULL," + CR_CREATED_AT + " varchar(255) DEFAULT NULL," + CR_STATUS + " varchar(255) DEFAULT NULL," +CR_MAX_GUESTS+ " varchar(255) DEFAULT NULL);";
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {

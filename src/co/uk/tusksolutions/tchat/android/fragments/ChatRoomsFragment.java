@@ -4,6 +4,8 @@ import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.R.id;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.activities.CreateChatRoomActivity;
+import co.uk.tusksolutions.tchat.android.adapters.ChatroomsContentAdapter;
+import co.uk.tusksolutions.tchat.android.adapters.GroupsContentAdapter;
 import co.uk.tusksolutions.tchat.android.adapters.RosterContentAdapter;
 import co.uk.tusksolutions.tchat.android.fragments.RosterFragment.RosterReceiver;
 import co.uk.tusksolutions.tchat.android.listeners.XMPPPresenceListener;
@@ -30,13 +32,14 @@ public class ChatRoomsFragment extends Fragment {
 	public static ListView listView;
 	public String TAG = "ChatRoomFragment";
 	private View rootView;
-
+	private static ChatroomsContentAdapter mAdapter;
 	private IntentFilter filter;
 
 	private static View mLodingStatusView;
 	private static int shortAnimTime;
-	private static int ALL_CHATROOM_QUERY_ACTION = 1; // See adapter for notes
-	private int ACTIVE_CHATROOM_QUERY_ACTION = 2; // See adapter for notes
+	private static int lastViewedPosition;
+	private static int topOffset;
+	
 	private RadioButton allchatroomButton, activechatroomButton,
 			scheduledchatroomButton,createchatroomButton;
 	private Bundle instanceState;
@@ -70,7 +73,16 @@ public class ChatRoomsFragment extends Fragment {
 		listView = (ListView) rootView.findViewById(R.id.list_view);
 		listView.setVerticalScrollBarEnabled(false);
 		listView.setHorizontalScrollBarEnabled(false);
+		showProgress(true);
 
+		if (instanceState != null && mAdapter != null) {
+
+			lastViewedPosition = instanceState.getInt("lastViewedPosition");
+			topOffset = instanceState.getInt("topOffset");
+		} else {
+			lastViewedPosition = 0;
+			topOffset = 0;
+		}
 		allchatroomButton = (RadioButton) rootView
 				.findViewById(R.id.all_chatroom_button);
 		allchatroomButton
@@ -85,6 +97,41 @@ public class ChatRoomsFragment extends Fragment {
 		createchatroomButton.setOnClickListener(new SegmentButtonOnClickListener());
 
 	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+
+		prepareListView();
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+
+	}
+
+	private static void prepareListView() {
+
+		/**
+		 * Load Recents from DB
+		 */
+		mAdapter = new ChatroomsContentAdapter(TChatApplication.getContext());
+
+		if (mAdapter.getCount() == 0) {
+			listView.setVisibility(View.GONE);
+		} else {
+			showProgress(false);
+			listView.setAdapter(mAdapter);
+			if (listView.getVisibility() != View.VISIBLE) {
+				listView.setVisibility(View.VISIBLE);
+			}
+
+			listView.setSelectionFromTop(lastViewedPosition, topOffset);
+		}
+	}
+
+
 
 	@Override
 	public void onAttach(Activity activity) {
