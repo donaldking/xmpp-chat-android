@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/white"
     android:orientation="vertical" >
 
     <FrameLayout
@@ -15,63 +16,68 @@
             android:background="@color/light_grey"
             android:gravity="center"
             android:padding="15dp"
-            android:text="Schedule a Chat Room for a future date. Once the Chat Room is started, a maximum of 20 people can Join."
+            android:text="Schedule a Chat Room for a future date. Once the Chat Room has started, a maximum of 20 people can Join."
             android:textColor="@color/dark_grey"
             android:textSize="15sp" />
     </FrameLayout>
 
-    <EditText
-        android:id="@+id/chatroom_name"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/frame_text"
-        android:layout_marginTop="20dp"
-        android:hint="Chatroom Name"
-        android:inputType="textPersonName" >
-    </EditText>
-
-    <EditText
-        android:id="@+id/start_date"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/chatroom_name"
-        android:layout_marginTop="20dp"
-        android:hint="Date"
-        android:inputType="textPersonName" >
-    </EditText>
-
     <LinearLayout
-        android:id="@+id/create_date_time_layout"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/start_date"
-        android:layout_marginTop="20dp"
-        android:weightSum="2" >
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        android:paddingTop="0dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp" >
 
         <EditText
-            android:id="@+id/start_time"
-            android:layout_width="wrap_content"
+            android:id="@+id/chatroom_name"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/robotoRegularTextView2"
-            android:layout_toLeftOf="@+id/end_time"
-            android:layout_weight="1"
-            android:ems="10"
-            android:focusable="false"
-            android:hint="Start Time"
-            android:inputType="date" >
+            android:layout_marginTop="20dp"
+            android:hint="Room Name"
+            android:inputType="textAutoComplete"
+            android:textStyle="bold" >
         </EditText>
 
         <EditText
-            android:id="@+id/end_time"
-            android:layout_width="wrap_content"
+            android:id="@+id/start_date"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/start_time"
-            android:layout_alignParentRight="true"
-            android:layout_weight="1"
-            android:ems="10"
-            android:focusable="false"
-            android:hint="End Time"
-            android:inputType="time" />
+            android:layout_marginTop="20dp"
+            android:hint="Start Date"
+            android:inputType="date"
+            android:textStyle="bold" >
+        </EditText>
+
+        <LinearLayout
+            android:id="@+id/create_date_time_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:weightSum="2" >
+
+            <EditText
+                android:id="@+id/start_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:focusable="false"
+                android:hint="Start Time"
+                android:inputType="date" 
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/end_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:focusable="false"
+                android:hint="End Time"
+                android:inputType="time"
+                android:textStyle="bold" />
+        </LinearLayout>
     </LinearLayout>
 
-</RelativeLayout>
+</LinearLayout>

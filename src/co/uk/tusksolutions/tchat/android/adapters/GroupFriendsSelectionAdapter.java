@@ -19,6 +19,7 @@ import android.widget.Filterable;
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
+import co.uk.tusksolutions.tchat.android.enums.AddOrRemoveEnum;
 import co.uk.tusksolutions.tchat.android.models.RosterModel;
 import co.uk.tusksolutions.tchat.android.viewHolders.GroupFriendsSelectionViewHolder;
 
@@ -42,14 +43,20 @@ public class GroupFriendsSelectionAdapter extends BaseAdapter implements
 		getFilter();
 	}
 
-	public GroupFriendsSelectionAdapter(Context context, JSONArray participants)
+	public GroupFriendsSelectionAdapter(Context context,
+			JSONArray participants, AddOrRemoveEnum action)
 			throws JSONException {
 
-		this.context = TChatApplication.getContext();
-		mModel = new RosterModel();
-		rosterModelCollection = mModel.getUsers(participants);
+		if (action == AddOrRemoveEnum.ADD_PEOPLE) {
+			// Do Add
+		} else if (action == AddOrRemoveEnum.REMOVE_PEOPLE) {
+			this.context = TChatApplication.getContext();
+			mModel = new RosterModel();
+			rosterModelCollection = mModel.getUsers(participants);
+
+		}
 	}
-	
+
 	@Override
 	public void notifyDataSetChanged() {
 		super.notifyDataSetChanged();
@@ -97,7 +104,7 @@ public class GroupFriendsSelectionAdapter extends BaseAdapter implements
 					final RosterModel rosterModel = (RosterModel) vH.checkMark
 							.getTag();
 					rosterModel.setSelected(buttonView.isChecked());
-					
+
 					Log.d(TAG, "Model status: " + rosterModel.name
 							+ " Selection: " + rosterModel.isSelected());
 				}
@@ -113,7 +120,8 @@ public class GroupFriendsSelectionAdapter extends BaseAdapter implements
 
 		GroupFriendsSelectionViewHolder mHolder = (GroupFriendsSelectionViewHolder) row
 				.getTag();
-		mHolder.checkMark.setChecked(rosterModelCollection.get(position).isSelected());
+		mHolder.checkMark.setChecked(rosterModelCollection.get(position)
+				.isSelected());
 
 		String[] username = rosterModel.user.split("@");
 		try {
