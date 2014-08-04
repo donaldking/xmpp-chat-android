@@ -270,7 +270,7 @@ public class CreateChatRoomActivity extends ActionBarActivity implements
 
 	@Override
 	public void onCreatechatroomSuccess(String chatroom_name, String chatroomjid) {
-		// TODO Auto-generated method stub
+
 		Log.v("CreateChatroom", "Successfully chatroom created "
 				+ chatroom_name + " JID " + chatroomjid);
 		long start_timestamp = componentTimeToTimestamp(startYear, startMonth,
@@ -279,7 +279,7 @@ public class CreateChatRoomActivity extends ActionBarActivity implements
 				startDay, endhours, endminutes);
 		long created_at = System.currentTimeMillis();
 		String status = "future";
-		String max_guest = "50";
+		String max_guest = "20";
 
 		APICreateChatrooms apiCreateChatrooms = new APICreateChatrooms();
 		apiCreateChatrooms.doPostChatroom(chatroomjid, chatroom_name,
@@ -290,8 +290,9 @@ public class CreateChatRoomActivity extends ActionBarActivity implements
 
 	@Override
 	public void onCreateChatroomFailed(boolean alreadyExists, String message) {
-		// TODO Auto-generated method stub
+
 		Log.v("CreateChatroom", "Failed chatroom " + message);
-		Toast.makeText(CreateChatRoomActivity.this, "Chatroom creation failed",Toast.LENGTH_SHORT).show();
+		Toast.makeText(CreateChatRoomActivity.this, "Chatroom creation failed",
+				Toast.LENGTH_SHORT).show();
 	}
 }

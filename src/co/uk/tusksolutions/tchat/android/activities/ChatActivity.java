@@ -281,11 +281,11 @@ public class ChatActivity extends ActionBarActivity {
 			startActivityForResult(
 					Intent.createChooser(intent, "Pick a picture"), SELECT_FILE);
 			break;
-		case R.id.video_menu:
+		/*case R.id.video_menu:
 			intent.setType("video/*");
 			startActivityForResult(
 					Intent.createChooser(intent, "Pick a Video"), SELECT_FILE);
-			break;
+			break;*/
 
 		case R.id.clear_chat_History:
 			doClearChatHistory();

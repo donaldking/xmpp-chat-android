@@ -8,6 +8,7 @@
         android:title="@string/send_photo"
         app:showAsAction="never">
     </item>
+    <!--
     <item
         android:id="@+id/video_menu"
         android:icon="@drawable/ic_action_video"
@@ -15,6 +16,7 @@
         android:title="@string/send_video"
         app:showAsAction="never">
     </item>
+    -->
     <item
         android:id="@+id/clear_chat_History"
         android:icon="@drawable/ic_action_delete"
@@ -22,23 +24,19 @@
         android:title="@string/clear_history"
         app:showAsAction="never">
     </item>
-   
-    
     <item
         android:id="@+id/download_chat_history"
-        
-         android:orderInCategory="13"
         android:icon="@drawable/ic_action_edit"
-        app:showAsAction="never"
-        android:title="@string/download_history">
+        android:orderInCategory="13"
+        android:title="@string/download_history"
+        app:showAsAction="never">
     </item>
     <item
         android:id="@+id/share_chat_history"
-         android:orderInCategory="14"
         android:icon="@drawable/ic_action_share"
-        app:showAsAction="never"
-        android:title="@string/share_chat">
+        android:orderInCategory="14"
+        android:title="@string/share_chat"
+        app:showAsAction="never">
     </item>
-   
 
 </menu>

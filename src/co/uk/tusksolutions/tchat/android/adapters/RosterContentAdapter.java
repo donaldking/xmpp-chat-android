@@ -2,9 +2,7 @@ package co.uk.tusksolutions.tchat.android.adapters;
 
 import java.util.ArrayList;
 import java.util.Locale;
-
-import org.json.JSONArray;
-import org.json.JSONException;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import android.content.Context;
 import android.content.Intent;
@@ -38,7 +36,7 @@ public class RosterContentAdapter extends BaseAdapter implements Filterable {
 	private RosterModel mModel;
 	private int action;
 
-	private ArrayList<RosterModel> rosterModelCollection;
+	private CopyOnWriteArrayList<RosterModel> rosterModelCollection;
 
 	public RosterContentAdapter(Context context, int action) {
 		this.context = TChatApplication.getContext();
@@ -181,7 +179,7 @@ public class RosterContentAdapter extends BaseAdapter implements Filterable {
 			protected void publishResults(CharSequence constraint,
 					FilterResults results) {
 
-				rosterModelCollection = (ArrayList<RosterModel>) results.values;
+				rosterModelCollection = (CopyOnWriteArrayList<RosterModel>) results.values;
 				notifyDataSetChanged();
 			}
 
@@ -192,7 +190,7 @@ public class RosterContentAdapter extends BaseAdapter implements Filterable {
 				ArrayList<RosterModel> FilteredArrayNames = new ArrayList<RosterModel>();
 
 				if (rosterModelCollection == null) {
-					rosterModelCollection = new ArrayList<RosterModel>(
+					rosterModelCollection = new CopyOnWriteArrayList<RosterModel>(
 							rosterModelCollection);
 
 				}

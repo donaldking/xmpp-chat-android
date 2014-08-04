@@ -1,8 +1,8 @@
 package co.uk.tusksolutions.tchat.android.models;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Locale;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.jivesoftware.smack.Roster;
 import org.jivesoftware.smack.RosterEntry;
@@ -277,9 +277,9 @@ public class RosterModel implements Parcelable {
 
 	}
 
-	public ArrayList<RosterModel> queryOnline() {
+	public CopyOnWriteArrayList<RosterModel> queryOnline() {
 
-		ArrayList<RosterModel> rosterModelCollection = new ArrayList<RosterModel>();
+		CopyOnWriteArrayList<RosterModel> rosterModelCollection = new CopyOnWriteArrayList<RosterModel>();
 
 		String whereClause = TChatDBHelper.PRESENCE_TYPE + " = ? OR "
 				+ TChatDBHelper.PRESENCE_TYPE + " = ? OR "
@@ -309,9 +309,9 @@ public class RosterModel implements Parcelable {
 		return rosterModelCollection;
 	}
 
-	public ArrayList<RosterModel> queryAll() {
+	public CopyOnWriteArrayList<RosterModel> queryAll() {
 
-		ArrayList<RosterModel> rosterModelCollection = new ArrayList<RosterModel>();
+		CopyOnWriteArrayList<RosterModel> rosterModelCollection = new CopyOnWriteArrayList<RosterModel>();
 
 		String whereClause = TChatDBHelper.PRESENCE_TYPE + " = ? OR "
 				+ TChatDBHelper.PRESENCE_TYPE + " = ? ";
@@ -332,9 +332,9 @@ public class RosterModel implements Parcelable {
 		return rosterModelCollection;
 	}
 
-	public ArrayList<RosterModel> querySearch(String text) {
+	public CopyOnWriteArrayList<RosterModel> querySearch(String text) {
 
-		ArrayList<RosterModel> rosterModelCollection = new ArrayList<RosterModel>();
+		CopyOnWriteArrayList<RosterModel> rosterModelCollection = new CopyOnWriteArrayList<RosterModel>();
 
 		String whereClause = TChatDBHelper.NAME + " LIKE ? ";
 
@@ -362,10 +362,10 @@ public class RosterModel implements Parcelable {
 		return rosterModelCollection;
 	}
 
-	public ArrayList<RosterModel> getUsers(JSONArray users)
+	public CopyOnWriteArrayList<RosterModel> getUsers(JSONArray users)
 			throws JSONException {
 
-		ArrayList<RosterModel> rosterModelCollection = new ArrayList<RosterModel>();
+		CopyOnWriteArrayList<RosterModel> rosterModelCollection = new CopyOnWriteArrayList<RosterModel>();
 
 		for (int i = 0; i < users.length(); i++) {
 			JSONObject user = (JSONObject) users.get(i);

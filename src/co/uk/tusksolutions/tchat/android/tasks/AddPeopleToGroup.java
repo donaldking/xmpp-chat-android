@@ -17,7 +17,7 @@ public class AddPeopleToGroup extends AsyncTask<Void, Void, Boolean> {
 	private OnAddPeopleMUCListener listener;
 	private ArrayList<RosterModel> friendArrayList;
 
-	public AddPeopleToGroup(final Context context, String groupName,
+	public AddPeopleToGroup(Context context, String groupName,
 			String groupId, ArrayList<RosterModel> friendArrayList,
 			OnAddPeopleMUCListener listener) {
 		this.context = context;
@@ -31,7 +31,7 @@ public class AddPeopleToGroup extends AsyncTask<Void, Void, Boolean> {
 	@Override
 	protected void onPreExecute() {
 		super.onPreExecute();
-
+		
 		progressDialog = new ProgressDialog(context);
 		progressDialog.setMessage("Adding, please wait...");
 		progressDialog.show();
@@ -42,6 +42,7 @@ public class AddPeopleToGroup extends AsyncTask<Void, Void, Boolean> {
 	protected Boolean doInBackground(Void... voids) {
 
 		XMPPMUCManager xmppMucManager = XMPPMUCManager.getInstance(context);
+		
 		for (int i = 0; i < friendArrayList.size(); i++) {
 			if (friendArrayList.get(i).isSelected()) {
 				String friendJID = friendArrayList.get(i).user;

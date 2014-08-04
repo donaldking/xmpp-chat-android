@@ -1,6 +1,6 @@
 package co.uk.tusksolutions.tchat.android.activities;
 
-import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -34,7 +34,7 @@ public class SearchActivity extends ActionBarActivity implements TextWatcher {
 	private int SEARCH_ACTION = 3; // for search result
 	private RosterModel mModel;
 	private Button clear_text_search;
-	public static ArrayList<RosterModel> rosterModelCollection;
+	public static CopyOnWriteArrayList<RosterModel> rosterModelCollection;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -43,7 +43,7 @@ public class SearchActivity extends ActionBarActivity implements TextWatcher {
 		setContentView(R.layout.search_messages_activity);
 
 		mModel = new RosterModel();
-		rosterModelCollection = new ArrayList<RosterModel>();
+		rosterModelCollection = new CopyOnWriteArrayList<RosterModel>();
 		searchView = (EditText) findViewById(R.id.editTextSearch);
 		searchView.addTextChangedListener(this);
 		listView = (ListView) findViewById(R.id.list_view_search);
@@ -76,25 +76,20 @@ public class SearchActivity extends ActionBarActivity implements TextWatcher {
 
 	}
 
-	/*private String getFirstImage(String htmlString) {
-
-		if (htmlString == null)
-			return null;
-
-		String img = "";
-		Document doc = Jsoup.parse(htmlString);
-		Elements imgs = doc.getElementsByTag("img");
-
-		for (Element imageElement : imgs) {
-			if (imageElement != null) {
-				// for each element get the srs url
-				img = imageElement.attr("src").substring(4);
-				return img;
-			}
-		}
-
-		return null;
-	}*/
+	/*
+	 * private String getFirstImage(String htmlString) {
+	 * 
+	 * if (htmlString == null) return null;
+	 * 
+	 * String img = ""; Document doc = Jsoup.parse(htmlString); Elements imgs =
+	 * doc.getElementsByTag("img");
+	 * 
+	 * for (Element imageElement : imgs) { if (imageElement != null) { // for
+	 * each element get the srs url img = imageElement.attr("src").substring(4);
+	 * return img; } }
+	 * 
+	 * return null; }
+	 */
 
 	/**
 	 * Shows the progress UI and hides the login form.

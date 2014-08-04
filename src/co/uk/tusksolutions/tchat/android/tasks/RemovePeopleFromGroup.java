@@ -41,7 +41,7 @@ public class RemovePeopleFromGroup extends AsyncTask<Void, Void, Boolean> {
 	protected Boolean doInBackground(Void... params) {
 
 		XMPPMUCManager xmppMucManager = XMPPMUCManager.getInstance(context);
-		xmppMucManager.mucServiceDiscovery();
+		//xmppMucManager.mucServiceDiscovery();
 		
 		if (xmppMucManager.kickFromRoom(TChatApplication.connection,
 				friendArrayList, groupId)) {

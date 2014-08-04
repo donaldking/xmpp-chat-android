@@ -5,31 +5,41 @@ import java.util.ArrayList;
 import org.jivesoftware.smack.util.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ListView;
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.adapters.GroupFriendsSelectionAdapter;
+import co.uk.tusksolutions.tchat.android.api.APIAddUserToGroup;
 import co.uk.tusksolutions.tchat.android.enums.AddOrRemoveEnum;
+import co.uk.tusksolutions.tchat.android.models.GroupsModel;
 import co.uk.tusksolutions.tchat.android.models.RosterModel;
 import co.uk.tusksolutions.tchat.android.tasks.AddPeopleToGroup;
 import co.uk.tusksolutions.tchat.android.tasks.AddPeopleToGroup.OnAddPeopleMUCListener;
 
 public class GroupParticipantsAddActivity extends ActionBarActivity implements
-		OnAddPeopleMUCListener {
+		TextWatcher, OnAddPeopleMUCListener {
 
+	public EditText searchInput;
 	public static ListView listView;
 	public String TAG = "GroupParticipantsAddActivity";
 	private static GroupFriendsSelectionAdapter mAdapter;
-	ArrayList<RosterModel> totalSelectedModel, totalUnSelectedModel, existingUsersModel;
+	ArrayList<RosterModel> totalSelectedModel, totalUnSelectedModel,
+			existingUsersModel;
 	public Bundle bundle;
 	public String groupId;
 	public JSONArray participants;
@@ -38,12 +48,16 @@ public class GroupParticipantsAddActivity extends ActionBarActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_group_participants_remove);
+		setContentView(R.layout.activity_group_friends_selection);
 		actionBar = getSupportActionBar();
 		actionBar.setHomeButtonEnabled(true);
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		actionBar.setTitle("Add People");
 
+		searchInput = (EditText) findViewById(R.id.friend_add_edittext);
+		searchInput.clearFocus();
+		searchInput.setFocusableInTouchMode(true);
+		searchInput.addTextChangedListener(this);
 		listView = (ListView) findViewById(R.id.list_view);
 		listView.setVerticalScrollBarEnabled(false);
 		listView.setHorizontalScrollBarEnabled(false);
@@ -65,12 +79,30 @@ public class GroupParticipantsAddActivity extends ActionBarActivity implements
 			participants = TChatApplication.getGroupsModel().getParticipants(
 					groupId);
 			if (participants != null) {
-				//existingUsersModel = mAdapter; // Create a new constructor and pass participants to this adapter for removal
 				mAdapter = new GroupFriendsSelectionAdapter(
-						TChatApplication.getContext(), participants, AddOrRemoveEnum.ADD_PEOPLE);
+						TChatApplication.getContext(), participants,
+						AddOrRemoveEnum.ADD_PEOPLE);
 				listView.setAdapter(mAdapter);
 			}
 		}
+	}
+
+	@Override
+	public void beforeTextChanged(CharSequence s, int start, int count,
+			int after) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onTextChanged(CharSequence s, int start, int before, int count) {
+		mAdapter.getFilter().filter(s);
+	}
+
+	@Override
+	public void afterTextChanged(Editable s) {
+		// TODO Auto-generated method stub
+
 	}
 
 	@Override
@@ -89,20 +121,38 @@ public class GroupParticipantsAddActivity extends ActionBarActivity implements
 			break;
 		case R.id.submit_next:
 
-			Handler handler = new Handler();
-			handler.postDelayed(new Runnable() {
-				@Override
-				public void run() {
-					handleSelection();
+			if (searchInputCleared()) {
 
-				}
-			}, 100);
+				Handler handler = new Handler();
+				handler.postDelayed(new Runnable() {
+					@Override
+					public void run() {
+						handleSelection();
+
+					}
+				}, 100);
+			}
 
 			break;
 		default:
 			break;
 		}
 		return true;
+	}
+
+	private boolean searchInputCleared() {
+		searchInput.setText("");
+		mAdapter.getFilter().filter(searchInput.getText().toString());
+
+		if (searchInput.length() == 0) {
+			return true;
+		}
+		return false;
+	}
+
+	public void hideKeyboard() {
+		InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.hideSoftInputFromWindow(searchInput.getWindowToken(), 0);
 	}
 
 	protected void handleSelection() {
@@ -118,8 +168,9 @@ public class GroupParticipantsAddActivity extends ActionBarActivity implements
 		}
 
 		if (totalSelectedModel.size() >= 1) {
-
-			new AddPeopleToGroup(TChatApplication.getContext(),
+			hideKeyboard();
+			
+			new AddPeopleToGroup(GroupParticipantsAddActivity.this,
 					StringUtils.parseName(groupId), groupId,
 					totalSelectedModel, this).execute();
 		} else {
@@ -127,40 +178,31 @@ public class GroupParticipantsAddActivity extends ActionBarActivity implements
 		}
 	}
 
-	/*
-	 * @SuppressLint("InlinedApi") @Override public void
-	 * onRemoveMUCSuccess(ArrayList<RosterModel> removedFriendsList) {
-	 * 
-	 * for (RosterModel rosterModel : removedFriendsList) {
-	 * GroupsModel.kickUserFromGroup(groupId, rosterModel.user); }
-	 * 
-	 * // Update participants and save to db Log.d(TAG, "TOTAL UNSELECTED: " +
-	 * totalUnSelectedModel); if (totalUnSelectedModel.size() >= 1) {
-	 * 
-	 * JSONArray jsonArray = new JSONArray(); JSONObject participant;
-	 * 
-	 * try { for (RosterModel rosterModel : totalUnSelectedModel) { participant
-	 * = new JSONObject(); participant.put("user_id", rosterModel.user);
-	 * jsonArray.put(participant); }
-	 * 
-	 * } catch (JSONException e) { e.printStackTrace(); } if
-	 * (GroupsModel.updateGroupParticipants(groupId, jsonArray)) { try {
-	 * prepareListView(); } catch (JSONException e) { e.printStackTrace(); } } }
-	 * else { if (GroupsModel.deleteGroup(groupId)) { APIDeleteGroup
-	 * deleteGroupApiObj = new APIDeleteGroup();
-	 * deleteGroupApiObj.doDeleteGroup(groupId,
-	 * TChatApplication.getCurrentJid());
-	 * 
-	 * Intent i = new Intent(GroupParticipantsAddActivity.this,
-	 * MainActivity.class); // set the new task and clear flags
-	 * i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
-	 * Intent.FLAG_ACTIVITY_CLEAR_TASK); startActivity(i); } } }
-	 */
-
 	@Override
 	public void onAddPeopleMUCSuccess(ArrayList<RosterModel> addedFriendsList) {
-		// TODO Auto-generated method stub
+		JSONObject participant;
+		try {
 
+			for (RosterModel rosterModel : totalSelectedModel) {
+				participant = new JSONObject();
+				participant.put("user_id", rosterModel.user);
+				participants.put(participant);
+
+				// Add this user to API
+				APIAddUserToGroup addUserToGroupObject = new APIAddUserToGroup();
+				addUserToGroupObject.doAddUserToGroup(
+						StringUtils.parseName(groupId),
+						StringUtils.parseName(rosterModel.user));
+			}
+
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		// Add participants to local db
+		if (GroupsModel.updateGroupParticipants(groupId, participants)) {
+			finish();
+		}
 	}
 
 	@Override

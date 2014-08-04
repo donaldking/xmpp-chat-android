@@ -260,7 +260,7 @@ public class GroupsModel implements Parcelable {
 		String whereClause = TChatDBHelper.G_GROUP_ID + " = ? AND "
 				+ TChatDBHelper.G_ADMIN + " = ?";
 
-		String[] whereArgs = new String[] { group_id, group_admin};
+		String[] whereArgs = new String[] { group_id, group_admin };
 
 		Cursor cursor = TChatApplication.getTChatDBReadable().query(
 				TChatDBHelper.GROUPS_TABLE, columns, whereClause, whereArgs,

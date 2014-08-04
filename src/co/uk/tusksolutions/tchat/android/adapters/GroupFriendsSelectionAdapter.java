@@ -1,7 +1,7 @@
 package co.uk.tusksolutions.tchat.android.adapters;
 
-import java.util.ArrayList;
 import java.util.Locale;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,8 +30,9 @@ public class GroupFriendsSelectionAdapter extends BaseAdapter implements
 
 	private RosterModel mModel;
 	private Context context;
-	public static ArrayList<RosterModel> rosterModelCollection;
-	private ArrayList<RosterModel> rosterModelCollectionCopy;
+	public static CopyOnWriteArrayList<RosterModel> rosterModelCollection;
+	private CopyOnWriteArrayList<RosterModel> rosterModelCollectionCopy;
+	private CopyOnWriteArrayList<RosterModel> rosterModelCollectionTmp;
 	private ValueFilter valueFilter;
 	private final static String TAG = "GroupFriendsSelectionAdapter";
 
@@ -47,11 +48,31 @@ public class GroupFriendsSelectionAdapter extends BaseAdapter implements
 			JSONArray participants, AddOrRemoveEnum action)
 			throws JSONException {
 
+		this.context = TChatApplication.getContext();
+		mModel = new RosterModel();
+		rosterModelCollection = mModel.queryAll();
+		rosterModelCollectionTmp = rosterModelCollection;
+
 		if (action == AddOrRemoveEnum.ADD_PEOPLE) {
-			// Do Add
+
+			/*
+			 * Remove people already added
+			 */
+			for (RosterModel rm : rosterModelCollectionTmp) {
+				synchronized (rosterModelCollection) {
+					for (int i = 0; i < participants.length(); i++) {
+						if (rm.user.equals(participants.getJSONObject(i).get(
+								"user_id"))) {
+							Log.d(TAG, "Will remove: " + rm.user);
+							rosterModelCollection.remove(rm);
+						}
+					}
+				}
+			}
+			rosterModelCollectionCopy = rosterModelCollection;
+			getFilter();
 		} else if (action == AddOrRemoveEnum.REMOVE_PEOPLE) {
-			this.context = TChatApplication.getContext();
-			mModel = new RosterModel();
+
 			rosterModelCollection = mModel.getUsers(participants);
 
 		}
@@ -151,7 +172,7 @@ public class GroupFriendsSelectionAdapter extends BaseAdapter implements
 		protected FilterResults performFiltering(CharSequence constraint) {
 			FilterResults results = new FilterResults();
 			if (constraint != null && constraint.length() > 0) {
-				ArrayList<RosterModel> filterList = new ArrayList<RosterModel>();
+				CopyOnWriteArrayList<RosterModel> filterList = new CopyOnWriteArrayList<RosterModel>();
 				for (int i = 0; i < rosterModelCollectionCopy.size(); i++) {
 					if (rosterModelCollectionCopy.get(i).name.toLowerCase(
 							Locale.ENGLISH).startsWith(
@@ -172,7 +193,7 @@ public class GroupFriendsSelectionAdapter extends BaseAdapter implements
 		@Override
 		protected void publishResults(CharSequence constraint,
 				FilterResults results) {
-			rosterModelCollection = (ArrayList<RosterModel>) results.values;
+			rosterModelCollection = (CopyOnWriteArrayList<RosterModel>) results.values;
 			notifyDataSetChanged();
 		}
 	}
