@@ -1,22 +1,34 @@
 package co.uk.tusksolutions.tchat.android.adapters;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 
+
+import org.apache.http.util.ByteArrayBuffer;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
+import android.os.Environment;
 import android.text.Html;
 import android.text.util.Linkify;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.BaseAdapter;
 import android.widget.Toast;
 import co.uk.tusksolutions.extensions.TimeAgo;
@@ -24,12 +36,14 @@ import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
 import co.uk.tusksolutions.tchat.android.models.ChatMessagesModel;
+import co.uk.tusksolutions.tchat.android.tasks.DownloadFilesTask;
 import co.uk.tusksolutions.tchat.android.viewHolders.ChatFromImageViewHolder;
 import co.uk.tusksolutions.tchat.android.viewHolders.ChatFromViewHolder;
 import co.uk.tusksolutions.tchat.android.viewHolders.ChatToImageViewHolder;
 import co.uk.tusksolutions.tchat.android.viewHolders.ChatToViewHolder;
 
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
+
 
 /**
  * Created by donaldking on 27/06/2014.
@@ -85,12 +99,27 @@ public class ChatMessagesAdapter extends BaseAdapter {
 			e.printStackTrace();
 		}
 		
-
-		if ((message != null)
+         if((message!=null)&&message.contains("href="))
+         {
+        	 if(chatMessagesModelCollection.get(position).receiver.equalsIgnoreCase(TChatApplication.getCurrentJid()))
+        	 {
+        		 rowType=1;
+        	 }
+        	 else
+        	 {
+        		 rowType=0;
+        	 }
+        	 
+        	 
+         }
+       
+		
+         else if ((message != null)
 				&& chatMessagesModelCollection.get(position).receiver
 						.equalsIgnoreCase(TChatApplication.getCurrentJid())) {
 			if (chatMessagesModelCollection.get(position).message
 					.contains("src")) {
+			
 				rowType = 3;
 			} else {
 				rowType = 0;
@@ -158,6 +187,26 @@ public class ChatMessagesAdapter extends BaseAdapter {
 			chatFromViewHolder.chatMessageTextView
 					.setText(chatMessagesModel.message);
 			}
+			
+			
+			row.setOnClickListener(new OnClickListener() { // Call Chat Page when
+				// pressed
+				@Override
+				public void onClick(View arg0) {
+
+					try {
+
+						String LinkMessage = chatMessagesModel.message;
+	                    	if (LinkMessage.contains("href")) {
+							
+	                    		 DownloadFilesTask downloadFilesTask=new DownloadFilesTask();
+	  	                       downloadFilesTask.dodownloadFile(context,getDownloadUrl(LinkMessage),Html.fromHtml(LinkMessage).toString());
+						} 
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			});
 			// }
 			chatFromViewHolder.chatMessageTimestampTextView.setText(TimeAgo
 					.getTimeAgo(Long.parseLong(chatMessagesModel.timeStamp),
@@ -193,8 +242,26 @@ public class ChatMessagesAdapter extends BaseAdapter {
 			chatToViewHolder.chatMessageTextView.setText(chatMessagesModel.message);
 			}
 			chatToViewHolder.chatMessageTimestampTextView.setText(TimeAgo
-					.getTimeAgo(Long.parseLong(chatMessagesModel.timeStamp),
-							context));
+					.getTimeAgo(Long.parseLong(chatMessagesModel.timeStamp),context));
+			
+			row.setOnClickListener(new OnClickListener() { // Call Chat Page when
+				// pressed
+				@Override
+				public void onClick(View arg0) {
+
+					try {
+
+						String LinkMessage = chatMessagesModel.message;
+	                     if (LinkMessage.contains("href")) {
+						
+	                    	 DownloadFilesTask downloadFilesTask=new DownloadFilesTask();
+	                       downloadFilesTask.dodownloadFile(context,getDownloadUrl(LinkMessage),Html.fromHtml(LinkMessage).toString());
+	                     } 
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			});
 
 			break;
 
@@ -311,6 +378,23 @@ public class ChatMessagesAdapter extends BaseAdapter {
 		return null;
 	}
 
+	private String getDownloadUrl(String htmlString) {
+
+		if (htmlString == null)
+			return null;
+
+		String img = "";
+		Document doc = Jsoup.parse(htmlString);
+		
+		Element element2 = doc.select("a").first(); 
+		
+
+		img=Constants.HTTP_SCHEME+element2.attr("href").substring(3);
+		return img;
+
+		
+	}
+	
 	public static Bitmap decodeScaledBitmapFromSdCard(String filePath,
 			int reqWidth, int reqHeight) {
 
@@ -352,4 +436,6 @@ public class ChatMessagesAdapter extends BaseAdapter {
 
 		return inSampleSize;
 	}
+	
+	
 }

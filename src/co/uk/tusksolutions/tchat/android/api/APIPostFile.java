@@ -70,11 +70,20 @@ public class APIPostFile {
 				// File file = new File(selectedFile);
 
 				try {
+                    if(receiver.contains("conference"))
+                    {
+                    	link = postFile(sender.replace("@"
+    							+ Constants.CURRENT_SERVER, ""), receiver.replace(
+    							"@conference." + Constants.CURRENT_SERVER, ""), selectedFile);
 
+                    }
+                    else
+                    {
 					link = postFile(sender.replace("@"
 							+ Constants.CURRENT_SERVER, ""), receiver.replace(
 							"@" + Constants.CURRENT_SERVER, ""), selectedFile);
 
+                    }
 					Log.e("upload file link ", link);
 				} catch (UnsupportedEncodingException e) {
 					// TODO Auto-generated catch block
@@ -109,7 +118,16 @@ public class APIPostFile {
 					XMPPChatMessageManager.sendMessage(receiver, buddyName, link,
 							1, "FileTransfer", mid);
 					receiver=receiver.replace("@conference."+Constants.CURRENT_SERVER, "");
-					GroupChatActivity.showProgressUpload(false);
+					try {
+						GroupChatActivity.showProgressUpload(false);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					APICloudStorage cloudStorage = new APICloudStorage();
+					cloudStorage.saveToCloud(TChatApplication.getUserModel()
+							.getUsername(), receiver, link,
+							mid, 1, "FileTransfer");
                     
 				}
 				else
@@ -123,12 +141,13 @@ public class APIPostFile {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
+					APICloudStorage cloudStorage = new APICloudStorage();
+					cloudStorage.saveToCloud(TChatApplication.getUserModel()
+							.getUsername(), receiver, link,
+							mid, 0, "FileTransfer");
 				}
                 
-				APICloudStorage cloudStorage = new APICloudStorage();
-				cloudStorage.saveToCloud(TChatApplication.getUserModel()
-						.getUsername(), receiver, link,
-						mid, 0, "FileTransfer");
+			
 
 			} else {
 
@@ -144,7 +163,7 @@ public class APIPostFile {
 
 	public static String postFile(String sender, String receiver,
 			String fileName) throws Exception {
-		Log.e("File send", fileName);
+		Log.e("File send", fileName+"sender "+sender+" receiver "+receiver);
 		HttpClient client = new DefaultHttpClient();
 		HttpPost post = new HttpPost(Constants.HTTP_SCHEME
 				+ Constants.CURRENT_SERVER + Constants.UPLOAD_FILE_ENDPOINT);
@@ -154,7 +173,7 @@ public class APIPostFile {
 		final File file = new File(fileName);
 		FileBody fb = new FileBody(file);
 
-		builder.addPart("upfile", fb);
+		builder.addPart("upfile",fb);
 		builder.addTextBody("sender", sender);
 		builder.addTextBody("receiver", receiver);
 
