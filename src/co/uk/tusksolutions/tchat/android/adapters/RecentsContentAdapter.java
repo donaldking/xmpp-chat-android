@@ -66,7 +66,6 @@ public class RecentsContentAdapter extends BaseAdapter {
 
 		View row = convertView;
 		RecentsViewHolder holder = null;
-		
 
 		if (row == null) {
 			LayoutInflater inflater = (LayoutInflater) context
@@ -87,7 +86,7 @@ public class RecentsContentAdapter extends BaseAdapter {
 		final RecentsModel model = recentsModelCollection.get(position);
 
 		Log.d(TAG, "Recents model: " + model.toString());
-		
+
 		try {
 			String[] username = model.chatWithUser.split("@");
 			UrlImageViewHelper.setUrlDrawable(holder.rosterAvatar,
@@ -99,7 +98,13 @@ public class RecentsContentAdapter extends BaseAdapter {
 		}
 
 		holder.rosterName.setText(model.name);
-		holder.lastMessage.setText(model.message);
+		if (model.message.contains("<img src")) {
+			holder.lastMessage.setText("Image");
+		} else if (model.message.contains("<a target")) {
+			holder.lastMessage.setText("File");
+		} else {
+			holder.lastMessage.setText(model.message);
+		}
 		holder.lastMessageTimestamp.setText(TimeAgo.getTimeAgo(
 				Long.parseLong(model.timestamp), context));
 
@@ -109,20 +114,20 @@ public class RecentsContentAdapter extends BaseAdapter {
 			public void onClick(View v) {
 
 				doSelectionAnimationForView(v);
-				
+
 				Bundle b = new Bundle();
 				b.putString("roomJid", model.chatWithUser);
-				
+
 				Log.d(TAG, "isGroupMessage " + model.isGroupMessage);
-				
+
 				if (model.isGroupMessage == 1) {
 					b.putString("roomName", model.name);
 					launchGroupChatActivity(b);
-				}else{
+				} else {
 					b.putString("friendName", model.name);
 					launchNormalChatActivity(b);
 				}
-				
+
 			}
 		});
 
@@ -135,24 +140,25 @@ public class RecentsContentAdapter extends BaseAdapter {
 		fadeAnimation.setDuration(50);
 		v.startAnimation(fadeAnimation);
 	}
-	
-	private void launchGroupChatActivity(Bundle b){
-		
-		Intent intent = new Intent(TChatApplication.getContext(), GroupChatActivity.class);
+
+	private void launchGroupChatActivity(Bundle b) {
+
+		Intent intent = new Intent(TChatApplication.getContext(),
+				GroupChatActivity.class);
 		intent.putExtra("groupChatToRoomBundle", b);
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		
+
 		TChatApplication.getContext().startActivity(intent);
 	}
-	
-	private void launchNormalChatActivity(Bundle b){
-		
-		Intent intent = new Intent(TChatApplication.getContext(), ChatActivity.class);
+
+	private void launchNormalChatActivity(Bundle b) {
+
+		Intent intent = new Intent(TChatApplication.getContext(),
+				ChatActivity.class);
 		intent.putExtra("chatWithFriendBundle", b);
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		
+
 		TChatApplication.getContext().startActivity(intent);
 	}
-	
-	
+
 }
