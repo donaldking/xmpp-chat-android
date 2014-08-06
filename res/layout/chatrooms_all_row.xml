@@ -8,15 +8,14 @@
         android:id="@+id/main_row_view"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="25dp"
         android:layout_marginTop="5dp"
         android:baselineAligned="true"
-        android:padding="8dp"
-        android:orientation="horizontal" >
+        android:orientation="horizontal"
+        android:padding="8dp" >
 
+       
         <FrameLayout
-            android:id="@+id/avatar_frame"
+            android:id="@+id/roster_avatar"
             android:layout_width="50dp"
             android:layout_height="50dp" >
 
@@ -28,17 +27,19 @@
                 
                 android:src="@drawable/mondobar_jewel_friends_on" />
         </FrameLayout>
+       
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:baselineAligned="true"
-            android:orientation="vertical" >
+            android:orientation="horizontal" >
 
             <co.uk.tusksolutions.extensions.RobotoRegularTextView
                 android:id="@+id/chatroom_name"
-                android:layout_width="fill_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
                 android:layout_marginLeft="5dp"
                 android:ellipsize="end"
                 android:singleLine="true"
@@ -46,8 +47,16 @@
                 android:textColor="@color/black"
                 android:textSize="17sp" />
 
-         
-        </LinearLayout>
+            <ImageView
+                android:id="@+id/chat_room_join_layout"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentRight="true"
+                android:layout_gravity="right"
+                android:layout_marginRight="20dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/joinbutton" />
+        </RelativeLayout>
     </LinearLayout>
 
     <!-- Divider line layout -->

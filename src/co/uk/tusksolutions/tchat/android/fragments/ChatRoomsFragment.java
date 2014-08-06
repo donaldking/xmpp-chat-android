@@ -7,6 +7,8 @@ import co.uk.tusksolutions.tchat.android.activities.CreateChatRoomActivity;
 import co.uk.tusksolutions.tchat.android.adapters.ChatroomsContentAdapter;
 import co.uk.tusksolutions.tchat.android.adapters.GroupsContentAdapter;
 import co.uk.tusksolutions.tchat.android.adapters.RosterContentAdapter;
+import co.uk.tusksolutions.tchat.android.api.APIGetChatRooms;
+import co.uk.tusksolutions.tchat.android.api.APIGetChatRooms.OnGetChatroomsCompleted;
 import co.uk.tusksolutions.tchat.android.fragments.RosterFragment.RosterReceiver;
 import co.uk.tusksolutions.tchat.android.listeners.XMPPPresenceListener;
 import android.animation.Animator;
@@ -28,7 +30,7 @@ import android.view.View.OnClickListener;
 import android.widget.ListView;
 import android.widget.RadioButton;
 
-public class ChatRoomsFragment extends Fragment {
+public class ChatRoomsFragment extends Fragment implements OnGetChatroomsCompleted {
 	public static ListView listView;
 	public String TAG = "ChatRoomFragment";
 	private View rootView;
@@ -103,7 +105,9 @@ public class ChatRoomsFragment extends Fragment {
 	@Override
 	public void onResume() {
 		super.onResume();
-
+   
+		APIGetChatRooms apiGetChatRooms=new APIGetChatRooms();
+		apiGetChatRooms.getChatrooms(this);
 		if (TChatApplication.CHATROOM_SECTION_QUERY_ACTION == ALL_CHATROOMS_QUERY_ACTION) {
 			prepareListView(TChatApplication.CHATROOM_SECTION_QUERY_ACTION);
 		}
@@ -221,6 +225,18 @@ public class ChatRoomsFragment extends Fragment {
 			// and hide the relevant UI components.*/
 			mLodingStatusView.setVisibility(show ? View.VISIBLE : View.GONE);
 		}
+	}
+
+	@Override
+	public void OnGetChatRoomSuccess() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void OnGetChatRoomFailed() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	
