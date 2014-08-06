@@ -185,7 +185,7 @@ public class ChatActivity extends ActionBarActivity {
 
 		mGetMessagesApi = new APIGetMessages();
 		mGetMessagesApi.getMessages(StringUtils.parseName(buddyJid),
-				mAdapter.getCount(), 25);
+				mAdapter.getCount(), 25, "chat");
 
 		// Get last online time for this buddy
 		getLastOnlineTime();

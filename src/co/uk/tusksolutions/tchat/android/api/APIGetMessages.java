@@ -22,8 +22,9 @@ public class APIGetMessages {
 	private AsyncApiGetMessages mTask = null;
 	private String buddyUsername;
 	private int offset, limit;
+	private String type;
 
-	public void getMessages(String buddyUsername, int offset, int limit) {
+	public void getMessages(String buddyUsername, int offset, int limit, String type) {
 
 		if (mTask != null) {
 			return;
@@ -32,6 +33,7 @@ public class APIGetMessages {
 		this.buddyUsername = buddyUsername;
 		this.offset = offset;
 		this.limit = limit;
+		this.type = type;
 
 		mTask = new AsyncApiGetMessages();
 		mTask.execute((Void) null);
@@ -52,7 +54,8 @@ public class APIGetMessages {
 					+ Constants.CHAT_MESSAGES_ENDPOINT + "?sender="
 					+ TChatApplication.getUserModel().getUsername()
 					+ "&receiver=" + buddyUsername + "&offset=" + offset
-					+ "&limit=" + limit);
+					+ "&limit=" + limit
+					+ "&type=" + type);
 
 			HttpClient httpclient = new DefaultHttpClient();
 			HttpResponse response;
@@ -67,12 +70,25 @@ public class APIGetMessages {
 					Utility utility = new Utility();
 					jsonArray = utility.convertToJSON(utility
 							.convertStreamToString(instream));
-
+					
 					if (jsonArray.length() >= 0) {
 						mChatMessagesModel = new ChatMessagesModel();
-						if (mChatMessagesModel.saveMessageToDB(jsonArray)) {
-							apiResult = true;
+						
+						if (type != null) {
+							if (type.equalsIgnoreCase("group")) {
+								// Call group save
+								if (mChatMessagesModel.saveGroupMessageToDB(jsonArray)) {
+									apiResult = true;
+								}
+							}else{
+								// Call normal chat save
+								if (mChatMessagesModel.saveMessageToDB(jsonArray)) {
+									apiResult = true;
+								}
+							}
 						}
+						
+						
 
 					} else {
 						apiResult = false;

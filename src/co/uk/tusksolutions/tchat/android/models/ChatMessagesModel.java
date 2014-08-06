@@ -94,6 +94,55 @@ public class ChatMessagesModel implements Parcelable {
 		return true;
 	}
 
+	public boolean saveGroupMessageToDB(JSONArray messages) {
+		int counter = 0;
+		db = TChatApplication.getTChatDBWritable();
+
+		/*
+		 * This method inserts the recent chats for the current user to db.
+		 */
+		for (int i = 0; i < messages.length(); i++) {
+
+			try {
+				JSONObject messageObject = messages.getJSONObject(i);
+
+				ContentValues contentValues = new ContentValues();
+				contentValues.put(TChatDBHelper.CM_OBJECT_ID,
+						messageObject.getString("id"));
+				contentValues.put(TChatDBHelper.CM_SENDER,
+						messageObject.getString("sender"));
+				contentValues.put(TChatDBHelper.CM_RECEIVER,
+						messageObject.getString("receiver"));
+				contentValues.put(TChatDBHelper.CM_RESOURCE,
+						messageObject.getString("resource"));
+				contentValues.put(TChatDBHelper.CM_IS_GROUP_MESSAGE,
+						messageObject.getString("isGroupMessage"));
+				contentValues.put(TChatDBHelper.CM_MESSAGE_TYPE,
+						messageObject.getString("messageType"));
+				contentValues.put(TChatDBHelper.CM_MESSAGE,
+						messageObject.getString("message"));
+				contentValues.put(TChatDBHelper.CM_MESSAGE_ID,
+						messageObject.getString("mid"));
+				contentValues.put(TChatDBHelper.CM_IS_READ,
+						messageObject.getString("isRead"));
+				contentValues.put(TChatDBHelper.CM_TIMESTAMP,
+						messageObject.getString("time_stamp"));
+
+				// Insert
+				db.insertWithOnConflict(TABLE, null, contentValues,
+						SQLiteDatabase.CONFLICT_REPLACE);
+
+				counter++;
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		Log.d(TAG, "Total Messages " + counter);
+		return true;
+	}
+	
 	public boolean saveMessageToDB(String to, String from, String resource,
 			String buddyName, String message, int isGroupMessage,
 			String messageType, long timeStamp, int isRead, String mid) {
@@ -110,6 +159,7 @@ public class ChatMessagesModel implements Parcelable {
 			contentValues.put(TChatDBHelper.CM_RECEIVER, to);
 			contentValues.put(TChatDBHelper.CM_RESOURCE, resource);
 			contentValues.put(TChatDBHelper.CM_MESSAGE, message);
+			contentValues.put(TChatDBHelper.CM_IS_GROUP_MESSAGE, isGroupMessage);
 			contentValues.put(TChatDBHelper.CM_MESSAGE_ID, mid);
 			contentValues.put(TChatDBHelper.CM_TIMESTAMP, timeStamp);
 			contentValues.put(TChatDBHelper.CM_MESSAGE_TYPE, messageType);

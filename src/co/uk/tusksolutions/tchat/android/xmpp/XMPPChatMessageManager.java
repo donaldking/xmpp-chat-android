@@ -49,7 +49,7 @@ public class XMPPChatMessageManager {
 			mChatMessageModel.saveMessageToDB(to,
 					TChatApplication.getCurrentJid(),
 					Constants.XMPP_RESOURCE, buddyName, message,
-					isGroupMessage, messageType, System.currentTimeMillis(), 2, mid);
+					isGroupMessage, messageType, System.currentTimeMillis(), 1, mid);
 		}
 	}
 

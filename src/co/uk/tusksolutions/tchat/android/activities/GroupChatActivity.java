@@ -173,7 +173,7 @@ public class GroupChatActivity extends ActionBarActivity {
 
 		mGetMessagesApi = new APIGetMessages();
 		mGetMessagesApi.getMessages(StringUtils.parseName(roomJid),
-				mAdapter.getCount(), 25);
+				mAdapter.getCount(), 25, "group");
 	}
 
 	private static void prepareListView(String buddyJid, String currentJid,
