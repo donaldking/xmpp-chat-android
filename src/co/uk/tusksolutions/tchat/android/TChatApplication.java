@@ -44,6 +44,7 @@ public class TChatApplication extends Application {
 	private static ChatMessagesModel mChatMessagesModel;
 	public static String chatSessionBuddy;
 	public static int CHAT_SECTION_QUERY_ACTION;
+	public static int CHATROOM_SECTION_QUERY_ACTION;
 	public static Handler presenceDialogHandler;
 
 	@Override

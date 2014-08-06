@@ -1,7 +1,5 @@
 package co.uk.tusksolutions.tchat.android.tasks;
 
-import java.util.ArrayList;
-
 import org.jivesoftware.smack.XMPPException;
 
 import android.app.ProgressDialog;
@@ -9,7 +7,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
-import co.uk.tusksolutions.tchat.android.models.RosterModel;
 import co.uk.tusksolutions.tchat.android.xmpp.XMPPMUCManager;
 
 public class CreateChatroomAsyncTask extends AsyncTask<Void, Void, Boolean> {
@@ -51,7 +48,7 @@ public class CreateChatroomAsyncTask extends AsyncTask<Void, Void, Boolean> {
 		try {
 
 			/**
-			 * Build group name from buddy names. This is used for sending
+			 * Build chat room name from buddy names. This is used for sending
 			 * invitation reason.
 			 */
 			String password="";

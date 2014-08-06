@@ -35,15 +35,16 @@ public class ChatRoomsFragment extends Fragment {
 	private static ChatroomsContentAdapter mAdapter;
 	private IntentFilter filter;
 
-	private static View mLodingStatusView;
 	private static int shortAnimTime;
 	private static int lastViewedPosition;
 	private static int topOffset;
-	
-	private RadioButton allchatroomButton, activechatroomButton,
-			scheduledchatroomButton,createchatroomButton;
+	private static View mLodingStatusView;
+	private RadioButton allchatroomButton, activechatroomButton,scheduledchatroomButton,createchatroomButton;
 	private Bundle instanceState;
-
+	
+	private static int ALL_CHATROOMS_QUERY_ACTION = 1; // See adapter for notes
+	private int ACTIVE_CHATROOMS_QUERY_ACTION = 2; // See adapter for notes
+	private int SCHEDULED_CHATROOMS_QUERY_ACTION = 3;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -68,12 +69,12 @@ public class ChatRoomsFragment extends Fragment {
 		shortAnimTime = getResources().getInteger(
 				android.R.integer.config_shortAnimTime);
 
-		mLodingStatusView = getActivity()
-				.findViewById(R.id.roster_loading_view);
+		
 		listView = (ListView) rootView.findViewById(R.id.list_view);
 		listView.setVerticalScrollBarEnabled(false);
 		listView.setHorizontalScrollBarEnabled(false);
-		showProgress(true);
+		mLodingStatusView = getActivity()
+				.findViewById(R.id.chatroom_loading_view);
 
 		if (instanceState != null && mAdapter != null) {
 
@@ -93,6 +94,7 @@ public class ChatRoomsFragment extends Fragment {
 				.setOnClickListener(new SegmentButtonOnClickListener());
 		scheduledchatroomButton = (RadioButton) rootView
 				.findViewById(R.id.scheduled_chatroom_button);
+		scheduledchatroomButton.setOnClickListener(new SegmentButtonOnClickListener());
 		createchatroomButton=(RadioButton)rootView.findViewById(R.id.create_chatroom_button);
 		createchatroomButton.setOnClickListener(new SegmentButtonOnClickListener());
 
@@ -102,7 +104,10 @@ public class ChatRoomsFragment extends Fragment {
 	public void onResume() {
 		super.onResume();
 
-		prepareListView();
+		if (TChatApplication.CHATROOM_SECTION_QUERY_ACTION == ALL_CHATROOMS_QUERY_ACTION) {
+			prepareListView(TChatApplication.CHATROOM_SECTION_QUERY_ACTION);
+		}
+		
 	}
 
 	@Override
@@ -111,14 +116,20 @@ public class ChatRoomsFragment extends Fragment {
 
 	}
 
-	private static void prepareListView() {
+	private static void prepareListView(final int queryInt) {
 
 		/**
 		 * Load Recents from DB
 		 */
-		mAdapter = new ChatroomsContentAdapter(TChatApplication.getContext());
+		TChatApplication.CHATROOM_SECTION_QUERY_ACTION=queryInt;
+		mAdapter = new ChatroomsContentAdapter(TChatApplication.getContext(),queryInt);
 
 		if (mAdapter.getCount() == 0) {
+			if (TChatApplication.CHATROOM_SECTION_QUERY_ACTION == 2) {
+				showProgress(false);
+			} else {
+				showProgress(true);
+			}
 			listView.setVisibility(View.GONE);
 		} else {
 			showProgress(false);
@@ -126,8 +137,6 @@ public class ChatRoomsFragment extends Fragment {
 			if (listView.getVisibility() != View.VISIBLE) {
 				listView.setVisibility(View.VISIBLE);
 			}
-
-			listView.setSelectionFromTop(lastViewedPosition, topOffset);
 		}
 	}
 
@@ -160,13 +169,17 @@ public class ChatRoomsFragment extends Fragment {
 			int id = v.getId();
 			switch (id) {
 			case R.id.all_chatroom_button:
+				TChatApplication.CHATROOM_SECTION_QUERY_ACTION=ALL_CHATROOMS_QUERY_ACTION;
+				prepareListView(TChatApplication.CHATROOM_SECTION_QUERY_ACTION);
 
 				break;
 			case R.id.active_chatroom_button:
-
+				TChatApplication.CHATROOM_SECTION_QUERY_ACTION=ACTIVE_CHATROOMS_QUERY_ACTION;
+				prepareListView(TChatApplication.CHATROOM_SECTION_QUERY_ACTION);
 				break;
 			case R.id.scheduled_chatroom_button:
-				
+				TChatApplication.CHATROOM_SECTION_QUERY_ACTION=SCHEDULED_CHATROOMS_QUERY_ACTION;
+				prepareListView(TChatApplication.CHATROOM_SECTION_QUERY_ACTION);
 				break;
 			case R.id.create_chatroom_button:
 				//To create a chat room
@@ -181,7 +194,6 @@ public class ChatRoomsFragment extends Fragment {
 			}
 		}
 	}
-	
 	/**
 	 * Shows the progress UI and hides the login form.
 	 */
@@ -210,5 +222,6 @@ public class ChatRoomsFragment extends Fragment {
 			mLodingStatusView.setVisibility(show ? View.VISIBLE : View.GONE);
 		}
 	}
-
+	
+	
 }

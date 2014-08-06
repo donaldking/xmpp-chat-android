@@ -7,13 +7,15 @@ import org.jivesoftware.smackx.muc.InvitationListener;
 
 import android.content.Context;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
+import co.uk.tusksolutions.tchat.android.api.APIGetChatRooms;
+import co.uk.tusksolutions.tchat.android.api.APIGetChatRooms.OnGetChatroomsCompleted;
 import co.uk.tusksolutions.tchat.android.api.APIGetGroups;
 import co.uk.tusksolutions.tchat.android.api.APIGetGroups.OnGetGroupsCompleted;
 import co.uk.tusksolutions.tchat.android.models.GroupsModel;
 import co.uk.tusksolutions.tchat.android.xmpp.XMPPMUCManager;
 
 public class XMPPMucInvitationListener implements InvitationListener,
-		OnGetGroupsCompleted {
+		OnGetGroupsCompleted{
 
 	private final Context context;
 
@@ -28,6 +30,7 @@ public class XMPPMucInvitationListener implements InvitationListener,
 		// Load groups from API
 		APIGetGroups groupsApi = new APIGetGroups();
 		groupsApi.getGroups(this);
+		
 
 		if (TChatApplication.getGroupsModel().saveCreatedRoomInDB(room, reason,
 				StringUtils.parseBareAddress(inviter), "")) {
@@ -47,4 +50,5 @@ public class XMPPMucInvitationListener implements InvitationListener,
 		// TODO Auto-generated method stub
 
 	}
+
 }

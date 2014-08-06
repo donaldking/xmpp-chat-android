@@ -11,11 +11,13 @@ import org.jsoup.select.Elements;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.BaseAdapter;
 import co.uk.tusksolutions.extensions.TimeAgo;
 import co.uk.tusksolutions.tchat.android.R;
@@ -23,6 +25,7 @@ import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
 import co.uk.tusksolutions.tchat.android.models.ChatMessagesModel;
 import co.uk.tusksolutions.tchat.android.models.UserModel;
+import co.uk.tusksolutions.tchat.android.tasks.DownloadFilesTask;
 import co.uk.tusksolutions.tchat.android.viewHolders.GroupChatFromImageViewHolder;
 import co.uk.tusksolutions.tchat.android.viewHolders.GroupChatFromViewHolder;
 import co.uk.tusksolutions.tchat.android.viewHolders.GroupChatToImageViewHolder;
@@ -85,8 +88,20 @@ public class GroupChatMessagesAdapter extends BaseAdapter {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-		if ((message != null)
+		 if((message!=null)&&message.contains("href="))
+         {
+        	 if(groupChatMessagesModelCollection.get(position).receiver.equalsIgnoreCase(TChatApplication.getCurrentJid()))
+        	 {
+        		 rowType=1;
+        	 }
+        	 else
+        	 {
+        		 rowType=0;
+        	 }
+        	 
+        	 
+         }
+    	 else if ((message != null)
 				&& groupChatMessagesModelCollection.get(position).receiver
 						.equalsIgnoreCase(TChatApplication.getCurrentJid())) {
 			if (groupChatMessagesModelCollection.get(position).message
@@ -166,13 +181,44 @@ public class GroupChatMessagesAdapter extends BaseAdapter {
 			}
 
 			groupChatFromViewHolder.chatMessageFromUser.setText(nameFrom);
-			groupChatFromViewHolder.chatMessageTextView
-					.setText(chatMessagesModel.message);
+			
+			
+			if ((chatMessagesModel.message!=null)&&chatMessagesModel.message.contains("href=")) {
+				groupChatFromViewHolder.chatMessageTextView.setTextColor(Color.WHITE);
+				
+				groupChatFromViewHolder.chatMessageTextView
+				.setText((Html.fromHtml(chatMessagesModel.message)));
+			}
+			else
+			{
+				groupChatFromViewHolder.chatMessageTextView
+				.setText(chatMessagesModel.message);
+			}
+			
 			// }
 			groupChatFromViewHolder.chatMessageTimestampTextView
 					.setText(TimeAgo.getTimeAgo(
 							Long.parseLong(chatMessagesModel.timeStamp),
 							context));
+			
+			row.setOnClickListener(new OnClickListener() { // Call Chat Page when
+				// pressed
+				@Override
+				public void onClick(View arg0) {
+
+					try {
+
+						String LinkMessage = chatMessagesModel.message;
+	                    	if (LinkMessage.contains("href")) {
+							
+	                    		 DownloadFilesTask downloadFilesTask=new DownloadFilesTask();
+	  	                       downloadFilesTask.dodownloadFile(context,getDownloadUrl(LinkMessage),Html.fromHtml(LinkMessage).toString());
+						} 
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			});
 
 			break;
 		case 1:
@@ -199,13 +245,42 @@ public class GroupChatMessagesAdapter extends BaseAdapter {
 				myName = um.getUsername();
 			}
 			groupChatToViewHolder.chatMessageToUser.setText(myName);
-			groupChatToViewHolder.chatMessageTextView
-					.setText(chatMessagesModel.message);
+			
+			if ((chatMessagesModel.message!=null)&&chatMessagesModel.message.contains("href=")) {
+				groupChatToViewHolder.chatMessageTextView.setTextColor(Color.WHITE);
+				
+				groupChatToViewHolder.chatMessageTextView
+				.setText((Html.fromHtml(chatMessagesModel.message)));
+			}
+			else
+			{
+				groupChatToViewHolder.chatMessageTextView
+				.setText(chatMessagesModel.message);
+			}
+			
 
 			groupChatToViewHolder.chatMessageTimestampTextView.setText(TimeAgo
 					.getTimeAgo(Long.parseLong(chatMessagesModel.timeStamp),
 							context));
 
+			row.setOnClickListener(new OnClickListener() { // Call Chat Page when
+				// pressed
+				@Override
+				public void onClick(View arg0) {
+
+					try {
+
+						String LinkMessage = chatMessagesModel.message;
+	                    	if (LinkMessage.contains("href")) {
+							
+	                    		 DownloadFilesTask downloadFilesTask=new DownloadFilesTask();
+	  	                       downloadFilesTask.dodownloadFile(context,getDownloadUrl(LinkMessage),Html.fromHtml(LinkMessage).toString());
+						} 
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			});
 			break;
 
 		case 2:
@@ -409,5 +484,21 @@ public class GroupChatMessagesAdapter extends BaseAdapter {
 		}
 
 		return inSampleSize;
+	}
+	private String getDownloadUrl(String htmlString) {
+
+		if (htmlString == null)
+			return null;
+
+		String img = "";
+		Document doc = Jsoup.parse(htmlString);
+		
+		Element element2 = doc.select("a").first(); 
+		
+
+		img=Constants.HTTP_SCHEME+element2.attr("href").substring(3);
+		return img;
+
+		
 	}
 }

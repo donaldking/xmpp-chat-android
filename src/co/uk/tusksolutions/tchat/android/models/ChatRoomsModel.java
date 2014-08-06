@@ -12,6 +12,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 public class ChatRoomsModel implements Parcelable {
 
@@ -110,7 +111,7 @@ public class ChatRoomsModel implements Parcelable {
 		return true;
 	}
 	
-	public ArrayList<ChatRoomsModel> queryChatrooms() {
+	public ArrayList<ChatRoomsModel> queryAllChatrooms() {
 
 		ArrayList<ChatRoomsModel> chatroomsModelCollection = new ArrayList<ChatRoomsModel>();
 
@@ -124,6 +125,55 @@ public class ChatRoomsModel implements Parcelable {
 
 		return chatroomsModelCollection;
 	}
+	public ArrayList<ChatRoomsModel> queryActiveChatrooms() {
+
+		ArrayList<ChatRoomsModel> chatroomsModelCollection = new ArrayList<ChatRoomsModel>();
+		
+		String currentTime=String.valueOf(System.currentTimeMillis());
+		
+		String whereClause = TChatDBHelper.CR_START_TIMESTAMP + " <= ? ";
+
+		String[] whereArgs = new String[] {currentTime};
+		String orderBy = TChatDBHelper.CR_CHATROOM_NAME + " ASC";
+
+		Cursor cursor = TChatApplication.getTChatDBWritable().query(TABLE,
+				null, whereClause, whereArgs, null, null, orderBy);
+		Log.e("length","active Size "+cursor.getCount());
+		while (cursor.moveToNext()) {
+			
+
+			chatroomsModelCollection.add(fromCursor(cursor));
+		}
+
+		return chatroomsModelCollection;
+	}
+	
+		public ArrayList<ChatRoomsModel> queryScheduledChatrooms() {
+
+			ArrayList<ChatRoomsModel> chatroomsModelCollection = new ArrayList<ChatRoomsModel>();
+
+			
+			String currentTime=String.valueOf(System.currentTimeMillis());
+			
+			String whereClause = TChatDBHelper.CR_START_TIMESTAMP + " > ? ";
+
+			String[] whereArgs = new String[] {currentTime};
+			String orderBy = TChatDBHelper.CR_CHATROOM_NAME + " ASC";
+
+			Cursor cursor = TChatApplication.getTChatDBWritable().query(TABLE,
+					null, whereClause, whereArgs, null, null, orderBy);
+
+			Log.e("length","scheduled Size "+cursor.getCount());
+			while (cursor.moveToNext()) {
+				
+
+
+				chatroomsModelCollection.add(fromCursor(cursor));
+			}
+
+			return chatroomsModelCollection;
+
+		}
 	protected ChatRoomsModel fromCursor(Cursor cursor) {
 		/*
 		 * Pulls the values fromUser the cursor object and returns it TO_USER

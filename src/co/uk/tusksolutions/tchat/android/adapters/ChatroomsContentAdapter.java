@@ -24,14 +24,35 @@ public class ChatroomsContentAdapter extends BaseAdapter {
 	static float SELECTED_ALPHA = 0.5f;
 	private Context context;
 	private ChatRoomsModel mModel;
-
 	private ArrayList<ChatRoomsModel> chatroomsModelCollection;
+	public int action;
 
-	public ChatroomsContentAdapter(Context context) {
+	public ChatroomsContentAdapter(Context context,int action) {
 		this.context = TChatApplication.getContext();
 		mModel = new ChatRoomsModel();
-		chatroomsModelCollection = mModel.queryChatrooms();
-		notifyDataSetChanged();
+		this.action=action;
+		switch (action) {
+		case 1:
+			chatroomsModelCollection=mModel.queryAllChatrooms();
+			notifyDataSetChanged();
+			
+			break;
+			
+		case 2:
+			chatroomsModelCollection=mModel.queryActiveChatrooms();
+			notifyDataSetChanged();
+			
+			break;
+		case 3:
+			chatroomsModelCollection=mModel.queryScheduledChatrooms();
+			notifyDataSetChanged();
+			
+			break;
+
+		default:
+			break;
+		}
+		
 	}
 
 	@Override
