@@ -114,7 +114,18 @@ public class XMPPGroupChatMessageListener implements PacketListener {
 		b.putString("roomName", roomName);
 		b.putString("senderJid", senderJid);
 		b.putString("senderName", senderName);
-		b.putString("message", message.getBody());
+		
+		/*
+		 * Image & File noticiations added
+		 */
+		String last_message = message.getBody();
+		if (last_message.contains("<img src")) {
+			last_message = "Image";
+		}else if(last_message.contains("<a target")){
+			last_message = "File";
+		}
+		
+		b.putString("message", last_message);
 
 		Intent intent = new Intent();
 		intent.putExtra("groupChatFromRoomBundle", b);

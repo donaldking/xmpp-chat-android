@@ -125,6 +125,15 @@ public class XMPPChatMessageListener implements PacketListener {
 			String MessageParse[] = message.getBody().split("\\|s\\|");
 			String buddyJID = MessageParse[0].replace("@"+Constants.CURRENT_SERVER,"");
 			String last_message = MessageParse[1];
+			/*
+			 * Image & File noticiations added
+			 */
+			if (last_message.contains("<img src")) {
+				last_message = "Image";
+			}else if(last_message.contains("<a target")){
+				last_message = "File";
+			}
+			
 			Bundle b = new Bundle();
 
 			b.putString("roomJid", packet.getFrom());
@@ -147,7 +156,18 @@ public class XMPPChatMessageListener implements PacketListener {
 			b.putString("roomJid", packet.getFrom());
 			b.putString("fromName", TChatApplication.getRosterModel()
 					.getBuddyName(buddyJid));
-			b.putString("message", message.getBody());
+			
+			/*
+			 * Image & File noticiations added
+			 */
+			String last_message = message.getBody();
+			if (last_message.contains("<img src")) {
+				last_message = "Image";
+			}else if(last_message.contains("<a target")){
+				last_message = "File";
+			}
+			
+			b.putString("message", last_message);
 
 			Intent intent = new Intent();
 			intent.putExtra("chatFromFriendBundle", b);
