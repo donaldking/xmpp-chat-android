@@ -5,8 +5,10 @@ import java.util.ArrayList;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -27,32 +29,32 @@ public class ChatroomsContentAdapter extends BaseAdapter {
 	private ArrayList<ChatRoomsModel> chatroomsModelCollection;
 	public int action;
 
-	public ChatroomsContentAdapter(Context context,int action) {
+	public ChatroomsContentAdapter(Context context, int action) {
 		this.context = TChatApplication.getContext();
 		mModel = new ChatRoomsModel();
-		this.action=action;
+		this.action = action;
 		switch (action) {
 		case 1:
-			chatroomsModelCollection=mModel.queryAllChatrooms();
+			chatroomsModelCollection = mModel.queryAllChatrooms();
 			notifyDataSetChanged();
-			
+
 			break;
-			
+
 		case 2:
-			chatroomsModelCollection=mModel.queryActiveChatrooms();
+			chatroomsModelCollection = mModel.queryActiveChatrooms();
 			notifyDataSetChanged();
-			
+
 			break;
 		case 3:
-			chatroomsModelCollection=mModel.queryScheduledChatrooms();
+			chatroomsModelCollection = mModel.queryScheduledChatrooms();
 			notifyDataSetChanged();
-			
+
 			break;
 
 		default:
 			break;
 		}
-		
+
 	}
 
 	@Override
@@ -106,7 +108,16 @@ public class ChatroomsContentAdapter extends BaseAdapter {
 			holder.joinchatroom.setVisibility(View.GONE);
 			break;
 		case 2:
+
 			holder.joinchatroom.setVisibility(View.VISIBLE);
+			if (model.chatroom_owner.toString().contains(
+					TChatApplication.getUserModel().getUsername())) {
+				holder.joinchatroom
+						.setBackgroundResource(R.drawable.startbutton);
+			} else {
+				holder.joinchatroom
+						.setBackgroundResource(R.drawable.joinbutton);
+			}
 			break;
 		case 3:
 			holder.joinchatroom.setVisibility(View.GONE);
@@ -114,7 +125,19 @@ public class ChatroomsContentAdapter extends BaseAdapter {
 		default:
 			break;
 		}
+		row.setOnClickListener(new OnClickListener() {
 
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				doSelectionAnimationForView(v);
+
+				Bundle b = new Bundle();
+				b.putString("roomJid", model.chatroom_jid);
+				b.putString("roomName", model.chatroom_name);
+				launchGroupChatActivity(b);
+			}
+		});
 		return row;
 	}
 

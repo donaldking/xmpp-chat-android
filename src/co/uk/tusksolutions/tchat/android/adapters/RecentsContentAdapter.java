@@ -98,9 +98,9 @@ public class RecentsContentAdapter extends BaseAdapter {
 		}
 
 		holder.rosterName.setText(model.name);
-		if (model.message.contains("<img src")) {
+		if ((model.message!=null)&&model.message.contains("<img src")) {
 			holder.lastMessage.setText("Image");
-		} else if (model.message.contains("<a target")) {
+		} else if ((model.message!=null)&&model.message.contains("<a target")) {
 			holder.lastMessage.setText("File");
 		} else {
 			holder.lastMessage.setText(model.message);

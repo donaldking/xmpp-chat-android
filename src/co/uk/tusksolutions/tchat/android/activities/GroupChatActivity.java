@@ -286,7 +286,7 @@ public class GroupChatActivity extends ActionBarActivity {
 		case R.id.group_add_people:
 			Intent addPeopleIntent = new Intent(TChatApplication.getContext(),
 					GroupParticipantsAddActivity.class); // Change to people
-														// selction
+															// selction
 			Bundle addPeopleBundle = new Bundle();
 			addPeopleBundle.putString("group_id", group_id);
 			addPeopleIntent.putExtras(addPeopleBundle);

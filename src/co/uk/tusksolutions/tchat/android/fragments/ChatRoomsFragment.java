@@ -141,6 +141,7 @@ public class ChatRoomsFragment extends Fragment implements OnGetChatroomsComplet
 				listView.setVisibility(View.VISIBLE);
 			}
 		}
+		listView.setSelectionFromTop(lastViewedPosition, topOffset);
 	}
 
 

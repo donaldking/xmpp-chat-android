@@ -10,6 +10,7 @@ import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBarActivity;
@@ -286,6 +287,7 @@ public class CreateChatRoomActivity extends ActionBarActivity implements
 		String status = "future";
 		String max_guest = "20";
 
+		
 		APICreateChatrooms apiCreateChatrooms = new APICreateChatrooms();
 		apiCreateChatrooms.doPostChatroom(chatroomjid, chatroom_name,
 				TChatApplication.getUserModel().getUsername(),
