@@ -43,9 +43,7 @@ public class APIGetChatRooms {
 			boolean apiResult = false;
 
 			HttpGet request = new HttpGet(Constants.HTTP_SCHEME
-					+ Constants.CURRENT_SERVER + Constants.GET_CHATROOMS_ENDPOINT
-					+ "?username="
-					+ TChatApplication.getUserModel().getUsername());
+					+ Constants.CURRENT_SERVER + Constants.GET_CHATROOMS_ENDPOINT);
 
 			HttpClient httpclient = new DefaultHttpClient();
 			HttpResponse response;
