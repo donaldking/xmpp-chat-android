@@ -41,7 +41,7 @@ public class ChatRoomsFragment extends Fragment implements OnGetChatroomsComplet
 	private static int lastViewedPosition;
 	private static int topOffset;
 	private static View mLodingStatusView;
-	private RadioButton allchatroomButton, activechatroomButton,scheduledchatroomButton,createchatroomButton;
+	private RadioButton allchatroomButton, activechatroomButton,scheduledchatroomButton;
 	private Bundle instanceState;
 	
 	private static int ALL_CHATROOMS_QUERY_ACTION = 1; // See adapter for notes
@@ -97,8 +97,7 @@ public class ChatRoomsFragment extends Fragment implements OnGetChatroomsComplet
 		scheduledchatroomButton = (RadioButton) rootView
 				.findViewById(R.id.scheduled_chatroom_button);
 		scheduledchatroomButton.setOnClickListener(new SegmentButtonOnClickListener());
-		createchatroomButton=(RadioButton)rootView.findViewById(R.id.create_chatroom_button);
-		createchatroomButton.setOnClickListener(new SegmentButtonOnClickListener());
+		
 
 	}
 	
@@ -159,8 +158,10 @@ public class ChatRoomsFragment extends Fragment implements OnGetChatroomsComplet
 
 		MenuItem filter = menu.findItem(R.id.action_settings);
 		MenuItem filter1 = menu.findItem(R.id.action_chat_one);
+		MenuItem filter2 = menu.findItem(R.id.action_chat);
 		filter.setVisible(false);
 		filter1.setVisible(false);
+		filter2.setVisible(false);
 	}
 
 	/*
@@ -185,13 +186,7 @@ public class ChatRoomsFragment extends Fragment implements OnGetChatroomsComplet
 				TChatApplication.CHATROOM_SECTION_QUERY_ACTION=SCHEDULED_CHATROOMS_QUERY_ACTION;
 				prepareListView(TChatApplication.CHATROOM_SECTION_QUERY_ACTION);
 				break;
-			case R.id.create_chatroom_button:
-				//To create a chat room
-				
-				Intent intent=new Intent(TChatApplication.getContext(),CreateChatRoomActivity.class);
-				startActivity(intent);
 			
-				break;
 
 			default:
 				break;
