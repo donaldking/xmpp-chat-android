@@ -99,7 +99,7 @@
             android:layout_marginBottom="8dp" />
     </LinearLayout>
 
-     <LinearLayout
+   <!--   <LinearLayout
             android:id="@+id/create_chatrooms"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -127,7 +127,7 @@
                     android:checked="true"
                     android:text="Create New" />
                 </info.hoang8f.android.segmented.SegmentedGroup>
-        </LinearLayout>
+        </LinearLayout> -->
    
         <!-- Loading progress start -->
 

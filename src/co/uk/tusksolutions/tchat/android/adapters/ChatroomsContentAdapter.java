@@ -101,7 +101,19 @@ public class ChatroomsContentAdapter extends BaseAdapter {
 
 		holder.chatroomName.setText(model.chatroom_name);
 
-
+		switch (action) {
+		case 1:
+			holder.joinchatroom.setVisibility(View.GONE);
+			break;
+		case 2:
+			holder.joinchatroom.setVisibility(View.VISIBLE);
+			break;
+		case 3:
+			holder.joinchatroom.setVisibility(View.GONE);
+			break;
+		default:
+			break;
+		}
 
 		return row;
 	}

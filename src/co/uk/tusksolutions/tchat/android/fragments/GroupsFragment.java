@@ -152,7 +152,10 @@ public class GroupsFragment extends Fragment {
 		
 		MenuItem filter = menu.findItem(R.id.action_settings);
 		MenuItem filter1 = menu.findItem(R.id.action_chat_one);
+		MenuItem filter2=menu.findItem(R.id.action_chat_room);
+		filter2.setVisible(false);
 		filter.setVisible(false);
 		filter1.setVisible(false);
+		
 	}
 }

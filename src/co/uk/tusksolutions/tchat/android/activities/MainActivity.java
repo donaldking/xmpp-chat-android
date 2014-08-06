@@ -193,6 +193,11 @@ public class MainActivity extends ActionBarActivity implements
 
 			return true;
 		}
+		if(id==R.id.action_chat_room)
+		{
+			startActivity(new Intent(MainActivity.this,CreateChatRoomActivity.class));
+			return true;
+		}
 		return super.onOptionsItemSelected(item);
 	}
 

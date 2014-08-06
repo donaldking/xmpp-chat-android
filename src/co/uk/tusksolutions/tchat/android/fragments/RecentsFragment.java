@@ -220,7 +220,8 @@ public class RecentsFragment extends Fragment {
 		// TODO Auto-generated method stub
 	
 		MenuItem filter = menu.findItem(R.id.action_chat);
-
+		MenuItem filter2=menu.findItem(R.id.action_chat_room);
+		filter2.setVisible(false);
 		filter.setVisible(false);
 	}
 }

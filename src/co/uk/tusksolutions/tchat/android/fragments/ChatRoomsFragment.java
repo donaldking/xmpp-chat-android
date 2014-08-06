@@ -7,6 +7,8 @@ import co.uk.tusksolutions.tchat.android.activities.CreateChatRoomActivity;
 import co.uk.tusksolutions.tchat.android.adapters.ChatroomsContentAdapter;
 import co.uk.tusksolutions.tchat.android.adapters.GroupsContentAdapter;
 import co.uk.tusksolutions.tchat.android.adapters.RosterContentAdapter;
+import co.uk.tusksolutions.tchat.android.api.APIGetChatRooms;
+import co.uk.tusksolutions.tchat.android.api.APIGetChatRooms.OnGetChatroomsCompleted;
 import co.uk.tusksolutions.tchat.android.fragments.RosterFragment.RosterReceiver;
 import co.uk.tusksolutions.tchat.android.listeners.XMPPPresenceListener;
 import android.animation.Animator;
@@ -28,7 +30,7 @@ import android.view.View.OnClickListener;
 import android.widget.ListView;
 import android.widget.RadioButton;
 
-public class ChatRoomsFragment extends Fragment {
+public class ChatRoomsFragment extends Fragment implements OnGetChatroomsCompleted {
 	public static ListView listView;
 	public String TAG = "ChatRoomFragment";
 	private View rootView;
@@ -39,7 +41,7 @@ public class ChatRoomsFragment extends Fragment {
 	private static int lastViewedPosition;
 	private static int topOffset;
 	private static View mLodingStatusView;
-	private RadioButton allchatroomButton, activechatroomButton,scheduledchatroomButton,createchatroomButton;
+	private RadioButton allchatroomButton, activechatroomButton,scheduledchatroomButton;
 	private Bundle instanceState;
 	
 	private static int ALL_CHATROOMS_QUERY_ACTION = 1; // See adapter for notes
@@ -95,15 +97,16 @@ public class ChatRoomsFragment extends Fragment {
 		scheduledchatroomButton = (RadioButton) rootView
 				.findViewById(R.id.scheduled_chatroom_button);
 		scheduledchatroomButton.setOnClickListener(new SegmentButtonOnClickListener());
-		createchatroomButton=(RadioButton)rootView.findViewById(R.id.create_chatroom_button);
-		createchatroomButton.setOnClickListener(new SegmentButtonOnClickListener());
+		
 
 	}
 	
 	@Override
 	public void onResume() {
 		super.onResume();
-
+   
+		APIGetChatRooms apiGetChatRooms=new APIGetChatRooms();
+		apiGetChatRooms.getChatrooms(this);
 		if (TChatApplication.CHATROOM_SECTION_QUERY_ACTION == ALL_CHATROOMS_QUERY_ACTION) {
 			prepareListView(TChatApplication.CHATROOM_SECTION_QUERY_ACTION);
 		}
@@ -155,8 +158,10 @@ public class ChatRoomsFragment extends Fragment {
 
 		MenuItem filter = menu.findItem(R.id.action_settings);
 		MenuItem filter1 = menu.findItem(R.id.action_chat_one);
+		MenuItem filter2 = menu.findItem(R.id.action_chat);
 		filter.setVisible(false);
 		filter1.setVisible(false);
+		filter2.setVisible(false);
 	}
 
 	/*
@@ -181,13 +186,7 @@ public class ChatRoomsFragment extends Fragment {
 				TChatApplication.CHATROOM_SECTION_QUERY_ACTION=SCHEDULED_CHATROOMS_QUERY_ACTION;
 				prepareListView(TChatApplication.CHATROOM_SECTION_QUERY_ACTION);
 				break;
-			case R.id.create_chatroom_button:
-				//To create a chat room
-				
-				Intent intent=new Intent(TChatApplication.getContext(),CreateChatRoomActivity.class);
-				startActivity(intent);
 			
-				break;
 
 			default:
 				break;
@@ -221,6 +220,18 @@ public class ChatRoomsFragment extends Fragment {
 			// and hide the relevant UI components.*/
 			mLodingStatusView.setVisibility(show ? View.VISIBLE : View.GONE);
 		}
+	}
+
+	@Override
+	public void OnGetChatRoomSuccess() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void OnGetChatRoomFailed() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	

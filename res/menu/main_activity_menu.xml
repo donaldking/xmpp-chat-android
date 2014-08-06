@@ -25,5 +25,11 @@
         android:title="@string/action_settings"
         app:showAsAction="always">
     </item>
+     <item
+        android:id="@+id/action_chat_room"
+        android:icon="@drawable/ic_action_add_group"
+        android:title="@string/action_create_chat_rooms"
+        app:showAsAction="always">
+    </item>
 
 </menu>
