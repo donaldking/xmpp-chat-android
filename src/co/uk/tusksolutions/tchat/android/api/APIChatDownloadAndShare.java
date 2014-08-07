@@ -175,7 +175,7 @@ public class APIChatDownloadAndShare {
 		emailIntent.putExtra(Intent.EXTRA_TEXT, "Yookos Chat");
 		emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Enter Subject");
 		emailIntent.setType("message/rfc822");
-		emailIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(f));
+	
 		PackageManager pm = mContext.getPackageManager();
 		Intent sendIntent = new Intent(Intent.ACTION_SEND);
 		sendIntent.setType("text/plain");
@@ -189,6 +189,7 @@ public class APIChatDownloadAndShare {
 			ResolveInfo ri = resInfo.get(i);
 			String packageName = ri.activityInfo.packageName;
 			if (packageName.contains("android.email")) {
+				emailIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(f));
 				emailIntent.setPackage(packageName);
 			} else if (packageName.contains("android.gm")) {
 				Intent intent = new Intent();
@@ -196,11 +197,11 @@ public class APIChatDownloadAndShare {
 						ri.activityInfo.name));
 				intent.setAction(Intent.ACTION_SEND);
 				intent.setType("text/plain");
-
+				intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(f));
 				intent.putExtra(Intent.EXTRA_TEXT, "Yookos Chat");
 				intent.putExtra(Intent.EXTRA_SUBJECT, "Enter Subject");
 				intent.setType("message/rfc822");
-				sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(f));
+				
 
 				intentList.add(new LabeledIntent(intent, packageName, ri
 						.loadLabel(pm), ri.icon));
