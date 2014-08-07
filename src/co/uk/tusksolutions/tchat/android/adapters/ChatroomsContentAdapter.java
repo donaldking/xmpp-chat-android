@@ -13,11 +13,14 @@ import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.BaseAdapter;
+import android.widget.Toast;
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.activities.GroupChatActivity;
+import co.uk.tusksolutions.tchat.android.constants.Constants;
 import co.uk.tusksolutions.tchat.android.models.ChatRoomsModel;
 import co.uk.tusksolutions.tchat.android.viewHolders.ChatroomsAllViewHolder;
+import co.uk.tusksolutions.tchat.android.xmpp.XMPPMUCManager;
 
 public class ChatroomsContentAdapter extends BaseAdapter {
 
@@ -130,12 +133,22 @@ public class ChatroomsContentAdapter extends BaseAdapter {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				doSelectionAnimationForView(v);
+				Long currentTime = System.currentTimeMillis();
+				if (Long.valueOf(model.start_timestamp) > currentTime) {
+					Toast.makeText(context, "This Chatroom not started yet",
+							Toast.LENGTH_SHORT).show();
+					Log.v(TAG, "Not started yet " + model.start_timestamp);
+				} else {
+					doSelectionAnimationForView(v);
+					joinChatRoom(model.chatroom_jid);
 
-				Bundle b = new Bundle();
-				b.putString("roomJid", model.chatroom_jid);
-				b.putString("roomName", model.chatroom_name);
-				launchGroupChatActivity(b);
+					Bundle b = new Bundle();
+					b.putString("roomJid", model.chatroom_jid+"@conference."+Constants.CURRENT_SERVER);
+					b.putString("roomName", model.chatroom_name);
+
+					launchGroupChatActivity(b);
+
+				}
 			}
 		});
 		return row;
@@ -156,5 +169,19 @@ public class ChatroomsContentAdapter extends BaseAdapter {
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
 		TChatApplication.getContext().startActivity(intent);
+	}
+
+	private void joinChatRoom(String chatroom_jid) {
+		try {
+			XMPPMUCManager.getInstance(TChatApplication.getContext())
+					.mucServiceDiscovery();
+
+			XMPPMUCManager.getInstance(TChatApplication.getContext())
+					.joinRoomChatroom(TChatApplication.connection,
+							chatroom_jid + "@conference.dev.yookoschat.com",
+							"", TChatApplication.getUserModel().getUsername());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

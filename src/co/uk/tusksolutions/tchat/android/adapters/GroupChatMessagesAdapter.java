@@ -47,6 +47,7 @@ public class GroupChatMessagesAdapter extends BaseAdapter {
 
 		switch (action) {
 		case 1:
+			
 			groupChatMessagesModelCollection = mModel.getAllMessagesFromDB(to,
 					from);
 			notifyDataSetChanged();

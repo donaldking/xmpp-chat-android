@@ -208,6 +208,7 @@ public class XMPPMUCManager {
 			// registerRoom(muc, roomJID,
 			// MyRoom.getRoomNameFromRoomJID(roomJID), password);
 		} catch (XMPPException e) {
+			e.printStackTrace();
 			/*
 			 * TODO: All these toasts don't work. This listener is called from a
 			 * background thread. You can't create and show a toast from a
@@ -250,7 +251,69 @@ public class XMPPMUCManager {
 			Log.e(TAG, e.getLocalizedMessage());
 		}
 	}
+	@SuppressWarnings("static-access")
+	public void joinRoomChatroom(Connection conn, String roomJID,
+			final String password, final String nickname) {
+	
 
+		if (!mRooms.containsKey(roomJID)) {
+			MultiUserChat muc = new MultiUserChat(conn, roomJID);
+			mRooms.put(roomJID, muc);
+		}
+
+		MultiUserChat muc = mRooms.get(roomJID);
+		try {
+			// Use DiscussionHistory here and specify how many messages you want
+			// to receive.
+			muc.join(nickname, password, null, JOIN_TIMEOUT);
+		//	muc.addUserStatusListener(new XMPPMucUserStatusListener(roomJID));
+
+			// registerRoom(muc, roomJID,
+			// MyRoom.getRoomNameFromRoomJID(roomJID), password);
+		} catch (XMPPException e) {
+			e.printStackTrace();
+			/*
+			 * TODO: All these toasts don't work. This listener is called from a
+			 * background thread. You can't create and show a toast from a
+			 * background thread. This should be refactored to use a handler to
+			 * the UIThread or fire an event / broadcast intent to something on
+			 * the UIThread that can create the toast This is just not
+			 * working......
+			 */
+			/*
+			 * switch (e.getXMPPError().getCode()) { case 401:
+			 * Toast.makeText(context, "Password is required!",
+			 * Toast.LENGTH_SHORT).show();
+			 * 
+			 * break; case 403: Toast.makeText(context,
+			 * "You are banned from this room!", Toast.LENGTH_SHORT).show();
+			 * 
+			 * break; case 404: Toast.makeText(context,
+			 * "Room does not exist or is locked!", Toast.LENGTH_SHORT).show();
+			 * 
+			 * break; case 406: Toast.makeText(context,
+			 * "Room does not accept this user!", Toast.LENGTH_SHORT).show();
+			 * 
+			 * break; case 407: Toast.makeText(context,
+			 * "You are not on the members list!", Toast.LENGTH_SHORT).show();
+			 * 
+			 * break; case 409: Toast.makeText( context,
+			 * "You must change your nickname in order to join this room!",
+			 * Toast.LENGTH_SHORT).show();
+			 * 
+			 * break; }
+			 */
+			switch (e.getXMPPError().getCode()) {
+			case 403:
+				XMPPMUCManager.iAmKickedFromThisRoom(roomJID);
+				break;
+
+			default:
+				break;
+			}
+			Log.e(TAG, e.getLocalizedMessage());
+		}
+	}
 	public static void iAmKickedFromThisRoom(final String roomJID) {
 		Log.i(TAG, "User banned from room with ID: " + roomJID);
 

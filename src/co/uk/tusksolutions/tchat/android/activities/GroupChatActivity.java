@@ -465,6 +465,7 @@ public class GroupChatActivity extends ActionBarActivity {
 				}
 				XMPPChatMessageManager.sendMessage(roomJid, roomName, message,
 						1, "GROUP_CHAT", mid);
+				Log.e("Groupchat activity ","RoomName "+roomName);
 				chatMessageEditText.setText("");
 				chatSendButton.setEnabled(false);
 

@@ -6,7 +6,9 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import co.uk.tusksolutions.tchat.android.TChatApplication;
+import co.uk.tusksolutions.tchat.android.api.APIKickUserFromRoom;
 import co.uk.tusksolutions.tchat.android.dbHelper.TChatDBHelper;
+import co.uk.tusksolutions.tchat.android.xmpp.XMPPMUCManager;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -202,6 +204,110 @@ public class ChatRoomsModel implements Parcelable {
 		return chatRoomsModel;
 
 	}
+	public ArrayList<ChatRoomsModel> queryChatrooms() {
+
+		ArrayList<ChatRoomsModel> chatroomsModelCollection = new ArrayList<ChatRoomsModel>();
+
+		Cursor cursor = TChatApplication.getTChatDBReadable().query(TABLE,
+				null, null, null, null, null, null);
+
+		while (cursor.moveToNext()) {
+
+			chatroomsModelCollection.add(fromCursor(cursor));
+		}
+
+		return chatroomsModelCollection;
+	}
+	
+	public static void joinAllChatrooms() {
+
+		Runnable runnable = new Runnable() {
+
+			@Override
+			public void run() {
+				// Rejoin all rooms so we can receive notifications
+				// when new messages come in.
+
+				ChatRoomsModel gm = new ChatRoomsModel();
+				ArrayList<ChatRoomsModel> chatroomCollection = gm.queryChatrooms();
+				for (ChatRoomsModel chatroomsModel : chatroomCollection) {
+					// Join all rooms
+					try {
+						XMPPMUCManager.getInstance(
+								TChatApplication.getContext())
+								.mucServiceDiscovery();
+
+						XMPPMUCManager.getInstance(
+								TChatApplication.getContext()).joinRoom(
+								TChatApplication.connection,
+								chatroomsModel.chatroom_jid, "",
+								TChatApplication.getUserModel().getUsername());
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}
+
+		};
+		new Thread(runnable).start();
+	}
+
+	public static void kickUserFromGroup(final String roomJid,
+			final String userJid) {
+		Runnable runnable = new Runnable() {
+
+			@Override
+			public void run() {
+
+				APIKickUserFromRoom kickUserFromRoom = new APIKickUserFromRoom();
+				kickUserFromRoom.kickUserFromRoom(userJid, roomJid,
+						TChatApplication.getCurrentJid(), 0);
+			}
+
+		};
+		new Thread(runnable).start();
+	}
+
+	public static boolean isAdmin(String group_id, String group_admin) {
+
+		db = TChatApplication.getTChatDBReadable();
+
+		String[] columns = { TChatDBHelper.CR_ADMIN };
+		String whereClause = TChatDBHelper.CR_CHATROOM_ID + " = ? AND "
+				+ TChatDBHelper.CR_ADMIN + " = ?";
+
+		String[] whereArgs = new String[] { group_id, group_admin };
+
+		Cursor cursor = TChatApplication.getTChatDBReadable().query(
+				TChatDBHelper.CHATROOMS_TABLE, columns, whereClause, whereArgs,
+				null, null, null);
+
+		while (cursor.moveToNext()) {
+			return true;
+		}
+
+		return false;
+	}
+	public String getChatRoomName(String chatroomId) {
+		db = TChatApplication.getTChatDBReadable();
+		String groupName = null;
+
+		String[] columns = { TChatDBHelper.CR_CHATROOM_NAME };
+		String whereClause = TChatDBHelper.CR_CHATROOM_ID + " = ? ";
+
+		String[] whereArgs = new String[] { chatroomId };
+
+		Cursor cursor = TChatApplication.getTChatDBReadable().query(TABLE,
+				columns, whereClause, whereArgs, null, null, null);
+
+		while (cursor.moveToNext()) {
+			groupName = cursor.getString(cursor
+					.getColumnIndex(TChatDBHelper.CR_CHATROOM_NAME));
+		}
+
+		return groupName;
+	}
+
 	@Override
 	public int describeContents() {
 		// TODO Auto-generated method stub

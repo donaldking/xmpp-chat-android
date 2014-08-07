@@ -14,6 +14,7 @@ import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.TChatApplication.CHAT_STATUS_ENUM;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
 import co.uk.tusksolutions.tchat.android.models.ChatMessagesModel;
+import co.uk.tusksolutions.tchat.android.models.ChatRoomsModel;
 import co.uk.tusksolutions.tchat.android.models.GroupsModel;
 import co.uk.tusksolutions.tchat.android.xmpp.notifications.XMPPNotificationManager;
 
@@ -53,6 +54,14 @@ public class XMPPGroupChatMessageListener implements PacketListener {
 				GroupsModel gm = new GroupsModel();
 				String roomName = gm.getGroupName(StringUtils
 						.parseBareAddress(message.getFrom()));
+				Log.e(TAG, "Message from "+roomJid);
+				if(roomName==null)
+				{
+					ChatRoomsModel chatRoomsModel=new ChatRoomsModel();
+					roomName=chatRoomsModel.getChatRoomName(roomJid.replace("@conference."+Constants.CURRENT_SERVER, ""));
+				
+				}
+				Log.e(TAG, "Room name "+roomName);
 				String senderJid = StringUtils.parseResource(message.getFrom())
 						+ "@" + Constants.CURRENT_SERVER;
 				String senderName = TChatApplication.getRosterModel()
@@ -107,6 +116,12 @@ public class XMPPGroupChatMessageListener implements PacketListener {
 				+ Constants.CURRENT_SERVER;
 		String senderName = TChatApplication.getRosterModel().getBuddyName(
 				senderJid);
+		if(roomName==null)
+		{
+			ChatRoomsModel chatRoomsModel=new ChatRoomsModel();
+			roomName=chatRoomsModel.getChatRoomName(roomJid.replace("@conference."+Constants.CURRENT_SERVER, ""));
+		
+		}
 
 		Bundle b = new Bundle();
 		b.putString("roomJid", roomJid);
@@ -148,6 +163,12 @@ public class XMPPGroupChatMessageListener implements PacketListener {
 		String roomName = TChatApplication.getGroupsModel().getGroupName(
 				StringUtils.parseBareAddress(message.getFrom()));
 
+		if(roomName==null)
+		{
+			ChatRoomsModel chatRoomsModel=new ChatRoomsModel();
+			roomName=chatRoomsModel.getChatRoomName(roomJid.replace("@conference."+Constants.CURRENT_SERVER, ""));
+		
+		}
 		Log.d("saveMessageToDb", "Sender: " + packet.getFrom() + " Resource: "
 				+ resource + ", Receiver: " + packet.getTo() + " Message: "
 				+ message.getBody());
