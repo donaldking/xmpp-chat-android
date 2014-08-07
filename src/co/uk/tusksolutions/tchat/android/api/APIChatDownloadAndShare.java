@@ -173,7 +173,7 @@ public class APIChatDownloadAndShare {
 		// Native email client doesn't currently support HTML, but it doesn't
 		// hurt to try in case they fix it
 		emailIntent.putExtra(Intent.EXTRA_TEXT, "Yookos Chat");
-		emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Enter Subject");
+		emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Yookos Chat Conversation");
 		emailIntent.setType("message/rfc822");
 	
 		PackageManager pm = mContext.getPackageManager();
@@ -199,7 +199,7 @@ public class APIChatDownloadAndShare {
 				intent.setType("text/plain");
 				intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(f));
 				intent.putExtra(Intent.EXTRA_TEXT, "Yookos Chat");
-				intent.putExtra(Intent.EXTRA_SUBJECT, "Enter Subject");
+				intent.putExtra(Intent.EXTRA_SUBJECT, "Yookos Chat Conversation");
 				intent.setType("message/rfc822");
 				
 
