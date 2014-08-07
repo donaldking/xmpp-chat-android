@@ -70,7 +70,7 @@ public class APICreateChatrooms {
 				postParams.add(new BasicNameValuePair("start_timestamp",
 						start_timestamp));
 				postParams.add(new BasicNameValuePair("end_timestamp",
-						start_timestamp));
+						end_timestamp));
 				postParams.add(new BasicNameValuePair("status", status));
 				postParams.add(new BasicNameValuePair("max_guests", max_guest));
 

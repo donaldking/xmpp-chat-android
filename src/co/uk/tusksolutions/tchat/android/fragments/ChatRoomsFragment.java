@@ -105,8 +105,7 @@ public class ChatRoomsFragment extends Fragment implements OnGetChatroomsComplet
 	public void onResume() {
 		super.onResume();
    
-		APIGetChatRooms apiGetChatRooms=new APIGetChatRooms();
-		apiGetChatRooms.getChatrooms(this);
+	
 		if (TChatApplication.CHATROOM_SECTION_QUERY_ACTION == ALL_CHATROOMS_QUERY_ACTION) {
 			prepareListView(TChatApplication.CHATROOM_SECTION_QUERY_ACTION);
 		}

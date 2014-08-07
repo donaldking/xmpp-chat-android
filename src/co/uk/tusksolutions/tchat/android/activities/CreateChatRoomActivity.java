@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -228,16 +229,20 @@ public class CreateChatRoomActivity extends ActionBarActivity implements
 	public void updateStartTimeDisplay() {
 		// TODO Auto-generated method stub
 
-		SimpleDateFormat sdf = new SimpleDateFormat("hh:ss");
+		SimpleDateFormat sdf = new SimpleDateFormat("HH:ss");
 		Date date = null;
 		try {
-			date = sdf.parse(hour + ":" + minutes);
+			date = sdf.parse(hour+":"+minutes);
 		} catch (ParseException e) {
 		}
 		Calendar c = Calendar.getInstance();
 		c.setTime(date);
 
 		String formattedTate = sdf.format(c.getTime());
+		String abc[]=formattedTate.split(":");
+		hour=Integer.parseInt(abc[0].toString());
+		
+		
 		inputStartTime.setText(formattedTate);
 
 	}
@@ -245,16 +250,18 @@ public class CreateChatRoomActivity extends ActionBarActivity implements
 	public void updateEndTimeDisplay() {
 		// TODO Auto-generated method stub
 
-		SimpleDateFormat sdf = new SimpleDateFormat("hh:ss");
+		SimpleDateFormat sdf = new SimpleDateFormat("HH:ss");
 		Date date = null;
 		try {
-			date = sdf.parse(endhours + ":" + endminutes);
+			date = sdf.parse(endhours+":"+endminutes);
 		} catch (ParseException e) {
 		}
 		Calendar c = Calendar.getInstance();
 		c.setTime(date);
 
 		String formattedTate = sdf.format(c.getTime());
+		String abc[]=formattedTate.split(":");
+		endhours=Integer.parseInt(abc[0].toString());
 		inputEndTime.setText(formattedTate);
 
 	}
@@ -268,9 +275,6 @@ public class CreateChatRoomActivity extends ActionBarActivity implements
 		c.set(Calendar.DAY_OF_MONTH, day);
 		c.set(Calendar.HOUR, hour);
 		c.set(Calendar.MINUTE, minute);
-		c.set(Calendar.SECOND, 0);
-		c.set(Calendar.MILLISECOND, 0);
-
 		return (c.getTimeInMillis());
 	}
 
@@ -279,22 +283,22 @@ public class CreateChatRoomActivity extends ActionBarActivity implements
 
 		Log.v("CreateChatroom", "Successfully chatroom created "
 				+ chatroom_name + " JID " + chatroomjid);
+	
+		
 		long start_timestamp = componentTimeToTimestamp(startYear, startMonth,
 				startDay, hour, minutes);
-		long end_timestamp = componentTimeToTimestamp(startYear, startMonth,
-				startDay, endhours, endminutes);
+		long end_timestamp = componentTimeToTimestamp(startYear, startMonth,startDay, endhours, endminutes);
 		long created_at = System.currentTimeMillis();
 		String status = "future";
 		String max_guest = "20";
-
 		
 		APICreateChatrooms apiCreateChatrooms = new APICreateChatrooms();
 		apiCreateChatrooms.doPostChatroom(chatroomjid, chatroom_name,
 				TChatApplication.getUserModel().getUsername(),
-				String.valueOf(start_timestamp), String.valueOf(end_timestamp),
+				String.valueOf(start_timestamp-86400000), String.valueOf(end_timestamp-86400000),
 				status, max_guest, String.valueOf(created_at));
 		ChatRoomsModel chatRoomsModel=new ChatRoomsModel();
-		chatRoomsModel.saveCreatedRoomInDB(chatroomjid, chatroom_name, TChatApplication.getUserModel().getUsername(), String.valueOf(start_timestamp), String.valueOf(end_timestamp), status, max_guest, String.valueOf(created_at));
+		chatRoomsModel.saveCreatedRoomInDB(chatroomjid, chatroom_name, TChatApplication.getUserModel().getUsername(), String.valueOf(start_timestamp-86400000), String.valueOf(end_timestamp-86400000), status, max_guest, String.valueOf(created_at));
 		finish();
 	}
 

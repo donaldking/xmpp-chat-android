@@ -137,7 +137,7 @@ public class ChatroomsContentAdapter extends BaseAdapter {
 				if (Long.valueOf(model.start_timestamp) > currentTime) {
 					Toast.makeText(context, "This Chatroom not started yet",
 							Toast.LENGTH_SHORT).show();
-					Log.v(TAG, "Not started yet " + model.start_timestamp);
+					Log.v(TAG, "Not started yet " + model.start_timestamp+" current timestamp "+currentTime);
 				} else {
 					doSelectionAnimationForView(v);
 					joinChatRoom(model.chatroom_jid);

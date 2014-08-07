@@ -341,8 +341,15 @@ public class GroupChatMessagesAdapter extends BaseAdapter {
 				}
 
 				// Add name of sender (me)
-				UserModel ium = new UserModel();
-				String imageFromName = ium.getProfileName();
+				UserModel ium = null;
+				String imageFromName = null;
+				try {
+					ium = new UserModel();
+					imageFromName = ium.getProfileName();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 
 				if (imageFromName == null) {
 					imageFromName = ium.getUsername();

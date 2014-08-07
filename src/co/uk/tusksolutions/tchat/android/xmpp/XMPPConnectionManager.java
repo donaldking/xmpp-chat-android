@@ -58,6 +58,8 @@ import android.os.Looper;
 import android.provider.Settings.Secure;
 import android.widget.Toast;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
+import co.uk.tusksolutions.tchat.android.api.APIGetChatRooms;
+import co.uk.tusksolutions.tchat.android.api.APIGetChatRooms.OnGetChatroomsCompleted;
 import co.uk.tusksolutions.tchat.android.api.APIGetGroups;
 import co.uk.tusksolutions.tchat.android.api.APIGetGroups.OnGetGroupsCompleted;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
@@ -187,6 +189,22 @@ public class XMPPConnectionManager {
 								public void OnGetGroupsFailed() {
 									// TODO Auto-generated method stub
 
+								}
+							});
+							
+							APIGetChatRooms apiGetChatRooms=new APIGetChatRooms();
+							apiGetChatRooms.getChatrooms(new OnGetChatroomsCompleted() {
+								
+								@Override
+								public void OnGetChatRoomSuccess() {
+									// TODO Auto-generated method stub
+									
+								}
+								
+								@Override
+								public void OnGetChatRoomFailed() {
+									// TODO Auto-generated method stub
+									
 								}
 							});
 

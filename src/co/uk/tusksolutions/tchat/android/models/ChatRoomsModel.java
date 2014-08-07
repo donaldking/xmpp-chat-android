@@ -116,9 +116,9 @@ public class ChatRoomsModel implements Parcelable {
 	public ArrayList<ChatRoomsModel> queryAllChatrooms() {
 
 		ArrayList<ChatRoomsModel> chatroomsModelCollection = new ArrayList<ChatRoomsModel>();
-
+		String orderBy = TChatDBHelper.CR_CREATED_AT + " DESC";
 		Cursor cursor = TChatApplication.getTChatDBReadable().query(TABLE,
-				null, null, null, null, null, null);
+				null, null, null, null, null, orderBy);
 
 		while (cursor.moveToNext()) {
 
@@ -136,7 +136,7 @@ public class ChatRoomsModel implements Parcelable {
 		String whereClause = TChatDBHelper.CR_START_TIMESTAMP + " <= ? ";
 
 		String[] whereArgs = new String[] {currentTime};
-		String orderBy = TChatDBHelper.CR_CHATROOM_NAME + " ASC";
+		String orderBy = TChatDBHelper.CR_CREATED_AT + " DESC";
 
 		Cursor cursor = TChatApplication.getTChatDBWritable().query(TABLE,
 				null, whereClause, whereArgs, null, null, orderBy);
@@ -160,7 +160,7 @@ public class ChatRoomsModel implements Parcelable {
 			String whereClause = TChatDBHelper.CR_START_TIMESTAMP + " > ? ";
 
 			String[] whereArgs = new String[] {currentTime};
-			String orderBy = TChatDBHelper.CR_CHATROOM_NAME + " ASC";
+			String orderBy = TChatDBHelper.CR_CREATED_AT + " DESC";
 
 			Cursor cursor = TChatApplication.getTChatDBWritable().query(TABLE,
 					null, whereClause, whereArgs, null, null, orderBy);
