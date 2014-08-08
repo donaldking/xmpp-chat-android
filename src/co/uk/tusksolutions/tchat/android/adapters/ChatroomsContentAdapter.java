@@ -36,13 +36,13 @@ public class ChatroomsContentAdapter extends BaseAdapter {
 	private ChatRoomsModel mModel;
 	private ArrayList<ChatRoomsModel> chatroomsModelCollection;
 	public int action;
-	int participantsCount=0;
+	int participantsCount = 0;
 
 	public ChatroomsContentAdapter(Context context, int action) {
 		this.context = TChatApplication.getContext();
 		mModel = new ChatRoomsModel();
 		this.action = action;
-		
+
 		switch (action) {
 		case 1:
 			chatroomsModelCollection = mModel.queryAllChatrooms();
@@ -146,18 +146,21 @@ public class ChatroomsContentAdapter extends BaseAdapter {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				
-				APIGetChatroomparticipants apiGetChatroomparticipants=new APIGetChatroomparticipants();
-				apiGetChatroomparticipants.doGetChatroomparticipants(model.chatroom_jid,new OnGetparticipantsCount() {
-					
-					@Override
-					public void OnGetChatRoomParticipantsSuccess(String room_id, int count) {
-						// TODO Auto-generated method stub
-						participantsCount=count;
-						Log.v("CHAT ROOM PARTICIPANTS", "Room id "+room_id+" having member "+count);
-						
-					}
-				});
+
+				APIGetChatroomparticipants apiGetChatroomparticipants = new APIGetChatroomparticipants();
+				apiGetChatroomparticipants.doGetChatroomparticipants(
+						model.chatroom_jid, new OnGetparticipantsCount() {
+
+							@Override
+							public void OnGetChatRoomParticipantsSuccess(
+									String room_id, int count) {
+								// TODO Auto-generated method stub
+								participantsCount = count;
+								Log.v("CHAT ROOM PARTICIPANTS", "Room id "
+										+ room_id + " having member " + count);
+
+							}
+						});
 				Long currentTime = System.currentTimeMillis();
 				if (Long.valueOf(model.start_timestamp) > currentTime) {
 					Toast.makeText(context, "This Chatroom not started yet",
@@ -169,6 +172,7 @@ public class ChatroomsContentAdapter extends BaseAdapter {
 
 					doSelectionAnimationForView(v);
 					joinChatRoom(model.chatroom_jid);
+					mModel.updateStatusofChatRoom(model.chatroom_jid, "Active");
 
 					// CallApiToChangeStatus(model.chatroom_jid,
 					// model.chatroom_name, model.chatroom_owner,
@@ -182,7 +186,7 @@ public class ChatroomsContentAdapter extends BaseAdapter {
 
 					launchGroupChatActivity(b);
 
-				} else if(participantsCount>0) {
+				} else if (participantsCount > 0) {
 					joinChatRoom(model.chatroom_jid);
 
 					Bundle b = new Bundle();

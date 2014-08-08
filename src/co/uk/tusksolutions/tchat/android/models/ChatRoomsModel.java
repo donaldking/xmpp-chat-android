@@ -332,6 +332,25 @@ public class ChatRoomsModel implements Parcelable {
 		return true;
 
 	}
+	
+	public boolean updateStatusofChatRoom(String chatroom_id,
+			String status) {
+		db = TChatApplication.getTChatDBReadable();
+		String whereClause = TChatDBHelper.CR_CHATROOM_ID + " = ? ";
+		String[] whereArgs = { chatroom_id };
+
+		ContentValues contentValues = new ContentValues();
+		contentValues.put(TChatDBHelper.CR_STATUS,
+				status);
+
+		TChatApplication.getTChatDBWritable().updateWithOnConflict(TABLE,
+				contentValues, whereClause, whereArgs,
+				SQLiteDatabase.CONFLICT_REPLACE);
+		db.close();
+
+		return true;
+
+	}
 
 	@Override
 	public int describeContents() {
