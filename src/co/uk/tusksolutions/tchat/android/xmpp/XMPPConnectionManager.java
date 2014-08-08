@@ -93,7 +93,7 @@ public class XMPPConnectionManager {
 							Constants.XMPP_RESOURCE = "TChat-Android-"
 									+ Secure.getString(TChatApplication
 											.getContext().getContentResolver(),
-											Secure.ANDROID_ID);
+											Secure.ANDROID_ID) +"-"+ System.currentTimeMillis();
 
 							TChatApplication.connection.login(username,
 									password, Constants.XMPP_RESOURCE);
