@@ -32,7 +32,9 @@ public class Constants {
 	public static String KICK_USER_FROM_GROUP_ENDPOINT = "/mobileservices/v1/kick_user_out_of_group.php";
 	public static String KICK_USER_FROM_CHAT_ROOM_ENDPOINT = "/mobileservices/v1/kick_user_out_of_chat_room.php";
     public static String CREATE_CHATROOM_ENDPOINT="/mobileservices/v1/create_chat_room.php";
-	/**
+	public static String GET_CHAT_ROOM_PARTICIPANTS_ENDPOINT="/mobileservices/v1/get_chat_room_participants.php";
+    
+    /**
 	 * Login Actions
 	 */
 	public static String LOGIN_SUCCESSFUL = "co.uk.tusksolutions.tchat.android.action.LOGIN_SUCCESSFUL";
