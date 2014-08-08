@@ -137,8 +137,8 @@ public class ChatRoomsModel implements Parcelable {
 
 		String whereClause = TChatDBHelper.CR_START_TIMESTAMP + " <= ? ";
 		         //+
-				//" AND "
-				//+ TChatDBHelper.CR_END_TIMESTAMP + " >= ?";
+				 //" AND "
+			     //+ TChatDBHelper.CR_END_TIMESTAMP + " >= ?";
 		String[] whereArgs = new String[] { currentTime };
 		String orderBy = TChatDBHelper.CR_CREATED_AT + " DESC";
 
