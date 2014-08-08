@@ -1,13 +1,11 @@
 package co.uk.tusksolutions.tchat.android.adapters;
 
-import java.util.ArrayList;
 import java.util.Locale;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -35,8 +33,9 @@ public class RosterContentAdapter extends BaseAdapter implements Filterable {
 	private Context context;
 	private RosterModel mModel;
 	private int action;
-
-	private CopyOnWriteArrayList<RosterModel> rosterModelCollection;
+	private ValueFilter valueFilter;
+	public static CopyOnWriteArrayList<RosterModel> rosterModelCollection;
+	private CopyOnWriteArrayList<RosterModel> rosterModelCollectionCopy;
 
 	public RosterContentAdapter(Context context, int action) {
 		this.context = TChatApplication.getContext();
@@ -51,21 +50,26 @@ public class RosterContentAdapter extends BaseAdapter implements Filterable {
 		switch (action) {
 		case 1:
 			rosterModelCollection = mModel.queryAll();
+			rosterModelCollectionCopy = rosterModelCollection;
 			notifyDataSetChanged();
 			break;
 		case 2:
 			rosterModelCollection = mModel.queryOnline();
+			rosterModelCollectionCopy = rosterModelCollection;
 			notifyDataSetChanged();
 			break;
 		case 3:
 			rosterModelCollection = SearchActivity.rosterModelCollection;
+			rosterModelCollectionCopy = rosterModelCollection;
 			notifyDataSetChanged();
 			break;
 		default:
 			rosterModelCollection = mModel.queryAll();
+			rosterModelCollectionCopy = rosterModelCollection;
 			notifyDataSetChanged();
 			break;
 		}
+		getFilter();
 	}
 
 	@Override
@@ -171,73 +175,41 @@ public class RosterContentAdapter extends BaseAdapter implements Filterable {
 
 	@Override
 	public Filter getFilter() {
-		// TODO Auto-generated method stub
-		Filter filter = new Filter() {
-
-			@SuppressWarnings("unchecked")
-			@Override
-			protected void publishResults(CharSequence constraint,
-					FilterResults results) {
-
-				rosterModelCollection = (CopyOnWriteArrayList<RosterModel>) results.values;
-				notifyDataSetChanged();
-			}
-
-			@Override
-			protected FilterResults performFiltering(CharSequence constraint) {
-
-				FilterResults results = new FilterResults();
-				ArrayList<RosterModel> FilteredArrayNames = new ArrayList<RosterModel>();
-
-				if (rosterModelCollection == null) {
-					rosterModelCollection = new CopyOnWriteArrayList<RosterModel>(
-							rosterModelCollection);
-
-				}
-				if (constraint == null || constraint.length() == 0) {
-					results.count = rosterModelCollection.size();
-					results.values = rosterModelCollection;
-				} else {
-					constraint = constraint.toString().toLowerCase(
-							Locale.ENGLISH);
-					// TODO Refactor this call
-					for (int i = 0; i < rosterModelCollection.size(); i++) {
-						String dataNames = rosterModelCollection.get(i).name;
-						String dataUser = rosterModelCollection.get(i).user;
-						String datastatus = rosterModelCollection.get(i).status;
-						String presenceStatus = rosterModelCollection.get(i).presenceStatus;
-						String presenceType = rosterModelCollection.get(i).presenceType;
-						String lastSeenTimestamp = rosterModelCollection.get(i).lastSeenTimestamp;
-						String resourceName = rosterModelCollection.get(i).resourceName;
-						if (dataNames.toLowerCase(Locale.ENGLISH).contains(
-								constraint.toString())
-								|| dataUser.toLowerCase(Locale.ENGLISH)
-										.contains(constraint.toString())) {
-							// FilteredArrayNames.add(dataNames);
-							RosterModel rosterModel = new RosterModel();
-							rosterModel.name = dataNames;
-							rosterModel.user = dataUser;
-							rosterModel.status = datastatus;
-							rosterModel.presenceStatus = presenceStatus;
-							rosterModel.presenceType = presenceType;
-							rosterModel.lastSeenTimestamp = lastSeenTimestamp;
-							rosterModel.resourceName = resourceName;
-							FilteredArrayNames.add(rosterModel);
-						}
-					}
-
-					results.count = FilteredArrayNames.size();
-					System.out.println(results.count);
-
-					results.values = FilteredArrayNames;
-					Log.e("VALUES", results.values.toString());
-				}
-
-				return results;
-			}
-		};
-
-		return filter;
+		if (valueFilter == null) {
+			valueFilter = new ValueFilter();
+		}
+		return valueFilter;
 	}
 
+	private class ValueFilter extends Filter {
+
+		@Override
+		protected FilterResults performFiltering(CharSequence constraint) {
+			FilterResults results = new FilterResults();
+			if (constraint != null && constraint.length() > 0) {
+				CopyOnWriteArrayList<RosterModel> filterList = new CopyOnWriteArrayList<RosterModel>();
+				for (int i = 0; i < rosterModelCollectionCopy.size(); i++) {
+					if (rosterModelCollectionCopy.get(i).name.toLowerCase(
+							Locale.ENGLISH).startsWith(
+							constraint.toString().toLowerCase(Locale.ENGLISH))) {
+						filterList.add(rosterModelCollectionCopy.get(i));
+					}
+				}
+				results.count = filterList.size();
+				results.values = filterList;
+			} else {
+				results.count = rosterModelCollectionCopy.size();
+				results.values = rosterModelCollectionCopy;
+			}
+			return results;
+		}
+
+		@SuppressWarnings("unchecked")
+		@Override
+		protected void publishResults(CharSequence constraint,
+				FilterResults results) {
+			rosterModelCollection = (CopyOnWriteArrayList<RosterModel>) results.values;
+			notifyDataSetChanged();
+		}
+	}
 }

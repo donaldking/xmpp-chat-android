@@ -141,7 +141,7 @@ public class SearchActivity extends ActionBarActivity implements TextWatcher {
 		 * performSearch(s); } else {
 		 * clear_text_search.setVisibility(View.GONE);
 		 * listView.setVisibility(View.GONE); }
-		 */
+		 *
 		Log.e("OntextChange", "Ontextchange called " + s);
 		if (s.length() > 0) {
 			mAdapter.getFilter().filter(s);
@@ -151,7 +151,9 @@ public class SearchActivity extends ActionBarActivity implements TextWatcher {
 			mAdapter = new RosterContentAdapter(TChatApplication.getContext(),
 					SEARCH_ACTION);
 			listView.setAdapter(mAdapter);
-		}
+		}*/
+		
+		mAdapter.getFilter().filter(s);
 	}
 
 	public void performSearch(CharSequence s) {
