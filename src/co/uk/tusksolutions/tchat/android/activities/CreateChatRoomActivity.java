@@ -6,6 +6,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
+import org.jivesoftware.smackx.workgroup.packet.MonitorPacket;
+
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
@@ -29,6 +31,7 @@ import android.widget.Toast;
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.api.APICreateChatrooms;
+import co.uk.tusksolutions.tchat.android.constants.Constants;
 import co.uk.tusksolutions.tchat.android.models.ChatRoomsModel;
 import co.uk.tusksolutions.tchat.android.tasks.CreateChatroomAsyncTask;
 import co.uk.tusksolutions.tchat.android.tasks.CreateChatroomAsyncTask.OnCreateChatroomListener;
@@ -269,11 +272,14 @@ public class CreateChatRoomActivity extends ActionBarActivity implements
 	long componentTimeToTimestamp(int year, int month, int day, int hour,
 			int minute) {
 
+		
+		Log.e("month","day  is "+day);
+	
 		Calendar c = Calendar.getInstance();
 		c.set(Calendar.YEAR, year);
 		c.set(Calendar.MONTH, month);
-		c.set(Calendar.DAY_OF_MONTH, day);
-		c.set(Calendar.HOUR, hour);
+		c.set(Calendar.DAY_OF_MONTH,day);
+		c.set(Calendar.HOUR_OF_DAY, hour);
 		c.set(Calendar.MINUTE, minute);
 		return (c.getTimeInMillis());
 	}
@@ -291,14 +297,20 @@ public class CreateChatRoomActivity extends ActionBarActivity implements
 		long created_at = System.currentTimeMillis();
 		String status = "future";
 		String max_guest = "20";
+		Log.e("Start Timetamp ","Timestamp "+start_timestamp);
+		Log.e("End Timestamp "," Timestamp "+end_timestamp);
+		Log.e("Now()","Current "+created_at);
+		
+		
 		
 		APICreateChatrooms apiCreateChatrooms = new APICreateChatrooms();
-		apiCreateChatrooms.doPostChatroom(chatroomjid, chatroom_name,
+		apiCreateChatrooms.doPostChatroom(chatroomjid.replace("@conference."+Constants.CURRENT_SERVER,""), chatroom_name,
 				TChatApplication.getUserModel().getUsername(),
-				String.valueOf(start_timestamp-86400000), String.valueOf(end_timestamp-86400000),
+				String.valueOf(start_timestamp), String.valueOf(end_timestamp),
 				status, max_guest, String.valueOf(created_at));
 		ChatRoomsModel chatRoomsModel=new ChatRoomsModel();
-		chatRoomsModel.saveCreatedRoomInDB(chatroomjid, chatroom_name, TChatApplication.getUserModel().getUsername(), String.valueOf(start_timestamp-86400000), String.valueOf(end_timestamp-86400000), status, max_guest, String.valueOf(created_at));
+		chatRoomsModel.saveCreatedRoomInDB(chatroomjid.replace("@conference."+Constants.CURRENT_SERVER,""), chatroom_name, TChatApplication.getUserModel().getUsername(), String.valueOf(start_timestamp), String.valueOf(end_timestamp), status, max_guest, String.valueOf(created_at));
+
 		finish();
 	}
 

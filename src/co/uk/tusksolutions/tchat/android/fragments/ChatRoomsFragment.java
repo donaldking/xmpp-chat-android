@@ -50,6 +50,9 @@ public class ChatRoomsFragment extends Fragment implements OnGetChatroomsComplet
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		APIGetChatRooms apiGetChatRooms=new APIGetChatRooms();
+		apiGetChatRooms.getChatrooms(this);
 
 	}
 
@@ -118,11 +121,15 @@ public class ChatRoomsFragment extends Fragment implements OnGetChatroomsComplet
 
 	}
 
-	private static void prepareListView(final int queryInt) {
+	private static void prepareListView(int queryInt) {
 
 		/**
 		 * Load Recents from DB
 		 */
+		if(queryInt==0)
+		{
+			queryInt=1;
+		}
 		TChatApplication.CHATROOM_SECTION_QUERY_ACTION=queryInt;
 		mAdapter = new ChatroomsContentAdapter(TChatApplication.getContext(),queryInt);
 
@@ -189,6 +196,8 @@ public class ChatRoomsFragment extends Fragment implements OnGetChatroomsComplet
 			
 
 			default:
+				TChatApplication.CHATROOM_SECTION_QUERY_ACTION=ALL_CHATROOMS_QUERY_ACTION;
+				prepareListView(TChatApplication.CHATROOM_SECTION_QUERY_ACTION);
 				break;
 			}
 		}
@@ -225,7 +234,12 @@ public class ChatRoomsFragment extends Fragment implements OnGetChatroomsComplet
 	@Override
 	public void OnGetChatRoomSuccess() {
 		// TODO Auto-generated method stub
-		
+		try {
+			prepareListView(TChatApplication.CHATROOM_SECTION_QUERY_ACTION);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -233,6 +247,5 @@ public class ChatRoomsFragment extends Fragment implements OnGetChatroomsComplet
 		// TODO Auto-generated method stub
 		
 	}
-	
-	
+
 }

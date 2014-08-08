@@ -3,6 +3,7 @@ package co.uk.tusksolutions.tchat.android.models;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import co.uk.tusksolutions.tchat.android.TChatApplication;
@@ -22,7 +23,7 @@ public class ChatRoomsModel implements Parcelable {
 	private String TABLE = TChatDBHelper.CHATROOMS_TABLE;
 
 	public String chatroom_jid;
-    public String chatroom_name;
+	public String chatroom_name;
 	public String chatroom_owner;
 	public String start_timestamp;
 	public String end_timestamp;
@@ -36,7 +37,6 @@ public class ChatRoomsModel implements Parcelable {
 
 	}
 
-	
 	public boolean saveChatroomsToDB(JSONArray chatroomsJson) {
 		db = TChatApplication.getTChatDBWritable();
 
@@ -64,8 +64,8 @@ public class ChatRoomsModel implements Parcelable {
 				contentValues.put(TChatDBHelper.CR_CREATED_AT,
 						groupsObject.getString("created_at"));
 				// Insert
-				db.insertWithOnConflict(TABLE, null,
-						contentValues, SQLiteDatabase.CONFLICT_REPLACE);
+				db.insertWithOnConflict(TABLE, null, contentValues,
+						SQLiteDatabase.CONFLICT_REPLACE);
 
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -74,7 +74,7 @@ public class ChatRoomsModel implements Parcelable {
 		}
 		return true;
 	}
-	
+
 	public boolean deleteChatRooms() {
 
 		db = TChatApplication.getTChatDBWritable();
@@ -83,9 +83,11 @@ public class ChatRoomsModel implements Parcelable {
 
 		return true;
 	}
-	
-	public boolean saveCreatedRoomInDB(String chatroom_jid, String chatroom_name,
-			String chatroom_admin, String start_timestamp,String end_timestamp,String status,String max_guests,String create_at) {
+
+	public boolean saveCreatedRoomInDB(String chatroom_jid,
+			String chatroom_name, String chatroom_admin,
+			String start_timestamp, String end_timestamp, String status,
+			String max_guests, String create_at) {
 		try {
 
 			db = TChatApplication.getTChatDBWritable();
@@ -93,26 +95,25 @@ public class ChatRoomsModel implements Parcelable {
 			contentValues.put(TChatDBHelper.CR_CHATROOM_ID, chatroom_jid);
 
 			contentValues.put(TChatDBHelper.CR_CHATROOM_NAME, chatroom_name);
-			contentValues.put(TChatDBHelper.CR_ADMIN,chatroom_admin);
-			contentValues.put(TChatDBHelper.CR_START_TIMESTAMP, start_timestamp);
-			contentValues.put(TChatDBHelper.CR_END_TIMESTAMP,end_timestamp);
-			
-			contentValues.put(TChatDBHelper.CR_STATUS,status);
-			contentValues.put(TChatDBHelper.CR_MAX_GUESTS,max_guests);
-			contentValues.put(TChatDBHelper.CR_CREATED_AT,create_at);
-			
-			
-			
+			contentValues.put(TChatDBHelper.CR_ADMIN, chatroom_admin);
+			contentValues
+					.put(TChatDBHelper.CR_START_TIMESTAMP, start_timestamp);
+			contentValues.put(TChatDBHelper.CR_END_TIMESTAMP, end_timestamp);
+
+			contentValues.put(TChatDBHelper.CR_STATUS, status);
+			contentValues.put(TChatDBHelper.CR_MAX_GUESTS, max_guests);
+			contentValues.put(TChatDBHelper.CR_CREATED_AT, create_at);
+
 			// Insert
-			db.insertWithOnConflict(TABLE, null,
-					contentValues, SQLiteDatabase.CONFLICT_REPLACE);
+			db.insertWithOnConflict(TABLE, null, contentValues,
+					SQLiteDatabase.CONFLICT_REPLACE);
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return true;
 	}
-	
+
 	public ArrayList<ChatRoomsModel> queryAllChatrooms() {
 
 		ArrayList<ChatRoomsModel> chatroomsModelCollection = new ArrayList<ChatRoomsModel>();
@@ -127,55 +128,55 @@ public class ChatRoomsModel implements Parcelable {
 
 		return chatroomsModelCollection;
 	}
+
 	public ArrayList<ChatRoomsModel> queryActiveChatrooms() {
 
 		ArrayList<ChatRoomsModel> chatroomsModelCollection = new ArrayList<ChatRoomsModel>();
-		
-		String currentTime=String.valueOf(System.currentTimeMillis());
-		
-		String whereClause = TChatDBHelper.CR_START_TIMESTAMP + " <= ? ";
 
-		String[] whereArgs = new String[] {currentTime};
+		String currentTime = String.valueOf(System.currentTimeMillis());
+
+		String whereClause = TChatDBHelper.CR_START_TIMESTAMP + " <= ? ";
+		         //+
+				//" AND "
+				//+ TChatDBHelper.CR_END_TIMESTAMP + " >= ?";
+		String[] whereArgs = new String[] { currentTime };
 		String orderBy = TChatDBHelper.CR_CREATED_AT + " DESC";
 
 		Cursor cursor = TChatApplication.getTChatDBWritable().query(TABLE,
 				null, whereClause, whereArgs, null, null, orderBy);
-		Log.e("length","active Size "+cursor.getCount());
+		Log.e("length", "active Size " + cursor.getCount());
 		while (cursor.moveToNext()) {
-			
 
 			chatroomsModelCollection.add(fromCursor(cursor));
 		}
 
 		return chatroomsModelCollection;
 	}
-	
-		public ArrayList<ChatRoomsModel> queryScheduledChatrooms() {
 
-			ArrayList<ChatRoomsModel> chatroomsModelCollection = new ArrayList<ChatRoomsModel>();
+	public ArrayList<ChatRoomsModel> queryScheduledChatrooms() {
 
-			
-			String currentTime=String.valueOf(System.currentTimeMillis());
-			
-			String whereClause = TChatDBHelper.CR_START_TIMESTAMP + " > ? ";
+		ArrayList<ChatRoomsModel> chatroomsModelCollection = new ArrayList<ChatRoomsModel>();
 
-			String[] whereArgs = new String[] {currentTime};
-			String orderBy = TChatDBHelper.CR_CREATED_AT + " DESC";
+		String currentTime = String.valueOf(System.currentTimeMillis());
 
-			Cursor cursor = TChatApplication.getTChatDBWritable().query(TABLE,
-					null, whereClause, whereArgs, null, null, orderBy);
+		String whereClause = TChatDBHelper.CR_START_TIMESTAMP + " > ? ";
 
-			Log.e("length","scheduled Size "+cursor.getCount());
-			while (cursor.moveToNext()) {
-				
+		String[] whereArgs = new String[] { currentTime };
+		String orderBy = TChatDBHelper.CR_CREATED_AT + " DESC";
 
+		Cursor cursor = TChatApplication.getTChatDBWritable().query(TABLE,
+				null, whereClause, whereArgs, null, null, orderBy);
 
-				chatroomsModelCollection.add(fromCursor(cursor));
-			}
+		Log.e("length", "scheduled Size " + cursor.getCount());
+		while (cursor.moveToNext()) {
 
-			return chatroomsModelCollection;
-
+			chatroomsModelCollection.add(fromCursor(cursor));
 		}
+
+		return chatroomsModelCollection;
+
+	}
+
 	protected ChatRoomsModel fromCursor(Cursor cursor) {
 		/*
 		 * Pulls the values fromUser the cursor object and returns it TO_USER
@@ -199,11 +200,13 @@ public class ChatRoomsModel implements Parcelable {
 
 		chatRoomsModel.max_guests = cursor.getString(cursor
 				.getColumnIndex(TChatDBHelper.CR_MAX_GUESTS));
-		chatRoomsModel.created_at=cursor.getString(cursor.getColumnIndex(TChatDBHelper.CR_CREATED_AT));
+		chatRoomsModel.created_at = cursor.getString(cursor
+				.getColumnIndex(TChatDBHelper.CR_CREATED_AT));
 
 		return chatRoomsModel;
 
 	}
+
 	public ArrayList<ChatRoomsModel> queryChatrooms() {
 
 		ArrayList<ChatRoomsModel> chatroomsModelCollection = new ArrayList<ChatRoomsModel>();
@@ -218,7 +221,7 @@ public class ChatRoomsModel implements Parcelable {
 
 		return chatroomsModelCollection;
 	}
-	
+
 	public static void joinAllChatrooms() {
 
 		Runnable runnable = new Runnable() {
@@ -229,7 +232,8 @@ public class ChatRoomsModel implements Parcelable {
 				// when new messages come in.
 
 				ChatRoomsModel gm = new ChatRoomsModel();
-				ArrayList<ChatRoomsModel> chatroomCollection = gm.queryChatrooms();
+				ArrayList<ChatRoomsModel> chatroomCollection = gm
+						.queryChatrooms();
 				for (ChatRoomsModel chatroomsModel : chatroomCollection) {
 					// Join all rooms
 					try {
@@ -288,6 +292,7 @@ public class ChatRoomsModel implements Parcelable {
 
 		return false;
 	}
+
 	public String getChatRoomName(String chatroomId) {
 		db = TChatApplication.getTChatDBReadable();
 		String groupName = null;
@@ -306,6 +311,45 @@ public class ChatRoomsModel implements Parcelable {
 		}
 
 		return groupName;
+	}
+	
+	
+
+	public boolean updateParticipantsinChatroom(String chatroom_id,
+			JSONArray participantsarray) {
+
+		String whereClause = TChatDBHelper.CR_CHATROOM_ID + " = ? ";
+		String[] whereArgs = { chatroom_id };
+
+		ContentValues contentValues = new ContentValues();
+		contentValues.put(TChatDBHelper.CR_PARTICIPANTS,
+				participantsarray.toString());
+
+		TChatApplication.getTChatDBWritable().updateWithOnConflict(TABLE,
+				contentValues, whereClause, whereArgs,
+				SQLiteDatabase.CONFLICT_REPLACE);
+
+		return true;
+
+	}
+	
+	public boolean updateStatusofChatRoom(String chatroom_id,
+			String status) {
+		db = TChatApplication.getTChatDBReadable();
+		String whereClause = TChatDBHelper.CR_CHATROOM_ID + " = ? ";
+		String[] whereArgs = { chatroom_id };
+
+		ContentValues contentValues = new ContentValues();
+		contentValues.put(TChatDBHelper.CR_STATUS,
+				status);
+
+		TChatApplication.getTChatDBWritable().updateWithOnConflict(TABLE,
+				contentValues, whereClause, whereArgs,
+				SQLiteDatabase.CONFLICT_REPLACE);
+		db.close();
+
+		return true;
+
 	}
 
 	@Override

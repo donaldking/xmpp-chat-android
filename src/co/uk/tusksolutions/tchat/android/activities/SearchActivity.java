@@ -76,21 +76,6 @@ public class SearchActivity extends ActionBarActivity implements TextWatcher {
 
 	}
 
-	/*
-	 * private String getFirstImage(String htmlString) {
-	 * 
-	 * if (htmlString == null) return null;
-	 * 
-	 * String img = ""; Document doc = Jsoup.parse(htmlString); Elements imgs =
-	 * doc.getElementsByTag("img");
-	 * 
-	 * for (Element imageElement : imgs) { if (imageElement != null) { // for
-	 * each element get the srs url img = imageElement.attr("src").substring(4);
-	 * return img; } }
-	 * 
-	 * return null; }
-	 */
-
 	/**
 	 * Shows the progress UI and hides the login form.
 	 */
