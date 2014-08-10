@@ -1,7 +1,12 @@
 package co.uk.tusksolutions.tchat.android.activities;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.Settings.Secure;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -9,14 +14,21 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
+import co.uk.tusksolutions.gcm.APIRegisterPushNotifications;
+import co.uk.tusksolutions.gcm.WakeLocker;
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
+import co.uk.tusksolutions.tchat.android.constants.Constants;
 import co.uk.tusksolutions.tchat.android.fragments.ChatRoomsFragment;
 import co.uk.tusksolutions.tchat.android.fragments.GroupsFragment;
 import co.uk.tusksolutions.tchat.android.fragments.RecentsFragment;
 import co.uk.tusksolutions.tchat.android.fragments.RosterFragment;
+
+import com.google.android.gcm.GCMRegistrar;
 
 public class MainActivity extends ActionBarActivity implements
 		ActionBar.TabListener {
@@ -44,6 +56,106 @@ public class MainActivity extends ActionBarActivity implements
 	private ChatRoomsFragment mChatRoomFragment;
 	ActionBar actionBar;
 	boolean mHomeForeGround = false;
+
+	/** PUSH STUFF STARTS ***/
+	// Asyntask
+	AsyncTask<Void, Void, Void> mRegisterTask;
+
+	/**
+	 * Register for PUSH notifications
+	 * 
+	 * @return
+	 */
+	public void registerForPushWithGCM() {
+
+		// Make sure the device has the proper dependencies.
+		GCMRegistrar.checkDevice(this);
+
+		// Make sure the manifest was properly set - comment out this line
+		// while developing the app, then uncomment it when it's ready.
+		GCMRegistrar.checkManifest(this);
+
+		registerReceiver(mHandleMessageReceiver, new IntentFilter(
+				Constants.DISPLAY_MESSAGE_ACTION));
+
+		// Get GCM registration id
+		final String regId = GCMRegistrar.getRegistrationId(this);
+
+		
+		// Check if regid already presents
+		if (regId.equals("")) {
+			// Registration is not present, register now with GCM
+			GCMRegistrar.register(this, Constants.SENDER_ID);
+		} else {
+			// Device is already registered on GCM
+			if (GCMRegistrar.isRegisteredOnServer(this)) {
+				//
+			} else {
+				// Try to register again, but not in the UI thread.
+				// It's also necessary to cancel the thread onDestroy(),
+				// hence the use of AsyncTask instead of a raw thread.
+				mRegisterTask = new AsyncTask<Void, Void, Void>() {
+
+					@Override
+					protected Void doInBackground(Void... params) {
+						// Register on our server
+						// On server creates a new user
+						APIRegisterPushNotifications regObject = new APIRegisterPushNotifications();
+						String device_id = Secure.getString(TChatApplication
+								.getContext().getContentResolver(),
+								Secure.ANDROID_ID);
+
+						regObject.doRegisterPushNotifications(regId,
+								TChatApplication.getUserModel().getUsername(),
+								device_id);
+						return null;
+					}
+
+					@Override
+					protected void onPostExecute(Void result) {
+						mRegisterTask = null;
+					}
+
+				};
+				mRegisterTask.execute(null, null, null);
+			}
+		}
+	}
+
+	/**
+	 * Receiving push messages
+	 * */
+	private final BroadcastReceiver mHandleMessageReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			String newMessage = intent.getExtras().getString("message");
+			// Waking up mobile if it is sleeping
+			WakeLocker.acquire(getApplicationContext());
+
+			// Showing received message
+			Toast.makeText(getApplicationContext(),
+					"New Message: " + newMessage, Toast.LENGTH_LONG).show();
+
+			// Releasing wake lock
+			WakeLocker.release();
+		}
+	};
+	
+	@Override
+	protected void onDestroy() {
+		if (mRegisterTask != null) {
+			mRegisterTask.cancel(true);
+		}
+		try {
+			unregisterReceiver(mHandleMessageReceiver);
+			GCMRegistrar.onDestroy(this);
+		} catch (Exception e) {
+			Log.e("UnRegister Receiver Error", "> " + e.getMessage());
+		}
+		super.onDestroy();
+	}
+	
+	/** PUSH STUFF ENDS ***/
 
 	public RecentsFragment getRecentsFragment() {
 
@@ -104,6 +216,9 @@ public class MainActivity extends ActionBarActivity implements
 			TChatApplication.reconnect();
 		}
 
+		// Call register for push
+		registerForPushWithGCM();
+
 		// Set up the action bar.
 		actionBar = getSupportActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -140,9 +255,15 @@ public class MainActivity extends ActionBarActivity implements
 		// For each of the sections in the app, add a tab TO_USER the action
 		// bar.
 		for (int i = 0; i < mSectionsPagerAdapter.getCount(); i++) {
-		
-			actionBar.addTab(actionBar.newTab().setText(mSectionsPagerAdapter.getItem(i).getArguments().getString("title"))
-					.setIcon(mSectionsPagerAdapter.getItem(i).getArguments().getInt("icon"))
+
+			actionBar.addTab(actionBar
+					.newTab()
+					.setText(
+							mSectionsPagerAdapter.getItem(i).getArguments()
+									.getString("title"))
+					.setIcon(
+							mSectionsPagerAdapter.getItem(i).getArguments()
+									.getInt("icon"))
 
 					.setTabListener(this));
 		}
@@ -174,12 +295,13 @@ public class MainActivity extends ActionBarActivity implements
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		if (id == R.id.action_chat||id==R.id.action_chat_one) {
-			
-			startActivity(new Intent(MainActivity.this,GroupFriendsSelectionActivity.class));
+		if (id == R.id.action_chat || id == R.id.action_chat_one) {
+
+			startActivity(new Intent(MainActivity.this,
+					GroupFriendsSelectionActivity.class));
 			return true;
 		}
-		
+
 		if (id == R.id.action_search) {
 			Intent intent = new Intent(MainActivity.this, SearchActivity.class);
 			startActivity(intent);
@@ -193,9 +315,9 @@ public class MainActivity extends ActionBarActivity implements
 
 			return true;
 		}
-		if(id==R.id.action_chat_room)
-		{
-			startActivity(new Intent(MainActivity.this,CreateChatRoomActivity.class));
+		if (id == R.id.action_chat_room) {
+			startActivity(new Intent(MainActivity.this,
+					CreateChatRoomActivity.class));
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -254,5 +376,4 @@ public class MainActivity extends ActionBarActivity implements
 		}
 	}
 
-	
 }

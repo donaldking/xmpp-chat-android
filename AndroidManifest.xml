@@ -8,11 +8,33 @@
         android:minSdkVersion="9"
         android:targetSdkVersion="20" />
 
-    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <!-- GCM STUFF -->
+    <!-- GCM connects to Internet Services. -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- GCM requires a Google account. -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+
+    <!-- Keeps the processor from sleeping when a message is received. -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="co.uk.tusksolutions.tchat.android.permission.C2D_MESSAGE" />
+
+    <!-- Creates a custom permission so only this app can receive its messages. -->
+    <permission
+        android:name="co.uk.tusksolutions.tchat.android.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+
+    <!-- This app has permission to register and receive data message. -->
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+
+    <!-- Network State Permissions to detect Internet status -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!-- Permission to vibrate -->
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:name="co.uk.tusksolutions.tchat.android.TChatApplication"
@@ -112,6 +134,19 @@
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
+        <receiver
+            android:name="com.google.android.gcm.GCMBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+
+                <!-- Receives the actual messages. -->
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <!-- Receives the registration id. -->
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+
+                <category android:name="co.uk.tusksolutions.tchat.android" />
+            </intent-filter>
+        </receiver>
 
         <!-- Services -->
         <service
@@ -120,6 +155,7 @@
         <service
             android:name="co.uk.tusksolutions.tchat.android.xmpp.XMPPConnectionManager"
             android:enabled="true" />
+        <service android:name=".GCMIntentService" />
     </application>
 
 </manifest>

@@ -3,7 +3,6 @@ package co.uk.tusksolutions.tchat.android.receivers;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.widget.Toast;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.xmpp.XMPPConnectionManager;
 
@@ -31,8 +30,6 @@ public class BootReceiver extends BroadcastReceiver {
 				}
 			
 				}
-			Toast.makeText(context, (String) TAG + " onReceive",
-					Toast.LENGTH_LONG).show();
 		}
 
 	}

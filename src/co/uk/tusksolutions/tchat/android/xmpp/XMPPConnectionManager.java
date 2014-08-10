@@ -93,7 +93,8 @@ public class XMPPConnectionManager {
 							Constants.XMPP_RESOURCE = "TChat-Android-"
 									+ Secure.getString(TChatApplication
 											.getContext().getContentResolver(),
-											Secure.ANDROID_ID) +"-"+ System.currentTimeMillis();
+											Secure.ANDROID_ID) + "-"
+									+ System.currentTimeMillis();
 
 							TChatApplication.connection.login(username,
 									password, Constants.XMPP_RESOURCE);
@@ -191,22 +192,23 @@ public class XMPPConnectionManager {
 
 								}
 							});
-							
-							APIGetChatRooms apiGetChatRooms=new APIGetChatRooms();
-							apiGetChatRooms.getChatrooms(new OnGetChatroomsCompleted() {
-								
-								@Override
-								public void OnGetChatRoomSuccess() {
-									// TODO Auto-generated method stub
-									
-								}
-								
-								@Override
-								public void OnGetChatRoomFailed() {
-									// TODO Auto-generated method stub
-									
-								}
-							});
+
+							APIGetChatRooms apiGetChatRooms = new APIGetChatRooms();
+							apiGetChatRooms
+									.getChatrooms(new OnGetChatroomsCompleted() {
+
+										@Override
+										public void OnGetChatRoomSuccess() {
+											// TODO Auto-generated method stub
+
+										}
+
+										@Override
+										public void OnGetChatRoomFailed() {
+											// TODO Auto-generated method stub
+
+										}
+									});
 
 						} catch (Exception e) {
 							/**
@@ -226,8 +228,7 @@ public class XMPPConnectionManager {
 											Toast.makeText(
 													TChatApplication
 															.getContext(),
-													(String) TAG
-															+ " Unable TO_USER login",
+													"Login failed",
 													Toast.LENGTH_SHORT).show();
 											// TChatApplication.tearDownAndLogout();
 										}

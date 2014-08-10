@@ -8,6 +8,7 @@ public class Constants {
 	public static String CURRENT_SERVER = null;
 	public static String PROXY_SERVER = null;
 	public static String XMPP_RESOURCE = null;
+	public static String SENDER_ID = "637301192685";
 	public static final String DEVELOPMENT_SERVER = "dev.yookoschat.com";
 	public static final String STAGING_SERVER = "uat.yookoschat.com";
 	public static final String PRODUCTION_SERVER = "yookoschat.com";
@@ -15,6 +16,8 @@ public class Constants {
 	public static String PROXY_PATH = "/service/proxy/proxy.yookos.php?path=/people/";
 	public static String RECENTS_ENDPOINT = "/mobileservices/v1/get_recents.php";
 	public static String CLOUD_STORAGE_ENDPOINT = "/mobileservices/v1/store_message.php";
+	public static String REGISTER_PUSH_ENDPOINT = "/mobileservices/v1/register_device_gcm.php";
+	public static String UNREGISTER_PUSH_ENDPOINT = "/mobileservices/v1/deactivate_device_gcm.php";
 	public static String CHAT_MESSAGES_ENDPOINT = "/mobileservices/v1/get_message.php";
 	public static final String GET_PROFILE_ENDPOINT = "/mobileservices/v1/get_profile.php";
 	public static final String GET_GROUPS_ENDPOINT = "/mobileservices/v1/get_groups_for_user.php";
@@ -67,9 +70,10 @@ public class Constants {
 	public static String CLOUD_SAVE_ERROR = "co.uk.tusksolutions.tchat.android.action.CLOUD_SAVE_ERROR";
 	public static String GROUPS_UPDATED = "co.uk.tusksolutions.tchat.android.action.GROUPS_UPDATED";
 	public static String GROUPS_NOT_UPDATED = "co.uk.tusksolutions.tchat.android.action.GROUPS_NOT_UPDATED";
-	public static final String PROFILE_UPDATED = "co.uk.tusksolutions.tchat.android.action.PROFILE_UPDATED";
-	public static final String PROFILE_NOT_UPDATED = "co.uk.tusksolutions.tchat.android.action.PROFILE_NOT_UPDATED";
-	public static final String LAST_ONLINE_TIME_STATE_CHANGED = "co.uk.tusksolutions.tchat.android.action.LAST_ONLINE_TIME_STATE_CHANGED";
-	public static final String BANNED_FROM_ROOM = "co.uk.tusksolutions.tchat.android.action.BANNED_FROM_ROOM";
+	public static String DISPLAY_MESSAGE_ACTION = "co.uk.tusksolutions.tchat.android.action.DISPLAY_MESSAGE";
+	public static String PROFILE_UPDATED = "co.uk.tusksolutions.tchat.android.action.PROFILE_UPDATED";
+	public static String PROFILE_NOT_UPDATED = "co.uk.tusksolutions.tchat.android.action.PROFILE_NOT_UPDATED";
+	public static String LAST_ONLINE_TIME_STATE_CHANGED = "co.uk.tusksolutions.tchat.android.action.LAST_ONLINE_TIME_STATE_CHANGED";
+	public static String BANNED_FROM_ROOM = "co.uk.tusksolutions.tchat.android.action.BANNED_FROM_ROOM";
 
 }

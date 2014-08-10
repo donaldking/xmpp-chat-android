@@ -14,7 +14,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Handler;
-import android.widget.Toast;
+import android.provider.Settings.Secure;
+import android.util.Log;
+import co.uk.tusksolutions.gcm.APIRegisterPushNotifications;
+import co.uk.tusksolutions.gcm.APIUnRegisterPushNotifications;
 import co.uk.tusksolutions.tchat.android.activities.LoginActivity;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
 import co.uk.tusksolutions.tchat.android.dbHelper.TChatDBHelper;
@@ -71,9 +74,7 @@ public class TChatApplication extends Application {
 		 * TO_USER MainActivity, otherwise, send us TO_USER LoginActivity
 		 */
 		if (!isNetworkAvailable()) {
-			Toast.makeText(TChatApplication.getContext(),
-					"No Internet connection.. Kill App", Toast.LENGTH_LONG)
-					.show();
+			Log.d(TAG, "No internet connection");
 		}
 	}
 
@@ -155,6 +156,7 @@ public class TChatApplication extends Application {
 	}
 
 	public static void tearDownAndLogout() {
+		TChatApplication.unRegisterForPush();
 		TChatApplication.getRosterModel().deleteRosterRecords();
 		TChatApplication.getRecentsModel().deleteRecents();
 		TChatApplication.getChatMessagesModel().deleteAllChats();
@@ -172,6 +174,23 @@ public class TChatApplication extends Application {
 							LoginActivity.class)
 							.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
 		}
+	}
+
+	public static void registerForPush(String registrationId) {
+		APIRegisterPushNotifications regObject = new APIRegisterPushNotifications();
+		String device_id = Secure.getString(TChatApplication.getContext()
+				.getContentResolver(), Secure.ANDROID_ID);
+
+		regObject.doRegisterPushNotifications(registrationId, TChatApplication
+				.getUserModel().getUsername(), device_id);
+	}
+
+	public static void unRegisterForPush() {
+		APIUnRegisterPushNotifications unRegObject = new APIUnRegisterPushNotifications();
+		String device_id = Secure.getString(TChatApplication.getContext()
+				.getContentResolver(), Secure.ANDROID_ID);
+
+		unRegObject.doUnRegisterPushNotifications(device_id);
 	}
 
 }
