@@ -17,8 +17,10 @@ import co.uk.tusksolutions.extensions.TimeAgo;
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.activities.ChatActivity;
+import co.uk.tusksolutions.tchat.android.activities.ChatRoomActivity;
 import co.uk.tusksolutions.tchat.android.activities.GroupChatActivity;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
+import co.uk.tusksolutions.tchat.android.models.ChatRoomsModel;
 import co.uk.tusksolutions.tchat.android.models.RecentsModel;
 import co.uk.tusksolutions.tchat.android.viewHolders.RecentsViewHolder;
 
@@ -119,11 +121,23 @@ public class RecentsContentAdapter extends BaseAdapter {
 				b.putString("roomJid", model.chatWithUser);
 
 				Log.d(TAG, "isGroupMessage " + model.isGroupMessage);
-
-				if (model.isGroupMessage == 1) {
+				
+				 if(model.messageType.toString().equalsIgnoreCase("CHAT_ROOM"))
+				{
+					 ChatRoomsModel chatRoomsModel=new ChatRoomsModel();
+					 String chatroomID=chatRoomsModel.getChatRoomID(model.name);
+					    TChatApplication.joinChatRoom(chatroomID);
+						b.putString("roomName",model.name);
+						launchpChatRoomActivity(b);
+				}
+				else if (model.isGroupMessage == 1) {
 					b.putString("roomName", model.name);
 					launchGroupChatActivity(b);
-				} else {
+				} 
+				
+				
+				
+				else {
 					b.putString("friendName", model.name);
 					launchNormalChatActivity(b);
 				}
@@ -145,6 +159,15 @@ public class RecentsContentAdapter extends BaseAdapter {
 
 		Intent intent = new Intent(TChatApplication.getContext(),
 				GroupChatActivity.class);
+		intent.putExtra("groupChatToRoomBundle", b);
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+		TChatApplication.getContext().startActivity(intent);
+	}
+	private void launchpChatRoomActivity(Bundle b) {
+
+		Intent intent = new Intent(TChatApplication.getContext(),
+				ChatRoomActivity.class);
 		intent.putExtra("groupChatToRoomBundle", b);
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 

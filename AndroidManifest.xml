@@ -69,6 +69,8 @@
         </activity>
         <activity android:name="co.uk.tusksolutions.tchat.android.activities.GroupChatActivity" >
         </activity>
+        <activity android:name="co.uk.tusksolutions.tchat.android.activities.ChatRoomActivity" >
+        </activity>
         <activity android:name="co.uk.tusksolutions.tchat.android.activities.GroupParticipantsAddActivity" />
         <activity android:name="co.uk.tusksolutions.tchat.android.activities.GroupParticipantsRemoveActivity" />
         <activity

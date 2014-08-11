@@ -346,14 +346,15 @@ public class GroupChatMessagesAdapter extends BaseAdapter {
 				try {
 					ium = new UserModel();
 					imageFromName = ium.getProfileName();
+					if (imageFromName == null) {
+						imageFromName = ium.getUsername();
+					}
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 
-				if (imageFromName == null) {
-					imageFromName = ium.getUsername();
-				}
+			
 
 				groupChatToImageViewHolder.chatMessageToUser
 						.setText(imageFromName);

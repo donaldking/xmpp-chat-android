@@ -11,6 +11,7 @@ import android.util.Log;
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.activities.ChatActivity;
+import co.uk.tusksolutions.tchat.android.activities.ChatRoomActivity;
 import co.uk.tusksolutions.tchat.android.activities.GroupChatActivity;
 
 public class XMPPNotificationManager {
@@ -74,6 +75,7 @@ public class XMPPNotificationManager {
 				.getString("roomName");
 		String message = intent.getBundleExtra("groupChatFromRoomBundle")
 				.getString("message");
+		String messageType=intent.getBundleExtra("groupChatFromRoomBundle").getString("messageType");
 		mBuilder = new NotificationCompat.Builder(mContext)
 				.setSmallIcon(R.drawable.ic_action_chat)
 				.setContentTitle(roomName).setTicker(roomName + ": " + message)
@@ -88,8 +90,18 @@ public class XMPPNotificationManager {
 		 * pending intent TO_USER post so that we can navigate TO_USER the exact
 		 * window when we click on the notification.
 		 */
-		Intent groupChatActivityIntent = new Intent(mContext,
+		Intent groupChatActivityIntent;
+		if(messageType.equalsIgnoreCase("CHAT_ROOM"))
+		{
+			 groupChatActivityIntent = new Intent(mContext,
+					ChatRoomActivity.class);
+				
+		}
+		else
+		{
+		 groupChatActivityIntent = new Intent(mContext,
 				GroupChatActivity.class);
+		}
 		groupChatActivityIntent.putExtra("groupChatFromRoomBundle",
 				intent.getBundleExtra("groupChatFromRoomBundle"));
 		groupChatActivityIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
