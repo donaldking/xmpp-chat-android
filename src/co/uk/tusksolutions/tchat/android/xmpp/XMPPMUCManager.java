@@ -17,7 +17,6 @@ import android.util.Log;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.api.APIClearChatHistory;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
-import co.uk.tusksolutions.tchat.android.listeners.XMPPMucSubjectUpdatedListener;
 import co.uk.tusksolutions.tchat.android.listeners.XMPPMucUserStatusListener;
 import co.uk.tusksolutions.tchat.android.models.GroupsModel;
 import co.uk.tusksolutions.tchat.android.models.RosterModel;

@@ -3,19 +3,18 @@ package co.uk.tusksolutions.tchat.android.models;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import co.uk.tusksolutions.tchat.android.TChatApplication;
-import co.uk.tusksolutions.tchat.android.api.APIKickUserFromRoom;
-import co.uk.tusksolutions.tchat.android.dbHelper.TChatDBHelper;
-import co.uk.tusksolutions.tchat.android.xmpp.XMPPMUCManager;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
+import co.uk.tusksolutions.tchat.android.TChatApplication;
+import co.uk.tusksolutions.tchat.android.api.APIKickUserFromRoom;
+import co.uk.tusksolutions.tchat.android.dbHelper.TChatDBHelper;
+import co.uk.tusksolutions.tchat.android.xmpp.XMPPMUCManager;
 
 public class ChatRoomsModel implements Parcelable {
 

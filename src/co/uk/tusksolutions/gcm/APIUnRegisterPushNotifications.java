@@ -9,12 +9,12 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 
-import com.google.android.gcm.GCMRegistrar;
-
 import android.os.AsyncTask;
 import android.util.Log;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
+
+import com.google.android.gcm.GCMRegistrar;
 
 public class APIUnRegisterPushNotifications {
 	private AsyncApiUnRegisterPushNotifications mTask = null;

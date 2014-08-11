@@ -1,34 +1,26 @@
 package co.uk.tusksolutions.tchat.android.fragments;
 
-import co.uk.tusksolutions.tchat.android.R;
-import co.uk.tusksolutions.tchat.android.R.id;
-import co.uk.tusksolutions.tchat.android.TChatApplication;
-import co.uk.tusksolutions.tchat.android.activities.CreateChatRoomActivity;
-import co.uk.tusksolutions.tchat.android.adapters.ChatroomsContentAdapter;
-import co.uk.tusksolutions.tchat.android.adapters.GroupsContentAdapter;
-import co.uk.tusksolutions.tchat.android.adapters.RosterContentAdapter;
-import co.uk.tusksolutions.tchat.android.api.APIGetChatRooms;
-import co.uk.tusksolutions.tchat.android.api.APIGetChatRooms.OnGetChatroomsCompleted;
-import co.uk.tusksolutions.tchat.android.fragments.RosterFragment.RosterReceiver;
-import co.uk.tusksolutions.tchat.android.listeners.XMPPPresenceListener;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.RadioButton;
+import co.uk.tusksolutions.tchat.android.R;
+import co.uk.tusksolutions.tchat.android.TChatApplication;
+import co.uk.tusksolutions.tchat.android.adapters.ChatroomsContentAdapter;
+import co.uk.tusksolutions.tchat.android.api.APIGetChatRooms;
+import co.uk.tusksolutions.tchat.android.api.APIGetChatRooms.OnGetChatroomsCompleted;
 
 public class ChatRoomsFragment extends Fragment implements OnGetChatroomsCompleted {
 	public static ListView listView;

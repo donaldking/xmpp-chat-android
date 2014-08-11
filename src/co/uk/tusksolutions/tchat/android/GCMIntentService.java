@@ -1,5 +1,6 @@
 package co.uk.tusksolutions.tchat.android;
 
+import org.jivesoftware.smack.util.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -8,18 +9,20 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
-import android.os.Looper;
+import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
+import co.uk.tusksolutions.tchat.android.TChatApplication.CHAT_STATUS_ENUM;
 import co.uk.tusksolutions.tchat.android.activities.MainActivity;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
+import co.uk.tusksolutions.tchat.android.xmpp.notifications.XMPPNotificationManager;
 
 import com.google.android.gcm.GCMBaseIntentService;
 
 public class GCMIntentService extends GCMBaseIntentService {
 
 	private static final String TAG = "GCMIntentService";
+	public static final String ACTION_XMPP_CHAT_STATE_CHANGED = "XMPP_CHAT_STATE_CHANGED";
+	public static final String EXTRA_CHAT_STATE = "chatState";
 
 	public GCMIntentService() {
 		super(Constants.SENDER_ID);
@@ -40,25 +43,124 @@ public class GCMIntentService extends GCMBaseIntentService {
 	@Override
 	protected void onMessage(final Context context, Intent intent) {
 
-		final String message = intent.getStringExtra("message");
-		new Handler(Looper.getMainLooper()).post(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					final JSONObject object = new JSONObject(message);
-					Toast.makeText(
-							context,
-							object.getString("sender_display_name") + " says: "
-									+ object.getString("message"),
-							Toast.LENGTH_SHORT).show();
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+		String jsonString = intent.getStringExtra("message");
+		
+		try {
+			JSONObject object = new JSONObject(jsonString);
+			if (jsonString.length() > 0) {
+
+				Intent i = new Intent();
+				i.setAction(ACTION_XMPP_CHAT_STATE_CHANGED);
+				i.putExtra(EXTRA_CHAT_STATE, "sent");
+				context.sendBroadcast(i);
+
+				if (TChatApplication.getChatActivityStatus() == CHAT_STATUS_ENUM.VISIBLE
+						&& TChatApplication.chatSessionBuddy
+								.equalsIgnoreCase(object.getString("senderJid"))) {
+
+					// 1. Visible and chatting with buddy
+
+				} else if (TChatApplication.getChatActivityStatus() == CHAT_STATUS_ENUM.VISIBLE
+						&& !TChatApplication.chatSessionBuddy
+								.equalsIgnoreCase(object.getString("senderJid"))) {
+
+					// 2. Visible and not chatting with buddy
+					processNotification(object);
+
+				} else if (TChatApplication.getChatActivityStatus() == CHAT_STATUS_ENUM.NOT_VISIBLE) {
+
+					// 3. Not Visible and not chatting
+					processNotification(object);
+
 				}
 			}
-		});
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
-		Log.d(TAG, "message received: " + message);
+	}
+
+	public void processNotification(JSONObject object){
+		try {
+			
+			Bundle b = new Bundle();
+
+			if (object.getString("messageType").equalsIgnoreCase("CHAT")) {
+				b.putString("roomJid", object.getString("sender") + "@"
+						+ Constants.CURRENT_SERVER);
+
+				b.putString("fromName", object.getString("sender_display_name"));
+
+				/*
+				 * Image & File notifications added
+				 */
+				String last_message = object.getString("message");
+				if (last_message.contains("<img src")) {
+					last_message = "Image";
+				} else if (last_message.contains("<a target")) {
+					last_message = "File";
+				}
+
+				b.putString("message", last_message);
+
+				Intent i = new Intent();
+				i.putExtra("chatFromFriendBundle", b);
+
+				// Send TO_USER notification manager
+				new XMPPNotificationManager().sendNormalChatNotification(i);
+
+			} else if (object.getString("messageType").equalsIgnoreCase(
+					"GROUP_CHAT")) {
+
+				Bundle groupChatBundle = new Bundle();
+				groupChatBundle.putString("roomJid",
+						object.getString("roomJid"));
+				groupChatBundle.putString("resource",
+						object.getString("sender"));
+				groupChatBundle.putString("roomName",
+						object.getString("sender_display_name"));
+				groupChatBundle.putString("senderJid",
+						object.getString("sender") + "@"
+								+ Constants.CURRENT_SERVER);
+				groupChatBundle.putString(
+						"senderName",
+						TChatApplication.getRosterModel().getBuddyName(
+								object.getString("sender") + "@"
+										+ Constants.CURRENT_SERVER));
+
+				/*
+				 * Image & File notifications added
+				 */
+				String last_message = object.getString("message");
+				if (last_message.contains("<img src")) {
+					last_message = "Image";
+				} else if (last_message.contains("<a target")) {
+					last_message = "File";
+				}
+
+				groupChatBundle.putString("message", last_message);
+
+				Intent i = new Intent();
+				i.putExtra("groupChatFromRoomBundle", groupChatBundle);
+
+				Log.d(TAG,
+						"message received: "
+								+ groupChatBundle.getString("message"));
+
+				// Send TO_USER notification manager
+				new XMPPNotificationManager().sendGroupChatNotification(i);
+
+			} else if (object.getString("messageType").equalsIgnoreCase(
+					"CHAT_ROOM")) {
+				b.putString("roomJid", object.getString("sender")
+						+ "@conference." + Constants.CURRENT_SERVER);
+			}
+
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -82,7 +184,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 
 	/**
 	 * Issues a notification to inform the user that server has sent a message.
-	 */
+	 *
 	private static void generateNotification(Context context, String message) {
 		int icon = R.drawable.ic_launcher;
 		long when = System.currentTimeMillis();
@@ -108,5 +210,5 @@ public class GCMIntentService extends GCMBaseIntentService {
 		notification.defaults |= Notification.DEFAULT_VIBRATE;
 		notificationManager.notify(0, notification);
 
-	}
+	}*/
 }

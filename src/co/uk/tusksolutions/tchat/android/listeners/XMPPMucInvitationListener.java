@@ -7,8 +7,6 @@ import org.jivesoftware.smackx.muc.InvitationListener;
 
 import android.content.Context;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
-import co.uk.tusksolutions.tchat.android.api.APIGetChatRooms;
-import co.uk.tusksolutions.tchat.android.api.APIGetChatRooms.OnGetChatroomsCompleted;
 import co.uk.tusksolutions.tchat.android.api.APIGetGroups;
 import co.uk.tusksolutions.tchat.android.api.APIGetGroups.OnGetGroupsCompleted;
 import co.uk.tusksolutions.tchat.android.models.GroupsModel;
