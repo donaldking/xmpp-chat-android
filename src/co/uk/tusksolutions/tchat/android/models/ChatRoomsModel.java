@@ -311,6 +311,25 @@ public class ChatRoomsModel implements Parcelable {
 
 		return groupName;
 	}
+	public String getChatRoomID(String ChatroomName) {
+		db = TChatApplication.getTChatDBReadable();
+		String groupName = null;
+
+		String[] columns = { TChatDBHelper.CR_CHATROOM_ID};
+		String whereClause = TChatDBHelper.CR_CHATROOM_NAME + " = ? ";
+
+		String[] whereArgs = new String[] { ChatroomName };
+
+		Cursor cursor = TChatApplication.getTChatDBReadable().query(TABLE,
+				columns, whereClause, whereArgs, null, null, null);
+
+		while (cursor.moveToNext()) {
+			groupName = cursor.getString(cursor
+					.getColumnIndex(TChatDBHelper.CR_CHATROOM_ID));
+		}
+
+		return groupName;
+	}
 	
 	
 

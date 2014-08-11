@@ -28,6 +28,7 @@ import co.uk.tusksolutions.tchat.android.models.RecentsModel;
 import co.uk.tusksolutions.tchat.android.models.RosterModel;
 import co.uk.tusksolutions.tchat.android.models.UserModel;
 import co.uk.tusksolutions.tchat.android.xmpp.XMPPConnectionManager;
+import co.uk.tusksolutions.tchat.android.xmpp.XMPPMUCManager;
 
 public class TChatApplication extends Application {
 
@@ -192,5 +193,21 @@ public class TChatApplication extends Application {
 
 		unRegObject.doUnRegisterPushNotifications(device_id);
 	}
+	
+
+	public static void joinChatRoom(String chatroom_jid) {
+		try {
+			XMPPMUCManager.getInstance(TChatApplication.getContext())
+					.mucServiceDiscovery();
+
+			XMPPMUCManager.getInstance(TChatApplication.getContext())
+					.joinRoomChatroom(TChatApplication.connection,
+							chatroom_jid + "@conference."+Constants.CURRENT_SERVER,
+							"", TChatApplication.getUserModel().getUsername());
+		} catch (Exception e) {
+		Log.v("TChatApplication ", "Error in join ChatRoom  "+e.getLocalizedMessage());
+		}
+	}
+
 
 }

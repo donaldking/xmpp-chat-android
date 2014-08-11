@@ -16,6 +16,7 @@ import android.widget.BaseAdapter;
 import android.widget.Toast;
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
+import co.uk.tusksolutions.tchat.android.activities.ChatRoomActivity;
 import co.uk.tusksolutions.tchat.android.activities.GroupChatActivity;
 import co.uk.tusksolutions.tchat.android.api.APICreateChatrooms;
 import co.uk.tusksolutions.tchat.android.api.APIGetChatroomparticipants;
@@ -169,7 +170,7 @@ public class ChatroomsContentAdapter extends BaseAdapter {
 						TChatApplication.getUserModel().getUsername())) {
 
 					doSelectionAnimationForView(v);
-					joinChatRoom(model.chatroom_jid);
+					TChatApplication.joinChatRoom(model.chatroom_jid);
 					mModel.updateStatusofChatRoom(model.chatroom_jid, "Active");
 
 					// CallApiToChangeStatus(model.chatroom_jid,
@@ -185,7 +186,7 @@ public class ChatroomsContentAdapter extends BaseAdapter {
 					launchGroupChatActivity(b);
 
 				} else if (participantsCount > 0) {
-					joinChatRoom(model.chatroom_jid);
+					TChatApplication.joinChatRoom(model.chatroom_jid);
 
 					Bundle b = new Bundle();
 					b.putString("roomJid", model.chatroom_jid + "@conference."
@@ -211,25 +212,11 @@ public class ChatroomsContentAdapter extends BaseAdapter {
 	private void launchGroupChatActivity(Bundle b) {
 
 		Intent intent = new Intent(TChatApplication.getContext(),
-				GroupChatActivity.class);
+				ChatRoomActivity.class);
 		intent.putExtra("groupChatToRoomBundle", b);
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
 		TChatApplication.getContext().startActivity(intent);
-	}
-
-	private void joinChatRoom(String chatroom_jid) {
-		try {
-			XMPPMUCManager.getInstance(TChatApplication.getContext())
-					.mucServiceDiscovery();
-
-			XMPPMUCManager.getInstance(TChatApplication.getContext())
-					.joinRoomChatroom(TChatApplication.connection,
-							chatroom_jid + "@conference.dev.yookoschat.com",
-							"", TChatApplication.getUserModel().getUsername());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 	private void CallApiToChangeStatus(String chatroom_id,
