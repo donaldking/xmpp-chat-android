@@ -11,7 +11,6 @@ import org.apache.http.message.BasicNameValuePair;
 
 import android.os.AsyncTask;
 import android.util.Log;
-
 import co.uk.tusksolutions.tchat.android.constants.Constants;
 
 public class APICreateChatrooms {

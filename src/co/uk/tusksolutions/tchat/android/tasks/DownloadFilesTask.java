@@ -1,23 +1,12 @@
 package co.uk.tusksolutions.tchat.android.tasks;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLConnection;
-
-import org.apache.http.util.ByteArrayBuffer;
 
 import android.app.DownloadManager;
-import android.app.NotificationManager;
 import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
-import android.util.Log;
-import android.widget.Toast;
 
 public class DownloadFilesTask {
 	Uri url;

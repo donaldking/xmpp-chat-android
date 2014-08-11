@@ -7,16 +7,12 @@ import org.jivesoftware.smack.util.StringUtils;
 import org.jivesoftware.smackx.muc.MultiUserChat;
 
 import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
 import android.util.Log;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
-import co.uk.tusksolutions.tchat.android.TChatApplication.CHAT_STATUS_ENUM;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
 import co.uk.tusksolutions.tchat.android.models.ChatMessagesModel;
 import co.uk.tusksolutions.tchat.android.models.ChatRoomsModel;
 import co.uk.tusksolutions.tchat.android.models.GroupsModel;
-import co.uk.tusksolutions.tchat.android.xmpp.notifications.XMPPNotificationManager;
 
 public class XMPPGroupChatMessageListener implements PacketListener {
 
@@ -46,110 +42,23 @@ public class XMPPGroupChatMessageListener implements PacketListener {
 			if (message.getBody().length() > 0
 					&& StringUtils.parseResource(message.getFrom()).length() > 0) {
 
-				Log.d("TAG",
-						"Resource sender: "
-								+ StringUtils.parseResource(message.getFrom()));
 				String roomJid = StringUtils
 						.parseBareAddress(message.getFrom());
 				GroupsModel gm = new GroupsModel();
 				String roomName = gm.getGroupName(StringUtils
 						.parseBareAddress(message.getFrom()));
-				Log.e(TAG, "Message from "+roomJid);
-				if(roomName==null)
-				{
-					ChatRoomsModel chatRoomsModel=new ChatRoomsModel();
-					roomName=chatRoomsModel.getChatRoomName(roomJid.replace("@conference."+Constants.CURRENT_SERVER, ""));
-				
-				}
-				Log.e(TAG, "Room name "+roomName);
-				String senderJid = StringUtils.parseResource(message.getFrom())
-						+ "@" + Constants.CURRENT_SERVER;
-				String senderName = TChatApplication.getRosterModel()
-						.getBuddyName(senderJid);
 
-				Log.i(TAG,
-						"New group message From Room Jid PKT: "
-								+ packet.getFrom() + ", Room Name: " + roomName
-								+ ", and sender: " + senderJid
-								+ ", and Sender Name: " + senderName
-								+ " Message: " + message.getBody());
-
-				if (TChatApplication.getChatActivityStatus() == CHAT_STATUS_ENUM.VISIBLE
-						&& TChatApplication.chatSessionBuddy
-								.equalsIgnoreCase(roomJid)) {
-
-					// 1. Visible and chatting with buddy
-
-					// Save to DB
-					saveMessageToDb(packet, message);
-
-				} else if (TChatApplication.getChatActivityStatus() == CHAT_STATUS_ENUM.VISIBLE
-						&& !TChatApplication.chatSessionBuddy
-								.equalsIgnoreCase(roomJid)) {
-
-					// 2. Visible and not chatting with buddy
-					/*
-					 * Prepare message bundle.
-					 */
-					sendNotification(packet, message);
-
-				} else if (TChatApplication.getChatActivityStatus() == CHAT_STATUS_ENUM.NOT_VISIBLE) {
-
-					// 3. Not Visible and not chatting
-					/*
-					 * Prepare message bundle.
-					 */
-					sendNotification(packet, message);
+				if (roomName == null) {
+					ChatRoomsModel chatRoomsModel = new ChatRoomsModel();
+					roomName = chatRoomsModel.getChatRoomName(roomJid.replace(
+							"@conference." + Constants.CURRENT_SERVER, ""));
 
 				}
+
+				// Save to DB
+				saveMessageToDb(packet, message);
 			}
 		}
-	}
-
-	private void sendNotification(Packet packet, Message message) {
-
-		String roomJid = StringUtils.parseBareAddress(message.getFrom());
-		String resource = StringUtils.parseResource(message.getFrom());
-		String roomName = TChatApplication.getGroupsModel().getGroupName(
-				StringUtils.parseBareAddress(message.getFrom()));
-		String senderJid = StringUtils.parseResource(message.getFrom()) + "@"
-				+ Constants.CURRENT_SERVER;
-		String senderName = TChatApplication.getRosterModel().getBuddyName(
-				senderJid);
-		if(roomName==null)
-		{
-			ChatRoomsModel chatRoomsModel=new ChatRoomsModel();
-			roomName=chatRoomsModel.getChatRoomName(roomJid.replace("@conference."+Constants.CURRENT_SERVER, ""));
-		
-		}
-
-		Bundle b = new Bundle();
-		b.putString("roomJid", roomJid);
-		b.putString("resource", resource);
-		b.putString("roomName", roomName);
-		b.putString("senderJid", senderJid);
-		b.putString("senderName", senderName);
-		
-		/*
-		 * Image & File noticiations added
-		 */
-		String last_message = message.getBody();
-		if (last_message.contains("<img src")) {
-			last_message = "Image";
-		}else if(last_message.contains("<a target")){
-			last_message = "File";
-		}
-		
-		b.putString("message", last_message);
-
-		Intent intent = new Intent();
-		intent.putExtra("groupChatFromRoomBundle", b);
-
-		// Send TO_USER notification manager
-		new XMPPNotificationManager().sendGroupChatNotification(intent);
-
-		// Save to DB
-		saveMessageToDb(packet, message);
 	}
 
 	private void saveMessageToDb(Packet packet, Message message) {
@@ -163,11 +72,11 @@ public class XMPPGroupChatMessageListener implements PacketListener {
 		String roomName = TChatApplication.getGroupsModel().getGroupName(
 				StringUtils.parseBareAddress(message.getFrom()));
 
-		if(roomName==null)
-		{
-			ChatRoomsModel chatRoomsModel=new ChatRoomsModel();
-			roomName=chatRoomsModel.getChatRoomName(roomJid.replace("@conference."+Constants.CURRENT_SERVER, ""));
-		
+		if (roomName == null) {
+			ChatRoomsModel chatRoomsModel = new ChatRoomsModel();
+			roomName = chatRoomsModel.getChatRoomName(roomJid.replace(
+					"@conference." + Constants.CURRENT_SERVER, ""));
+
 		}
 		Log.d("saveMessageToDb", "Sender: " + packet.getFrom() + " Resource: "
 				+ resource + ", Receiver: " + packet.getTo() + " Message: "
