@@ -160,7 +160,7 @@ public class RecentsContentAdapter extends BaseAdapter {
 		Intent intent = new Intent(TChatApplication.getContext(),
 				GroupChatActivity.class);
 		intent.putExtra("groupChatToRoomBundle", b);
-		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
 		TChatApplication.getContext().startActivity(intent);
 	}
@@ -169,7 +169,7 @@ public class RecentsContentAdapter extends BaseAdapter {
 		Intent intent = new Intent(TChatApplication.getContext(),
 				ChatRoomActivity.class);
 		intent.putExtra("groupChatToRoomBundle", b);
-		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
 		TChatApplication.getContext().startActivity(intent);
 	}
@@ -179,8 +179,9 @@ public class RecentsContentAdapter extends BaseAdapter {
 		Intent intent = new Intent(TChatApplication.getContext(),
 				ChatActivity.class);
 		intent.putExtra("chatWithFriendBundle", b);
-		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
+		Log.d(TAG, "Context: " + TChatApplication.getContext());
 		TChatApplication.getContext().startActivity(intent);
 	}
 

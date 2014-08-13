@@ -136,7 +136,6 @@ public class ChatActivity extends ActionBarActivity {
 
 			getSupportActionBar().setTitle(buddyName);
 		}
-
 	}
 
 	@Override

@@ -1,18 +1,13 @@
 package co.uk.tusksolutions.tchat.android;
 
-import org.jivesoftware.smack.util.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import co.uk.tusksolutions.tchat.android.TChatApplication.CHAT_STATUS_ENUM;
-import co.uk.tusksolutions.tchat.android.activities.MainActivity;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
 import co.uk.tusksolutions.tchat.android.xmpp.notifications.XMPPNotificationManager;
 
@@ -106,6 +101,8 @@ public class GCMIntentService extends GCMBaseIntentService {
 
 				Intent i = new Intent();
 				i.putExtra("chatFromFriendBundle", b);
+				
+				//this.saveNormalChatMessageToDb(b);
 
 				// Send TO_USER notification manager
 				new XMPPNotificationManager().sendNormalChatNotification(i);
@@ -180,6 +177,35 @@ public class GCMIntentService extends GCMBaseIntentService {
 	protected void onError(Context context, String errorId) {
 
 	}
+	
+	/*private void saveNormalChatMessageToDb(Bundle bundle) {
+		/*
+		 * Insert received message to db
+		 *
+		String resource = StringUtils.parseResource(packet.getFrom());
+		ChatMessagesModel mChatMessageModel = new ChatMessagesModel();
+		String mid = packet.getPacketID();
+		/*
+		 * If Message from Other Resource and get the carbon message
+		 *
+		if (message.getBody().contains("|s|")) {
+
+			String MessageParse[] = message.getBody().split("\\|s\\|");
+			String buddyJID = MessageParse[0];
+			String last_message = MessageParse[1];
+			mChatMessageModel.saveMessageToDB(TChatApplication.getCurrentJid(),
+					buddyJID, resource,
+					StringUtils.parseName(packet.getFrom()), last_message, 0,
+					"CHAT", System.currentTimeMillis(), 1, mid);
+
+		} else {
+
+			mChatMessageModel.saveMessageToDB(TChatApplication.getCurrentJid(),
+					StringUtils.parseBareAddress(packet.getFrom()), resource,
+					StringUtils.parseName(packet.getFrom()), message.getBody(),
+					0, "CHAT", System.currentTimeMillis(), 1, mid);
+		}
+	}*/
 
 	/**
 	 * Issues a notification to inform the user that server has sent a message.
