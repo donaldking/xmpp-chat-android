@@ -137,6 +137,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 				}
 
 				groupChatBundle.putString("message", last_message);
+				groupChatBundle.putString("messageType", "GROUP_CHAT");
 
 				Intent i = new Intent();
 				i.putExtra("groupChatFromRoomBundle", groupChatBundle);

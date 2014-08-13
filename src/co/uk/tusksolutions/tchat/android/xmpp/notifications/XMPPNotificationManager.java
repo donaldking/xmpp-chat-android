@@ -51,7 +51,7 @@ public class XMPPNotificationManager {
 				intent.getBundleExtra("chatFromFriendBundle"));
 		chatActivityIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
 
-		PendingIntent pi = PendingIntent.getActivity(mContext, 0,
+		PendingIntent pi = PendingIntent.getActivity(mContext, 1,
 				chatActivityIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 		mBuilder.setContentIntent(pi);
 
@@ -103,9 +103,9 @@ public class XMPPNotificationManager {
 		}
 		groupChatActivityIntent.putExtra("groupChatFromRoomBundle",
 				intent.getBundleExtra("groupChatFromRoomBundle"));
-		groupChatActivityIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		groupChatActivityIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
 		
-		PendingIntent pi = PendingIntent.getActivity(mContext, 0,
+		PendingIntent pi = PendingIntent.getActivity(mContext, 1,
 				groupChatActivityIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 		
 		mBuilder.setContentIntent(pi);
