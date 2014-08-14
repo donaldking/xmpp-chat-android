@@ -106,6 +106,7 @@ public class RosterModel implements Parcelable {
 				// Get Resource Name
 				if (presence.getType() != null
 						&& presence.getType() == Presence.Type.available) {
+
 					String[] strTemp = presence.getFrom().split("/");
 					contentValues.put(TChatDBHelper.RESOURCE,
 							getResourceType(strTemp[1].toLowerCase(Locale
@@ -168,12 +169,20 @@ public class RosterModel implements Parcelable {
 		
 		Log.e("Presence ","Friend id "+friendJid+ " presence type "+presence.toString());
 
+		/*
+		 * Mode mode = presence.getMode(); String status = null; if
+		 * (mode.toString().equalsIgnoreCase("chat")) { status = "available"; }
+		 * else if (mode.toString().equalsIgnoreCase("dnd")) { status =
+		 * "available"; } else if (mode.toString().equalsIgnoreCase("away")) {
+		 * status = "available"; } else { status = "unavailable"; }
+		 */
+
 		String whereClause = TChatDBHelper.USER + " = ? ";
 		String[] whereArgs = { friendJid };
 
 		ContentValues contentValues = new ContentValues();
 		contentValues.put(TChatDBHelper.PRESENCE_TYPE, presence.getType()
-				.name());
+				.toString());
 		contentValues.put(TChatDBHelper.RESOURCE,
 				getResourceType(resource.toLowerCase(Locale.getDefault())));
 

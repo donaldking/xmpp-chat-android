@@ -11,7 +11,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
-import co.uk.tusksolutions.tchat.android.TChatApplication.CHAT_STATUS_ENUM;
 import co.uk.tusksolutions.tchat.android.models.ChatMessagesModel;
 
 public class XMPPChatMessageListener implements PacketListener {
