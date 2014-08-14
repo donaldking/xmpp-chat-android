@@ -165,7 +165,7 @@ public class APIPostFile {
 		Log.e("File send", fileName+"sender "+sender+" receiver "+receiver);
 		HttpClient client = new DefaultHttpClient();
 		HttpPost post = new HttpPost(Constants.HTTP_SCHEME
-				+ Constants.CURRENT_SERVER + Constants.UPLOAD_FILE_ENDPOINT);
+				+ Constants.CURRENT_SERVER+Constants.UPLOAD_FILE_ENDPOINT);
 		MultipartEntityBuilder builder = MultipartEntityBuilder.create();
 		builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
 

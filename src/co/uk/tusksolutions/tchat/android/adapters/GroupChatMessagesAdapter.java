@@ -436,6 +436,10 @@ public class GroupChatMessagesAdapter extends BaseAdapter {
 		if (htmlString.startsWith("&lt")) {
 			htmlString = Html.fromHtml(htmlString).toString();
 		}
+		if(htmlString.startsWith("http"))
+		{
+			return htmlString;
+		}
 
 		String img = "";
 		Document doc = Jsoup.parse(htmlString);
@@ -445,7 +449,7 @@ public class GroupChatMessagesAdapter extends BaseAdapter {
 			if (imageElement != null) {
 				// for each element get the src url
 				img = Constants.HTTP_SCHEME
-						+ imageElement.attr("src").substring(3);
+						+ imageElement.attr("src").substring(2);
 				return img;
 			}
 		}
@@ -505,7 +509,7 @@ public class GroupChatMessagesAdapter extends BaseAdapter {
 		Element element2 = doc.select("a").first(); 
 		
 
-		img=Constants.HTTP_SCHEME+element2.attr("href").substring(3);
+		img=Constants.HTTP_SCHEME+element2.attr("href").substring(2);
 		return img;
 
 		

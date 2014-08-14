@@ -165,6 +165,8 @@ public class RosterModel implements Parcelable {
 
 	public void updatePresenceForFriend(String friendJid, Presence presence,
 			String resource) {
+		
+		Log.e("Presence ","Friend id "+friendJid+ " presence type "+presence.toString());
 
 		String whereClause = TChatDBHelper.USER + " = ? ";
 		String[] whereArgs = { friendJid };

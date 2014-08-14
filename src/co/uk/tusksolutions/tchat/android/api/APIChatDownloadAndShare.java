@@ -131,19 +131,6 @@ public class APIChatDownloadAndShare {
 			if (result) {
 				File f = new File(dir.toString() + "/" + receiver + ".txt");
 				if (share && (f.exists())) {
-					/*
-					 * Intent share = new Intent(Intent.ACTION_SEND);
-					 * share.setType("text/*");
-					 * 
-					 * share.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(f));
-					 * 
-					 * share.putExtra(android.content.Intent.EXTRA_SUBJECT,
-					 * "Subject Here");
-					 * share.putExtra(android.content.Intent.EXTRA_TEXT,
-					 * "Yookos Chat Messanger");
-					 * mContext.startActivity(Intent.createChooser(share,
-					 * "Share Chat"));
-					 */
 					onShareClick(f);
 				}
 
