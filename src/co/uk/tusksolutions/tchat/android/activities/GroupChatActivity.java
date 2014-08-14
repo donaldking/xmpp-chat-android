@@ -40,6 +40,7 @@ import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.adapters.GroupChatMessagesAdapter;
 import co.uk.tusksolutions.tchat.android.api.APIChatDownloadAndShare;
+import co.uk.tusksolutions.tchat.android.api.APIChatShare;
 import co.uk.tusksolutions.tchat.android.api.APICloudStorage;
 import co.uk.tusksolutions.tchat.android.api.APIGetMessages;
 import co.uk.tusksolutions.tchat.android.api.APIPostFile;
@@ -315,7 +316,7 @@ public class GroupChatActivity extends ActionBarActivity {
 
 			break;
 		case R.id.group_share_chat_history:
-			APIChatDownloadAndShare chatShare = new APIChatDownloadAndShare();
+			APIChatShare chatShare = new APIChatShare();
 			chatShare.doChatDownloadAndShare(
 					GroupChatActivity.this,
 					TChatApplication.getCurrentJid().replace(

@@ -43,6 +43,7 @@ import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.adapters.ChatMessagesAdapter;
 import co.uk.tusksolutions.tchat.android.api.APIChatDownloadAndShare;
+import co.uk.tusksolutions.tchat.android.api.APIChatShare;
 import co.uk.tusksolutions.tchat.android.api.APIClearChatHistory;
 import co.uk.tusksolutions.tchat.android.api.APICloudStorage;
 import co.uk.tusksolutions.tchat.android.api.APIGetLastOnlineTime;
@@ -298,7 +299,7 @@ public class ChatActivity extends ActionBarActivity {
 
 			break;
 		case R.id.share_chat_history:
-			APIChatDownloadAndShare chatShare = new APIChatDownloadAndShare();
+			APIChatShare chatShare = new APIChatShare();
 			chatShare.doChatDownloadAndShare(ChatActivity.this, TChatApplication
 					.getCurrentJid()
 					.replace("@" + Constants.CURRENT_SERVER, ""), buddyJid

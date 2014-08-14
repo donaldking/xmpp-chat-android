@@ -149,6 +149,12 @@
                 <category android:name="co.uk.tusksolutions.tchat.android" />
             </intent-filter>
         </receiver>
+        
+          <receiver android:name="co.uk.tusksolutions.tchat.android.receivers.CompleteDownload" >
+            <intent-filter>
+                <action android:name="android.intent.action.DOWNLOAD_COMPLETE" />
+            </intent-filter>
+        </receiver>
 
         <!-- Services -->
         <service

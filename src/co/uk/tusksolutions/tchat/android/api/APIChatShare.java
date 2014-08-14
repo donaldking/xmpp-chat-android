@@ -19,7 +19,6 @@ import android.content.Intent;
 import android.content.pm.LabeledIntent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.content.res.Resources;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
@@ -27,7 +26,7 @@ import android.util.Log;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
 
-public class APIChatDownloadAndShare {
+public class APIChatShare {
 
 	String sender, receiver;
 	Activity mContext;
@@ -35,8 +34,7 @@ public class APIChatDownloadAndShare {
 
 	private AsyncApiChatDownload mTask = null;
 	File dir;
-	public static  DownloadManager mgr = null;
-	public static  long lastDownload = -1L;
+
 	public void doChatDownloadAndShare(Activity act, String sender,
 			String receiver, Boolean share) {
 		this.sender = sender;
@@ -51,7 +49,7 @@ public class APIChatDownloadAndShare {
 		mTask = new AsyncApiChatDownload();
 		mTask.execute((Void) null);
 		
-		  mgr = (DownloadManager) act.getSystemService(Context.DOWNLOAD_SERVICE);
+		
 
 	}
 
@@ -65,13 +63,13 @@ public class APIChatDownloadAndShare {
 		protected void onPreExecute() {
 			// TODO Auto-generated method stub
 			super.onPreExecute();
-			/*dialog = new ProgressDialog(mContext);
+			dialog = new ProgressDialog(mContext);
 			if (share) {
 				dialog.setMessage("Please wait..");
 			} else {
 				dialog.setMessage("Downloading Chat History");
 			}
-			dialog.show();*/
+			dialog.show();
 		}
 
 		@Override
@@ -82,24 +80,10 @@ public class APIChatDownloadAndShare {
 					+ Constants.CURRENT_SERVER
 					+ Constants.DOWNLOAD_CHAT_HISTORY_TEXT_ENDPOINT + "?";
 			
-			Uri uri=Uri.parse(TextFileDownloadURL + "sender=" + sender
-					+ "&receiver=" + receiver);
 			
-			try {
-				startDownload(uri, receiver+".txt");
-				apiResult=true;
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				apiResult=false;
-			}
 
-			/*try {
-				
-				Uri uri=Uri.parse(TextFileDownloadURL + "sender=" + sender
-						+ "&receiver=" + receiver);
-				
-				
-				URL url = new URL(TextFileDownloadURL + "sender=" + sender
+			try {
+					URL url = new URL(TextFileDownloadURL + "sender=" + sender
 						+ "&receiver=" + receiver);
 				 
 				URLConnection conection = url.openConnection();
@@ -140,7 +124,7 @@ public class APIChatDownloadAndShare {
 			} catch (Exception e) {
 				Log.e("Error: ", e.getMessage());
 				apiResult = false;
-			}*/
+			}
 
 			return apiResult;
 
@@ -149,12 +133,12 @@ public class APIChatDownloadAndShare {
 		@Override
 		protected void onPostExecute(Boolean result) {
 			mTask = null;
-			//dialog.dismiss();
+			dialog.dismiss();
 			if (result) {
-				/*File f = new File(dir.toString() + "/" + receiver + ".txt");
+				File f = new File(dir.toString() + "/" + receiver + ".txt");
 				if (share && (f.exists())) {
 					onShareClick(f);
-				}*/
+				}
 
 				TChatApplication.getContext().sendBroadcast(
 						new Intent(Constants.MESSAGE_READY));
@@ -168,26 +152,6 @@ public class APIChatDownloadAndShare {
 		protected void onCancelled() {
 			mTask = null;
 			return;
-		}
-	}
-
-	private void startDownload(Uri uri, String filepath) {
-
-		Boolean isSDPresent = android.os.Environment.getExternalStorageState()
-				.equals(android.os.Environment.MEDIA_MOUNTED);
-
-		if (isSDPresent) {
-			DownloadManager.Request req = new DownloadManager.Request(uri);
-
-			req.setAllowedNetworkTypes(
-					DownloadManager.Request.NETWORK_WIFI
-							| DownloadManager.Request.NETWORK_MOBILE)
-					.setAllowedOverRoaming(false).setTitle("Downloding..  ")
-					.setDescription(filepath)
-					.setDestinationInExternalPublicDir("/yookoschat", filepath);
-
-			lastDownload = mgr.enqueue(req);
-			// queryStatus();
 		}
 	}
 

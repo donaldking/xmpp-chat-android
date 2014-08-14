@@ -1,3 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <lint>
+    <issue id="AaptCrash" severity="ignore" />
+    <issue id="AccidentalOctal" severity="ignore" />
+    <issue id="AddJavascriptInterface" severity="ignore" />
+    <issue id="AndroidGradlePluginVersion" severity="ignore" />
+    <issue id="AppCompatMethod" severity="ignore" />
+    <issue id="AppCompatResource" severity="ignore" />
+    <issue id="Assert" severity="ignore" />
+    <issue id="ByteOrderMark" severity="ignore" />
+    <issue id="ClickableViewAccessibility" severity="ignore" />
+    <issue id="ExportedPreferenceActivity" severity="ignore" />
+    <issue id="GetInstance" severity="ignore" />
+    <issue id="GradleCompatible" severity="ignore" />
+    <issue id="GradleDependency" severity="ignore" />
+    <issue id="GradleDeprecated" severity="ignore" />
+    <issue id="GradleGetter" severity="ignore" />
+    <issue id="GradleIdeError" severity="ignore" />
+    <issue id="GradlePath" severity="ignore" />
+    <issue id="ImpliedQuantity" severity="ignore" />
+    <issue id="ImproperProjectLevelStatement" severity="ignore" />
+    <issue id="IncludeLayoutParam" severity="ignore" />
+    <issue id="InflateParams" severity="ignore" />
+    <issue id="LocaleFolder" severity="ignore" />
+    <issue id="MisplacedStatement" severity="ignore" />
+    <issue id="NfcTechWhitespace" severity="ignore" />
+    <issue id="PropertyEscape" severity="ignore" />
+    <issue id="ReferenceType" severity="ignore" />
+    <issue id="ResourceCycle" severity="ignore" />
+    <issue id="ResourceName" severity="ignore" />
+    <issue id="SignatureOrSystemPermissions" severity="ignore" />
+    <issue id="StringShouldBeInt" severity="ignore" />
+    <issue id="UnusedAttribute" severity="ignore" />
+    <issue id="ViewHolder" severity="ignore" />
+    <issue id="WebViewLayout" severity="ignore" />
 </lint>
