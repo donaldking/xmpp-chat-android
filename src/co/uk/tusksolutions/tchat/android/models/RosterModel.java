@@ -166,6 +166,8 @@ public class RosterModel implements Parcelable {
 
 	public void updatePresenceForFriend(String friendJid, Presence presence,
 			String resource) {
+		
+		Log.e("Presence ","Friend id "+friendJid+ " presence type "+presence.toString());
 
 		/*
 		 * Mode mode = presence.getMode(); String status = null; if

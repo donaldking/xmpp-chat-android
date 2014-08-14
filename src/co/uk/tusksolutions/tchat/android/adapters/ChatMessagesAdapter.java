@@ -11,6 +11,7 @@ import org.jsoup.select.Elements;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.provider.ContactsContract.Presence;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -288,7 +289,7 @@ public class ChatMessagesAdapter extends BaseAdapter {
 
 			} else {
 				String path1 = getFirstImage(chatMessagesModel.message);
-
+                Log.e("Url","Url is "+path1);
 				try {
 					UrlImageViewHelper.setUrlDrawable(
 							chatToImageViewHolder.imagesent, path1,
@@ -321,7 +322,7 @@ public class ChatMessagesAdapter extends BaseAdapter {
 
 			}
 			String path1 = getFirstImage(chatMessagesModel.message);
-
+			 Log.e("Url","Url is "+path1);
 			try {
 				UrlImageViewHelper.setUrlDrawable(
 						chatFromImageViewHolder.imageReceived, path1,
@@ -349,6 +350,10 @@ public class ChatMessagesAdapter extends BaseAdapter {
 		if (htmlString.startsWith("&lt")) {
 			htmlString = Html.fromHtml(htmlString).toString();
 		}
+		if(htmlString.startsWith("http"))
+		{
+			return htmlString;
+		}
 
 		String img = "";
 		Document doc = Jsoup.parse(htmlString);
@@ -358,9 +363,10 @@ public class ChatMessagesAdapter extends BaseAdapter {
 			if (imageElement != null) {
 				// for each element get the src url
 				img = Constants.HTTP_SCHEME
-						+ imageElement.attr("src").substring(3);
+						+ imageElement.attr("src").substring(2);
 				return img;
 			}
+		
 		}
 
 		return null;
@@ -377,7 +383,7 @@ public class ChatMessagesAdapter extends BaseAdapter {
 		Element element2 = doc.select("a").first(); 
 		
 
-		img=Constants.HTTP_SCHEME+element2.attr("href").substring(3);
+		img=Constants.HTTP_SCHEME+element2.attr("href").substring(2);
 		return img;
 
 		
