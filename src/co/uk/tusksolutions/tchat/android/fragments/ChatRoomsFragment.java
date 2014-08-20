@@ -100,7 +100,8 @@ public class ChatRoomsFragment extends Fragment implements OnGetChatroomsComplet
 	public void onResume() {
 		super.onResume();
    
-	
+		APIGetChatRooms apiGetChatRooms=new APIGetChatRooms();
+		apiGetChatRooms.getChatrooms(this);
 		if (TChatApplication.CHATROOM_SECTION_QUERY_ACTION == ALL_CHATROOMS_QUERY_ACTION) {
 			prepareListView(TChatApplication.CHATROOM_SECTION_QUERY_ACTION);
 		}
@@ -118,6 +119,7 @@ public class ChatRoomsFragment extends Fragment implements OnGetChatroomsComplet
 		/**
 		 * Load Recents from DB
 		 */
+		
 		if(queryInt==0)
 		{
 			queryInt=1;
@@ -170,6 +172,7 @@ public class ChatRoomsFragment extends Fragment implements OnGetChatroomsComplet
 
 		@Override
 		public void onClick(View v) {
+			
 			int id = v.getId();
 			switch (id) {
 			case R.id.all_chatroom_button:
