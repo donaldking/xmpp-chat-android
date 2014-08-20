@@ -54,8 +54,8 @@ public class TChatApplication extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		Constants.CURRENT_SERVER = Constants.DEVELOPMENT_SERVER;
-		//Constants.CURRENT_SERVER = Constants.STAGING_SERVER;
+		//Constants.CURRENT_SERVER = Constants.DEVELOPMENT_SERVER;
+		Constants.CURRENT_SERVER = Constants.STAGING_SERVER;
 		// Constants.CURRENT_SERVER = Constants.PRODUCTION_SERVER;
 		Constants.PROXY_SERVER = Constants.HTTP_SCHEME
 				+ Constants.CURRENT_SERVER + Constants.PROXY_PATH;
