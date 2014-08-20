@@ -225,11 +225,7 @@ public class XMPPConnectionManager {
 										@Override
 										public void run() { // Show who we are
 															// logged in as
-											Toast.makeText(
-													TChatApplication
-															.getContext(),
-													"Login failed",
-													Toast.LENGTH_SHORT).show();
+											
 											// TChatApplication.tearDownAndLogout();
 										}
 									});
