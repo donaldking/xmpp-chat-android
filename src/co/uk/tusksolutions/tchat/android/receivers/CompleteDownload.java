@@ -7,6 +7,7 @@ import java.net.URI;
 
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.api.APIChatDownloadAndShare;
+import co.uk.tusksolutions.tchat.android.tasks.DownloadFilesTask;
 
 import android.app.DownloadManager;
 import android.app.Notification;
@@ -31,7 +32,8 @@ public class CompleteDownload extends BroadcastReceiver {
 			// TODO Auto-generated method stub
 			if (DownloadManager.ACTION_DOWNLOAD_COMPLETE.equals(intent
 					.getAction())) {
-			
+			  if(APIChatDownloadAndShare.mgr!=null)
+			  {
 			Query query = new Query();
 	        query.setFilterById(APIChatDownloadAndShare.lastDownload);
 	        Cursor c = APIChatDownloadAndShare.mgr.query(query);
@@ -41,10 +43,7 @@ public class CompleteDownload extends BroadcastReceiver {
 
 	                String uriString = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
 	                Log.i("Debug", "downloaded file " + uriString); 
-	             
-	               
-	                  
-	                Toast.makeText(context, "Download  ",Toast.LENGTH_SHORT).show();
+	      
 	        		notificationManager = (NotificationManager)context. getSystemService(Context.NOTIFICATION_SERVICE);
 	        		myNotification = new Notification(R.drawable.ic_launcher," Yookos chat!", System.currentTimeMillis());
 	        	
@@ -61,6 +60,45 @@ public class CompleteDownload extends BroadcastReceiver {
 			}
 			
 			
+			}
+			  else if(DownloadFilesTask.mgr!=null)
+			  {
+
+					Query query = new Query();
+			        query.setFilterById(DownloadFilesTask.lastDownload);
+			        Cursor c = DownloadFilesTask.mgr.query(query);
+			        if (c.moveToFirst()) {
+			        	
+			          
+			        	int columnIndex = c.getColumnIndex(DownloadManager.COLUMN_STATUS);
+			            if (DownloadManager.STATUS_SUCCESSFUL == c.getInt(columnIndex)) {
+			            	int fileIndex=c.getColumnIndex(DownloadManager.COLUMN_DESCRIPTION);
+				        	String name=c.getString(fileIndex);
+			                String uriString = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
+			                Log.i("Debug", "downloaded file " + uriString); 
+			             
+			        		notificationManager = (NotificationManager)context. getSystemService(Context.NOTIFICATION_SERVICE);
+			        		myNotification = new Notification(R.drawable.ic_launcher," Yookos chat!", System.currentTimeMillis());
+			        	
+			        		String notificationTitle = "File "+name;
+			        		Intent myIntent=new Intent(Intent.ACTION_VIEW);
+			        		myIntent.setDataAndType(Uri.parse(uriString), "*/*");
+			        		myNotification.icon = R.drawable.ic_launcher;
+			        		myNotification.flags |= Notification.FLAG_AUTO_CANCEL;
+			        		PendingIntent pendingIntent = PendingIntent.getActivity(context, 0,myIntent, Intent.FLAG_ACTIVITY_CLEAR_TASK);
+			        		myNotification.setLatestEventInfo(context, notificationTitle,
+			        				"Downloaded", pendingIntent);
+			        		notificationManager.notify(43, myNotification);
+			            } 
+					}
+					
+					
+					
+			  }
+			  else
+			  {
+				  return;
+			}
 			}
 		}
 		

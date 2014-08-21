@@ -8,6 +8,7 @@ import java.util.UUID;
 import org.jivesoftware.smack.XMPPConnection;
 
 import android.app.Application;
+import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
@@ -50,7 +51,7 @@ public class TChatApplication extends Application {
 	public static int CHAT_SECTION_QUERY_ACTION;
 	public static int CHATROOM_SECTION_QUERY_ACTION;
 	public static Handler presenceDialogHandler;
-
+	
 	@Override
 	public void onCreate() {
 		super.onCreate();
@@ -89,7 +90,7 @@ public class TChatApplication extends Application {
 
 		return isConnected;
 	}
-
+  
 	public static String getMid() {
 		return UUID.randomUUID().toString();
 	}

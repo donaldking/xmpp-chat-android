@@ -22,8 +22,8 @@ public class DownloadFilesTask {
 		}
 		this.url = Uri.parse(url);
 		this.name = name;
-  this.context=ctx;
-  mgr = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+       this.context=ctx;
+        mgr = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
 		mTask = new DownloadFile();
 		mTask.execute((Void) null);
 
@@ -88,7 +88,7 @@ private void startDownload(Uri uri, String filepath) {
 							| DownloadManager.Request.NETWORK_MOBILE)
 					.setAllowedOverRoaming(false).setTitle("Downloding..  ")
 					.setDescription(filepath)
-					.setDestinationInExternalPublicDir("/yookoschat", filepath);
+					.setDestinationInExternalPublicDir("/yookoschat",filepath);
 			
 			lastDownload = mgr.enqueue(req);
 			//queryStatus();
