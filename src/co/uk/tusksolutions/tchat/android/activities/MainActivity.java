@@ -363,8 +363,9 @@ public class MainActivity extends ActionBarActivity implements
 				return getRosterFragment();
 			case 2:
 				return getGroupsFragment();
-			case 3:
+			/*case 3:
 				return getChatRoomsFragment();
+				*/
 			}
 			return null;
 		}
@@ -372,7 +373,7 @@ public class MainActivity extends ActionBarActivity implements
 		@Override
 		public int getCount() {
 			// Show 4 total pages.
-			return 4;
+			return 3;
 		}
 	}
 

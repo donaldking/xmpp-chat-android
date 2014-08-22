@@ -8,7 +8,6 @@ import java.util.UUID;
 import org.jivesoftware.smack.XMPPConnection;
 
 import android.app.Application;
-import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
