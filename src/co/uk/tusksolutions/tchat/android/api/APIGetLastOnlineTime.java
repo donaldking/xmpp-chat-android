@@ -8,27 +8,29 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-import android.content.Intent;
 import android.os.AsyncTask;
-import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
-import co.uk.tusksolutions.tchat.android.models.RosterModel;
 import co.uk.tusksolutions.utility.Utility;
 
 public class APIGetLastOnlineTime {
 
 	JSONArray jsonArray;
-	private RosterModel mRosterModel;
 	public String buddyJid;
+	public String lastOnline;
 	private AsyncApiGetLastOnlineTime mTask = null;
+	OnGetLastOnlineCompleted callbackObject;
 
-	public void doGetLastOnlineTime(String buddyJid) {
+	public void doGetLastOnlineTime(String buddyJid,
+			OnGetLastOnlineCompleted callbackObject) {
 
 		if (mTask != null) {
 			return;
 		}
 
+		this.callbackObject = callbackObject;
 		this.buddyJid = buddyJid;
 		mTask = new AsyncApiGetLastOnlineTime();
 		mTask.execute((Void) null);
@@ -65,10 +67,12 @@ public class APIGetLastOnlineTime {
 							.convertStreamToString(instream));
 
 					if (jsonArray.length() >= 0) {
-						mRosterModel = new RosterModel();
-						if (mRosterModel.updateLastOnline(
-								jsonArray.getJSONObject(0), buddyJid)) {
+						lastOnline = parseLastOnline(jsonArray.getJSONObject(0));
+						if (lastOnline.matches("[0-9]+")
+								&& lastOnline.length() >= 1) {
 							apiResult = true;
+						} else {
+							apiResult = false;
 						}
 
 					} else {
@@ -86,8 +90,9 @@ public class APIGetLastOnlineTime {
 			mTask = null;
 
 			if (result) {
-				 TChatApplication.getContext().sendBroadcast(
-				new Intent(Constants.LAST_ONLINE_TIME_STATE_CHANGED));
+				callbackObject.OnGetLastOnlineAvailable(lastOnline);
+			} else {
+				callbackObject.OnGetLastOnlinePrivate();
 			}
 		}
 
@@ -98,4 +103,28 @@ public class APIGetLastOnlineTime {
 		}
 	}
 
+	public String parseLastOnline(JSONObject jsonObject) {
+		String lastSeen = null;
+		try {
+			lastSeen = jsonObject.getString("seconds");
+			return lastSeen;
+
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return null;
+
+	}
+
+	/**
+	 * Interface to handle last online result
+	 * 
+	 * @author donaldking
+	 * 
+	 */
+	public interface OnGetLastOnlineCompleted {
+		void OnGetLastOnlineAvailable(String lastOnlineTime);
+
+		void OnGetLastOnlinePrivate();
+	}
 }

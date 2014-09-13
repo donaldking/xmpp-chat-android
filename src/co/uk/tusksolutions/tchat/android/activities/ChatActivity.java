@@ -49,13 +49,15 @@ import co.uk.tusksolutions.tchat.android.api.APICloudStorage;
 import co.uk.tusksolutions.tchat.android.api.APIGetLastOnlineTime;
 import co.uk.tusksolutions.tchat.android.api.APIGetMessages;
 import co.uk.tusksolutions.tchat.android.api.APIPostFile;
+import co.uk.tusksolutions.tchat.android.api.APIGetLastOnlineTime.OnGetLastOnlineCompleted;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
 import co.uk.tusksolutions.tchat.android.listeners.XMPPChatMessageListener;
 import co.uk.tusksolutions.tchat.android.models.ChatMessagesModel;
 import co.uk.tusksolutions.tchat.android.models.RosterModel;
 import co.uk.tusksolutions.tchat.android.xmpp.XMPPChatMessageManager;
 
-public class ChatActivity extends ActionBarActivity {
+public class ChatActivity extends ActionBarActivity implements
+		OnGetLastOnlineCompleted {
 	private MediaPlayer mp;
 	private TextView chatMessageEditText;
 	private Button chatSendButton, emojiButton;
@@ -281,29 +283,33 @@ public class ChatActivity extends ActionBarActivity {
 			startActivityForResult(
 					Intent.createChooser(intent, "Pick a picture"), SELECT_FILE);
 			break;
-		/*case R.id.video_menu:
-			intent.setType("video/*");
-			startActivityForResult(
-					Intent.createChooser(intent, "Pick a Video"), SELECT_FILE);
-			break;*/
+		/*
+		 * case R.id.video_menu: intent.setType("video/*");
+		 * startActivityForResult( Intent.createChooser(intent, "Pick a Video"),
+		 * SELECT_FILE); break;
+		 */
 
 		case R.id.clear_chat_History:
 			doClearChatHistory();
 			break;
 		case R.id.download_chat_history:
 			APIChatDownloadAndShare chatDownload = new APIChatDownloadAndShare();
-			chatDownload.doChatDownloadAndShare(ChatActivity.this, TChatApplication
-					.getCurrentJid()
-					.replace("@" + Constants.CURRENT_SERVER, ""), buddyJid
-					.replace("@" + Constants.CURRENT_SERVER, ""),false);
+			chatDownload
+					.doChatDownloadAndShare(
+							ChatActivity.this,
+							TChatApplication.getCurrentJid().replace(
+									"@" + Constants.CURRENT_SERVER, ""),
+							buddyJid.replace("@" + Constants.CURRENT_SERVER, ""),
+							false);
 
 			break;
 		case R.id.share_chat_history:
 			APIChatShare chatShare = new APIChatShare();
-			chatShare.doChatDownloadAndShare(ChatActivity.this, TChatApplication
-					.getCurrentJid()
-					.replace("@" + Constants.CURRENT_SERVER, ""), buddyJid
-					.replace("@" + Constants.CURRENT_SERVER, ""),true);
+			chatShare.doChatDownloadAndShare(
+					ChatActivity.this,
+					TChatApplication.getCurrentJid().replace(
+							"@" + Constants.CURRENT_SERVER, ""),
+					buddyJid.replace("@" + Constants.CURRENT_SERVER, ""), true);
 
 			break;
 		default:
@@ -417,32 +423,34 @@ public class ChatActivity extends ActionBarActivity {
 		}
 	}
 
-	public void showLastOnlineTime() {
+	public void showLastOnlineTime(String lastonline) {
 
-		String lastOnlineTime = mRosterModel.getLastSeen(buddyJid);
-
-		if (lastOnlineTime != null) {
-			lastSeen = TimeAgo.getTimeAgo(Long.parseLong(lastOnlineTime), this);
+		if (lastonline != null) {
+			lastSeen = TimeAgo.getTimeAgo(Long.parseLong(lastonline), this);
 			getSupportActionBar().setSubtitle(
 					Html.fromHtml("<font color='#FFFFFF'>last seen " + lastSeen
 							+ "</font>"));
+		}else{
+			getSupportActionBar().setSubtitle(null);
 		}
 	}
 
 	// Get last online time for this buddy
 
 	private void getLastOnlineTime() {
-
+		
 		if (mRosterModel.isBuddyOnline(buddyJid) == true) {
 			lastSeen = "online";
 			getSupportActionBar().setSubtitle(
 					Html.fromHtml("<font color='#FFFFFF'> " + lastSeen
 							+ "</font>"));
 			return;
+		}else{
+			getSupportActionBar().setSubtitle(null);
 		}
-		showLastOnlineTime();
+		
 		APIGetLastOnlineTime getLastOnlineTimeObject = new APIGetLastOnlineTime();
-		getLastOnlineTimeObject.doGetLastOnlineTime(buddyJid);
+		getLastOnlineTimeObject.doGetLastOnlineTime(buddyJid, this);
 	}
 
 	/*
@@ -651,9 +659,6 @@ public class ChatActivity extends ActionBarActivity {
 					displayComposing(chatStateStr, chatStateUserJid);
 				}
 			} else if (intent.getAction().equalsIgnoreCase(
-					Constants.LAST_ONLINE_TIME_STATE_CHANGED)) {
-				showLastOnlineTime();
-			} else if (intent.getAction().equalsIgnoreCase(
 					Constants.ROSTER_UPDATED)) {
 				getLastOnlineTime();
 			}
@@ -714,6 +719,17 @@ public class ChatActivity extends ActionBarActivity {
 			input.close();
 		}
 
+	}
+
+	@Override
+	public void OnGetLastOnlinePrivate() {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void OnGetLastOnlineAvailable(String lastOnlineTime) {
+		// TODO Auto-generated method stub
+		showLastOnlineTime(lastOnlineTime);
 	}
 
 }

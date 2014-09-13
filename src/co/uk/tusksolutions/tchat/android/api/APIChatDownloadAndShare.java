@@ -1,12 +1,6 @@
 package co.uk.tusksolutions.tchat.android.api;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,10 +13,8 @@ import android.content.Intent;
 import android.content.pm.LabeledIntent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.content.res.Resources;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Environment;
 import android.util.Log;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
@@ -35,8 +27,9 @@ public class APIChatDownloadAndShare {
 
 	private AsyncApiChatDownload mTask = null;
 	File dir;
-	public static  DownloadManager mgr = null;
-	public static  long lastDownload = -1L;
+	public static DownloadManager mgr = null;
+	public static long lastDownload = -1L;
+
 	public void doChatDownloadAndShare(Activity act, String sender,
 			String receiver, Boolean share) {
 		this.sender = sender;
@@ -50,8 +43,8 @@ public class APIChatDownloadAndShare {
 				+ receiver);
 		mTask = new AsyncApiChatDownload();
 		mTask.execute((Void) null);
-		
-		  mgr = (DownloadManager) act.getSystemService(Context.DOWNLOAD_SERVICE);
+
+		mgr = (DownloadManager) act.getSystemService(Context.DOWNLOAD_SERVICE);
 
 	}
 
@@ -65,13 +58,11 @@ public class APIChatDownloadAndShare {
 		protected void onPreExecute() {
 			// TODO Auto-generated method stub
 			super.onPreExecute();
-			/*dialog = new ProgressDialog(mContext);
-			if (share) {
-				dialog.setMessage("Please wait..");
-			} else {
-				dialog.setMessage("Downloading Chat History");
-			}
-			dialog.show();*/
+			/*
+			 * dialog = new ProgressDialog(mContext); if (share) {
+			 * dialog.setMessage("Please wait.."); } else {
+			 * dialog.setMessage("Downloading Chat History"); } dialog.show();
+			 */
 		}
 
 		@Override
@@ -81,66 +72,52 @@ public class APIChatDownloadAndShare {
 			String TextFileDownloadURL = Constants.HTTP_SCHEME
 					+ Constants.CURRENT_SERVER
 					+ Constants.DOWNLOAD_CHAT_HISTORY_TEXT_ENDPOINT + "?";
-			
-			Uri uri=Uri.parse(TextFileDownloadURL + "sender=" + sender
+
+			Uri uri = Uri.parse(TextFileDownloadURL + "sender=" + sender
 					+ "&receiver=" + receiver);
-			
+
 			try {
-				startDownload(uri, receiver+".txt");
-				apiResult=true;
+				startDownload(uri, receiver + ".txt");
+				apiResult = true;
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
-				apiResult=false;
+				apiResult = false;
 			}
 
-			/*try {
-				
-				Uri uri=Uri.parse(TextFileDownloadURL + "sender=" + sender
-						+ "&receiver=" + receiver);
-				
-				
-				URL url = new URL(TextFileDownloadURL + "sender=" + sender
-						+ "&receiver=" + receiver);
-				 
-				URLConnection conection = url.openConnection();
-				conection.connect();
-				// download the file
-				InputStream input = new BufferedInputStream(url.openStream(),
-						8192);
-				dir = new File(Environment.getExternalStorageDirectory()
-						.toString() + "/YookosChat/Media/");
-				try {
-					if (dir.mkdirs()) {
-						System.out.println("Directory created");
-					} else {
-						System.out.println("Directory is not created");
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				// Output stream
-				OutputStream output = new FileOutputStream(dir.toString() + "/"
-						+ receiver + ".txt");
-
-				byte data[] = new byte[1024];
-
-				while ((count = input.read(data)) != -1) {
-					// writing data to file
-					output.write(data, 0, count);
-				}
-
-				// flushing output
-				output.flush();
-
-				// closing streams
-				output.close();
-				input.close();
-				apiResult = true;
-
-			} catch (Exception e) {
-				Log.e("Error: ", e.getMessage());
-				apiResult = false;
-			}*/
+			/*
+			 * try {
+			 * 
+			 * Uri uri=Uri.parse(TextFileDownloadURL + "sender=" + sender +
+			 * "&receiver=" + receiver);
+			 * 
+			 * 
+			 * URL url = new URL(TextFileDownloadURL + "sender=" + sender +
+			 * "&receiver=" + receiver);
+			 * 
+			 * URLConnection conection = url.openConnection();
+			 * conection.connect(); // download the file InputStream input = new
+			 * BufferedInputStream(url.openStream(), 8192); dir = new
+			 * File(Environment.getExternalStorageDirectory() .toString() +
+			 * "/YookosChat/Media/"); try { if (dir.mkdirs()) {
+			 * System.out.println("Directory created"); } else {
+			 * System.out.println("Directory is not created"); } } catch
+			 * (Exception e) { e.printStackTrace(); } // Output stream
+			 * OutputStream output = new FileOutputStream(dir.toString() + "/" +
+			 * receiver + ".txt");
+			 * 
+			 * byte data[] = new byte[1024];
+			 * 
+			 * while ((count = input.read(data)) != -1) { // writing data to
+			 * file output.write(data, 0, count); }
+			 * 
+			 * // flushing output output.flush();
+			 * 
+			 * // closing streams output.close(); input.close(); apiResult =
+			 * true;
+			 * 
+			 * } catch (Exception e) { Log.e("Error: ", e.getMessage());
+			 * apiResult = false; }
+			 */
 
 			return apiResult;
 
@@ -149,12 +126,12 @@ public class APIChatDownloadAndShare {
 		@Override
 		protected void onPostExecute(Boolean result) {
 			mTask = null;
-			//dialog.dismiss();
+			// dialog.dismiss();
 			if (result) {
-				/*File f = new File(dir.toString() + "/" + receiver + ".txt");
-				if (share && (f.exists())) {
-					onShareClick(f);
-				}*/
+				/*
+				 * File f = new File(dir.toString() + "/" + receiver + ".txt");
+				 * if (share && (f.exists())) { onShareClick(f); }
+				 */
 
 				TChatApplication.getContext().sendBroadcast(
 						new Intent(Constants.MESSAGE_READY));

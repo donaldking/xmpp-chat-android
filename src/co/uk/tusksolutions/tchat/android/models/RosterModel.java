@@ -195,6 +195,8 @@ public class RosterModel implements Parcelable {
 		 */
 		TChatApplication.getContext().sendBroadcast(
 				new Intent(Constants.ROSTER_UPDATED));
+		TChatApplication.getContext().sendBroadcast(
+				new Intent(Constants.LAST_ONLINE_TIME_STATE_CHANGED));
 
 	}
 
