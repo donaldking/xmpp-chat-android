@@ -11,6 +11,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 
 import android.os.AsyncTask;
+import android.util.Log;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
 
@@ -73,9 +74,11 @@ public class APIUpdateLastOnlinePrivacy {
 			if (result) {
 				// TChatApplication.getContext().sendBroadcast(
 				// new Intent(Constants.CLOUD_SAVE_SUCCESS));
+				Log.v("Update Last Seen ","Succesfully update Last seen status "+status);
 			} else {
 				// TChatApplication.getContext().sendBroadcast(
 				// new Intent(Constants.CLOUD_SAVE_ERROR));
+				Log.v("Update Last Seen ","Failed to update Last seen status "+status);
 			}
 		}
 

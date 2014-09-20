@@ -22,7 +22,7 @@ public class TChatDBHelper extends SQLiteOpenHelper {
 	public static final String CHAT_MESSAGES_TABLE = "CHAT_MESSAGES_TABLE";
 	public static final String GROUP_CHAT_MESSAGES_TABLE = "GROUP_CHAT_MESSAGES_TABLE";
 	public static final String RECENTS_TABLE = "RECENTS_TABLE";
-	public static final String CHATROOMS_TABLE="CHATROOMS_TABLE";
+	public static final String CHATROOMS_TABLE = "CHATROOMS_TABLE";
 
 	/*
 	 * Profile table definition
@@ -33,6 +33,7 @@ public class TChatDBHelper extends SQLiteOpenHelper {
 	public static final String PROFILE_NAME = "name";
 	public static final String CURRENT_PRESENCE = "currentPresence";
 	public static final String LAST_LOGIN = "lastLogin";
+	
 
 	/*
 	 * Roster table definition
@@ -77,6 +78,8 @@ public class TChatDBHelper extends SQLiteOpenHelper {
 	public static final String R_MESSAGE = "message";
 	public static final String R_MESSAGE_ID = "mid";
 	public static final String R_IS_READ = "isRead";
+	
+
 	public static final String R_TIMESTAMP = "time_stamp";
 
 	/*
@@ -92,17 +95,17 @@ public class TChatDBHelper extends SQLiteOpenHelper {
 	/*
 	 * Chat Room table definition
 	 */
-   public static final String CR_UID="_id";
-   public static final String CR_CHATROOM_ID="chatroom_id";
-   public static final String CR_ADMIN="chatroom_admin";
-   public static final String CR_CHATROOM_NAME="chatroom_name";
-   public static final String CR_PARTICIPANTS="participants";
-   public static final String CR_START_TIMESTAMP="start_timestamp";
-   public static final String CR_END_TIMESTAMP="end_timestamp";
-   public static final String CR_CREATED_AT="created_at";
-   public static final String CR_STATUS="staus";
-   public static final String CR_MAX_GUESTS="max_guests";
-	
+	public static final String CR_UID = "_id";
+	public static final String CR_CHATROOM_ID = "chatroom_id";
+	public static final String CR_ADMIN = "chatroom_admin";
+	public static final String CR_CHATROOM_NAME = "chatroom_name";
+	public static final String CR_PARTICIPANTS = "participants";
+	public static final String CR_START_TIMESTAMP = "start_timestamp";
+	public static final String CR_END_TIMESTAMP = "end_timestamp";
+	public static final String CR_CREATED_AT = "created_at";
+	public static final String CR_STATUS = "staus";
+	public static final String CR_MAX_GUESTS = "max_guests";
+
 	public TChatDBHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 
@@ -183,9 +186,14 @@ public class TChatDBHelper extends SQLiteOpenHelper {
 	private static final String CREATE_CHATROOMS_TABLE = "CREATE TABLE "
 			+ CHATROOMS_TABLE + " ( " + CR_UID
 			+ " INTEGER PRIMARY KEY AUTOINCREMENT," + CR_CHATROOM_ID
-			+ " varchar(255) UNIQUE," + CR_ADMIN + " varchar(255) DEFAULT NULL,"
-			+ CR_CHATROOM_NAME + " varchar(255) DEFAULT NULL," + CR_PARTICIPANTS
-			+ " blob," + CR_START_TIMESTAMP + " varchar(255) DEFAULT NULL," + CR_END_TIMESTAMP + " varchar(255) DEFAULT NULL," + CR_CREATED_AT + " varchar(255) DEFAULT NULL," + CR_STATUS + " varchar(255) DEFAULT NULL," +CR_MAX_GUESTS+ " varchar(255) DEFAULT NULL);";
+			+ " varchar(255) UNIQUE," + CR_ADMIN
+			+ " varchar(255) DEFAULT NULL," + CR_CHATROOM_NAME
+			+ " varchar(255) DEFAULT NULL," + CR_PARTICIPANTS + " blob,"
+			+ CR_START_TIMESTAMP + " varchar(255) DEFAULT NULL,"
+			+ CR_END_TIMESTAMP + " varchar(255) DEFAULT NULL," + CR_CREATED_AT
+			+ " varchar(255) DEFAULT NULL," + CR_STATUS
+			+ " varchar(255) DEFAULT NULL," + CR_MAX_GUESTS
+			+ " varchar(255) DEFAULT NULL);";
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {

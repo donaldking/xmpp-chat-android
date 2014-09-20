@@ -12,6 +12,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.os.AsyncTask;
+import android.util.Log;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
 import co.uk.tusksolutions.utility.Utility;
 
@@ -68,7 +69,13 @@ public class APIGetLastOnlineTime {
 
 					if (jsonArray.length() >= 0) {
 						lastOnline = parseLastOnline(jsonArray.getJSONObject(0));
-						if (lastOnline.matches("[0-9]+")
+						Log.e("last online ","last online "+lastOnline);
+						if(lastOnline.equalsIgnoreCase("private"))
+						{
+							
+							apiResult=false;
+						}
+						else if (lastOnline.matches("[0-9]+")
 								&& lastOnline.length() >= 1) {
 							apiResult = true;
 						} else {

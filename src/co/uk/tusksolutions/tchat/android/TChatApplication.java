@@ -50,6 +50,9 @@ public class TChatApplication extends Application {
 	public static int CHAT_SECTION_QUERY_ACTION;
 	public static int CHATROOM_SECTION_QUERY_ACTION;
 	public static Handler presenceDialogHandler;
+	public static  boolean chatNotificationSound=true;
+	public static  boolean showLastSeenOnline=true;
+	
 	
 	@Override
 	public void onCreate() {
@@ -118,6 +121,24 @@ public class TChatApplication extends Application {
 	public synchronized static TChatDBHelper getTChatDBHelper() {
 		return tChatDBHelper;
 	}
+  
+	
+	public static boolean isChatNotificationSound() {
+		return chatNotificationSound;
+	}
+	
+
+	public static void setChatNotificationSound(boolean chatNotificationSound) {
+		TChatApplication.chatNotificationSound = chatNotificationSound;
+	}
+	public static boolean isShowLastSeenOnline() {
+		return showLastSeenOnline;
+	}
+
+	public static void setShowLastSeenOnline(boolean showLastSeenOnline) {
+		TChatApplication.showLastSeenOnline = showLastSeenOnline;
+	}
+
 
 	public static UserModel getUserModel() {
 		return mUserModel;
