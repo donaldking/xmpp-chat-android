@@ -38,7 +38,15 @@ public class XMPPNotificationManager {
 				.setContentText(message);
 		Uri defaultSound = RingtoneManager
 				.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+		if(TChatApplication.isChatNotificationSound())
+		{
 		mBuilder.setSound(defaultSound);
+		}
+		else
+		{
+			mBuilder.setSound(null);
+		}
+		
 		mBuilder.setAutoCancel(true);
 
 		/**
@@ -81,7 +89,14 @@ public class XMPPNotificationManager {
 				.setContentText(message);
 		Uri defaultSound = RingtoneManager
 				.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+		if(TChatApplication.isChatNotificationSound())
+		{
 		mBuilder.setSound(defaultSound);
+		}
+		else
+		{
+			mBuilder.setSound(null);
+		}
 		mBuilder.setAutoCancel(true);
 
 		/**

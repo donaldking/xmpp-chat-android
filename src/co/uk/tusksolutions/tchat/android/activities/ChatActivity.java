@@ -138,6 +138,8 @@ public class ChatActivity extends ActionBarActivity implements
 			}
 
 			getSupportActionBar().setTitle(buddyName);
+			APIGetLastOnlineTime getLastOnlineTimeObject = new APIGetLastOnlineTime();
+			getLastOnlineTimeObject.doGetLastOnlineTime(buddyJid, this);
 		}
 	}
 
@@ -188,6 +190,11 @@ public class ChatActivity extends ActionBarActivity implements
 		mGetMessagesApi = new APIGetMessages();
 		mGetMessagesApi.getMessages(StringUtils.parseName(buddyJid),
 				mAdapter.getCount(), 25, "chat");
+		
+		
+
+		APIGetLastOnlineTime getLastOnlineTimeObject = new APIGetLastOnlineTime();
+		getLastOnlineTimeObject.doGetLastOnlineTime(buddyJid, this);
 
 		// Get last online time for this buddy
 		getLastOnlineTime();
@@ -424,6 +431,8 @@ public class ChatActivity extends ActionBarActivity implements
 	}
 
 	public void showLastOnlineTime(String lastonline) {
+		
+		
 
 		if (lastonline != null) {
 			lastSeen = TimeAgo.getTimeAgo(Long.parseLong(lastonline), this);
@@ -724,6 +733,8 @@ public class ChatActivity extends ActionBarActivity implements
 	@Override
 	public void OnGetLastOnlinePrivate() {
 		// TODO Auto-generated method stub
+		Log.v("Last Seen", "Last Seen set Private");
+		getSupportActionBar().setSubtitle(null);
 	}
 
 	@Override

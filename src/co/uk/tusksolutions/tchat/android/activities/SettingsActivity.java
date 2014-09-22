@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -17,11 +18,14 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import co.uk.tusksolutions.extensions.RobotoBoldTextView;
 import co.uk.tusksolutions.extensions.RobotoLightTextView;
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
+import co.uk.tusksolutions.tchat.android.api.APIUpdateLastOnlinePrivacy;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
 import co.uk.tusksolutions.tchat.android.fragments.ChangePresenceFragment;
 import co.uk.tusksolutions.tchat.android.models.UserModel;
@@ -85,7 +89,46 @@ public class SettingsActivity extends ActionBarActivity {
 				finish();
 			}
 		});
+		mSoundNotificationCheckbox
+				.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
+					@Override
+					public void onCheckedChanged(CompoundButton arg0,
+							boolean arg1) {
+						// TODO Auto-generated method stub
+						if (arg0.isChecked()) {
+							TChatApplication.setChatNotificationSound(true);
+							setPrefs("sound", true);
+						} else {
+							TChatApplication.setChatNotificationSound(false);
+							setPrefs("sound", false);
+						}
+
+					}
+				});
+		mShowLastSeenOnlineCheckbox
+				.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+					@Override
+					public void onCheckedChanged(CompoundButton buttonView,
+							boolean isChecked) {
+						// TODO Auto-generated method stub
+						if (buttonView.isChecked()) {
+							TChatApplication.setShowLastSeenOnline(true);
+							APIUpdateLastOnlinePrivacy apiUpdateLastOnlinePrivacy = new APIUpdateLastOnlinePrivacy();
+							apiUpdateLastOnlinePrivacy
+									.updateLastOnlinePrivacy("1");
+							setPrefs("lastseen", true);
+
+						} else {
+							TChatApplication.setShowLastSeenOnline(false);
+							APIUpdateLastOnlinePrivacy apiUpdateLastOnlinePrivacy = new APIUpdateLastOnlinePrivacy();
+							apiUpdateLastOnlinePrivacy
+									.updateLastOnlinePrivacy("0");
+							setPrefs("lastseen", false);
+						}
+					}
+				});
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 
@@ -135,8 +178,17 @@ public class SettingsActivity extends ActionBarActivity {
 		mFullNameTextView.setText(mUserModel.getProfileName());
 		mUserNameTextView.setText(mUserModel.getUsername());
 
-		mSoundNotificationCheckbox.setChecked(true);
-		mShowLastSeenOnlineCheckbox.setChecked(true);
+		if (getPrefs("sound"))
+
+			mSoundNotificationCheckbox.setChecked(true);
+		else
+			mSoundNotificationCheckbox.setChecked(false);
+		if (getPrefs("lastseen"))
+
+			mShowLastSeenOnlineCheckbox.setChecked(true);
+		else
+			mShowLastSeenOnlineCheckbox.setChecked(false);
+
 	}
 
 	public void setUserPresence() {
@@ -198,5 +250,22 @@ public class SettingsActivity extends ActionBarActivity {
 				prepareProfile();
 			}
 		}
+	}
+
+	public void setPrefs(String key, Boolean value) {
+
+		SharedPreferences mPreferences = getSharedPreferences("settingPrfes",
+				MODE_PRIVATE);
+
+		SharedPreferences.Editor editor = mPreferences.edit();
+		editor.putBoolean(key, value);
+		editor.commit();
+	}
+
+	public boolean getPrefs(String key) {
+		SharedPreferences mPreferences = getSharedPreferences("settingPrfes",
+				MODE_PRIVATE);
+
+		return mPreferences.getBoolean(key, true);
 	}
 }

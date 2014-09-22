@@ -57,14 +57,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="co.uk.tusksolutions.tchat.android.fragments.RecentsFragment"
-            android:label="@string/title_activity_recents_fragment" >
-        </activity>
-        <activity
-            android:name="co.uk.tusksolutions.tchat.android.fragments.GroupsFragment"
-            android:label="@string/title_activity_groups_fragment" >
-        </activity>
+       
         <activity android:name="co.uk.tusksolutions.tchat.android.activities.ChatActivity" >
         </activity>
         <activity android:name="co.uk.tusksolutions.tchat.android.activities.GroupChatActivity" >

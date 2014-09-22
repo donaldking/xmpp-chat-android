@@ -5,6 +5,7 @@ import org.json.JSONObject;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.dbHelper.TChatDBHelper;
 import co.uk.tusksolutions.tchat.android.xmpp.XMPPConnectionManager;
@@ -17,12 +18,14 @@ public class UserModel {
 	private String profileName;
 	private String currentPresence;
 	private String lastLogin;
+	
 	SQLiteDatabase db;
 
 	public UserModel() {
 		prepareProfile();
 	}
 
+	
 	public String getUsername() {
 		return username;
 	}
@@ -72,9 +75,10 @@ public class UserModel {
 		boolean saveResult = false;
 		ContentValues contentValues = new ContentValues();
 
-		contentValues.put(TChatDBHelper.USERNAME, username);
+		contentValues.put(TChatDBHelper.USERNAME, username.toLowerCase());
 		contentValues.put(TChatDBHelper.PASSWORD, password);
 		contentValues.put(TChatDBHelper.CURRENT_PRESENCE, "online");
+		
 
 		if (db.insert(TChatDBHelper.PROFILE_TABLE, null, contentValues) >= 1) {
 
@@ -96,6 +100,8 @@ public class UserModel {
 				/**
 				 * Do Login
 				 */
+				String userName=TChatApplication.getUserModel().getUsername();
+				Log.e("username", "Username "+userName);
 				XMPPConnectionManager.connect(TChatApplication.getUserModel()
 						.getUsername(), TChatApplication.getUserModel()
 						.getPassword());
@@ -141,6 +147,8 @@ public class UserModel {
 					.getColumnIndex(TChatDBHelper.CURRENT_PRESENCE)));
 			setLastLogin(cursor.getString(cursor
 					.getColumnIndex(TChatDBHelper.LAST_LOGIN)));
+		
+			
 		}
 
 		db.close();

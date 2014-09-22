@@ -10,10 +10,12 @@ import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.Filter;
 import android.widget.Filterable;
 import co.uk.tusksolutions.tchat.android.R;
@@ -35,7 +37,8 @@ public class GroupFriendsSelectionAdapter extends BaseAdapter implements
 	private CopyOnWriteArrayList<RosterModel> rosterModelCollectionTmp;
 	private ValueFilter valueFilter;
 	private final static String TAG = "GroupFriendsSelectionAdapter";
-
+	 GroupFriendsSelectionViewHolder vH;
+	 CheckBox ctv;
 	public GroupFriendsSelectionAdapter() {
 		this.context = TChatApplication.getContext();
 		mModel = new RosterModel();
@@ -105,7 +108,7 @@ public class GroupFriendsSelectionAdapter extends BaseAdapter implements
 		GroupFriendsSelectionViewHolder holder = null;
 
 		final RosterModel rosterModel = rosterModelCollection.get(position);
-		final GroupFriendsSelectionViewHolder vH;
+	
 		if (row == null) {
 
 			LayoutInflater inflater = (LayoutInflater) context
@@ -115,8 +118,13 @@ public class GroupFriendsSelectionAdapter extends BaseAdapter implements
 			holder = new GroupFriendsSelectionViewHolder(row);
 			vH = holder;
 			row.setTag(holder);
+			  ctv = holder.checkMark;
+			
+			
 
-			final CheckBox ctv = holder.checkMark;
+			
+			
+			
 			ctv.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
 				@Override
@@ -155,6 +163,16 @@ public class GroupFriendsSelectionAdapter extends BaseAdapter implements
 		}
 
 		mHolder.rosterName.setText(rosterModel.name);
+		
+		/*row.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				ctv.setOnCheckedChangeListener(new CheckChangeListener());
+
+			}
+		});*/
 		return row;
 	}
 
@@ -197,4 +215,24 @@ public class GroupFriendsSelectionAdapter extends BaseAdapter implements
 			notifyDataSetChanged();
 		}
 	}
+	class CheckChangeListener implements OnCheckedChangeListener
+	{
+
+		@Override
+		public void onCheckedChanged(CompoundButton buttonView,
+				boolean isChecked) {
+			// TODO Auto-generated method stub
+
+			final RosterModel rosterModel = (RosterModel) vH.checkMark
+					.getTag();
+			rosterModel.setSelected(buttonView.isChecked());
+
+			Log.d(TAG, "Model status: " + rosterModel.name
+					+ " Selection: " + rosterModel.isSelected());
+		
+		}
+		
+	}
+	
+	
 }
