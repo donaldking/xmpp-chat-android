@@ -734,7 +734,8 @@ public class ChatActivity extends ActionBarActivity implements
 	public void OnGetLastOnlinePrivate() {
 		// TODO Auto-generated method stub
 		Log.v("Last Seen", "Last Seen set Private");
-		getSupportActionBar().setSubtitle(null);
+		//getSupportActionBar().setSubtitle(null);
+		getLastOnlineTime();
 	}
 
 	@Override

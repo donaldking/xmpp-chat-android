@@ -37,8 +37,7 @@ public class GroupFriendsSelectionAdapter extends BaseAdapter implements
 	private CopyOnWriteArrayList<RosterModel> rosterModelCollectionTmp;
 	private ValueFilter valueFilter;
 	private final static String TAG = "GroupFriendsSelectionAdapter";
-	 GroupFriendsSelectionViewHolder vH;
-	 CheckBox ctv;
+	
 	public GroupFriendsSelectionAdapter() {
 		this.context = TChatApplication.getContext();
 		mModel = new RosterModel();
@@ -106,7 +105,8 @@ public class GroupFriendsSelectionAdapter extends BaseAdapter implements
 
 		View row = convertView;
 		GroupFriendsSelectionViewHolder holder = null;
-
+		
+		
 		final RosterModel rosterModel = rosterModelCollection.get(position);
 	
 		if (row == null) {
@@ -116,15 +116,10 @@ public class GroupFriendsSelectionAdapter extends BaseAdapter implements
 			row = inflater.inflate(R.layout.group_selection_row, parent, false);
 
 			holder = new GroupFriendsSelectionViewHolder(row);
-			vH = holder;
+			final GroupFriendsSelectionViewHolder vH = holder;
 			row.setTag(holder);
-			  ctv = holder.checkMark;
-			
-			
-
-			
-			
-			
+			 final CheckBox ctv = holder.checkMark;
+		
 			ctv.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
 				@Override
@@ -163,16 +158,6 @@ public class GroupFriendsSelectionAdapter extends BaseAdapter implements
 		}
 
 		mHolder.rosterName.setText(rosterModel.name);
-		
-		/*row.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				ctv.setOnCheckedChangeListener(new CheckChangeListener());
-
-			}
-		});*/
 		return row;
 	}
 
@@ -215,24 +200,7 @@ public class GroupFriendsSelectionAdapter extends BaseAdapter implements
 			notifyDataSetChanged();
 		}
 	}
-	class CheckChangeListener implements OnCheckedChangeListener
-	{
 
-		@Override
-		public void onCheckedChanged(CompoundButton buttonView,
-				boolean isChecked) {
-			// TODO Auto-generated method stub
-
-			final RosterModel rosterModel = (RosterModel) vH.checkMark
-					.getTag();
-			rosterModel.setSelected(buttonView.isChecked());
-
-			Log.d(TAG, "Model status: " + rosterModel.name
-					+ " Selection: " + rosterModel.isSelected());
-		
-		}
-		
-	}
 	
 	
 }
