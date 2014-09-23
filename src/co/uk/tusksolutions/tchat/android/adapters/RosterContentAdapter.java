@@ -97,6 +97,7 @@ public class RosterContentAdapter extends BaseAdapter implements Filterable {
 
 		View row = convertView;
 		RosterViewHolder holder = null;
+		
 
 		if (row == null) {
 			LayoutInflater inflater = (LayoutInflater) context
@@ -114,7 +115,17 @@ public class RosterContentAdapter extends BaseAdapter implements Filterable {
 		 * Put values received fromUser model collection TO_USER view holder.
 		 * 
 		 */
-		final RosterModel rosterModel = rosterModelCollection.get(position);
+		final RosterModel rosterModel;
+		if(position>rosterModelCollection.size())
+		{
+			rosterModel = rosterModelCollection.get(0);
+		}
+		else
+		{
+			  rosterModel = rosterModelCollection.get(position);
+		}
+		
+		//final RosterModel rosterModel = rosterModelCollection.get(position);
 
 		String[] username = rosterModel.user.split("@");
 		try {
