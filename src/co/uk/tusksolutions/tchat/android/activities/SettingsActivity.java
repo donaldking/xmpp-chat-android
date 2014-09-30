@@ -86,7 +86,9 @@ public class SettingsActivity extends ActionBarActivity {
 			@Override
 			public void onClick(View v) {
 				TChatApplication.tearDownAndLogout();
+				
 				finish();
+			
 			}
 		});
 		mSoundNotificationCheckbox
