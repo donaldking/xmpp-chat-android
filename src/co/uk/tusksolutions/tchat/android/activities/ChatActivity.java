@@ -432,9 +432,15 @@ public class ChatActivity extends ActionBarActivity implements
 
 	public void showLastOnlineTime(String lastonline) {
 		
-		
+		if (mRosterModel.isBuddyOnline(buddyJid) == true) {
+			lastSeen = "online";
+			getSupportActionBar().setSubtitle(
+					Html.fromHtml("<font color='#FFFFFF'> " + lastSeen
+							+ "</font>"));
+			return;
+		}
 
-		if (lastonline != null) {
+		else if (lastonline != null) {
 			lastSeen = TimeAgo.getTimeAgo(Long.parseLong(lastonline), this);
 			getSupportActionBar().setSubtitle(
 					Html.fromHtml("<font color='#FFFFFF'>last seen " + lastSeen
@@ -458,8 +464,8 @@ public class ChatActivity extends ActionBarActivity implements
 			getSupportActionBar().setSubtitle(null);
 		}
 		
-		APIGetLastOnlineTime getLastOnlineTimeObject = new APIGetLastOnlineTime();
-		getLastOnlineTimeObject.doGetLastOnlineTime(buddyJid, this);
+		/*APIGetLastOnlineTime getLastOnlineTimeObject = new APIGetLastOnlineTime();
+		getLastOnlineTimeObject.doGetLastOnlineTime(buddyJid, this);*/
 	}
 
 	/*
@@ -741,6 +747,7 @@ public class ChatActivity extends ActionBarActivity implements
 	@Override
 	public void OnGetLastOnlineAvailable(String lastOnlineTime) {
 		// TODO Auto-generated method stub
+		//if (mRosterModel.isBuddyOnline(buddyJid) == false)
 		showLastOnlineTime(lastOnlineTime);
 	}
 

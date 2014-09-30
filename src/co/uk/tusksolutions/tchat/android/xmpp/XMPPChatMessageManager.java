@@ -26,7 +26,6 @@ public class XMPPChatMessageManager {
 			msg = new Message(to, Message.Type.chat);
 		}
 
-		Log.e("mid in sendMessage","mid "+mid);
 		msg.setBody(message);
 		msg.setPacketID(mid);
 		/*
