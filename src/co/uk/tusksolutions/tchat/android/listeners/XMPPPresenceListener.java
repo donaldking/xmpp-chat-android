@@ -6,6 +6,7 @@ import org.jivesoftware.smack.packet.Packet;
 import org.jivesoftware.smack.packet.Presence;
 
 import android.content.Context;
+import android.util.Log;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 
 public class XMPPPresenceListener implements PacketListener {
@@ -19,6 +20,8 @@ public class XMPPPresenceListener implements PacketListener {
 		 * Tell the server we are online
 		 */
 		XMPPPresenceListener.setXMPPPresence(Presence.Type.available);
+		
+		Log.e("XMPPPresenceListener ","PRESENCE UPDATES ");
 	}
 
 	public static void setXMPPPresence(Presence.Type presence) {
@@ -49,6 +52,9 @@ public class XMPPPresenceListener implements PacketListener {
 			String[] strTemp = presence.getFrom().split("/");
 			TChatApplication.getRosterModel().updatePresenceForFriend(
 					strTemp[0], presence, strTemp[1]);
+			
+			
+			Log.e("XMPPPresenceListener ","PRESENCE FRIEND "+strTemp[0]+" presence "+presence);
 		}
 	}
 
