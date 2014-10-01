@@ -258,6 +258,8 @@ public class RosterModel implements Parcelable {
 						TABLE, contentValues, whereClause, whereArgs,
 						SQLiteDatabase.CONFLICT_REPLACE);
 
+			
+				
 				return true;
 			}
 
@@ -309,6 +311,7 @@ public class RosterModel implements Parcelable {
 			 * Request for the values TO_USER be pulled fromUser this cursor and
 			 * returned back TO_USER us.
 			 */
+			
 			rosterModelCollection.add(fromCursor(cursor));
 		}
 

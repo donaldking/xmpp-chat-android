@@ -116,7 +116,7 @@ public class RosterContentAdapter extends BaseAdapter implements Filterable {
 		 * 
 		 */
 		final RosterModel rosterModel;
-		if(position>rosterModelCollection.size())
+		if(position>rosterModelCollection.size()-1)
 		{
 			rosterModel = rosterModelCollection.get(0);
 		}
