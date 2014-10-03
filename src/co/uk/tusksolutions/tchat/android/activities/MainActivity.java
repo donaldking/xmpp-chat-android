@@ -81,7 +81,6 @@ public class MainActivity extends ActionBarActivity implements
 		// Get GCM registration id
 		final String regId = GCMRegistrar.getRegistrationId(this);
 
-		
 		// Check if regid already presents
 		if (regId.equals("")) {
 			// Registration is not present, register now with GCM
@@ -140,7 +139,7 @@ public class MainActivity extends ActionBarActivity implements
 			WakeLocker.release();
 		}
 	};
-	
+
 	@Override
 	protected void onDestroy() {
 		if (mRegisterTask != null) {
@@ -154,7 +153,7 @@ public class MainActivity extends ActionBarActivity implements
 		}
 		super.onDestroy();
 	}
-	
+
 	/** PUSH STUFF ENDS ***/
 
 	public RecentsFragment getRecentsFragment() {
@@ -363,9 +362,9 @@ public class MainActivity extends ActionBarActivity implements
 				return getRosterFragment();
 			case 2:
 				return getGroupsFragment();
-			/*case 3:
-				return getChatRoomsFragment();
-				*/
+				/*
+				 * case 3: return getChatRoomsFragment();
+				 */
 			}
 			return null;
 		}
@@ -375,6 +374,18 @@ public class MainActivity extends ActionBarActivity implements
 			// Show 4 total pages.
 			return 3;
 		}
+	}
+
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		
+	    if(TChatApplication.getUserModel().getUsername()==null)
+	    {
+	    	finish();
+	    }
+	    super.onResume();
+	    
 	}
 
 }

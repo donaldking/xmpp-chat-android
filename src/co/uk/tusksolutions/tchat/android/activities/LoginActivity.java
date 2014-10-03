@@ -11,6 +11,7 @@ import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
@@ -264,5 +265,20 @@ public class LoginActivity extends Activity {
 			mLoginStatusView.setVisibility(show ? View.VISIBLE : View.GONE);
 			mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
 		}
+	}
+
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK)
+
+		{
+
+		
+   
+			Log.e("back ", "back");
+			finish();
+
+			// Your code here
+		}
+		return false;
 	}
 }

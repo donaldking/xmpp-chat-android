@@ -19,6 +19,7 @@ import android.util.Log;
 import co.uk.tusksolutions.gcm.APIRegisterPushNotifications;
 import co.uk.tusksolutions.gcm.APIUnRegisterPushNotifications;
 import co.uk.tusksolutions.tchat.android.activities.LoginActivity;
+import co.uk.tusksolutions.tchat.android.activities.MainActivity;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
 import co.uk.tusksolutions.tchat.android.dbHelper.TChatDBHelper;
 import co.uk.tusksolutions.tchat.android.models.ChatMessagesModel;
@@ -50,14 +51,13 @@ public class TChatApplication extends Application {
 	public static int CHAT_SECTION_QUERY_ACTION;
 	public static int CHATROOM_SECTION_QUERY_ACTION;
 	public static Handler presenceDialogHandler;
-	public static  boolean chatNotificationSound=true;
-	public static  boolean showLastSeenOnline=true;
-	
-	
+	public static boolean chatNotificationSound = true;
+	public static boolean showLastSeenOnline = true;
+
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		//Constants.CURRENT_SERVER = Constants.DEVELOPMENT_SERVER;
+		// Constants.CURRENT_SERVER = Constants.DEVELOPMENT_SERVER;
 		Constants.CURRENT_SERVER = Constants.STAGING_SERVER;
 		// Constants.CURRENT_SERVER = Constants.PRODUCTION_SERVER;
 		Constants.PROXY_SERVER = Constants.HTTP_SCHEME
@@ -92,7 +92,7 @@ public class TChatApplication extends Application {
 
 		return isConnected;
 	}
-  
+
 	public static String getMid() {
 		return UUID.randomUUID().toString();
 	}
@@ -121,16 +121,15 @@ public class TChatApplication extends Application {
 	public synchronized static TChatDBHelper getTChatDBHelper() {
 		return tChatDBHelper;
 	}
-  
-	
+
 	public static boolean isChatNotificationSound() {
 		return chatNotificationSound;
 	}
-	
 
 	public static void setChatNotificationSound(boolean chatNotificationSound) {
 		TChatApplication.chatNotificationSound = chatNotificationSound;
 	}
+
 	public static boolean isShowLastSeenOnline() {
 		return showLastSeenOnline;
 	}
@@ -138,7 +137,6 @@ public class TChatApplication extends Application {
 	public static void setShowLastSeenOnline(boolean showLastSeenOnline) {
 		TChatApplication.showLastSeenOnline = showLastSeenOnline;
 	}
-
 
 	public static UserModel getUserModel() {
 		return mUserModel;
@@ -191,10 +189,14 @@ public class TChatApplication extends Application {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
+
+			
 			TChatApplication.getContext().startActivity(
 					new Intent(TChatApplication.getContext(),
 							LoginActivity.class)
 							.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+			
+			
 		}
 	}
 
@@ -214,7 +216,6 @@ public class TChatApplication extends Application {
 
 		unRegObject.doUnRegisterPushNotifications(device_id);
 	}
-	
 
 	public static void joinChatRoom(String chatroom_jid) {
 		try {
@@ -222,13 +223,22 @@ public class TChatApplication extends Application {
 					.mucServiceDiscovery();
 
 			XMPPMUCManager.getInstance(TChatApplication.getContext())
-					.joinRoomChatroom(TChatApplication.connection,
-							chatroom_jid + "@conference."+Constants.CURRENT_SERVER,
-							"", TChatApplication.getUserModel().getUsername());
+					.joinRoomChatroom(
+							TChatApplication.connection,
+							chatroom_jid + "@conference."
+									+ Constants.CURRENT_SERVER, "",
+							TChatApplication.getUserModel().getUsername());
 		} catch (Exception e) {
-		Log.v("TChatApplication ", "Error in join ChatRoom  "+e.getLocalizedMessage());
+			Log.v("TChatApplication ",
+					"Error in join ChatRoom  " + e.getLocalizedMessage());
 		}
 	}
 
+	@Override
+	public void onTerminate() {
+		// TODO Auto-generated method stub
+		
+		super.onTerminate();
 
+	}
 }
