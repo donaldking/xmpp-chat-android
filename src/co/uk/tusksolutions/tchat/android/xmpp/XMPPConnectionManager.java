@@ -56,18 +56,11 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings.Secure;
-import android.widget.Toast;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
-import co.uk.tusksolutions.tchat.android.api.APIGetChatRooms;
-import co.uk.tusksolutions.tchat.android.api.APIGetChatRooms.OnGetChatroomsCompleted;
-import co.uk.tusksolutions.tchat.android.api.APIGetGroups;
-import co.uk.tusksolutions.tchat.android.api.APIGetGroups.OnGetGroupsCompleted;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
 import co.uk.tusksolutions.tchat.android.listeners.XMPPChatMessageListener;
 import co.uk.tusksolutions.tchat.android.listeners.XMPPConnectionListener;
-import co.uk.tusksolutions.tchat.android.listeners.XMPPGroupChatMessageListener;
 import co.uk.tusksolutions.tchat.android.listeners.XMPPPresenceListener;
-import co.uk.tusksolutions.tchat.android.models.GroupsModel;
 
 public class XMPPConnectionManager {
 
@@ -121,21 +114,11 @@ public class XMPPConnectionManager {
 								e.printStackTrace();
 							}
 
-							/**
-							 * 3) Set up group chat messages packet listener
-							 */
-							try {
-								PacketFilter groupChatFilter = new MessageTypeFilter(
-										Message.Type.groupchat);
-								TChatApplication.connection.addPacketListener(
-										new XMPPGroupChatMessageListener(),
-										groupChatFilter);
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
+							
+							
 
 							/**
-							 * 4) Add Presence packet listener
+							 * 3) Add Presence packet listener
 							 */
 							try {
 								PacketFilter presenceFilter = new PacketTypeFilter(
@@ -177,39 +160,7 @@ public class XMPPConnectionManager {
 							configureProviderManager(TChatApplication.connection);
 
 							// Get groups and login
-							APIGetGroups groupsApi = new APIGetGroups();
-							groupsApi.getGroups(new OnGetGroupsCompleted() {
-
-								@Override
-								public void OnGetGroupsSuccess() {
-									// TODO Auto-generated method stub
-									GroupsModel.joinAllGroups();
-								}
-
-								@Override
-								public void OnGetGroupsFailed() {
-									// TODO Auto-generated method stub
-
-								}
-							});
-
-							APIGetChatRooms apiGetChatRooms = new APIGetChatRooms();
-							apiGetChatRooms
-									.getChatrooms(new OnGetChatroomsCompleted() {
-
-										@Override
-										public void OnGetChatRoomSuccess() {
-											// TODO Auto-generated method stub
-
-										}
-
-										@Override
-										public void OnGetChatRoomFailed() {
-											// TODO Auto-generated method stub
-
-										}
-									});
-
+							
 						} catch (Exception e) {
 							/**
 							 * Error connecting. This could be Internet off or

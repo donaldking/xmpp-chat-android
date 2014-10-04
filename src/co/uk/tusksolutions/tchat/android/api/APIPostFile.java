@@ -23,7 +23,7 @@ import android.app.Activity;
 import android.os.AsyncTask;
 import android.util.Log;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
-import co.uk.tusksolutions.tchat.android.activities.GroupChatActivity;
+
 import co.uk.tusksolutions.tchat.android.constants.Constants;
 import co.uk.tusksolutions.tchat.android.models.ChatMessagesModel;
 import co.uk.tusksolutions.tchat.android.xmpp.XMPPChatMessageManager;
@@ -117,12 +117,7 @@ public class APIPostFile {
 					XMPPChatMessageManager.sendMessage(receiver, buddyName, link,
 							1, "FileTransfer", mid);
 					receiver=receiver.replace("@conference."+Constants.CURRENT_SERVER, "");
-					try {
-						GroupChatActivity.showProgressUpload(false);
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+					
 					APICloudStorage cloudStorage = new APICloudStorage();
 					cloudStorage.saveToCloud(TChatApplication.getUserModel()
 							.getUsername(), receiver, link,
@@ -134,12 +129,7 @@ public class APIPostFile {
 					XMPPChatMessageManager.sendMessage(receiver, buddyName, link,
 							0, "FileTransfer", mid);
 					receiver=receiver.replace("@"+Constants.CURRENT_SERVER, "");
-					try {
-						GroupChatActivity.showProgressUpload(false);
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+					
 					APICloudStorage cloudStorage = new APICloudStorage();
 					cloudStorage.saveToCloud(TChatApplication.getUserModel()
 							.getUsername(), receiver, link,

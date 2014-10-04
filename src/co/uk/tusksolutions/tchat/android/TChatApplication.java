@@ -19,16 +19,14 @@ import android.util.Log;
 import co.uk.tusksolutions.gcm.APIRegisterPushNotifications;
 import co.uk.tusksolutions.gcm.APIUnRegisterPushNotifications;
 import co.uk.tusksolutions.tchat.android.activities.LoginActivity;
+import co.uk.tusksolutions.tchat.android.activities.MainActivity;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
 import co.uk.tusksolutions.tchat.android.dbHelper.TChatDBHelper;
 import co.uk.tusksolutions.tchat.android.models.ChatMessagesModel;
-import co.uk.tusksolutions.tchat.android.models.ChatRoomsModel;
-import co.uk.tusksolutions.tchat.android.models.GroupsModel;
 import co.uk.tusksolutions.tchat.android.models.RecentsModel;
 import co.uk.tusksolutions.tchat.android.models.RosterModel;
 import co.uk.tusksolutions.tchat.android.models.UserModel;
 import co.uk.tusksolutions.tchat.android.xmpp.XMPPConnectionManager;
-import co.uk.tusksolutions.tchat.android.xmpp.XMPPMUCManager;
 
 public class TChatApplication extends Application {
 
@@ -43,21 +41,19 @@ public class TChatApplication extends Application {
 	private static UserModel mUserModel;
 	private static RosterModel mRosterModel;
 	private static RecentsModel mRecentsModel;
-	private static GroupsModel mGroupsModel;
-	private static ChatRoomsModel mChatRoomsModel;
+	
 	private static ChatMessagesModel mChatMessagesModel;
 	public static String chatSessionBuddy;
 	public static int CHAT_SECTION_QUERY_ACTION;
 	public static int CHATROOM_SECTION_QUERY_ACTION;
 	public static Handler presenceDialogHandler;
-	public static  boolean chatNotificationSound=true;
-	public static  boolean showLastSeenOnline=true;
-	
-	
+	public static boolean chatNotificationSound = true;
+	public static boolean showLastSeenOnline = true;
+
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		//Constants.CURRENT_SERVER = Constants.DEVELOPMENT_SERVER;
+		// Constants.CURRENT_SERVER = Constants.DEVELOPMENT_SERVER;
 		Constants.CURRENT_SERVER = Constants.STAGING_SERVER;
 		// Constants.CURRENT_SERVER = Constants.PRODUCTION_SERVER;
 		Constants.PROXY_SERVER = Constants.HTTP_SCHEME
@@ -70,8 +66,7 @@ public class TChatApplication extends Application {
 		mRosterModel = new RosterModel();
 		mRecentsModel = new RecentsModel();
 		mChatMessagesModel = new ChatMessagesModel();
-		mGroupsModel = new GroupsModel();
-		mChatRoomsModel = new ChatRoomsModel();
+		;
 
 		/**
 		 * This method makes sure we have network and can login. If so, send us
@@ -92,7 +87,7 @@ public class TChatApplication extends Application {
 
 		return isConnected;
 	}
-  
+
 	public static String getMid() {
 		return UUID.randomUUID().toString();
 	}
@@ -121,16 +116,15 @@ public class TChatApplication extends Application {
 	public synchronized static TChatDBHelper getTChatDBHelper() {
 		return tChatDBHelper;
 	}
-  
-	
+
 	public static boolean isChatNotificationSound() {
 		return chatNotificationSound;
 	}
-	
 
 	public static void setChatNotificationSound(boolean chatNotificationSound) {
 		TChatApplication.chatNotificationSound = chatNotificationSound;
 	}
+
 	public static boolean isShowLastSeenOnline() {
 		return showLastSeenOnline;
 	}
@@ -138,7 +132,6 @@ public class TChatApplication extends Application {
 	public static void setShowLastSeenOnline(boolean showLastSeenOnline) {
 		TChatApplication.showLastSeenOnline = showLastSeenOnline;
 	}
-
 
 	public static UserModel getUserModel() {
 		return mUserModel;
@@ -156,13 +149,6 @@ public class TChatApplication extends Application {
 		return mChatMessagesModel;
 	}
 
-	public static GroupsModel getGroupsModel() {
-		return mGroupsModel;
-	}
-
-	public static ChatRoomsModel getChatRoomsModel() {
-		return mChatRoomsModel;
-	}
 
 	public synchronized static SQLiteDatabase getTChatDBWritable() {
 		return getTChatDBHelper().getWritableDatabase();
@@ -183,18 +169,21 @@ public class TChatApplication extends Application {
 		TChatApplication.getRecentsModel().deleteRecents();
 		TChatApplication.getChatMessagesModel().deleteAllChats();
 		TChatApplication.getUserModel().deleteProfile();
-		TChatApplication.getGroupsModel().deleteGroups();
-		TChatApplication.getChatRoomsModel().deleteChatRooms();
+	
 		try {
 			TChatApplication.connection.disconnect();
 			TChatApplication.connection = null;
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
+
+			
 			TChatApplication.getContext().startActivity(
 					new Intent(TChatApplication.getContext(),
 							LoginActivity.class)
 							.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+			
+			
 		}
 	}
 
@@ -214,21 +203,8 @@ public class TChatApplication extends Application {
 
 		unRegObject.doUnRegisterPushNotifications(device_id);
 	}
+
 	
 
-	public static void joinChatRoom(String chatroom_jid) {
-		try {
-			XMPPMUCManager.getInstance(TChatApplication.getContext())
-					.mucServiceDiscovery();
-
-			XMPPMUCManager.getInstance(TChatApplication.getContext())
-					.joinRoomChatroom(TChatApplication.connection,
-							chatroom_jid + "@conference."+Constants.CURRENT_SERVER,
-							"", TChatApplication.getUserModel().getUsername());
-		} catch (Exception e) {
-		Log.v("TChatApplication ", "Error in join ChatRoom  "+e.getLocalizedMessage());
-		}
-	}
-
-
+	
 }

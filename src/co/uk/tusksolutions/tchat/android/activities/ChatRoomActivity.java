@@ -46,7 +46,6 @@ import co.uk.tusksolutions.tchat.android.api.APIGetMessages;
 import co.uk.tusksolutions.tchat.android.api.APIPostFile;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
 import co.uk.tusksolutions.tchat.android.models.ChatMessagesModel;
-import co.uk.tusksolutions.tchat.android.models.GroupsModel;
 import co.uk.tusksolutions.tchat.android.xmpp.XMPPChatMessageManager;
 
 public class ChatRoomActivity extends ActionBarActivity {
@@ -258,12 +257,9 @@ public class ChatRoomActivity extends ActionBarActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 
-		if (GroupsModel.isAdmin(group_id, TChatApplication.getCurrentJid())) {
-			inflater.inflate(R.menu.group_chat_activity_admin_menu, menu);
-		} else {
+		
 			inflater.inflate(R.menu.group_chat_activity_menu, menu);
-		}
-		return true;
+				return true;
 	}
 
 	@Override
@@ -285,23 +281,11 @@ public class ChatRoomActivity extends ActionBarActivity {
 		 * SELECT_FILE); break;
 		 */
 		case R.id.group_add_people:
-			Intent addPeopleIntent = new Intent(TChatApplication.getContext(),
-					GroupParticipantsAddActivity.class); // Change to people
-															// selction
-			Bundle addPeopleBundle = new Bundle();
-			addPeopleBundle.putString("group_id", group_id);
-			addPeopleIntent.putExtras(addPeopleBundle);
-			startActivity(addPeopleIntent);
+			
 
 			break;
 		case R.id.group_remove_people:
-			Intent removePeopleIntent = new Intent(
-					TChatApplication.getContext(),
-					GroupParticipantsRemoveActivity.class);
-			Bundle removePeopleBundle = new Bundle();
-			removePeopleBundle.putString("group_id", group_id);
-			removePeopleIntent.putExtras(removePeopleBundle);
-			startActivity(removePeopleIntent);
+			
 
 			break;
 		case R.id.group_download_chat_history:

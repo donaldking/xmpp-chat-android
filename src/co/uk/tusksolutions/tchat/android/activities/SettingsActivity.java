@@ -1,5 +1,7 @@
 package co.uk.tusksolutions.tchat.android.activities;
 
+import org.jivesoftware.smack.packet.Presence;
+
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -11,6 +13,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBarActivity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,6 +31,7 @@ import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.api.APIUpdateLastOnlinePrivacy;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
 import co.uk.tusksolutions.tchat.android.fragments.ChangePresenceFragment;
+import co.uk.tusksolutions.tchat.android.listeners.XMPPPresenceListener;
 import co.uk.tusksolutions.tchat.android.models.UserModel;
 
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
@@ -85,6 +89,10 @@ public class SettingsActivity extends ActionBarActivity {
 
 			@Override
 			public void onClick(View v) {
+				
+				if (TChatApplication.connection != null) {
+					XMPPPresenceListener.setXMPPPresence(Presence.Type.unavailable);
+				}
 				TChatApplication.tearDownAndLogout();
 				
 				finish();
@@ -270,4 +278,6 @@ public class SettingsActivity extends ActionBarActivity {
 
 		return mPreferences.getBoolean(key, true);
 	}
+
+	
 }

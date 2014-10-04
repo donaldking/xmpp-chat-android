@@ -12,7 +12,6 @@ import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.activities.ChatActivity;
 import co.uk.tusksolutions.tchat.android.activities.ChatRoomActivity;
-import co.uk.tusksolutions.tchat.android.activities.GroupChatActivity;
 
 public class XMPPNotificationManager {
 
@@ -105,17 +104,13 @@ public class XMPPNotificationManager {
 		 * window when we click on the notification.
 		 */
 		Intent groupChatActivityIntent;
-		if(messageType.equalsIgnoreCase("CHAT_ROOM"))
-		{
+	
+		
 			 groupChatActivityIntent = new Intent(mContext,
 					ChatRoomActivity.class);
 				
-		}
-		else
-		{
-		 groupChatActivityIntent = new Intent(mContext,
-				GroupChatActivity.class);
-		}
+		
+		
 		groupChatActivityIntent.putExtra("groupChatFromRoomBundle",
 				intent.getBundleExtra("groupChatFromRoomBundle"));
 		groupChatActivityIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
