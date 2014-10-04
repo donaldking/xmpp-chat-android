@@ -23,8 +23,7 @@ import co.uk.tusksolutions.gcm.WakeLocker;
 import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
-import co.uk.tusksolutions.tchat.android.fragments.ChatRoomsFragment;
-import co.uk.tusksolutions.tchat.android.fragments.GroupsFragment;
+
 import co.uk.tusksolutions.tchat.android.fragments.RecentsFragment;
 import co.uk.tusksolutions.tchat.android.fragments.RosterFragment;
 
@@ -50,10 +49,10 @@ public class MainActivity extends ActionBarActivity implements
 	 * Declare all our fragments
 	 */
 	private RecentsFragment mRecentsFragment;
-	private GroupsFragment mGroupsFragment;
+
 	private RosterFragment mRosterFragment;
 
-	private ChatRoomsFragment mChatRoomFragment;
+	
 	ActionBar actionBar;
 	boolean mHomeForeGround = false;
 
@@ -180,28 +179,9 @@ public class MainActivity extends ActionBarActivity implements
 		return mRosterFragment;
 	}
 
-	public ChatRoomsFragment getChatRoomsFragment() {
-		if (mChatRoomFragment == null) {
-			mChatRoomFragment = new ChatRoomsFragment();
-			Bundle bundle = new Bundle();
-			bundle.putString("title", "ChatRooms");
-			bundle.putInt("icon", R.drawable.ic_action_group);
-			mChatRoomFragment.setArguments(bundle);
-		}
-		return mChatRoomFragment;
-	}
 
-	public GroupsFragment getGroupsFragment() {
 
-		if (mGroupsFragment == null) {
-			mGroupsFragment = new GroupsFragment();
-			Bundle bundle = new Bundle();
-			bundle.putString("title", "Groups");
-			bundle.putInt("icon", R.drawable.ic_action_group);
-			mGroupsFragment.setArguments(bundle);
-		}
-		return mGroupsFragment;
-	}
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -275,16 +255,7 @@ public class MainActivity extends ActionBarActivity implements
 		// present.
 		getMenuInflater().inflate(R.menu.main_activity_menu, menu);
 		// Get the SearchView and set the searchable configuration
-		/*
-		 * SearchManager searchManager = (SearchManager)
-		 * getSystemService(Context.SEARCH_SERVICE); SearchView searchView =
-		 * (SearchView) menu.findItem(R.id.action_search).getActionView(); //
-		 * Assumes current activity is the searchable activity
-		 * searchView.setSearchableInfo
-		 * (searchManager.getSearchableInfo(getComponentName()));
-		 * searchView.setIconifiedByDefault(false); // Do not iconify the
-		 * widget; expand it by default
-		 */
+		
 		return true;
 	}
 
@@ -296,8 +267,7 @@ public class MainActivity extends ActionBarActivity implements
 		int id = item.getItemId();
 		if (id == R.id.action_chat || id == R.id.action_chat_one) {
 
-			startActivity(new Intent(MainActivity.this,
-					GroupFriendsSelectionActivity.class));
+			
 			return true;
 		}
 
@@ -315,8 +285,7 @@ public class MainActivity extends ActionBarActivity implements
 			return true;
 		}
 		if (id == R.id.action_chat_room) {
-			startActivity(new Intent(MainActivity.this,
-					CreateChatRoomActivity.class));
+		
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -360,11 +329,7 @@ public class MainActivity extends ActionBarActivity implements
 				return getRecentsFragment();
 			case 1:
 				return getRosterFragment();
-			case 2:
-				return getGroupsFragment();
-				/*
-				 * case 3: return getChatRoomsFragment();
-				 */
+			
 			}
 			return null;
 		}
@@ -372,7 +337,7 @@ public class MainActivity extends ActionBarActivity implements
 		@Override
 		public int getCount() {
 			// Show 4 total pages.
-			return 3;
+			return 2;
 		}
 	}
 

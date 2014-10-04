@@ -23,13 +23,10 @@ import co.uk.tusksolutions.tchat.android.activities.MainActivity;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
 import co.uk.tusksolutions.tchat.android.dbHelper.TChatDBHelper;
 import co.uk.tusksolutions.tchat.android.models.ChatMessagesModel;
-import co.uk.tusksolutions.tchat.android.models.ChatRoomsModel;
-import co.uk.tusksolutions.tchat.android.models.GroupsModel;
 import co.uk.tusksolutions.tchat.android.models.RecentsModel;
 import co.uk.tusksolutions.tchat.android.models.RosterModel;
 import co.uk.tusksolutions.tchat.android.models.UserModel;
 import co.uk.tusksolutions.tchat.android.xmpp.XMPPConnectionManager;
-import co.uk.tusksolutions.tchat.android.xmpp.XMPPMUCManager;
 
 public class TChatApplication extends Application {
 
@@ -44,8 +41,7 @@ public class TChatApplication extends Application {
 	private static UserModel mUserModel;
 	private static RosterModel mRosterModel;
 	private static RecentsModel mRecentsModel;
-	private static GroupsModel mGroupsModel;
-	private static ChatRoomsModel mChatRoomsModel;
+	
 	private static ChatMessagesModel mChatMessagesModel;
 	public static String chatSessionBuddy;
 	public static int CHAT_SECTION_QUERY_ACTION;
@@ -70,8 +66,7 @@ public class TChatApplication extends Application {
 		mRosterModel = new RosterModel();
 		mRecentsModel = new RecentsModel();
 		mChatMessagesModel = new ChatMessagesModel();
-		mGroupsModel = new GroupsModel();
-		mChatRoomsModel = new ChatRoomsModel();
+		;
 
 		/**
 		 * This method makes sure we have network and can login. If so, send us
@@ -154,13 +149,6 @@ public class TChatApplication extends Application {
 		return mChatMessagesModel;
 	}
 
-	public static GroupsModel getGroupsModel() {
-		return mGroupsModel;
-	}
-
-	public static ChatRoomsModel getChatRoomsModel() {
-		return mChatRoomsModel;
-	}
 
 	public synchronized static SQLiteDatabase getTChatDBWritable() {
 		return getTChatDBHelper().getWritableDatabase();
@@ -181,8 +169,7 @@ public class TChatApplication extends Application {
 		TChatApplication.getRecentsModel().deleteRecents();
 		TChatApplication.getChatMessagesModel().deleteAllChats();
 		TChatApplication.getUserModel().deleteProfile();
-		TChatApplication.getGroupsModel().deleteGroups();
-		TChatApplication.getChatRoomsModel().deleteChatRooms();
+	
 		try {
 			TChatApplication.connection.disconnect();
 			TChatApplication.connection = null;
@@ -217,28 +204,7 @@ public class TChatApplication extends Application {
 		unRegObject.doUnRegisterPushNotifications(device_id);
 	}
 
-	public static void joinChatRoom(String chatroom_jid) {
-		try {
-			XMPPMUCManager.getInstance(TChatApplication.getContext())
-					.mucServiceDiscovery();
+	
 
-			XMPPMUCManager.getInstance(TChatApplication.getContext())
-					.joinRoomChatroom(
-							TChatApplication.connection,
-							chatroom_jid + "@conference."
-									+ Constants.CURRENT_SERVER, "",
-							TChatApplication.getUserModel().getUsername());
-		} catch (Exception e) {
-			Log.v("TChatApplication ",
-					"Error in join ChatRoom  " + e.getLocalizedMessage());
-		}
-	}
-
-	@Override
-	public void onTerminate() {
-		// TODO Auto-generated method stub
-		
-		super.onTerminate();
-
-	}
+	
 }

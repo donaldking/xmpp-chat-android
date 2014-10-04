@@ -269,15 +269,8 @@ public class LoginActivity extends Activity {
 
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK)
-
 		{
-
-		
-   
-			Log.e("back ", "back");
-			finish();
-
-			// Your code here
+			finish();	
 		}
 		return false;
 	}
