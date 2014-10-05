@@ -19,7 +19,6 @@ import android.util.Log;
 import co.uk.tusksolutions.gcm.APIRegisterPushNotifications;
 import co.uk.tusksolutions.gcm.APIUnRegisterPushNotifications;
 import co.uk.tusksolutions.tchat.android.activities.LoginActivity;
-import co.uk.tusksolutions.tchat.android.activities.MainActivity;
 import co.uk.tusksolutions.tchat.android.constants.Constants;
 import co.uk.tusksolutions.tchat.android.dbHelper.TChatDBHelper;
 import co.uk.tusksolutions.tchat.android.models.ChatMessagesModel;
