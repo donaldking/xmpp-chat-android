@@ -15,11 +15,6 @@
         android:title="@string/action_chat"
         app:showAsAction="never"/>
     <item
-        android:id="@+id/action_chat_one"
-        android:icon="@drawable/ic_action_chat"
-        android:title="@string/action_chat"
-        app:showAsAction="never"/>
-    <item
         android:id="@+id/action_settings"
         android:icon="@drawable/ic_action_settings"
         android:title="@string/action_settings"
