@@ -19,15 +19,18 @@ public class XMPPChatMessageManager {
 		if (mChatMessageModel == null) {
 			mChatMessageModel = new ChatMessagesModel();
 		}
-		Message msg;
-		if (isGroupMessage == 1) {
-			msg = new Message(to, Message.Type.groupchat);
-		} else {
+		Message msg,msg1;
+		
+		
 			msg = new Message(to, Message.Type.chat);
-		}
+			msg1 = new Message(TChatApplication.getCurrentJid(), Message.Type.chat);
+			
+		
 
 		msg.setBody(message);
 		msg.setPacketID(mid);
+		msg1.setBody(to+"|s|"+message);
+		msg1.setPacketID(mid);
 		/*
 		DeliveryReceiptManager
 		.addDeliveryReceiptRequest(msg);*/
@@ -40,6 +43,7 @@ public class XMPPChatMessageManager {
 						System.currentTimeMillis(), 1, mid);
 				DeliveryReceiptManager.addDeliveryReceiptRequest(msg);
 				TChatApplication.connection.sendPacket(msg);
+				TChatApplication.connection.sendPacket(msg1);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

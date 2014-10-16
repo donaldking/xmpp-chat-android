@@ -94,6 +94,8 @@ public class XMPPChatMessageListener implements PacketListener {
 		/*
 		 * If Message from Other Resource and get the carbon message
 		 */
+		
+			
 		if (message.getBody().contains("|s|")) {
 
 			String MessageParse[] = message.getBody().split("\\|s\\|");
@@ -104,7 +106,9 @@ public class XMPPChatMessageListener implements PacketListener {
 					StringUtils.parseName(packet.getFrom()), last_message, 0,
 					"CHAT", System.currentTimeMillis(), 1, mid);
 
-		} else {
+		} 
+		
+		else {
 
 			mChatMessageModel.saveMessageToDB(TChatApplication.getCurrentJid(),
 					StringUtils.parseBareAddress(packet.getFrom()), resource,
