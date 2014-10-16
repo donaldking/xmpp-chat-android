@@ -12,6 +12,7 @@ import co.uk.tusksolutions.tchat.android.R;
 import co.uk.tusksolutions.tchat.android.TChatApplication;
 import co.uk.tusksolutions.tchat.android.activities.ChatActivity;
 import co.uk.tusksolutions.tchat.android.activities.ChatRoomActivity;
+import co.uk.tusksolutions.tchat.android.models.UserModel;
 
 public class XMPPNotificationManager {
 
@@ -19,9 +20,14 @@ public class XMPPNotificationManager {
 	NotificationCompat.Builder mBuilder;
 	Context mContext = TChatApplication.getContext();
 	private static final String TAG = "XMPPNotificationManager";
-
+UserModel mUserModel;
 	public void sendNormalChatNotification(Intent intent) {
+		mUserModel=new UserModel();
+		String presence = mUserModel.getCurrentPresence();
 
+		  if (presence.equalsIgnoreCase("offline")) {
+				return;
+			} 
 		/**
 		 * Post Jelly Bean use inbox style notification Pre Jelly Bean, use
 		 * normal ticker notification
